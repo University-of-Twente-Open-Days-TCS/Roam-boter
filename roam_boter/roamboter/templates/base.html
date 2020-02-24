@@ -9,12 +9,17 @@
         <meta name="viewport"    content="width=device-width, initial-scale=1" />
         
         {# Fonts #}
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
         
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}">
 
         {# Stylesheets #}
         <link rel="stylesheet" href="{% static 'base.css' %}">
+
+        {# Fontawesome 5 #}
+        {% load fontawesome_5 %}
+        {% fontawesome_5_static %}
 
         {% block extra_css %}
         {% endblock %}
