@@ -1,0 +1,54 @@
+version: '3.7'
+
+services: 
+
+    #postgres 
+    db:
+        environment:
+            POSTGRES_DB: ${DB_NAME}
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        restart: always
+        volumes:
+            - db_data:/var/lib/postgresql/data
+        image: postgres:11
+        expose:
+            - "5432"
+ 
+    redis: 
+        restart: always
+        image: redis:5.0.5
+        expose:
+            - "6379"
+
+    web:
+        environment:
+            DJANGO_SETTINGS_MODULE: roamboter.settings
+            DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@db/${DB_NAME}
+            CACHE_URL: redis://redis
+            POSTGRES_DB: ${DB_NAME}
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            DB_HOST: db
+            DB_PORT: 5432
+            DJANGO_SECRET_KEY: ${DJANGO_KEY}
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        restart: always
+        volumes: 
+            - ./roam_boter:/roam_boter
+            - ./requirements:/requirements
+        links:
+            - db:db 
+            - redis:redis
+        ports:
+            - "8000:8000"
+        depends_on:
+            - db
+            - redis
+
+volumes:
+    db_data: 
+        external: false
+
