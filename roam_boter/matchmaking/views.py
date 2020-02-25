@@ -3,16 +3,25 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
 
+import json
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 # Create your views here.
+
+# This is an example view. It shows how to process a API request from the client. 
 class SaveAIView(View):
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            # process AI 
-            return HttpResponse('just text')
+            post_data = json.loads(request.body)
+            # Do something with the data 
+
+            # Send a response
+            response = {"responsedata" : "todo" }
+            return HttpResponse(json.dumps(response), content_type='application/json')
         else:
            return HttpResponse('Unauthorized')
-
-    def get(self, request, *args, **kwargs):
-        print("Hello AI VIEW!")
-        return HttpResponse('<html><body>hello</body></html>')
