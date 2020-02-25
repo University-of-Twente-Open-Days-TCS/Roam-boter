@@ -1,4 +1,6 @@
 Django>=3.0,<4.0 
 psycopg2>=2.7,<3.0
-gunicorn
+gunicorn>=20.0,<21.0
+django-fontawesome-5>=1.0,<2.0
+antlr4-python3-runtime>=4.8.0,<4.9.0
 
