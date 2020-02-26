@@ -20,11 +20,12 @@ from django.contrib import admin
 from django.urls import path
 
 import home.urls as home_urls
+import matchmaking.urls as matchmaking_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'', include(home_urls)),
-]
+    path(r'ai/', include(matchmaking_urls)),
+    path(r'', include(home_urls)),]
 
 
 

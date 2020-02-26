@@ -15,7 +15,7 @@
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}">
 
         {# Stylesheets #}
-        <link rel="stylesheet" href="{% static 'base.css' %}">
+        <link rel="stylesheet" href="{% static '/css/base.css' %}">
 
         {# Fontawesome 5 #}
         {% load fontawesome_5 %}
@@ -31,7 +31,10 @@
         {% block content %}
         {% endblock %}
 
-        {% block extra_scripts %}
+        {# JQUERY #} 
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+        <script src="{% static '/js/utilities.js' %}"></script>
+        {% block extra_js %}
         {% endblock %}
 
     </body>
