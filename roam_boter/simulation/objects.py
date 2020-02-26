@@ -8,6 +8,8 @@ class Object(Enum):
     HEAL = 3
     FLAG = 4
     HILL = 5
+    TANK = 6
+    BULLET = 7
 
 
 ColorValues = {

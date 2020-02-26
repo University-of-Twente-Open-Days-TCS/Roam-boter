@@ -5,8 +5,13 @@ VISUAL_DEBUG = True
 
 screen = None
 
+tank_body = None
+tank_turret = None
+
 if VISUAL_DEBUG:
     screen = pygame.display.set_mode((480, 270))
+    tank_body = pygame.image.load("debug_images/tank_body.png")
+    tank_turret = pygame.image.load("debug_images/tank_turret.png")
 
 
 def DRAW_WORLD(state):
@@ -21,7 +26,10 @@ def DRAW_WORLD(state):
             pygame.draw.rect(screen, color, (x * 10, y * 10, 10, 10))
 
     for tank in state.tanks:
-        print(tank.x, tank.y)
-        pygame.draw.rect(screen, (128, 128, 128), (int(tank.x * 10), int(tank.y * 10), 10, 10))
+        pygame.Surface.blit(tank_body, screen, (int(tank.x * 10), int(tank.y * 10), 10, 10))
+        pygame.Surface.blit(tank_turret, screen, (int(tank.x * 10), int(tank.y * 10), 10, 10))
+
+    for bullet in state.bullets:
+        pygame.draw.rect(screen, (0, 0, 0), (int(bullet.x * 10), int(bullet.y * 10), 4, 4))
 
     pygame.display.flip()

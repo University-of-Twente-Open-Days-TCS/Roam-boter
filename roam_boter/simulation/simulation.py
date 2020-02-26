@@ -1,8 +1,12 @@
-from ai import AI
 from levelloader import LevelLoader
 from tank import Tank
 from objects import Object
 import visual_debug
+from EvaluationTree import EvaluationTree
+from conditions import Condition
+from actions import Action
+
+import time
 
 MAX_GAME_LENGTH = 256
 
@@ -45,6 +49,9 @@ class Simulation:
     def get_tanks(self):
         return self.state.tanks
 
+    def get_bullets(self):
+        return self.state.bullets
+
     def step(self):
         if self.state.frames_passed > MAX_GAME_LENGTH:
             self.ended = True
@@ -56,16 +63,31 @@ class Simulation:
         for tank in self.get_tanks():
             tank.executeActions(self.state)
 
+        for bullet in self.get_bullets():
+            bullet.update()
+
         visual_debug.DRAW_WORLD(self.state)
         self.state.frames_passed += 1
 
-        pass
+        time.sleep(0.017)
+
+        return self.get_tanks()[0].actions
 
 
 if __name__ == "__main__":
     level_loader = LevelLoader()
 
-    a = Simulation(level_loader.load_level("levels/level0.png"), [1, 1])
+    ai = EvaluationTree()
+    ai.leaf = False
+    ai.condition = Condition(0, (Object.TANK, 5))
+
+    ai.set_yes_child(EvaluationTree())
+    ai.set_no_child(EvaluationTree())
+
+    ai.yes().actions = [Action(0, (Object.TANK,)), Action(2, ())]
+    ai.no().actions = [Action(2, ())]
+
+    a = Simulation(level_loader.load_level("levels/level0.png"), [ai, ai])
 
     while not a.has_ended():
         print(a.step())
