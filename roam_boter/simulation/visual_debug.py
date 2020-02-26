@@ -21,8 +21,7 @@ def DRAW_WORLD(state):
             pygame.draw.rect(screen, color, (x * 10, y * 10, 10, 10))
 
     for tank in state.tanks:
+        print(tank.x, tank.y)
         pygame.draw.rect(screen, (128, 128, 128), (int(tank.x * 10), int(tank.y * 10), 10, 10))
-
-
 
     pygame.display.flip()

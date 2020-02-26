@@ -4,7 +4,7 @@ class Tank:
     x = 0
     y = 0
     rotation = 0
-    spawn = (0, 0)
+    spawn = (0.0, 0.0)
 
     def __init__(self, ai):
         self.ai = ai

@@ -6,5 +6,5 @@ class AI:
         pass
 
     def evaluate(self, simulation_state) -> [Action]:
-        return []
+        pass
 
