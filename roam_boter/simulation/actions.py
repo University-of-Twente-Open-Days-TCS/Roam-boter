@@ -4,6 +4,10 @@ from bullet import Bullet
 from utils import get_nearest_tank, get_nearest_bullet, get_nearest_level_object, move_to_position, move_from_position
 
 
+# An action executable by a tank
+# Contains an id indicating which action in the ACTIONS list.
+# params is a tuple of parameters. VERY IMPORTANT
+# hint: tuples of 1 size can be made with (x, )
 class Action:
     id = 0
     params = ()

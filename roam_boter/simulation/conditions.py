@@ -5,6 +5,9 @@ from utils import distance_squared
 from math import sqrt
 
 
+# A condition has an id and a tuple of arguments. VERY IMPORTANT THAT IT IS ACTUALLY A TUPLE
+# hint: tuples of 1 size can be made with (x, )
+# id indicates which condition in the CONDITIONS list.
 class Condition:
     id = -1
     params = ()
