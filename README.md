@@ -13,11 +13,11 @@ Make sure you have docker and docker-compose installed. It is important that doc
 
 Build the docker containers:
 
-3. `docker-compose build` 
+3. `sudo docker-compose build` 
 
 Start the docker containers:
 
-4. `docker-compose up`
+4. `sudo docker-compose up`
 
 The above commands will have initialized and started the containers. The django web server is not ready yet. First the database needs to initialized and a super user must be created. 
 To do this you first have to open a new terminal and get inside the 'web' docker container.
