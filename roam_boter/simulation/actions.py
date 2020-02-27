@@ -1,7 +1,7 @@
 from objects import Object
 from bullet import Bullet
 
-from utils import get_nearest_tank, get_nearest_bullet, get_nearest_level_object, move_to_position, move_from_position
+from utils import *
 
 
 # An action executable by a tank
@@ -15,7 +15,6 @@ class Action:
     def __init__(self, id=-1, params=()):
         self.id = id
         self.params = params
-        print(self.params)
         pass
 
     def execute(self, tank, state):
@@ -31,9 +30,9 @@ def move_to_nearest_object(tank, state, obj):
 
     if obj == Object.TANK:
         # find nearest tank to move to.
-        tank = get_nearest_tank(state, tank)
-        if tank is not None:
-            goal = tank.get_pos()
+        other_tank = get_nearest_tank(state, tank)
+        if other_tank is not None:
+            goal = other_tank.get_pos()
         pass
 
     elif obj == Object.BULLET:
@@ -57,9 +56,9 @@ def move_from_nearest_object(tank, state, obj):
 
     if obj == Object.TANK:
         # find nearest tank to move to.
-        tank = get_nearest_tank(state, tank)
-        if tank is not None:
-            goal = tank.get_pos()
+        other_tank = get_nearest_tank(state, tank)
+        if other_tank is not None:
+            goal = other_tank.get_pos()
         pass
 
     elif obj == Object.BULLET:
@@ -77,6 +76,23 @@ def move_from_nearest_object(tank, state, obj):
     pass
 
 
+def aim_to_nearest_object(tank, state, obj):
+    aim_goal = None
+    if obj == Object.TANK:
+        other_tank = get_nearest_tank(state, tank)
+        if other_tank is not None:
+            aim_goal = other_tank.get_pos()
+
+    elif obj == Object.BULLET:
+        bullet = get_nearest_bullet(state, tank)
+        if bullet is not None:
+            aim_goal = bullet.get_pos()
+
+    else:
+        aim_goal = get_nearest_level_object(state, tank, obj)
+    aim_to_position(state, tank, aim_goal)
+
+
 def shoot(tank, state):
     if state.frames_passed >= tank.shoot_ready:
         bullet = Bullet(tank)
@@ -88,5 +104,6 @@ def shoot(tank, state):
 ACTIONS = [
     move_to_nearest_object,
     move_from_nearest_object,
+    aim_to_nearest_object,
     shoot,
 ]

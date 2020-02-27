@@ -5,10 +5,13 @@ import visual_debug
 from EvaluationTree import EvaluationTree
 from conditions import Condition
 from actions import Action
+from playback import PlayBack, PlayBackEncoder
+
+import json
 
 import time
 
-MAX_GAME_LENGTH = 256
+MAX_GAME_LENGTH = 1000
 
 
 class SimulationState:
@@ -28,6 +31,8 @@ class Simulation:
         self.ended = False
         self.state = SimulationState(level, players)
         self.set_starting_position()
+        self.winner = None
+        self.playback = PlayBack(level)
 
     def set_starting_position(self):
         spawns = self.get_spawns()
@@ -40,7 +45,7 @@ class Simulation:
         for y, row in enumerate(self.state.level):
             for x, cell in enumerate(row):
                 if cell == Object.SPAWN:
-                    result.append((x, y))
+                    result.append((float(x), float(y)))
         return result
 
     def has_ended(self):
@@ -53,8 +58,9 @@ class Simulation:
         return self.state.bullets
 
     def step(self):
-        if self.state.frames_passed > MAX_GAME_LENGTH:
+        if self.state.frames_passed > MAX_GAME_LENGTH or len(self.get_tanks()) <= 1:
             self.ended = True
+            self.playback.winner = self.get_winner()
             return
 
         for tank in self.get_tanks():
@@ -64,14 +70,25 @@ class Simulation:
             tank.executeActions(self.state)
 
         for bullet in self.get_bullets():
-            bullet.update()
+            bullet.update(self.state)
+
+        for tank in self.get_tanks():
+            if tank.get_health() <= 0:
+                self.state.tanks.remove(tank)
 
         visual_debug.DRAW_WORLD(self.state)
         self.state.frames_passed += 1
 
-        time.sleep(0.017)
+        self.playback.add_frame(self.state)
 
-        return self.get_tanks()[0].actions
+    def get_playback(self):
+        return self.playback
+
+    def get_winner(self):
+        if len(self.get_tanks()) == 1:
+            return self.get_tanks()[0].ai
+        else:
+            return None
 
 
 if __name__ == "__main__":
@@ -84,11 +101,20 @@ if __name__ == "__main__":
     ai.set_yes_child(EvaluationTree())
     ai.set_no_child(EvaluationTree())
 
-    ai.yes().actions = [Action(0, (Object.TANK,)), Action(2, ())]
-    ai.no().actions = [Action(2, ())]
+    ai.yes().actions = [Action(0, (Object.TANK,)), Action(3, ()), Action(2, (Object.TANK, ))]
+    ai.no().actions = [Action(3, ())]
 
     a = Simulation(level_loader.load_level("levels/level0.png"), [ai, ai])
 
     while not a.has_ended():
         print(a.step())
 
+    if a.get_winner() is not None:
+        print("PLAYER: " + a.__str__() + " has won!!!!")
+    else:
+        print("Its a tie")
+
+    encoder = PlayBackEncoder()
+
+    print(encoder.encode(a.get_playback()))
+    # PlayBackEncoder.encode(a.get_playback())

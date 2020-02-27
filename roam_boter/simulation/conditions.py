@@ -24,9 +24,9 @@ def distance_to_nearest_object_greater_than(tank, state, obj, distance):
 
     if obj == Object.TANK:
         for t in state.tanks:
-
+            if t == tank:
+                continue
             if sqrt(distance_squared(t.get_pos(), tank.get_pos())) > distance:
-                print("Returning true")
                 return True
             else:
                 return False
