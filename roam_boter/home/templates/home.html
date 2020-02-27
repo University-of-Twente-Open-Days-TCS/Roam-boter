@@ -15,13 +15,22 @@
         <p>Build and Test your own AI against the wits of others.</p>
     </div>
 
-    <div>
-        <button type="submit" id="save-ai-button">Save AI</button>
-    </div>
+    <br>
+    <br>
+    {% if not request.session.in_team %} 
+        <div>
+            <h3>Enter Team</h3>
+            <form action="/team/enter" method="POST">
+                {% csrf_token %}
+                <input type="number" id="tcode" name="team_code" placeholder="Your team code">
+                <input type="submit" value="Enter">
+            </form>
+        </div>
+    {% endif %}
     
+    {% debug %}
     
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'home/js/home.js' %}"></script>
 {% endblock %}

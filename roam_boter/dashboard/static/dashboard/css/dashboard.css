@@ -1,0 +1,96 @@
+/* MAIN CONTAINER */
+
+div.dash-container {
+    padding: 2rem 4rem;
+    height: 100vh;
+}
+
+div.dash-content {
+    height: 100%;
+    max-height: 100%;
+
+}
+
+div.dash-grid-wrapper {
+}
+
+div.dash-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-column-gap: 1rem;
+    
+    max-height: 90%;
+}
+
+.dash-grid .grid-item {
+    max-height: inherit;
+}
+
+.dash-content h1 {
+    text-align: center;
+    margin:0;
+}
+
+/* WORKSHOP MENU */
+.workshop-menu {
+    text-align: center;
+}
+
+.danger-zone h4 {
+    display: inline-block;
+}
+
+
+
+
+/* TEAM CODE */
+div.team-codes {
+    text-align: left;
+    max-height: 80%;
+}
+
+.team-codes h2 {
+    text-align: center;
+}
+
+.team-codes div.team-code-list {
+    overflow-y: scroll;
+    max-height: 80vh;
+}
+
+.team-codes div.team-code-list h4 {
+    text-align: center;
+}
+
+.team-codes ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.team-codes li {
+    background-color: #eee;
+    padding: 2px;
+}
+
+
+.team-codes li:nth-child(even) {
+    background-color: #ddd;
+}
+
+.team-codes li span {
+    float: right;
+    margin-right: 1rem;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+
+

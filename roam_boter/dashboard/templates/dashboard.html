@@ -1,0 +1,96 @@
+{% extends "dashboardbase.html" %}
+{% load static %}
+
+{% block content %}
+
+    {# Check whether user is logged in #}
+    {% if user.is_authenticated %}
+
+        <div class='dash-container'>
+            {# TODO: workshops, generate codes #}
+
+            <div class='dash-content'>
+               
+                <h1>RoamBot-er Dashboard</h1>
+                <div class='dash-grid-wrapper'>
+                    <div class='dash-grid'>
+                        <div class='workshop-menu grid-item'>
+    
+                            <h2>Workshop status: 
+                                {% if workshop %}
+                                    <span class='green'>Open</span>
+                                {% else %}
+                                    <span class='red'>Closed</span>
+                                {% endif %}
+                            </h2>
+                            
+                            <div class='menu-buttons'>
+                                {% if workshop %}
+                                    <form method="POST" action="/dashboard/generate/" id='generate-form'>
+                                        {% csrf_token %}
+    
+                                        <label for="amount">Amount</label>
+                                        <input type="number" name="amount" placeholder="Number of new codes"></input>
+                                        <input type="submit" value="Generate" id="generate-team-codes-button"></input>
+    
+                                    </form>
+    
+                                    <br>
+                                    <div class='danger-zone'>
+                                        <h4 class='red'>Danger Zone:</h4>
+                                        <button type="button" id='close-workshop-button'>Close Workshop</button>
+                                    </div>
+    
+    
+                                {% else %}
+                                    <button type="button" id='open-workshop-button'>Open Workshop</button>
+                                {% endif %}
+                            </div>
+                        </div>
+    
+                        {% if workshop %}
+    
+                            <div class='team-codes grid-item'>
+                                <h2>Team Codes</h2>
+    
+                                <div class='team-code-list'>
+                                    {% if teams %}
+    
+                                        <ul>
+                                            {% for team in teams %}
+                                            <li>{{ team.team_code }} 
+                                                {% if team.active %}   
+                                                    <span class='green'>active</span>
+                                                {% endif %}
+                                            
+                                            </li> 
+                                            {% endfor %}
+                                        </ul>   
+    
+                                    {% else %}
+                                    
+                                        <h4>No team codes</h4>
+    
+                                    {% endif %}
+                                </div>
+    
+                            </div>    
+    
+                        {% endif %}
+                    </div>
+                </div> 
+            </div>
+
+        </div>
+
+
+    {% endif %}
+
+
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static '/dashboard/js/dashboard.js' %}"></script>
+{% endblock %}
+
+

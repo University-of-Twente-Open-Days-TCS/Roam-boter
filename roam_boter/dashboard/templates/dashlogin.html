@@ -1,0 +1,25 @@
+{% extends "dashboardbase.html" %}
+
+{% block content %}
+
+    <h1>Dashboard Login</h1>
+
+    {% if form.errors %}
+        <p>Incorrect username and password did not match.</p>
+    {% endif %}
+
+    <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        {{ form.username.label_tag }}
+        {{ form.username }}</br>
+
+        {{ form.password.label_tag }}
+        {{ form.password }}</br> 
+
+        <input type="submit" value="login" /> 
+        <input type="hidden" name="next" value="{% url 'dashboard' %}">
+
+    </form>
+
+{% endblock %}
