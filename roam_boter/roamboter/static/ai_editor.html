@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/konva@4.1.5/konva.min.js"></script>
+</head>
+<body>
+<div id="container"></div>
+<script>
+    // first we need to create a stage
+    var stage = new Konva.Stage({
+        container: 'container',   // id of container <div>
+        width: 500,
+        height: 500
+    });
+
+    // then create layer
+    var layer = new Konva.Layer();
+
+    spacing = 40;
+    line_height = 10;
+    class condition {
+
+        constructor() {
+
+            this.height = spacing;
+            this.falseNode = null;
+            this.trueNode = null;
+
+            //TODO: change
+            this.width = 100;
+            this.makeGroup();
+        }
+
+        makeGroup() {
+            var g = new Konva.Group({
+                draggable:true
+            });
+            var rect1 = new Konva.Rect({
+                x: 0,
+                y: 0,
+                width: this.width,
+                height: this.height,
+                fill: 'blue',
+                stroke: 'black',
+                strokeWidth: 2,
+                cornerRadius: 10,
+            });
+            const circle_radius = 10;
+            var falseCircle = new Konva.Circle({
+                y: rect1.height(),
+                x: 0,
+                radius: circle_radius,
+                fill: 'red',
+                stroke: 'black',
+            });
+            var trueCircle = new Konva.Circle({
+                y: rect1.height(),
+                x: rect1.width(),
+                radius: circle_radius,
+                fill: 'green',
+                stroke: 'black',
+            });
+
+            var trueDragCircle = new Konva.Circle({
+                draggable: true,
+                y: rect1.height(),
+                x: rect1.width(),
+                radius: circle_radius,
+                fill: 'white',
+                opacity: 0.5
+            });
+
+            var inputCircle = new Konva.Circle({
+                y: 0,
+                x: rect1.width() / 2,
+                radius: circle_radius,
+                fill: 'white',
+                stroke: 'black',
+            });
+
+            g.add(rect1);
+            g.add(inputCircle);
+            g.add(trueCircle);
+            trueDragCircle.on("dragstart", dragStartCondRes);
+            trueDragCircle.on("dragstart", dragEndCondRes);
+
+            g.add(trueDragCircle);
+            g.add(falseCircle);
+
+            this.group = g;
+        }
+    }
+
+    var dragArrow = null;
+    function dragStartCondRes(){
+        dragArrow = new Konva.Arrow({
+
+        });
+    }
+
+    function dragEndCondRes(){
+        // circle.setX(0);
+        // circle.setY(0);
+    }
+
+    class action {
+
+    }
+    var node1 = new condition();
+    layer.add(node1.group);
+    stage.add(layer);
+
+    // draw the image
+    layer.draw();
+</script>
+</body>
+</html>
