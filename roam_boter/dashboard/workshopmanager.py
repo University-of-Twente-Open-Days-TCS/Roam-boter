@@ -54,7 +54,7 @@ def link_session_to_team(team_code, session):
 
         if UserSession.objects.filter(team=team, session=session_id).exists():
             # session already exists
-            session['in_team'] = True
+            session['registered'] = True
             return True
 
 
@@ -62,7 +62,7 @@ def link_session_to_team(team_code, session):
         user_session.save()
 
         # make sure that the session is registered as active
-        session['in_team'] = True
+        session['registered'] = True
 
         return True
 

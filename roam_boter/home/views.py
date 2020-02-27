@@ -34,6 +34,7 @@ class EnterTeamView(View):
         if team_form.is_valid():
             # Link session to team TODO:
             team_code = team_form.cleaned_data['team_code']
+
             successfully_linked = link_session_to_team(team_code, request.session)
 
             if successfully_linked:
