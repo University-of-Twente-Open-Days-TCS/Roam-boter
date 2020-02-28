@@ -18,6 +18,7 @@
 
     spacing = 40;
     line_height = 10;
+
     class condition {
 
         constructor() {
@@ -33,9 +34,9 @@
 
         makeGroup() {
             var g = new Konva.Group({
-                draggable:true
+                draggable: true
             });
-            var rect1 = new Konva.Rect({
+            this.rect1 = new Konva.Rect({
                 x: 0,
                 y: 0,
                 width: this.width,
@@ -46,66 +47,162 @@
                 cornerRadius: 10,
             });
             const circle_radius = 10;
-            var falseCircle = new Konva.Circle({
-                y: rect1.height(),
+            this.falseCircle = new Konva.Circle({
+                y: this.rect1.height(),
                 x: 0,
                 radius: circle_radius,
                 fill: 'red',
                 stroke: 'black',
             });
-            var trueCircle = new Konva.Circle({
-                y: rect1.height(),
-                x: rect1.width(),
+            this.trueCircle = new Konva.Circle({
+                y: this.rect1.height(),
+                x: this.rect1.width(),
                 radius: circle_radius,
                 fill: 'green',
                 stroke: 'black',
             });
 
-            var trueDragCircle = new Konva.Circle({
+            this.trueDragCircle = new Konva.Circle({
                 draggable: true,
-                y: rect1.height(),
-                x: rect1.width(),
+                y: this.rect1.height(),
+                x: this.rect1.width(),
                 radius: circle_radius,
                 fill: 'white',
                 opacity: 0.5
             });
 
-            var inputCircle = new Konva.Circle({
+            this.inputCircle = new Konva.Circle({
                 y: 0,
-                x: rect1.width() / 2,
+                x: this.rect1.width() / 2,
                 radius: circle_radius,
                 fill: 'white',
                 stroke: 'black',
             });
 
-            g.add(rect1);
-            g.add(inputCircle);
-            g.add(trueCircle);
-            trueDragCircle.on("dragstart", dragStartCondRes);
-            trueDragCircle.on("dragstart", dragEndCondRes);
+            this.dragArrow = new Konva.Arrow({
+                x: 0,
+                y: 0,
+                points: [this.trueCircle.x(), this.trueCircle.y(), this.trueDragCircle.x(), this.trueDragCircle.y()],
+                pointerLength: 15,
+                pointerWidth: 15,
+                fill: 'black',
+                stroke: 'black',
+                strokeWidth: 4
+            });
 
-            g.add(trueDragCircle);
-            g.add(falseCircle);
+            g.add(this.rect1);
+            g.add(this.inputCircle);
+            g.add(this.trueCircle);
+            this.trueDragCircle.on("dragstart", this.dragStartCondRes);
+            this.trueDragCircle.on("dragmove", this.dragMoveCondRes);
+            this.trueDragCircle.on("dragend", this.dragEndCondRes);
+            g.add(this.dragArrow);
+            g.add(this.trueDragCircle);
+            g.add(this.falseCircle);
 
             this.group = g;
         }
+
+        dragStartCondRes() {
+            this.dragArrow = new Konva.Arrow({
+                x: 0,
+                y: 0,
+                points: [this.trueCircle.x(), this.trueCircle.y(), this.trueDragCircle.x(), this.trueDragCircle.y()],
+                pointerLength: 15,
+                pointerWidth: 15,
+                fill: 'black',
+                stroke: 'black',
+                strokeWidth: 4
+            });
+            layer.batchDraw();
+        }
+
+        dragMoveCondRes() {
+            this.dragArrow.points([this.trueCircle.x(), this.trueCircle.y(), this.trueDragCircle.x(), this.trueDragCircle.y()])
+            layer.batchDraw();
+        }
+
+        dragEndCondRes() {
+            // circle.setX(0);
+            // circle.setY(0);
+        }
     }
 
-    var dragArrow = null;
-    function dragStartCondRes(){
-        dragArrow = new Konva.Arrow({
+    {#The connection between two conditions or a condition and an action#}
+    class arrow {
 
-        });
+        {#The Konva arrow object#}
+        arrowline;
+
+        {#The source/origin group of nodes (condition)#}
+        src;
+
+        {#The destination group of nodes (condition/action)#}
+        dest;
+
+        {#Whether the arrow sprouts from a true or false condition#}
+        isTrue;
+
+        {#The starting coordinates on the canvas (absolute)#}
+        startpos;
+
+        {#The end coordinates on the canvas (absolute)#}
+        endpos;
+
+        {#Constructor takes the source node, destination node and whether it starts at the true- or false point as input#}
+        constructor(src, dest, isTrue) {
+            this.src = src;
+            this.dest = dest;
+            this.isTrue = isTrue;
+
+            if(isTrue) {
+                this.startpos = this.src.getTrueDotPosition();
+            } else {
+                this.startpos = this.src.getFalseDotPosition();
+            }
+            this.endpos = this.dest.getInputDotPosition();
+
+            this.arrowline = new Konva.Arrow({
+                x: 0,
+                y: 0,
+                points: this.startpos.concat(this.endpos),
+                stroke: 'black'
+            })
+            layer.draw();
+
+        }
+
+
+        {#Move the arrow and update the canvas#}
+        update() {
+            if(this.isTrue) {
+                this.startpos = this.src.getTrueDotPosition();
+            } else {
+                this.startpos = this.src.getFalseDotPosition();
+            }
+            this.endpos = this.dest.getInputDotPosition();
+
+            this.arrowline.points(this.startpos.concat(this.endpos))
+            layer.draw();
+
+        }
+
+        {#Remove the arrow from the canvas and set the corresponding values at the src&dest nodes to null#}
+        delete() {
+            if(this.isTrue) {
+                this.src.trueArrow = null;
+            } else {
+                this.src.falseArrow = null;
+            }
+            this.dest.inputArrow = null;
+            this.arrowline.destroy();
+            layer.draw();
+        }
     }
 
-    function dragEndCondRes(){
-        // circle.setX(0);
-        // circle.setY(0);
-    }
 
-    class action {
 
-    }
+
     var node1 = new condition();
     layer.add(node1.group);
     stage.add(layer);
