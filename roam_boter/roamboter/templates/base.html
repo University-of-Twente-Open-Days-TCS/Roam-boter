@@ -12,10 +12,11 @@
         <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
         
-        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}">
+        <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
 
         {# Stylesheets #}
-        <link rel="stylesheet" href="{% static 'base.css' %}">
+        <link rel="stylesheet" href="{% static '/css/base.css' %}">
+
 
         {# Fontawesome 5 #}
         {% load fontawesome_5 %}
@@ -31,7 +32,13 @@
         {% block content %}
         {% endblock %}
 
-        {% block extra_scripts %}
+        {# This will make the csrf token available in javascript at all times #}
+        {% csrf_token %}
+        <script>
+            const csrfToken = document.querySelector("input[name='csrfmiddlewaretoken']").value
+        </script>
+
+        {% block extra_js %}
         {% endblock %}
 
     </body>

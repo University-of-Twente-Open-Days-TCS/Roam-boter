@@ -15,25 +15,13 @@
         <p>Build and Test your own AI against the wits of others.</p>
     </div>
 
-    <br>
-    <br>
-    <div> 
-        <h2>You are in team: {{ request.session.team_id }}</h2>  
-        <button type="button">Load AI</button><br><br>
-        <button type="button">Play Match</button>
+    <div>
+        <button type="submit" id="save-ai-button">Save AI</button>
     </div>
     
-    <br>
-    <br>
-
-    <div>
-        <form method="POST" action="{% url 'leave_team_api' %}">
-            {% csrf_token %}
-            <input type="submit" value="Leave Team"></input>
-        </form>
-    </div>
     
 {% endblock %}
 
 {% block extra_js %}
+    <script src="{% static 'home/js/aimenu.js' %}"></script>
 {% endblock %}

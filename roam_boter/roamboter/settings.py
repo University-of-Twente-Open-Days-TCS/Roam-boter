@@ -24,7 +24,7 @@ SECRET_KEY = 'jpppj^ex3k^(04i&athc+^=*_&71qe!$%8syf2lkx6anmts@mm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,7 +41,10 @@ INSTALLED_APPS = [
 
     # Our Applications
     'roamboter',
+    'AIapi',
     'home',
+    'dashboard',
+
 ]
 
 MIDDLEWARE = [
@@ -108,6 +111,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# URLS used for logging in and logging out workshop owners.
+LOGIN_URL = "/dashboard/login"
+LOGOUT_REDIRECT_URL = "/dashboard/login"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -126,3 +132,27 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = '/static/'
+
+# LOGGING
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console' : {
+            'level' : 'DEBUG',
+            'class' : 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'matchmaking.views' : {
+            'handlers': ['console'],
+            'level' : 'DEBUG',
+            'propogate': True,
+        },
+        'debugLogger' : {
+            'handlers': ['console'],
+            'level' : 'DEBUG',
+            'propogate': True,
+        }
+    },
+}

@@ -20,11 +20,14 @@ from django.contrib import admin
 from django.urls import path
 
 import home.urls as home_urls
+import AIapi.urls as AIapi_urls
+import dashboard.urls as dashboard_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'', include(home_urls)),
-]
+    path(r'ai/', include(AIapi_urls)),
+    path(r'dashboard/', include(dashboard_urls)),
+    path(r'', include(home_urls)),]
 
 
 
