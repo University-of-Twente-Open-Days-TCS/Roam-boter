@@ -120,3 +120,8 @@ def all_workshops_closed():
     """Returns whether all workshops are closed"""
     open_workshops = Workshop.objects.filter(workshop_open=True).count()
     return open_workshops == 0
+
+
+
+if __name__ == "__main__":
+    print(sys.path)
