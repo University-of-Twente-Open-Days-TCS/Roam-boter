@@ -15,7 +15,7 @@
 
     // then create layer
     var layer = new Konva.Layer();
-
+    var templayer = new Konva.Layer();
     spacing = 40;
     line_height = 10;
     class condition {
@@ -23,8 +23,6 @@
         constructor() {
 
             this.height = spacing;
-            this.falseNode = null;
-            this.trueNode = null;
 
             //TODO: change
             this.width = 100;
@@ -61,16 +59,19 @@
                 stroke: 'black',
             });
 
-            var trueDragCircle = new Konva.Circle({
+            //this is an invisible circle used only for making a new connection between nodes
+            this.trueDragCircle = new Konva.Circle({
                 draggable: true,
                 y: rect1.height(),
                 x: rect1.width(),
                 radius: circle_radius,
-                fill: 'white',
+                fill: 'black',
                 opacity: 0.5
             });
+            this.trueDragCircle.originalX = this.trueDragCircle.x();
+            this.trueDragCircle.originalY = this.trueDragCircle.y();
 
-            var inputCircle = new Konva.Circle({
+            this.inputCircle = new Konva.Circle({
                 y: 0,
                 x: rect1.width() / 2,
                 radius: circle_radius,
@@ -79,36 +80,60 @@
             });
 
             g.add(rect1);
-            g.add(inputCircle);
+            g.add(this.inputCircle);
             g.add(trueCircle);
-            trueDragCircle.on("dragstart", dragStartCondRes);
-            trueDragCircle.on("dragstart", dragEndCondRes);
 
-            g.add(trueDragCircle);
+            //when the invisible circle starts to be dragged create a new temporary arrow
+            this.trueDragCircle.on("dragstart", function(){
+                this.tempX = this.getAbsolutePosition().x;
+                this.tempY = this.getAbsolutePosition().y;
+                //it is important that the invisible circle is in a different layer in order to check what is under the cursor it later
+                this.moveTo(templayer);
+                this.tempArrow = new Konva.Arrow({
+                    stroke: "black",
+                    fill: "black"
+                });
+                layer.add(this.tempArrow);
+            });
+
+            //update the temporary arrow
+            this.trueDragCircle.on("dragmove", function(){
+                this.tempArrow.points([this.tempX, this.tempY, stage.getPointerPosition().x, stage.getPointerPosition().y]);
+                layer.draw();
+            });
+
+            //when the drag is enden return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
+            this.trueDragCircle.on("dragend", function(){
+                var touchPos = stage.getPointerPosition();
+                var intersect = layer.getIntersection(touchPos);
+                console.log(intersect);
+                //TODO: shit doen hier
+
+                this.moveTo(g);
+                this.x(this.originalX);
+                this.y(this.originalY);
+                this.tempArrow.destroy();
+                this.tempArrow = null;
+                layer.draw();
+                templayer.draw();
+            });
+            g.add(this.trueDragCircle);
             g.add(falseCircle);
 
             this.group = g;
         }
+        dragStartCondRes(){
+            this.trueDragCircle.moveTo(templayer);
+        }
     }
 
-    var dragArrow = null;
-    function dragStartCondRes(){
-        dragArrow = new Konva.Arrow({
 
-        });
-    }
-
-    function dragEndCondRes(){
-        // circle.setX(0);
-        // circle.setY(0);
-    }
-
-    class action {
-
-    }
     var node1 = new condition();
+    var node2 = new condition();
     layer.add(node1.group);
+    layer.add(node2.group);
     stage.add(layer);
+    stage.add(templayer);
 
     // draw the image
     layer.draw();
