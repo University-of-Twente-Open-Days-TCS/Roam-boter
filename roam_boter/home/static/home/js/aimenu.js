@@ -17,7 +17,7 @@ async function postAI() {
         method: "POST",
         headers: {
             'Content-Type' : 'application/json',
-            'X_CSRFTOKEN' : getCsrfToken()
+            'X_CSRFTOKEN' : csrfToken
         },
         body: JSON.stringify({ data : "data-to-send" })
     })

@@ -32,9 +32,12 @@
         {% block content %}
         {% endblock %}
 
-        {# JQUERY #} 
-        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-        <script src="{% static '/js/utilities.js' %}"></script>
+        {# This will make the csrf token available in javascript at all times #}
+        {% csrf_token %}
+        <script>
+            const csrfToken = document.querySelector("input[name='csrfmiddlewaretoken']").value
+        </script>
+
         {% block extra_js %}
         {% endblock %}
 

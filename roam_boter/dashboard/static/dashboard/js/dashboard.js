@@ -1,11 +1,7 @@
 window.onload = initializeDashboard()
 
-var csrfToken
 
 function initializeDashboard() {
-    // Get CSRF token for API calls
-    csrfToken = getCsrfToken()
-
     // Add event listeners to the buttons
     let closeWorkshopButton = document.getElementById("close-workshop-button")
     if (closeWorkshopButton) closeWorkshopButton.addEventListener("click", closeWorkshop)
@@ -33,7 +29,7 @@ async function closeWorkshopCall() {
     const response = await fetch("/dashboard/close/", {
         method: "POST",
         headers: {
-            'X_CSRFTOKEN' : csrfToken
+            'X_CSRFTOKEN' : csrfToken  
         }
     })
 
