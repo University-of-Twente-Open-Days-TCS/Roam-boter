@@ -30,11 +30,14 @@
             this.makeGroup();
         }
 
+        //creates the group which represents a condition
         makeGroup() {
             var g = new Konva.Group({
                 draggable: true
             });
-            this.rect1 = new Konva.Rect({
+
+            //base rectangle which contains the condition text
+            this.rect = new Konva.Rect({
                 x: 0,
                 y: 0,
                 width: this.width,
@@ -45,16 +48,20 @@
                 cornerRadius: 10,
             });
             const circle_radius = 10;
+
+            //circle from which the false connection is made to another node
             this.falseCircle = new Konva.Circle({
-                y: this.rect1.height(),
+                y: this.rect.height(),
                 x: 0,
                 radius: circle_radius,
                 fill: 'red',
                 stroke: 'black',
             });
+
+            //circle from which the true connection is made to another node
             this.trueCircle = new Konva.Circle({
-                y: this.rect1.height(),
-                x: this.rect1.width(),
+                y: this.rect.height(),
+                x: this.rect.width(),
                 radius: circle_radius,
                 fill: 'green',
                 stroke: 'black',
@@ -63,8 +70,8 @@
             //this is an invisible circle used only for making a new connection between nodes
             this.trueDragCircle = new Konva.Circle({
                 draggable: true,
-                y: this.rect1.height(),
-                x: this.rect1.width(),
+                y: this.rect.height(),
+                x: this.rect.width(),
                 radius: circle_radius,
                 fill: 'black',
                 opacity: 0.5
@@ -72,9 +79,10 @@
             this.trueDragCircle.originalX = this.trueDragCircle.x();
             this.trueDragCircle.originalY = this.trueDragCircle.y();
 
+            //circle to which connections can be made by dragging arrows on it
             this.inputCircle = new Konva.Circle({
                 y: 0,
-                x: this.rect1.width() / 2,
+                x: this.rect.width() / 2,
                 radius: circle_radius,
                 fill: 'white',
                 stroke: 'black',
