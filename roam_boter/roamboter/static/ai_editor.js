@@ -11,7 +11,7 @@
     spacing = 40;
     line_height = 10;
     const circle_radius = 10;
-    var inputDict = {};
+    var inputDict = new Map([]);
 
     class condition {
         constructor() {
@@ -33,6 +33,22 @@
             this.createDragCircle(this.trueCircle, true);
             this.createDragCircle(this.falseCircle, false);
             this.createInputCircle();
+            let node = this;
+            this.group.on("dragmove", function(){
+               node.updateArrows()
+            });
+        }
+
+        updateArrows(){
+            if(this.trueArrow != null){
+                this.trueArrow.update();
+            }
+            if(this.falseArrow != null){
+                this.falseArrow.update();
+            }
+            if(this.inputArrow != null){
+                this.inputArrow.update();
+            }
         }
 
         //circle to which connections can be made by dragging arrows on it
@@ -44,7 +60,8 @@
                 fill: 'white',
                 stroke: 'black',
             });
-            inputDict[this.inputCircle] = this;
+            inputDict.set(this.inputCircle, this);
+
             this.group.add(this.inputCircle);
         }
 
@@ -136,9 +153,8 @@
                 console.log(intersect);
                 console.log(inputDict[intersect]);
                 //TODO: shit doen hier
-                if (intersect in inputDict){
-                    new arrow(node, inputDict[intersect], condition);
-                    console.log(inputDict);
+                if (inputDict.has(intersect)){
+                    new arrow(node, inputDict.get(intersect), condition);
                 }
 
 
@@ -199,10 +215,12 @@
             this.isTrue = isTrue;
             if(isTrue) {
                 this.startpos = this.src.getTrueDotPosition();
+                this.src.trueArrow = this;
             } else {
                 this.startpos = this.src.getFalseDotPosition();
             }
             this.endpos = this.dest.getInputDotPosition();
+            this.dest.inputArrow = this;
 
             this.arrowline = new Konva.Arrow({
                 x: 0,
@@ -253,5 +271,4 @@
     stage.add(layer);
     stage.add(templayer);
 
-    // draw the image
     layer.draw();
