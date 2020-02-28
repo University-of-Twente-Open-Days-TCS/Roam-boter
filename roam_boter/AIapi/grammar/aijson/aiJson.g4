@@ -13,7 +13,7 @@ root        : ROOT SC node ;
 node        : condition | actionblock;
 
 condition   : LBR CONDITION SC conditiondata RBR ;
-conditiondata : LBR type_id COM childtrue COM childfalse (COM attributes)? RBR ;
+conditiondata : LBR type_id COM childtrue COM childfalse COM attributes RBR ;
 childtrue   : CHILDTRUE SC node ;
 childfalse  : CHILDFALSE SC node ;
 
@@ -24,11 +24,11 @@ childfalse  : CHILDFALSE SC node ;
 
 actionblock : LBR ACTIONBLOCK SC actionlist RBR ;
 actionlist  : LB action (COM action)* RB ;
-action      : LBR type_id (COM attributes)? RBR;
+action      : LBR type_id COM attributes RBR;
 
 
 attributes          : ATTRIBUTES SC attributevalues ;
-attributevalues     : LBR attributevalue (COM attributevalue)* RBR ;
+attributevalues     : LBR (attributevalue (COM attributevalue)*)? RBR ;
 attributevalue      : APHSTRING SC value;
 value               : APHSTRING | INTEGER;
 
