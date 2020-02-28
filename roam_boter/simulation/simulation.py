@@ -6,6 +6,7 @@ from EvaluationTree import EvaluationTree
 from conditions import Condition
 from actions import Action
 from playback import PlayBack, PlayBackEncoder
+from level import Level
 
 import json
 
@@ -39,6 +40,10 @@ class Simulation:
         for i, tank in enumerate(self.get_tanks()):
             tank.spawn = spawns[i] + (0.5, 0.5)
             tank.set_pos(tank.spawn[0], tank.spawn[1])
+            if spawns[i][1] < len(self.state.level) / 2:
+                tank.set_rotation(180)
+            else:
+                tank.set_rotation(0)
 
     def get_spawns(self):
         result = []
@@ -104,7 +109,7 @@ if __name__ == "__main__":
     ai.yes().actions = [Action(0, (Object.TANK,)), Action(3, ()), Action(2, (Object.TANK, ))]
     ai.no().actions = [Action(3, ())]
 
-    a = Simulation(level_loader.load_level("levels/level0.png"), [ai, ai])
+    a = Simulation(level_loader.load_level("levels/level1.png"), [ai, ai])
 
     while not a.has_ended():
         print(a.step())

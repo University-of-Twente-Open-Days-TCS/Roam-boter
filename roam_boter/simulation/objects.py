@@ -20,3 +20,14 @@ ColorValues = {
     (255, 0, 0): Object.FLAG,
     (255, 255, 0): Object.HILL
 }
+
+
+ALL_OBJECTS = [
+    Object.WALL,
+    Object.SPAWN,
+    Object.HEAL,
+    Object.FLAG,
+    Object.HEAL,
+    Object.TANK,
+    Object.BULLET,
+]

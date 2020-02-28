@@ -11,13 +11,12 @@ tank_turret = pygame.image.load("debug_images/tank_turret.png")
 
 if VISUAL_DEBUG:
     display = pygame.display.set_mode((1920, 1080))
-    screen = pygame.Surface((480, 270))
+    screen = pygame.Surface((610, 410))
 
 
 def DRAW_WORLD(state):
     if not VISUAL_DEBUG:
         return
-
 
     screen.fill((255, 255, 255))
 

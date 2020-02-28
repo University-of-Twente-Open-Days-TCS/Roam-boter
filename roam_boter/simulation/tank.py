@@ -1,5 +1,10 @@
 from objects import Object
 
+import math
+
+TANK_TURN_SPEED = 2.5
+TURRET_TURN_SPEED = 2.3
+
 
 class Tank:
     x = 0
@@ -41,6 +46,12 @@ class Tank:
         self.x += x
         self.y += y
 
+    def move_forward(self, state):
+        dx = -math.sin(math.radians(self.rotation)) * self.speed
+        dy = -math.cos(math.radians(self.rotation)) * self.speed
+        if not self.check_collision(state, dx, dy):
+            self.move(dx, dy)
+
     def set_rotation(self, angle):
         self.rotation = angle
 
@@ -50,13 +61,28 @@ class Tank:
     def get_turret_rotation(self):
         return self.turret_rotation
 
+    def rotate_tank_towards(self, angle):
+        self.rotation %= 360
+        angle %= 360
+
+        difference = angle - self.rotation
+
+        if abs(difference) > 180:
+            self.rotation -= max(min(difference, TANK_TURN_SPEED), -TANK_TURN_SPEED)
+        else:
+            self.rotation += max(min(difference, TANK_TURN_SPEED), -TANK_TURN_SPEED)
+
     def rotate_turret_towards(self, angle):
         # self.turret_rotation = angle
+        self.turret_rotation %= 360
+        angle %= 360
 
-        if angle - self.turret_rotation < 180:
-            self.turret_rotation += min(angle - self.turret_rotation, 0.1)
+        difference = angle - self.turret_rotation
+
+        if abs(difference) > 180:
+            self.turret_rotation -= max(min(difference, TURRET_TURN_SPEED), -TURRET_TURN_SPEED)
         else:
-            self.turret_rotation -= min(self.turret_rotation - angle, 0.1)
+            self.turret_rotation += max(min(difference, TURRET_TURN_SPEED), -TURRET_TURN_SPEED)
 
     def collectActions(self, state):
         self.actions = self.ai.evaluate(self, state)
@@ -88,6 +114,8 @@ class Tank:
 
     def get_health(self):
         return self.health
+
+
 
 
 

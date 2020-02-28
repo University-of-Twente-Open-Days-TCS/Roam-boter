@@ -1,5 +1,6 @@
 import math
 
+
 def distance_squared(pos1: (float, float), pos2: (float, float)):
     x1, y1 = pos1
     x2, y2 = pos2
@@ -40,33 +41,31 @@ def move_to_position(state, tank, goal):
     x1, y1 = tank.get_pos()
     x2, y2 = goal
 
-    dx = min(max(x2 - x1, -tank.speed), tank.speed)
-    dy = min(max(y2 - y1, -tank.speed), tank.speed)
+    distance = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+
+    dx = (x2 - x1) / distance * tank.speed
+    dy = (y2 - y1) / distance * tank.speed
+
+    ndx, ndy = 0, 0
 
     if not tank.check_collision(state, dx=dx):
-        tank.move(dx, 0)
+        ndx = dx
 
-    if not tank.check_collision(state, dy=dy):
-        tank.move(0, dy)
+    if not tank.check_collision(state, dx=ndx, dy=dy):
+        ndy = dy
 
-    angle_tank_towards_position(state, tank, (tank.get_pos()[0] - x1, tank.get_pos()[1] - y1))
+    goal_angle = angle_tank_towards_position(state, tank, (ndx, ndy))
+    angle_difference = ((goal_angle % 360) - (tank.get_rotation() % 360)) % 360
+    if angle_difference < 90 or angle_difference > 270:
+        tank.move_forward(state)
 
 
 def move_from_position(state, tank, goal):
-    x1, y1 = tank.get_pos()
-    x2, y2 = goal
-
-    dx = min(max(x2 - x1, -tank.speed), tank.speed)
-    dy = min(max(y2 - y1, -tank.speed), tank.speed)
-
-    angle_tank_towards_position(state, tank, (dx, dy))
-    tank.set_pos(x1 - dx, y1 - dy)
+    move_to_position(state, tank, -goal)
 
 
 def angle_tank_towards_position(state, tank, goal):
     dx, dy = goal
-
-    print(dx, dy)
 
     if abs(dy) < 0.00001:
         if abs(dx) < 0.00001:
@@ -84,7 +83,9 @@ def angle_tank_towards_position(state, tank, goal):
         else:
             angle_towards_goal = math.degrees(math.atan2(-dx, -dy))
 
-    tank.set_rotation(angle_towards_goal)
+    tank.rotate_tank_towards(angle_towards_goal)
+    return angle_towards_goal
+
 
 def aim_to_position(state, tank, goal):
     gx, gy = goal

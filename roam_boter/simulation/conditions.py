@@ -41,6 +41,7 @@ def distance_to_nearest_object_greater_than(tank, state, obj, distance):
     # search through objects on state.level
     pass
 
+
 def distance_to_nearest_object_smaller_than(tank, state, obj, distance):
     # check if object is tank:
     if obj == Object.TANK:
@@ -51,6 +52,7 @@ def distance_to_nearest_object_smaller_than(tank, state, obj, distance):
                 return False
     pass
     # TODO: finish implementation
+
 
 CONDITIONS = [
     distance_to_nearest_object_greater_than,
