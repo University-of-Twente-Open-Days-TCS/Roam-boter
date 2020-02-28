@@ -11,6 +11,8 @@
     spacing = 40;
     line_height = 10;
 
+    var startnode = new startNode();
+
     class condition {
 
         constructor() {
@@ -193,6 +195,207 @@
             this.dest.inputArrow = null;
             this.arrowline.destroy();
             layer.draw();
+        }
+    }
+
+    //Action (NOT A NODE), has zero or more attributes, by default null
+    class action {
+        id;
+        object;
+        dir;
+        deg;
+        label;
+
+        constructor(id, object  = null, dir = null, deg = null, label = null) {
+           this.id = id;
+           this.object = object;
+           this.dir = dir;
+           this.deg = deg;
+           this.label = label;
+        }
+    }
+
+    class startNode {
+        arrow;
+        constructor() {
+        //    bla insert shape and a point which can be dragged to a condition/action
+        }
+    }
+
+    function treeToJson(startnode) {
+        return jsonify(startnode.arrow.dest);
+    }
+
+
+    //assumptions: condition node class = condition, action node class = actionNode, within an actionNode are zero or more actions in a list called actionList. the action object class is called action, has an id and possible parameters.
+    function jsonify(node) {
+        // Check if the current node is a condition, otherwise it is an actionNode
+        if(node instanceof condition) {
+
+            let tree = {};
+            tree.condition = {};
+
+            //case Condition:
+            switch(node.id) {
+                //distance to nearest object greater than distance
+                case 1:
+                    tree.condition.push({"type-id": 1,
+                                        "child-true": jsonify(node.trueArrow.dest),
+                                        "child-false": jsonify(node.falseArrow.dest),
+                                        "attributes": {"distance": node.distance,
+                                                        "object": node.object}
+                                    });
+
+                    break;
+
+                //object visible
+                case 2:
+                    tree.condition.push({"type-id": 2,
+                                        "child-true": jsonify(node.trueArrow.dest),
+                                        "child-false": jsonify(node.falseArrow.dest),
+                                        "attributes": {"object": node.object}
+                                    });
+                    break;
+
+                //aimed at object
+                case 3:
+                    tree.condition.push({"type-id": 3,
+                                        "child-true": jsonify(node.trueArrow.dest),
+                                        "child-false": jsonify(node.falseArrow.dest),
+                                        "attributes": {"object": node.object}
+                                    });
+
+                    break;
+
+                // if object exists
+                case 4:
+                    tree.condition.push({"type-id": 4,
+                                        "child-true": jsonify(node.trueArrow.dest),
+                                        "child-false": jsonify(node.falseArrow.dest),
+                                        "attributes": {"object": node.object}
+                                    });
+
+                    break;
+
+                //bullet ready
+                case 5:
+                    tree.condition.push({"type-id": 5,
+                                        "child-true": jsonify(node.trueArrow.dest),
+                                        "child-false": jsonify(node.falseArrow.dest),
+                                        "attributes": {}
+                                    });
+
+                    break;
+
+                //if label set
+                case 6:
+                    tree.condition.push({"type-id": 6,
+                                        "child-true": jsonify(node.trueArrow.dest),
+                                        "child-false": jsonify(node.falseArrow.dest),
+                                        "attributes": {"label": node.label}
+                                    });
+
+                    break;
+
+                //health greater than amount
+                case 7:
+                    tree.condition.push({"type-id": 7,
+                                        "child-true": jsonify(node.trueArrow.dest),
+                                        "child-false": jsonify(node.falseArrow.dest),
+                                        "attributes": {"amount": node.amount}
+                                    });
+
+
+                    break;
+
+                default:
+                //Raise error, wrong ID
+
+            }
+
+        } else if(node instanceof actionNode) {
+
+            let tree = {};
+            tree.actionblock = [];
+
+            //Iterate over all actions and add its json to the actionblock
+            node.actionList.forEach(function(action){
+
+            //case Action:
+            switch(action.id) {
+                // Finds shortest path to reach given object.
+                case 1:
+                    tree.actionblock.push({"type-id": 1, "attributes": {"object": action.object}});
+
+                    break;
+                //Follows a pre-defined path clockwise or anticlockwise along the map
+                case 2:
+                    tree.actionblock.push({"type-id": 2, "attributes": {}});
+                    break;
+
+                // Patrols in a possible eight-figure around a location.
+                case 3:
+                    tree.actionblock.push({"type-id": 3, "attributes": {"object": action.object}});
+                    break;
+
+
+                //Keeps moving in a straight away from object, if wall is hit keeps increasing either x or y-value to increase distance
+                case 4:
+                    tree.actionblock.push({"type-id": 4, "attributes": {"object": action.object}});
+                    break;
+
+
+                //Aims at an object. It aims according to the predicted position and bullet travel time
+                case 5:
+                    tree.actionblock.push({"type-id": 5, "attributes": {"object": action.object}});
+                    break;
+
+
+                //Aims at a certain direction based on either the tank or map
+                case 6:
+                    tree.actionblock.push({"type-id": 6, "attributes": {"dir": action.dir}});
+                    break;
+
+
+                //Aims at a certain direction based on either the tank or map
+                case 7:
+                    tree.actionblock.push({"type-id": 7, "attributes": {"deg": action.deg}});
+                    break;
+
+                //Fires a bullet
+                case 8:
+                    tree.actionblock.push({"type-id": 8, "attributes": {}});
+                    break;
+                //Blows up your own tank, dealing equal damage to your surroundings
+                case 9:
+                    tree.actionblock.push({"type-id": 9, "attributes": {}});
+
+                    break;
+                //Sets a certain label to true
+                case 10:
+                    tree.actionblock.push({"type-id": 10, "attributes": {"label": action.label}});
+
+                    break;
+
+                //Sets a certain label to false
+                case 11:
+                    tree.actionblock.push({"type-id": 10, "attributes": {"label": action.label}});
+
+                    break;
+
+                //Sets a certain label to true for X seconds
+                case 12:
+                    tree.actionblock.push({"type-id": 10, "attributes": {"label": action.label}});
+
+                    break;
+
+                default:
+                    //Raise error, wrong ID
+            }});
+
+            return tree;
+        } else {
+            //Raise error, is not cond or act
         }
     }
 
