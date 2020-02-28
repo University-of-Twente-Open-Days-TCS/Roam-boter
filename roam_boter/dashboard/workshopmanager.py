@@ -8,14 +8,14 @@ import logging
 logger = logging.getLogger("debugLogger")
 
 
-'''
-Creates 'amount' teams and generates corresponding team codes.
-team code generation is done randomly. A random number is generated and if this number does not yet exist in another team it is used as a team code.
-Note that team codes do not uniquely identify a team. It is possible that two teams from two different workshops have the same team code.
-'''
-def generate_teamcodes(workshop, amount):
+def generate_teamcodes(amount):
+    """
+    Creates 'amount' teams and generates corresponding team codes.
+    team code generation is done randomly. A random number is generated and if this number does not yet exist in another team it is used as a team code.
+    Note that team codes do not uniquely identify a team. It is possible that two teams from two different workshops have the same team code.
+    """
+    workshop = get_cur_workshop()
 
-    # get list of team codes
     team_codes = list(Team.objects.filter(workshop=workshop).values('team_code'))
     team_codes = list(map(lambda x: x['team_code'], team_codes))
 
@@ -38,11 +38,13 @@ def generate_teamcodes(workshop, amount):
                 generated_code = True
 
 
-'''
-Links a session to a team. This way users can enter a team with just a team code.
-'''
-def link_session_to_team(team_code, session):
+def link_user_session_to_team(team_code, session):
+    """Links a user session to team specified by the team code"""
+    if session.session_key is None:
+        raise ValidationError("Session does not exist")
+
     session_id = session.session_key
+
     if all_workshops_closed():
         raise ValidationError("No workshop is open")
 
@@ -54,15 +56,14 @@ def link_session_to_team(team_code, session):
 
         if UserSession.objects.filter(team=team, session=session_id).exists():
             # session already exists
-            session['registered'] = True
+            session['team_id'] = team.id
             return True
-
 
         user_session = UserSession(team=team, session=session_id)
         user_session.save()
 
         # make sure that the session is registered as active
-        session['registered'] = True
+        session['team_id'] = team.id
 
         return True
 
@@ -70,17 +71,52 @@ def link_session_to_team(team_code, session):
     return False
 
 
+def remove_user_session(session):
+    """Removes a user session ID. Including the related UserSession"""
+    session_id = session.session_key
+
+    # Delete UserSession object related to the key
+    userSession = UserSession.objects.filter(session=session_id)
+
+    if userSession.exists():
+        # Delete all sessions related to the key
+        userSession.delete()
+
+    # Delete the session
+    session.clear()
 
 
-# Gets the current open workshop.
+def open_workshop():
+    """Opens a workshop. Returns whether successful."""
+    if not all_workshops_closed():
+        return False
+
+    # open workshop
+    workshop = Workshop(workshop_open=True)
+    workshop.save()
+    return True
+
+def close_workshop():
+    """Closes a workshop. Returns whether successful."""
+    if all_workshops_closed():
+        # Workshops already closed
+        return False
+
+    else:
+        cur_workshop = get_cur_workshop()
+        cur_workshop.workshop_open = False
+        cur_workshop.save()
+        return True
+
+
+# UTILITIES
 def get_cur_workshop():
+    """Gets current open workshop"""
     return Workshop.objects.filter(workshop_open=True).first()
 
 
-# Checks whether all workshops are closed
+
 def all_workshops_closed():
+    """Returns whether all workshops are closed"""
     open_workshops = Workshop.objects.filter(workshop_open=True).count()
     return open_workshops == 0
-
-
-

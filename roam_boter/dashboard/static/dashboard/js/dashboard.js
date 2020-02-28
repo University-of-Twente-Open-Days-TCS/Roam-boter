@@ -21,7 +21,10 @@ function initializeDashboard() {
 // First confirms with user and then closes the current workshop
 function closeWorkshop() {
     if(window.confirm("Are you sure you want to close the workshop?")){
-        closeWorkshopCall().then(() => location.reload())
+        closeWorkshopCall().then((response) => {
+            console.log(response)
+            location.reload()
+        })
     }
 }
 

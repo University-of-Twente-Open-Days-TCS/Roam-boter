@@ -10,10 +10,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.http import HttpResponse, HttpResponseRedirect
 
+import dashboard.workshopmanager as wmanager
 from .models import Workshop, Team
 
-from .forms import GenerateTeamCodesForm
-from .workshopmanager import get_cur_workshop, all_workshops_closed, generate_teamcodes
+from .forms import GenerateTeamCodesForm, EnterTeamForm
 
 import json
 
@@ -22,45 +22,72 @@ import logging
 logger = logging.getLogger('debugLogger')
 
 
-''' This view will open a new workshop '''
-class OpenWorkshopView(LoginRequiredMixin, View):
+"""API CALL VIEWS ENTERING/LEAVING TEAMS"""
+class EnterTeamView(View):
+    """View that will link a session to a team. Given that team_code is valid"""
+
+    http_method_names = ['post',]
 
     def post(self, request, *args, **kwargs):
-            if not all_workshops_closed():
-                return HttpResponse(json.dumps({ "error" : "Close older workshop first" }), content_type="application/json", status=405)
+
+        team_form = EnterTeamForm(request.POST)
+        if team_form.is_valid():
+            team_code = team_form.cleaned_data['team_code']
+
+            successfully_linked = wmanager.link_user_session_to_team(team_code, request.session)
+
+            if successfully_linked:
+                return HttpResponseRedirect('/')
             else:
-                # Create new open workshop
-                workshop = Workshop(workshop_open=True)
-                workshop.save()
-                return HttpResponse(json.dumps({ "success" : "Workshop created" }), content_type="application/json")
+                return HttpResponse("Incorrect Team Code", status=400)
+
+        else:
+            error_json = json.dumps(team_form.errors)
+            return HttpResponse(error_json, status=403, content_type="application/json")
+
+class LeaveTeamView(View):
+    """View removes session. This will thus remove a user from a team"""
+
+    http_method_names = ['post',]
+
+    def post(self, request, *args, **kwargs):
+        """Removes a user session and returns user to home screen"""
+        wmanager.remove_user_session(request.session)
+        return HttpResponseRedirect('/')
+
+
+"""API CALL VIEWS DASHBOARD"""
+class OpenWorkshopView(LoginRequiredMixin, View):
+    """Opens new workshop"""
+
+    def post(self, request, *args, **kwargs):
+
+        success = wmanager.open_workshop()
+
+        if success:
+            return HttpResponse(json.dumps({"success":"Created new workshop"}))
+        else:
+            return HttpResponse(json.dumps({"error":"Could not open new workshop"}))
 
 
 '''This will close the current opened workshop'''
 class CloseWorkshopView(LoginRequiredMixin, View):
+    """Closes current open workshop"""
 
     def post(self, request, *args, **kwargs):
-        # Get open workshops
-        open_workshops = Workshop.objects.filter(workshop_open=True)
 
-        # Check whether there is an open workshop
-        if (open_workshops.count() == 0):
-            return HttpResponse(json.dumps({ "error" : "No open workshop" }), content_type="application/json")
-
-        # Close the current workshop
+        success = wmanager.close_workshop()
+        if success:
+            return HttpResponse(json.dumps({"success":"Closed workshop"}))
         else:
-            cur_workshop = open_workshops.first() # Get first open workshop
-            cur_workshop.workshop_open = False
-            cur_workshop.save()
-            return HttpResponse(json.dumps({ "success" : "Workshop closed"}), content_type="application/json")
+            return HttpResponse(json.dumps({"error":"Could not close workshop"}))
 
-"""
-Will generate team codes for the current open workshop
-"""
+
 class GenerateTeamCodes(LoginRequiredMixin, View):
-
+    """Generate new team codes"""
     def post(self, request, *args, **kwargs):
-        if (all_workshops_closed()):
-            return HttpResponse("No open workshop", status=403)
+        if (wmanager.all_workshops_closed()):
+            return HttpResponse(json.dumps({"error":"No open workshop"}))
 
         else:
             form = GenerateTeamCodesForm(request.POST)
@@ -69,8 +96,7 @@ class GenerateTeamCodes(LoginRequiredMixin, View):
                 amount = form.cleaned_data['amount']
 
                 # Generate 'amount' team codes
-                cur_workshop = get_cur_workshop()
-                generate_teamcodes(cur_workshop, amount)
+                wmanager.generate_teamcodes(amount)
                 return HttpResponse(json.dumps({"success" : "Generated Team Codes"}))
 
             else:
@@ -78,6 +104,7 @@ class GenerateTeamCodes(LoginRequiredMixin, View):
 
 
 
+"""NON-API VIEWS FOR DASHBOARD"""
 
 '''
 Shows the home screen for the dashboard. And login screen of the dashboard if a user is not logged in.
