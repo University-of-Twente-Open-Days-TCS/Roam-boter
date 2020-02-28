@@ -10,27 +10,65 @@
     var templayer = new Konva.Layer();
     spacing = 40;
     line_height = 10;
+    const circle_radius = 10;
+    var inputDict = new Map([]);
 
     var startnode = new startNode();
 
     class condition {
-
         constructor() {
-
             this.height = spacing;
 
             //TODO: change
             this.width = 100;
-            this.makeGroup();
+            this.createGroup();
         }
 
         //creates the group which represents a condition
-        makeGroup() {
-            var g = new Konva.Group({
+        createGroup() {
+            this.group = new Konva.Group({
                 draggable: true
             });
+            this.createRect();
+            this.createFalseCircle();
+            this.createTrueCircle();
+            this.createDragCircle(this.trueCircle, true);
+            this.createDragCircle(this.falseCircle, false);
+            this.createInputCircle();
+            let node = this;
+            this.group.on("dragmove", function(){
+               node.updateArrows()
+            });
+        }
 
-            //base rectangle which contains the condition text
+        updateArrows(){
+            if(this.trueArrow != null){
+                this.trueArrow.update();
+            }
+            if(this.falseArrow != null){
+                this.falseArrow.update();
+            }
+            if(this.inputArrow != null){
+                this.inputArrow.update();
+            }
+        }
+
+        //circle to which connections can be made by dragging arrows on it
+        createInputCircle(){
+            this.inputCircle = new Konva.Circle({
+                y: 0,
+                x: this.rect.width() / 2,
+                radius: circle_radius,
+                fill: 'white',
+                stroke: 'black',
+            });
+            inputDict.set(this.inputCircle, this);
+
+            this.group.add(this.inputCircle);
+        }
+
+        //base rectangle which contains the condition text
+        createRect(){
             this.rect = new Konva.Rect({
                 x: 0,
                 y: 0,
@@ -41,9 +79,11 @@
                 strokeWidth: 2,
                 cornerRadius: 10,
             });
-            const circle_radius = 10;
+            this.group.add(this.rect);
+        }
 
-            //circle from which the false connection is made to another node
+        //create a circle from which the false connection is made to another node
+        createFalseCircle(){
             this.falseCircle = new Konva.Circle({
                 y: this.rect.height(),
                 x: 0,
@@ -51,8 +91,11 @@
                 fill: 'red',
                 stroke: 'black',
             });
+            this.group.add(this.falseCircle);
+        }
 
-            //circle from which the true connection is made to another node
+        //create a circle from which the true connection is made to another node
+        createTrueCircle(){
             this.trueCircle = new Konva.Circle({
                 y: this.rect.height(),
                 x: this.rect.width(),
@@ -60,34 +103,33 @@
                 fill: 'green',
                 stroke: 'black',
             });
+            this.group.add(this.trueCircle);
 
-            //this is an invisible circle used only for making a new connection between nodes
-            this.trueDragCircle = new Konva.Circle({
+        }
+
+        //creates an invisible circle used only for making a new connection between nodes, based on condition will create one for true or for false
+        createDragCircle(circle, condition){
+            let dragCircle = new Konva.Circle({
                 draggable: true,
-                y: this.rect.height(),
-                x: this.rect.width(),
+                y: circle.y(),
+                x: circle.x(),
                 radius: circle_radius,
                 fill: 'black',
                 opacity: 0.5
             });
-            this.trueDragCircle.originalX = this.trueDragCircle.x();
-            this.trueDragCircle.originalY = this.trueDragCircle.y();
+            if (condition) {
+                this.trueDragCircle = dragCircle;
+            } else {
+                this.falseDragCircle = dragCircle;
+            }
 
-            //circle to which connections can be made by dragging arrows on it
-            this.inputCircle = new Konva.Circle({
-                y: 0,
-                x: this.rect.width() / 2,
-                radius: circle_radius,
-                fill: 'white',
-                stroke: 'black',
-            });
+            this.group.add(dragCircle);
 
-            g.add(this.rect);
-            g.add(this.inputCircle);
-            g.add(this.trueCircle);
+            dragCircle.originalX = dragCircle.x();
+            dragCircle.originalY = dragCircle.y();
 
-            //when the invisible circle starts to be dragged create a new temporary arrow
-            this.trueDragCircle.on("dragstart", function(){
+             //when the invisible circle starts to be dragged create a new temporary arrow
+            dragCircle.on("dragstart", function(){
                 this.tempX = this.getAbsolutePosition().x;
                 this.tempY = this.getAbsolutePosition().y;
                 //it is important that the invisible circle is in a different layer in order to check what is under the cursor it later
@@ -96,21 +138,27 @@
                     stroke: "black",
                     fill: "black"
                 });
-                layer.add(this.tempArrow);
+                templayer.add(this.tempArrow);
             });
 
             //update the temporary arrow
-            this.trueDragCircle.on("dragmove", function(){
+            dragCircle.on("dragmove", function(){
                 this.tempArrow.points([this.tempX, this.tempY, stage.getPointerPosition().x, stage.getPointerPosition().y]);
-                layer.draw();
+                templayer.draw();
             });
-
+            let g = this.group;
+            let node = this;
             //when the drag is enden return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
-            this.trueDragCircle.on("dragend", function(){
+            dragCircle.on("dragend", function(){
                 var touchPos = stage.getPointerPosition();
                 var intersect = layer.getIntersection(touchPos);
                 console.log(intersect);
+                console.log(inputDict[intersect]);
                 //TODO: shit doen hier
+                if (inputDict.has(intersect)){
+                    new arrow(node, inputDict.get(intersect), condition);
+                }
+
 
                 this.moveTo(g);
                 this.x(this.originalX);
@@ -120,11 +168,26 @@
                 layer.draw();
                 templayer.draw();
             });
-            g.add(this.trueDragCircle);
-            g.add(this.falseCircle);
 
-            this.group = g;
         }
+
+        getTrueDotPosition(){
+            let pos = this.trueCircle.getAbsolutePosition();
+            return [pos.x, pos.y];
+        }
+
+        getFalseDotPosition(){
+            let pos = this.falseCircle.getAbsolutePosition();
+            return [pos.x, pos.y];
+        }
+
+        getInputDotPosition(){
+            let pos = this.inputCircle.getAbsolutePosition();
+            return [pos.x, pos.y];
+        }
+
+
+
     }
     //The connection between two conditions or a condition and an action
     class arrow {
@@ -152,13 +215,14 @@
             this.src = src;
             this.dest = dest;
             this.isTrue = isTrue;
-
             if(isTrue) {
                 this.startpos = this.src.getTrueDotPosition();
+                this.src.trueArrow = this;
             } else {
                 this.startpos = this.src.getFalseDotPosition();
             }
             this.endpos = this.dest.getInputDotPosition();
+            this.dest.inputArrow = this;
 
             this.arrowline = new Konva.Arrow({
                 x: 0,
@@ -166,6 +230,7 @@
                 points: this.startpos.concat(this.endpos),
                 stroke: 'black'
             });
+            layer.add(this.arrowline);
             layer.draw();
 
         }
@@ -180,7 +245,7 @@
             }
             this.endpos = this.dest.getInputDotPosition();
 
-            this.arrowline.points(this.startpos.concat(this.endpos))
+            this.arrowline.points(this.startpos.concat(this.endpos));
             layer.draw();
 
         }
@@ -409,5 +474,4 @@
     stage.add(layer);
     stage.add(templayer);
 
-    // draw the image
     layer.draw();
