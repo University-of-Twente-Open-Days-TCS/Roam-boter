@@ -15,7 +15,7 @@ sys.path.append(os.path.abspath(os.path.join('..', 'simulation')))
 #==============================================================
 
 from simulation.ai.actions import Action
-from simulation.ai.conditions import Condition
+from simulation.ai.condition import Condition
 from simulation.ai.AINode import AINode, ActionNode, ConditionNode
 
 # This class defines a complete listener for a parse tree produced by aiJsonParser.
