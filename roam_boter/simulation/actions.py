@@ -1,16 +1,27 @@
-"""Actions are described here."""
-class Action:
+from objects import Object
+from bullet import Bullet
 
-    def __init__(self, action_id, attributes):
-        self.action_id = action_id
-        self.attributes = attributes
+from utils import *
+
+
+# An action executable by a tank
+# Contains an id indicating which action in the ACTIONS list.
+# params is a tuple of parameters. VERY IMPORTANT
+# hint: tuples of 1 size can be made with (x, )
+class Action:
+    id = 0
+    params = () #TODO Will be replaced by a dict
+
+    def __init__(self, id=-1, params=()):
+        self.id = id
+        self.params = params
+        pass
 
     def execute(self, tank, state):
-        # pass execution to correct function
-        ACTIONS[self.action_id](tank, state, self.attributes)
+        ACTIONS[self.id](tank, state, *self.params)
 
     def __repr__(self):
-        return ACTIONS[self.action_id].__name__ + " " + str(self.action_id) + " " + str(self.attributes)
+        return ACTIONS[self.id].__name__ + " " + str(self.id) + " " + str(self.params)
 
 
 # The function correlated with the action of the tank moving to a nearest object.
