@@ -107,6 +107,7 @@
 
         //creates an invisible circle used only for making a new connection between nodes, based on condition will create one for true or for false
         createDragCircle(circle, condition){
+            let node = this;
             let dragCircle = new Konva.Circle({
                 draggable: true,
                 y: circle.y(),
@@ -136,6 +137,14 @@
                     stroke: "black",
                     fill: "black"
                 });
+
+                //deleten any existing arrow
+                if (condition && node.trueArrow != null){
+                    node.trueArrow.delete();
+                } else if(!condition && node.falseArrow != null){
+                    node.falseArrow.delete();
+                }
+
                 templayer.add(this.tempArrow);
             });
 
@@ -145,7 +154,6 @@
                 templayer.draw();
             });
             let g = this.group;
-            let node = this;
             //when the drag is enden return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
             dragCircle.on("dragend", function(){
                 var touchPos = stage.getPointerPosition();
@@ -153,7 +161,7 @@
                 console.log(intersect);
                 console.log(inputDict[intersect]);
                 //TODO: shit doen hier
-                if (inputDict.has(intersect)){
+                if (inputDict.has(intersect) && inputDict.get(intersect).inputArrow == null){
                     new arrow(node, inputDict.get(intersect), condition);
                 }
 
@@ -218,6 +226,7 @@
                 this.src.trueArrow = this;
             } else {
                 this.startpos = this.src.getFalseDotPosition();
+                this.src.falseArrow = this;
             }
             this.endpos = this.dest.getInputDotPosition();
             this.dest.inputArrow = this;
@@ -266,8 +275,17 @@
 
     var node1 = new condition();
     var node2 = new condition();
+    var node3 = new condition();
+    var node4 = new condition();
+    var node5 = new condition();
+
+
     layer.add(node1.group);
     layer.add(node2.group);
+    layer.add(node3.group);
+    layer.add(node4.group);
+    layer.add(node5.group);
+
     stage.add(layer);
     stage.add(templayer);
 
