@@ -34,7 +34,7 @@ services:
             DJANGO_SECRET_KEY: ${DJANGO_KEY}
         build:
             context: .
-            dockerfile: ./Dockerfile
+            dockerfile: ./dockerfiles/django
         restart: always
         volumes: 
             - ./backend:/django
@@ -47,6 +47,20 @@ services:
         depends_on:
             - db
             - redis
+
+    react:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/react
+        restart: always
+        volumes:
+            - ./frontend:/frontend
+        ports:
+            - "3000:3000"
+
+
+
+#react nodejs container
 
 volumes:
     db_data: 

@@ -18,12 +18,19 @@ class App extends Component {
         this.setState({isFull: true});
     }
 
+    testAPI = () => {
+        // TODO: test call api
+    }
+
     render() {
         return (
             <div>
                 <h1>This app only works fullscreen, please click below to enter the app!</h1>
                 <Button onClick={this.goFull} margin-left="auto" margin-right="auto">
                     Go Fullscreen
+                </Button>
+                <Button onClick={this.testAPI}>
+                    Test API
                 </Button>
                 <Fullscreen
                     enabled={this.state.isFull}
