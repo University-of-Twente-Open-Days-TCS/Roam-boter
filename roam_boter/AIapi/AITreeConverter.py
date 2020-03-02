@@ -9,9 +9,12 @@ from grammar.aijson.aiJsonParser import aiJsonParser
 #from simulation.ai.AINode import AINode
 
 #TODO: REMOVE THIS DEBUGGING ONLY===============================
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join('..', 'simulation')))
+DEBUG = True
+
+if DEBUG:
+    import sys
+    import os
+    sys.path.append(os.path.abspath(os.path.join('..', 'simulation')))
 #==============================================================
 
 from ai.actions import Action

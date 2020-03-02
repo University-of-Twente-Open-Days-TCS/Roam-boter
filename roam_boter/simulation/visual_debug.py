@@ -4,7 +4,6 @@ import time
 
 # TODO: Make it so that it is more a component that can be toggled on. 
 # Importing simulation imported this module, which resulted in the imgaes being loaded. 
-
 VISUAL_DEBUG = False
 
 screen = None
