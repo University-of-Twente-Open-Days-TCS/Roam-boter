@@ -5,6 +5,22 @@ import AppContent from "./components/AppContent";
 import Fullscreen from "react-full-screen";
 import Button from "@material-ui/core/Button";
 
+let _csrfToken = null
+const API_HOST = 'http://localhost:8000'
+
+async function getCsrfToken() {
+    // Gets a csrf token from the django api
+    if (_csrfToken === null){
+        const response = await fetch(`${API_HOST}/csrf/`, {
+            credentials: 'include',
+        });
+        const data = await response.json();
+        _csrfToken = data.csrfToken
+    }
+    return _csrfToken
+}
+
+
 class App extends Component {
     constructor(props) {
         super();
@@ -18,8 +34,16 @@ class App extends Component {
         this.setState({isFull: true});
     }
 
-    testAPI = () => {
-        // TODO: test call api
+    testAPI = async function() {
+        const response = await fetch(`${API_HOST}/test/`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFTOKEN': await getCsrfToken()
+            }
+        });
+        let data = await response.json()
+        console.log(data)
     }
 
     render() {

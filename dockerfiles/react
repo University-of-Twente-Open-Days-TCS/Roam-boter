@@ -1,15 +1,8 @@
 FROM node:13.8.0-alpine
 
-WORKDIR /frontend
+WORKDIR /frontend/
 
-
-#add module binaries to docker path
-ENV PATH /frontend/node_modules/.bin:$PATH
-
-#install node modules requires package.json
-RUN npm install
-
-#expose port
+# expose port
 EXPOSE 3000
-#start application
-CMD ["npm", "start"]
+# start application
+CMD npm install ; npm start 
