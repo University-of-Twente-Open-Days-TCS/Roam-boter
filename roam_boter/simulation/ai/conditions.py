@@ -9,15 +9,13 @@ from math import sqrt
 # hint: tuples of 1 size can be made with (x, )
 # id indicates which condition in the CONDITIONS list.
 class Condition:
-    id = -1
-    params = ()
 
-    def __init__(self, id, params):
-        self.id = id
-        self.params = params
+    def __init__(self, condition_id, attributes):
+        self.condition_id = condition_id
+        self.attributes = attributes
 
     def evaluate(self, tank, state):
-        return CONDITIONS[self.id](tank, state, *self.params)
+        return CONDITIONS[self.condition_id](tank, state, **self.attributes)
 
 
 def distance_to_nearest_object_greater_than(tank, state, obj, distance):
@@ -53,9 +51,31 @@ def distance_to_nearest_object_smaller_than(tank, state, obj, distance):
     pass
     # TODO: finish implementation
 
+def placeholder_condition(tank, state):
+    raise NotImplementedError("Placeholder condition should never be called")
 
+
+# List of possible conditions that the AI can evaluate.
+# The condition ID is based on the position of the condition in the list.
 CONDITIONS = [
-    distance_to_nearest_object_greater_than,
-    distance_to_nearest_object_smaller_than,
+    placeholder_condition,                          #0
+    distance_to_nearest_object_greater_than,        #1
+    placeholder_condition,                          #2
+    placeholder_condition,                          #3
+    placeholder_condition,                          #4
+    placeholder_condition,                          #5
+    placeholder_condition,                          #6
+    placeholder_condition,                          #7
+    placeholder_condition,                          #8
+    placeholder_condition,                          #9
+    placeholder_condition,                          #10
+    placeholder_condition,                          #11
+    placeholder_condition,                          #12
+    placeholder_condition,                          #13
+    placeholder_condition,                          #14
+    placeholder_condition,                          #15
+    placeholder_condition,                          #16
+    placeholder_condition,                          #17
+    placeholder_condition,                          #18
 ]
 

@@ -1,3 +1,8 @@
+from objects import Object
+from bullet import Bullet
+
+from utils import *
+
 """Actions are described here."""
 class Action:
 
@@ -7,7 +12,7 @@ class Action:
 
     def execute(self, tank, state):
         # pass execution to correct function
-        ACTIONS[self.action_id](tank, state, self.attributes)
+        ACTIONS[self.action_id](tank, state, **self.attributes)
 
     def __repr__(self):
         return ACTIONS[self.action_id].__name__ + " " + str(self.action_id) + " " + str(self.attributes)
@@ -88,11 +93,38 @@ def shoot(tank, state):
         state.bullets.append(bullet)
         tank.shoot_ready = state.frames_passed + tank.reload_time
 
+def do_nothing(tank, state):
+    return
+
+
+def placeholder_action(tank, state):
+    raise NotImplementedError("Placeholder action should never be called")
+
 
 # List of possible actions that the AI can execute.
+# The action ID is based on the position of the action in the list. 
+
 ACTIONS = [
-    move_to_nearest_object,
-    move_from_nearest_object,
-    aim_to_nearest_object,
-    shoot,
+    do_nothing,                             #0
+    move_to_nearest_object,                 #1
+    placeholder_action,                     #2
+    placeholder_action,                     #3
+    move_from_nearest_object,               #4
+    aim_to_nearest_object,                  #5
+    placeholder_action,                     #6
+    placeholder_action,                     #7
+    shoot,                                  #8
+    placeholder_action,                     #9
+    placeholder_action,                     #10
+    placeholder_action,                     #11
+    placeholder_action,                     #12
+    placeholder_action,                     #13
+    placeholder_action,                     #14
+    placeholder_action,                     #15
+    placeholder_action,                     #16
+    placeholder_action,                     #17
+    placeholder_action,                     #18
+    placeholder_action,                     #19
+    placeholder_action,                     #20
+    placeholder_action,                     #21
 ]

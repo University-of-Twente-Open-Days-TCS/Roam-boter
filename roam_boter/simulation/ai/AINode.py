@@ -1,3 +1,8 @@
+from actions import Action
+from conditions import Condition
+
+from objects import Object
+
 class AINode(object):
     """Represents a node in the EvaluationTree"""
 
@@ -30,4 +35,3 @@ class ConditionNode(AINode):
             return self.true_child.evaluate(tank, state)
 
         return self.false_child.evaluate(tank, state)
-
