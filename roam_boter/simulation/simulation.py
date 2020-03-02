@@ -22,7 +22,7 @@ class SimulationState:
     frames_passed = 0
 
     def __init__(self, level, players):
-        self.level = level
+        self.level = Level(level)
         self.tanks = [Tank(x) for x in players]
 
 
@@ -40,17 +40,17 @@ class Simulation:
         for i, tank in enumerate(self.get_tanks()):
             tank.spawn = spawns[i] + (0.5, 0.5)
             tank.set_pos(tank.spawn[0], tank.spawn[1])
-            if spawns[i][1] < len(self.state.level) / 2:
+            if spawns[i][1] < self.state.level.get_height() / 2:
                 tank.set_rotation(180)
             else:
                 tank.set_rotation(0)
 
     def get_spawns(self):
         result = []
-        for y, row in enumerate(self.state.level):
-            for x, cell in enumerate(row):
-                if cell == Object.SPAWN:
-                    result.append((float(x), float(y)))
+
+        for obj, x, y in self.state.level.iterate():
+            if obj == Object.SPAWN:
+                result.append((float(x), float(y)))
         return result
 
     def has_ended(self):

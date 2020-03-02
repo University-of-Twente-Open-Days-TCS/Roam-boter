@@ -28,7 +28,7 @@ class Bullet:
         return self.x, self.y
 
     def check_collision_wall(self, state):
-        if state.level[round(self.y)][round(self.x)] == Object.WALL:
+        if state.level.get_object(round(self.x), round(self.y)) == Object.WALL:
             return True
         return False
 

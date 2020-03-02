@@ -54,8 +54,9 @@ def distance_to_nearest_object_smaller_than(tank, state, obj, distance):
     # TODO: finish implementation
 
 
+# The CONDITIONS list where the index corresponds with a certain condition.
 CONDITIONS = [
-    distance_to_nearest_object_greater_than,
-    distance_to_nearest_object_smaller_than,
+    distance_to_nearest_object_greater_than,  # 0
+    distance_to_nearest_object_smaller_than,  # 1
 ]
 

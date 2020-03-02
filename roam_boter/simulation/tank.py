@@ -100,12 +100,12 @@ class Tank:
 
         for a in range(y - 1, y + 1):
             for b in range(x - 1, x + 1):
-                if not 0 <= a < len(state.level):
+                if not 0 <= a < state.level.get_height():
                     return True
-                if not 0 <= b < len(state.level[a]):
+                if not 0 <= b < state.level.get_width():
                     return True
 
-                if state.level[a][b] == Object.WALL:
+                if state.level.get_object(b, a) == Object.WALL:
                     return True
         return False
 

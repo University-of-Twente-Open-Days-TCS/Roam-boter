@@ -20,10 +20,9 @@ def DRAW_WORLD(state):
 
     screen.fill((255, 255, 255))
 
-    for y, row in enumerate(state.level):
-        for x, cell in enumerate(row):
-            color = next(key for key, value in ColorValues.items() if value == cell)
-            pygame.draw.rect(screen, color, (x * 10, y * 10, 10, 10))
+    for obj, x, y in state.level.iterate():
+        color = next(key for key, value in ColorValues.items() if value == obj)
+        pygame.draw.rect(screen, color, (x * 10, y * 10, 10, 10))
 
     for tank in state.tanks:
         # pygame.Surface.blit(tank_body, screen, (int(tank.x * 10), int(tank.y * 10), 10, 10))
