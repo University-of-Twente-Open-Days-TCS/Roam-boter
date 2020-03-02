@@ -22,7 +22,7 @@ class SimulationState:
     frames_passed = 0
 
     def __init__(self, level, players):
-        self.level = Level(level)
+        self.level = level
         self.tanks = [Tank(x) for x in players]
 
 

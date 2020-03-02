@@ -1,11 +1,27 @@
 import objects
+import pickle
 
 
 class Level:
 
-    def __init__(self, objects):
+    def __init__(self, path, objects):
         self.objects = objects
-        self.nearest_objects = self.prepare_nearest_objects()
+        self.nearest_objects = self.cache_or_prepare_nearest_objects(path)
+
+    def cache_or_prepare_nearest_objects(self, path):
+        nearest_objects = None
+        pickle_path = 'caching/nearest_objects.p'
+        print(pickle_path)
+        try:
+            with open(pickle_path, 'rb') as f:
+                nearest_objects = pickle.load(f)
+        except FileNotFoundError:
+            nearest_objects = self.prepare_nearest_objects()
+            with open(pickle_path, 'wb') as f:
+                pickle.dump(nearest_objects, f)
+
+        print(nearest_objects)
+        return nearest_objects
 
     def prepare_nearest_objects(self):
         # for y, for x, for object collect nearest of obj from x, y
