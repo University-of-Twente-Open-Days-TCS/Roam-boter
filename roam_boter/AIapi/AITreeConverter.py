@@ -14,17 +14,15 @@ import os
 sys.path.append(os.path.abspath(os.path.join('..', 'simulation')))
 #==============================================================
 
-from simulation.ai.actions import Action
-from simulation.ai.conditions import Condition
-from simulation.ai.AINode import AINode, ActionNode, ConditionNode
+from ai.actions import Action
+from ai.conditions import Condition
+from ai.AINode import AINode, ActionNode, ConditionNode
 
 # This class defines a complete listener for a parse tree produced by aiJsonParser.
 class AITreeConverter(ParseTreeListener):
 
     # Enter a parse tree produced by aiJsonParser#startrule.
     def enterStartrule(self, ctx:aiJsonParser.StartruleContext):
-        print(sys.path)
-
         pass
 
     # Exit a parse tree produced by aiJsonParser#startrule.

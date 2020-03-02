@@ -6,11 +6,6 @@ from grammar.aijson.aiJsonParser import aiJsonParser
 
 from AITreeConverter import AITreeConverter
 
-#from simulation.ai.AINode import *
-#from simulation.ai.actions import Action
-#from simulation.ai.conditions import Condition
-
-
 def create_ai_evaluation_tree(parseTree):
     converter = AITreeConverter()
     walker = ParseTreeWalker()
@@ -29,5 +24,7 @@ def main(argv):
     #Test conversion
     eval_tree = create_ai_evaluation_tree(tree)
 
+
+# DEBUGGING TODO: REMOVE IN PRODUCTION
 if __name__ == "__main__":
     main(sys.argv)
