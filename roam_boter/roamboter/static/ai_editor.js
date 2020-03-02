@@ -194,7 +194,18 @@
             return [pos.x, pos.y];
         }
 
-
+        delete(){
+            if(trueArrow != null){
+                trueArrow.delete();
+            }
+            if(falseArrow != null){
+                falseArrow.delete();
+            }
+            if(inputArrow != null){
+                inputArrow.delete();
+            }
+            this.group.delete();
+        }
 
     }
     //The connection between two conditions or a condition and an action
