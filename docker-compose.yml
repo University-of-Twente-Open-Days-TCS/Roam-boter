@@ -37,7 +37,7 @@ services:
             dockerfile: ./Dockerfile
         restart: always
         volumes: 
-            - ./roam_boter:/roam_boter
+            - ./backend:/django
             - ./requirements:/requirements
         links:
             - db:db 

@@ -7,10 +7,10 @@ ENV DJANGO_ENV dev
 ADD requirements/ /requirements/
 RUN pip install -r /requirements/production.txt 
 
-WORKDIR /roam_boter/ 
+WORKDIR /django/ 
 
 RUN useradd roambot 
-RUN chown -R roambot /roam_boter 
+RUN chown -R roambot /django 
 USER roambot 
 
 EXPOSE 8000
