@@ -13,24 +13,24 @@
     const circle_radius = 10;
     var inputDict = new Map([]);
 
-    //var startnode = new startNode();
+    // var startnode = new startNode();
 
     class condition {
-        constructor() {
+        constructor(stage, layer) {
 
-            this.createGroup();
+            this.createGroup(stage, layer);
         }
 
         //creates the group which represents a condition
-        createGroup() {
+        createGroup(stage, layer) {
             this.group = new Konva.Group({
                 draggable: true
             });
             this.createRect();
             this.createFalseCircle();
             this.createTrueCircle();
-            this.createDragCircle(this.trueCircle, true);
-            this.createDragCircle(this.falseCircle, false);
+            this.createDragCircle(this.trueCircle, true, stage, layer);
+            this.createDragCircle(this.falseCircle, false, stage, layer);
             this.createInputCircle();
             let node = this;
             this.group.on("dragmove", function(){
@@ -105,7 +105,7 @@
         }
 
         //creates an invisible circle used only for making a new connection between nodes, based on condition will create one for true or for false
-        createDragCircle(circle, condition){
+        createDragCircle(circle, condition, stage, layer){
             let node = this;
             let dragCircle = new Konva.Circle({
                 draggable: true,
@@ -268,15 +268,15 @@
         }
     }
 
-    //Action (NOT A NODE), has zero or more attributes, by default null
+    //Action (NOT A NODE), has zero or more attributes, by default null. DOES NOT WORK WITH LABELS YET
     class action {
         id;
         object;
         dir;
         deg;
-        label;
+        // label;
 
-        constructor(id, object  = null, dir = null, deg = null, label = null) {
+        constructor(id, object  = null, dir = null, deg = null) {
            this.id = id;
            this.object = object;
            this.dir = dir;
@@ -523,19 +523,44 @@
 
 
 
+    function addCondition(stage, layer) {
+        let newCondition = new condition(stage, layer);
+        layer.add(newCondition.group);
+        stage.draw();
+    }
 
-    var node1 = new condition();
-    var node2 = new condition();
-    var node3 = new condition();
+    // function addActionNode(stage, layer) {
+    //     let newActionNode = new actionNode(stage, layer);
+    //     layer.add(newActionNode.group);
+    //     stage.draw();
+    // }
+    //Buttons
+
+    //Add condition
+    document.getElementById('addCondition').addEventListener(
+        'click',
+        function () {
+            addCondition(stage, layer)
+        },
+        false
+    );
+
+      //Add condition
+    document.getElementById('addActionNode').addEventListener(
+        'click',
+        function () {
+            // addActionNode(stage, layer)
+        },
+        false
+    );
+
+
 
     var action1 = new action(5);
     var action2 = new action(5);
     var action3 = new action(5);
     var action4 = new action(5);
 
-    layer.add(node1.group);
-    layer.add(node2.group);
-    layer.add(node3.group);
     layer.add(action1.group);
     layer.add(action2.group);
     layer.add(action3.group);
