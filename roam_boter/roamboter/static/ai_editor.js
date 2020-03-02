@@ -8,19 +8,16 @@
     // then create layer
     var layer = new Konva.Layer();
     var templayer = new Konva.Layer();
-    spacing = 40;
-    line_height = 10;
+    const blockHeight = 40;
+    const blockWidth = 100;
     const circle_radius = 10;
     var inputDict = new Map([]);
 
-    var startnode = new startNode();
+    //var startnode = new startNode();
 
     class condition {
         constructor() {
-            this.height = spacing;
 
-            //TODO: change
-            this.width = 100;
             this.createGroup();
         }
 
@@ -72,8 +69,8 @@
             this.rect = new Konva.Rect({
                 x: 0,
                 y: 0,
-                width: this.width,
-                height: this.height,
+                width: blockWidth,
+                height: blockHeight,
                 fill: 'blue',
                 stroke: 'black',
                 strokeWidth: 2,
@@ -162,12 +159,12 @@
                 var intersect = layer.getIntersection(touchPos);
                 console.log(intersect);
                 console.log(inputDict[intersect]);
-                //TODO: shit doen hier
-                if (inputDict.has(intersect) && inputDict.get(intersect).inputArrow == null){
+                if (inputDict.has(intersect)){
+                    if (inputDict.get(intersect).inputArrow != null){
+                        inputDict.get(intersect).inputArrow.delete();
+                    }
                     new arrow(node, inputDict.get(intersect), condition);
                 }
-
-
                 this.moveTo(g);
                 this.x(this.originalX);
                 this.y(this.originalY);
@@ -176,7 +173,6 @@
                 layer.draw();
                 templayer.draw();
             });
-
         }
 
         getTrueDotPosition(){
@@ -286,6 +282,58 @@
            this.dir = dir;
            this.deg = deg;
            this.label = label;
+           this.createGroup();
+        }
+        //creates the group which represents a condition
+        createGroup() {
+            this.group = new Konva.Group({
+                draggable: true
+            });
+            this.createRect();
+            this.createInputCircle();
+            let node = this;
+            this.group.on("dragmove", function(){
+               node.updateArrows()
+            });
+        }
+
+        createRect(){
+            this.rect = new Konva.Rect({
+                x: 0,
+                y: 0,
+                width: blockWidth,
+                height: blockHeight,
+                fill: 'green',
+                stroke: 'black',
+                strokeWidth: 2,
+                cornerRadius: 10,
+            });
+            this.group.add(this.rect);
+        }
+
+        //circle to which connections can be made by dragging arrows on it
+        createInputCircle(){
+            this.inputCircle = new Konva.Circle({
+                y: 0,
+                x: this.rect.width() / 2,
+                radius: circle_radius,
+                fill: 'white',
+                stroke: 'black',
+            });
+            inputDict.set(this.inputCircle, this);
+
+            this.group.add(this.inputCircle);
+        }
+
+        getInputDotPosition(){
+            let pos = this.inputCircle.getAbsolutePosition();
+            return [pos.x, pos.y];
+        }
+
+        updateArrows(){
+            if(this.inputArrow != null){
+                this.inputArrow.update();
+            }
         }
     }
 
@@ -479,15 +527,22 @@
     var node1 = new condition();
     var node2 = new condition();
     var node3 = new condition();
-    var node4 = new condition();
-    var node5 = new condition();
 
+    var action1 = new action(5);
+    var action2 = new action(5);
+    var action3 = new action(5);
+    var action4 = new action(5);
 
     layer.add(node1.group);
     layer.add(node2.group);
     layer.add(node3.group);
-    layer.add(node4.group);
-    layer.add(node5.group);
+    layer.add(action1.group);
+    layer.add(action2.group);
+    layer.add(action3.group);
+    layer.add(action4.group);
+
+
+    console.log(action1.group);
 
     stage.add(layer);
     stage.add(templayer);
