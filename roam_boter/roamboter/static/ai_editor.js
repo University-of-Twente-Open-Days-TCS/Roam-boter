@@ -281,11 +281,19 @@
            this.object = object;
            this.dir = dir;
            this.deg = deg;
-           this.label = label;
-           this.createGroup();
+           //this.label = label;
         }
+
+    }
+
+    class actionNode {
+
+        constructor(stage, layer){
+            this.createGroup(stage, layer);
+        }
+
         //creates the group which represents a condition
-        createGroup() {
+        createGroup(stage, layer) {
             this.group = new Konva.Group({
                 draggable: true
             });
@@ -529,11 +537,11 @@
         stage.draw();
     }
 
-    // function addActionNode(stage, layer) {
-    //     let newActionNode = new actionNode(stage, layer);
-    //     layer.add(newActionNode.group);
-    //     stage.draw();
-    // }
+    function addActionNode(stage, layer) {
+        let newActionNode = new actionNode(stage, layer);
+        layer.add(newActionNode.group);
+        stage.draw();
+    }
     //Buttons
 
     //Add condition
@@ -549,25 +557,10 @@
     document.getElementById('addActionNode').addEventListener(
         'click',
         function () {
-            // addActionNode(stage, layer)
+            addActionNode(stage, layer)
         },
         false
     );
-
-
-
-    var action1 = new action(5);
-    var action2 = new action(5);
-    var action3 = new action(5);
-    var action4 = new action(5);
-
-    layer.add(action1.group);
-    layer.add(action2.group);
-    layer.add(action3.group);
-    layer.add(action4.group);
-
-
-    console.log(action1.group);
 
     stage.add(layer);
     stage.add(templayer);
