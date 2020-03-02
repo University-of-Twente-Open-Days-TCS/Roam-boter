@@ -8,52 +8,52 @@ import sys
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\32")
-        buf.write("\u0096\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\u0094\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
         buf.write("\4\24\t\24\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\4\3\4")
         buf.write("\3\4\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3")
         buf.write("\6\3\7\3\7\3\7\3\7\3\b\3\b\5\bH\n\b\3\t\3\t\3\t\3\t\3")
-        buf.write("\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\5\nX\n\n\3\n\3")
-        buf.write("\n\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r")
-        buf.write("\3\r\3\r\3\16\3\16\3\16\3\16\7\16n\n\16\f\16\16\16q\13")
-        buf.write("\16\3\16\3\16\3\17\3\17\3\17\3\17\5\17y\n\17\3\17\3\17")
-        buf.write("\3\20\3\20\3\20\3\20\3\21\3\21\3\21\3\21\7\21\u0085\n")
-        buf.write("\21\f\21\16\21\u0088\13\21\3\21\3\21\3\22\3\22\3\22\3")
-        buf.write("\22\3\23\3\23\3\24\3\24\3\24\3\24\3\24\2\2\25\2\4\6\b")
-        buf.write("\n\f\16\20\22\24\26\30\32\34\36 \"$&\2\3\3\2\r\16\2\u0087")
-        buf.write("\2(\3\2\2\2\4-\3\2\2\2\6\61\3\2\2\2\b9\3\2\2\2\n=\3\2")
-        buf.write("\2\2\fA\3\2\2\2\16G\3\2\2\2\20I\3\2\2\2\22O\3\2\2\2\24")
-        buf.write("[\3\2\2\2\26_\3\2\2\2\30c\3\2\2\2\32i\3\2\2\2\34t\3\2")
-        buf.write("\2\2\36|\3\2\2\2 \u0080\3\2\2\2\"\u008b\3\2\2\2$\u008f")
-        buf.write("\3\2\2\2&\u0091\3\2\2\2()\7\26\2\2)*\5\4\3\2*+\7\27\2")
-        buf.write("\2+,\7\2\2\3,\3\3\2\2\2-.\7\3\2\2./\7\25\2\2/\60\5\6\4")
-        buf.write("\2\60\5\3\2\2\2\61\62\7\26\2\2\62\63\5\b\5\2\63\64\7\24")
-        buf.write("\2\2\64\65\5\n\6\2\65\66\7\24\2\2\66\67\5\f\7\2\678\7")
-        buf.write("\27\2\28\7\3\2\2\29:\7\4\2\2:;\7\25\2\2;<\7\r\2\2<\t\3")
-        buf.write("\2\2\2=>\7\5\2\2>?\7\25\2\2?@\7\16\2\2@\13\3\2\2\2AB\7")
-        buf.write("\6\2\2BC\7\25\2\2CD\5\16\b\2D\r\3\2\2\2EH\5\20\t\2FH\5")
-        buf.write("\30\r\2GE\3\2\2\2GF\3\2\2\2H\17\3\2\2\2IJ\7\26\2\2JK\7")
-        buf.write("\7\2\2KL\7\25\2\2LM\5\22\n\2MN\7\27\2\2N\21\3\2\2\2OP")
-        buf.write("\7\26\2\2PQ\5&\24\2QR\7\24\2\2RS\5\24\13\2ST\7\24\2\2")
-        buf.write("TW\5\26\f\2UV\7\24\2\2VX\5\36\20\2WU\3\2\2\2WX\3\2\2\2")
-        buf.write("XY\3\2\2\2YZ\7\27\2\2Z\23\3\2\2\2[\\\7\b\2\2\\]\7\25\2")
-        buf.write("\2]^\5\16\b\2^\25\3\2\2\2_`\7\t\2\2`a\7\25\2\2ab\5\16")
-        buf.write("\b\2b\27\3\2\2\2cd\7\26\2\2de\7\n\2\2ef\7\25\2\2fg\5\32")
-        buf.write("\16\2gh\7\27\2\2h\31\3\2\2\2ij\7\30\2\2jo\5\34\17\2kl")
-        buf.write("\7\24\2\2ln\5\34\17\2mk\3\2\2\2nq\3\2\2\2om\3\2\2\2op")
-        buf.write("\3\2\2\2pr\3\2\2\2qo\3\2\2\2rs\7\31\2\2s\33\3\2\2\2tu")
-        buf.write("\7\26\2\2ux\5&\24\2vw\7\24\2\2wy\5\36\20\2xv\3\2\2\2x")
-        buf.write("y\3\2\2\2yz\3\2\2\2z{\7\27\2\2{\35\3\2\2\2|}\7\f\2\2}")
-        buf.write("~\7\25\2\2~\177\5 \21\2\177\37\3\2\2\2\u0080\u0081\7\26")
-        buf.write("\2\2\u0081\u0086\5\"\22\2\u0082\u0083\7\24\2\2\u0083\u0085")
-        buf.write("\5\"\22\2\u0084\u0082\3\2\2\2\u0085\u0088\3\2\2\2\u0086")
-        buf.write("\u0084\3\2\2\2\u0086\u0087\3\2\2\2\u0087\u0089\3\2\2\2")
-        buf.write("\u0088\u0086\3\2\2\2\u0089\u008a\7\27\2\2\u008a!\3\2\2")
-        buf.write("\2\u008b\u008c\7\r\2\2\u008c\u008d\7\25\2\2\u008d\u008e")
-        buf.write("\5$\23\2\u008e#\3\2\2\2\u008f\u0090\t\2\2\2\u0090%\3\2")
-        buf.write("\2\2\u0091\u0092\7\13\2\2\u0092\u0093\7\25\2\2\u0093\u0094")
-        buf.write("\7\16\2\2\u0094\'\3\2\2\2\7GWox\u0086")
+        buf.write("\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\13\3")
+        buf.write("\13\3\13\3\13\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r\3\r\3\r")
+        buf.write("\3\16\3\16\3\16\3\16\7\16l\n\16\f\16\16\16o\13\16\3\16")
+        buf.write("\3\16\3\17\3\17\3\17\3\17\3\17\3\17\3\20\3\20\3\20\3\20")
+        buf.write("\3\21\3\21\3\21\3\21\7\21\u0081\n\21\f\21\16\21\u0084")
+        buf.write("\13\21\5\21\u0086\n\21\3\21\3\21\3\22\3\22\3\22\3\22\3")
+        buf.write("\23\3\23\3\24\3\24\3\24\3\24\3\24\2\2\25\2\4\6\b\n\f\16")
+        buf.write("\20\22\24\26\30\32\34\36 \"$&\2\3\3\2\r\16\2\u0084\2(")
+        buf.write("\3\2\2\2\4-\3\2\2\2\6\61\3\2\2\2\b9\3\2\2\2\n=\3\2\2\2")
+        buf.write("\fA\3\2\2\2\16G\3\2\2\2\20I\3\2\2\2\22O\3\2\2\2\24Y\3")
+        buf.write("\2\2\2\26]\3\2\2\2\30a\3\2\2\2\32g\3\2\2\2\34r\3\2\2\2")
+        buf.write("\36x\3\2\2\2 |\3\2\2\2\"\u0089\3\2\2\2$\u008d\3\2\2\2")
+        buf.write("&\u008f\3\2\2\2()\7\26\2\2)*\5\4\3\2*+\7\27\2\2+,\7\2")
+        buf.write("\2\3,\3\3\2\2\2-.\7\3\2\2./\7\25\2\2/\60\5\6\4\2\60\5")
+        buf.write("\3\2\2\2\61\62\7\26\2\2\62\63\5\b\5\2\63\64\7\24\2\2\64")
+        buf.write("\65\5\n\6\2\65\66\7\24\2\2\66\67\5\f\7\2\678\7\27\2\2")
+        buf.write("8\7\3\2\2\29:\7\4\2\2:;\7\25\2\2;<\7\r\2\2<\t\3\2\2\2")
+        buf.write("=>\7\5\2\2>?\7\25\2\2?@\7\16\2\2@\13\3\2\2\2AB\7\6\2\2")
+        buf.write("BC\7\25\2\2CD\5\16\b\2D\r\3\2\2\2EH\5\20\t\2FH\5\30\r")
+        buf.write("\2GE\3\2\2\2GF\3\2\2\2H\17\3\2\2\2IJ\7\26\2\2JK\7\7\2")
+        buf.write("\2KL\7\25\2\2LM\5\22\n\2MN\7\27\2\2N\21\3\2\2\2OP\7\26")
+        buf.write("\2\2PQ\5&\24\2QR\7\24\2\2RS\5\24\13\2ST\7\24\2\2TU\5\26")
+        buf.write("\f\2UV\7\24\2\2VW\5\36\20\2WX\7\27\2\2X\23\3\2\2\2YZ\7")
+        buf.write("\b\2\2Z[\7\25\2\2[\\\5\16\b\2\\\25\3\2\2\2]^\7\t\2\2^")
+        buf.write("_\7\25\2\2_`\5\16\b\2`\27\3\2\2\2ab\7\26\2\2bc\7\n\2\2")
+        buf.write("cd\7\25\2\2de\5\32\16\2ef\7\27\2\2f\31\3\2\2\2gh\7\30")
+        buf.write("\2\2hm\5\34\17\2ij\7\24\2\2jl\5\34\17\2ki\3\2\2\2lo\3")
+        buf.write("\2\2\2mk\3\2\2\2mn\3\2\2\2np\3\2\2\2om\3\2\2\2pq\7\31")
+        buf.write("\2\2q\33\3\2\2\2rs\7\26\2\2st\5&\24\2tu\7\24\2\2uv\5\36")
+        buf.write("\20\2vw\7\27\2\2w\35\3\2\2\2xy\7\f\2\2yz\7\25\2\2z{\5")
+        buf.write(" \21\2{\37\3\2\2\2|\u0085\7\26\2\2}\u0082\5\"\22\2~\177")
+        buf.write("\7\24\2\2\177\u0081\5\"\22\2\u0080~\3\2\2\2\u0081\u0084")
+        buf.write("\3\2\2\2\u0082\u0080\3\2\2\2\u0082\u0083\3\2\2\2\u0083")
+        buf.write("\u0086\3\2\2\2\u0084\u0082\3\2\2\2\u0085}\3\2\2\2\u0085")
+        buf.write("\u0086\3\2\2\2\u0086\u0087\3\2\2\2\u0087\u0088\7\27\2")
+        buf.write("\2\u0088!\3\2\2\2\u0089\u008a\7\r\2\2\u008a\u008b\7\25")
+        buf.write("\2\2\u008b\u008c\5$\23\2\u008c#\3\2\2\2\u008d\u008e\t")
+        buf.write("\2\2\2\u008e%\3\2\2\2\u008f\u0090\7\13\2\2\u0090\u0091")
+        buf.write("\7\25\2\2\u0091\u0092\7\16\2\2\u0092\'\3\2\2\2\6Gm\u0082")
+        buf.write("\u0085")
         return buf.getvalue()
 
 
@@ -656,12 +656,12 @@ class aiJsonParser ( Parser ):
             return self.getTypedRuleContext(aiJsonParser.ChildfalseContext,0)
 
 
-        def RBR(self):
-            return self.getToken(aiJsonParser.RBR, 0)
-
         def attributes(self):
             return self.getTypedRuleContext(aiJsonParser.AttributesContext,0)
 
+
+        def RBR(self):
+            return self.getToken(aiJsonParser.RBR, 0)
 
         def getRuleIndex(self):
             return aiJsonParser.RULE_conditiondata
@@ -687,7 +687,6 @@ class aiJsonParser ( Parser ):
 
         localctx = aiJsonParser.ConditiondataContext(self, self._ctx, self.state)
         self.enterRule(localctx, 16, self.RULE_conditiondata)
-        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 77
@@ -702,17 +701,11 @@ class aiJsonParser ( Parser ):
             self.match(aiJsonParser.COM)
             self.state = 82
             self.childfalse()
+            self.state = 83
+            self.match(aiJsonParser.COM)
+            self.state = 84
+            self.attributes()
             self.state = 85
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==aiJsonParser.COM:
-                self.state = 83
-                self.match(aiJsonParser.COM)
-                self.state = 84
-                self.attributes()
-
-
-            self.state = 87
             self.match(aiJsonParser.RBR)
         except RecognitionException as re:
             localctx.exception = re
@@ -764,11 +757,11 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 18, self.RULE_childtrue)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 89
+            self.state = 87
             self.match(aiJsonParser.CHILDTRUE)
-            self.state = 90
+            self.state = 88
             self.match(aiJsonParser.SC)
-            self.state = 91
+            self.state = 89
             self.node()
         except RecognitionException as re:
             localctx.exception = re
@@ -820,11 +813,11 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 20, self.RULE_childfalse)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 93
+            self.state = 91
             self.match(aiJsonParser.CHILDFALSE)
-            self.state = 94
+            self.state = 92
             self.match(aiJsonParser.SC)
-            self.state = 95
+            self.state = 93
             self.node()
         except RecognitionException as re:
             localctx.exception = re
@@ -882,15 +875,15 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 22, self.RULE_actionblock)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 97
+            self.state = 95
             self.match(aiJsonParser.LBR)
-            self.state = 98
+            self.state = 96
             self.match(aiJsonParser.ACTIONBLOCK)
-            self.state = 99
+            self.state = 97
             self.match(aiJsonParser.SC)
-            self.state = 100
+            self.state = 98
             self.actionlist()
-            self.state = 101
+            self.state = 99
             self.match(aiJsonParser.RBR)
         except RecognitionException as re:
             localctx.exception = re
@@ -952,23 +945,23 @@ class aiJsonParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 103
+            self.state = 101
             self.match(aiJsonParser.LB)
-            self.state = 104
+            self.state = 102
             self.action()
-            self.state = 109
+            self.state = 107
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==aiJsonParser.COM:
-                self.state = 105
+                self.state = 103
                 self.match(aiJsonParser.COM)
-                self.state = 106
+                self.state = 104
                 self.action()
-                self.state = 111
+                self.state = 109
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 112
+            self.state = 110
             self.match(aiJsonParser.RB)
         except RecognitionException as re:
             localctx.exception = re
@@ -991,15 +984,15 @@ class aiJsonParser ( Parser ):
             return self.getTypedRuleContext(aiJsonParser.Type_idContext,0)
 
 
-        def RBR(self):
-            return self.getToken(aiJsonParser.RBR, 0)
-
         def COM(self):
             return self.getToken(aiJsonParser.COM, 0)
 
         def attributes(self):
             return self.getTypedRuleContext(aiJsonParser.AttributesContext,0)
 
+
+        def RBR(self):
+            return self.getToken(aiJsonParser.RBR, 0)
 
         def getRuleIndex(self):
             return aiJsonParser.RULE_action
@@ -1025,24 +1018,17 @@ class aiJsonParser ( Parser ):
 
         localctx = aiJsonParser.ActionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 26, self.RULE_action)
-        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 114
+            self.state = 112
             self.match(aiJsonParser.LBR)
-            self.state = 115
+            self.state = 113
             self.type_id()
-            self.state = 118
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==aiJsonParser.COM:
-                self.state = 116
-                self.match(aiJsonParser.COM)
-                self.state = 117
-                self.attributes()
-
-
-            self.state = 120
+            self.state = 114
+            self.match(aiJsonParser.COM)
+            self.state = 115
+            self.attributes()
+            self.state = 116
             self.match(aiJsonParser.RBR)
         except RecognitionException as re:
             localctx.exception = re
@@ -1094,11 +1080,11 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 28, self.RULE_attributes)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 122
+            self.state = 118
             self.match(aiJsonParser.ATTRIBUTES)
-            self.state = 123
+            self.state = 119
             self.match(aiJsonParser.SC)
-            self.state = 124
+            self.state = 120
             self.attributevalues()
         except RecognitionException as re:
             localctx.exception = re
@@ -1117,15 +1103,15 @@ class aiJsonParser ( Parser ):
         def LBR(self):
             return self.getToken(aiJsonParser.LBR, 0)
 
+        def RBR(self):
+            return self.getToken(aiJsonParser.RBR, 0)
+
         def attributevalue(self, i:int=None):
             if i is None:
                 return self.getTypedRuleContexts(aiJsonParser.AttributevalueContext)
             else:
                 return self.getTypedRuleContext(aiJsonParser.AttributevalueContext,i)
 
-
-        def RBR(self):
-            return self.getToken(aiJsonParser.RBR, 0)
 
         def COM(self, i:int=None):
             if i is None:
@@ -1160,23 +1146,29 @@ class aiJsonParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 126
+            self.state = 122
             self.match(aiJsonParser.LBR)
-            self.state = 127
-            self.attributevalue()
-            self.state = 132
+            self.state = 131
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==aiJsonParser.COM:
-                self.state = 128
-                self.match(aiJsonParser.COM)
-                self.state = 129
+            if _la==aiJsonParser.APHSTRING:
+                self.state = 123
                 self.attributevalue()
-                self.state = 134
+                self.state = 128
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
+                while _la==aiJsonParser.COM:
+                    self.state = 124
+                    self.match(aiJsonParser.COM)
+                    self.state = 125
+                    self.attributevalue()
+                    self.state = 130
+                    self._errHandler.sync(self)
+                    _la = self._input.LA(1)
 
-            self.state = 135
+
+
+            self.state = 133
             self.match(aiJsonParser.RBR)
         except RecognitionException as re:
             localctx.exception = re
@@ -1228,11 +1220,11 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 32, self.RULE_attributevalue)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 137
+            self.state = 135
             self.match(aiJsonParser.APHSTRING)
-            self.state = 138
+            self.state = 136
             self.match(aiJsonParser.SC)
-            self.state = 139
+            self.state = 137
             self.value()
         except RecognitionException as re:
             localctx.exception = re
@@ -1281,7 +1273,7 @@ class aiJsonParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 141
+            self.state = 139
             _la = self._input.LA(1)
             if not(_la==aiJsonParser.APHSTRING or _la==aiJsonParser.INTEGER):
                 self._errHandler.recoverInline(self)
@@ -1337,11 +1329,11 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 36, self.RULE_type_id)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 143
+            self.state = 141
             self.match(aiJsonParser.TYPE_ID)
-            self.state = 144
+            self.state = 142
             self.match(aiJsonParser.SC)
-            self.state = 145
+            self.state = 143
             self.match(aiJsonParser.INTEGER)
         except RecognitionException as re:
             localctx.exception = re

@@ -2,14 +2,16 @@ import pygame
 from objects import Object, ColorValues
 import time
 
-VISUAL_DEBUG = True
+# TODO: Make it so that it is more a component that can be toggled on. 
+# Importing simulation imported this module, which resulted in the imgaes being loaded. 
+VISUAL_DEBUG = False
 
 screen = None
 
-tank_body = pygame.image.load("debug_images/tank_body.png")
-tank_turret = pygame.image.load("debug_images/tank_turret.png")
 
 if VISUAL_DEBUG:
+    tank_body = pygame.image.load("debug_images/tank_body.png")
+    tank_turret = pygame.image.load("debug_images/tank_turret.png")
     display = pygame.display.set_mode((1920, 1080))
     screen = pygame.Surface((610, 410))
 

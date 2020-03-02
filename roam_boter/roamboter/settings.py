@@ -24,7 +24,7 @@ SECRET_KEY = 'jpppj^ex3k^(04i&athc+^=*_&71qe!$%8syf2lkx6anmts@mm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,7 +41,11 @@ INSTALLED_APPS = [
 
     # Our Applications
     'roamboter',
+    'simulation',
+    'AIapi',
     'home',
+    'dashboard',
+
 ]
 
 MIDDLEWARE = [
@@ -108,6 +112,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# URLS used for logging in and logging out workshop owners.
+LOGIN_URL = "/dashboard/login"
+LOGOUT_REDIRECT_URL = "/dashboard/login"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -139,6 +146,11 @@ LOGGING = {
     },
     'loggers': {
         'matchmaking.views' : {
+            'handlers': ['console'],
+            'level' : 'DEBUG',
+            'propogate': True,
+        },
+        'debugLogger' : {
             'handlers': ['console'],
             'level' : 'DEBUG',
             'propogate': True,

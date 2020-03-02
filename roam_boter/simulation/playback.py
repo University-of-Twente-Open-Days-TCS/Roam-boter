@@ -2,8 +2,8 @@ from tank import Tank
 from bullet import Bullet
 from objects import Object
 from EvaluationTree import EvaluationTree
-from conditions import Condition
-from actions import Action
+from ai.conditions import Condition
+from ai.actions import Action
 
 from copy import deepcopy
 
