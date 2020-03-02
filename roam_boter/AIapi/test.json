@@ -12,7 +12,7 @@
                                 "actionblock" : 
                                     [
                                         {
-                                            "type-id" : 123,
+                                            "type-id" : 1,
                                             "attributes" : {}
                                         }, 
                                         {
@@ -33,11 +33,7 @@
                                         {
                                             "type-id" : 1,
                                             "attributes" : {}
-                                        }, 
-                                        {
-                                            "type-id" : 6,
-                                            "attributes" : {}
-                                        }
+                                        } 
                                     ]
                             },
                         "attributes" : 

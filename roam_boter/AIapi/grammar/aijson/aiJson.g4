@@ -18,10 +18,6 @@ childtrue   : CHILDTRUE SC node ;
 childfalse  : CHILDFALSE SC node ;
 
 
-
-
-
-
 actionblock : LBR ACTIONBLOCK SC actionlist RBR ;
 actionlist  : LB action (COM action)* RB ;
 action      : LBR type_id COM attributes RBR;

@@ -4,14 +4,12 @@ from antlr4 import *
 from grammar.aijson.aiJsonLexer import aiJsonLexer
 from grammar.aijson.aiJsonParser import aiJsonParser
 
-from AITreeConverter import AITreeConverter
+from EvaluationTreeConverter import EvaluationTreeConverter
 
 def create_ai_evaluation_tree(parseTree):
-    converter = AITreeConverter()
-    walker = ParseTreeWalker()
-    evalTree = walker.walk(converter, parseTree)
-    return evalTree
-
+    evaluation_tree_converter = EvaluationTreeConverter()
+    converted_tree = evaluation_tree_converter.visit(parseTree)
+    return converted_tree
 
 
 def main(argv):
