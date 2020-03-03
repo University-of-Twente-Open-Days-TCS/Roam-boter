@@ -23,11 +23,16 @@ import home.urls as home_urls
 import AIapi.urls as AIapi_urls
 import dashboard.urls as dashboard_urls
 
+from . import views
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),                #standard django admin urls
     path(r'ai/', include(AIapi_urls)),
     path(r'dashboard/', include(dashboard_urls)),
+    path(r'csrf/', views.csrf),                     #ping server. Useful for setting csrf cookie.
+    path(r'test/', views.test),                     #ping test
     path(r'', include(home_urls)),]
+
 
 
 

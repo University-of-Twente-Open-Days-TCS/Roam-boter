@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # External Apps
+    'corsheaders',
     'fontawesome_5',
 
-    # Our Applications
+    # Our App
     'roamboter',
     'AIapi',
     'home',
@@ -50,6 +52,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # Cors headers middleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -110,6 +114,13 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# CORS SETTINGS
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000',] #change to app.example.com
+
+# CSRF TRUSTED DOMAINS
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000',] #change to app.example.com
 
 # URLS used for logging in and logging out workshop owners.
 LOGIN_URL = "/dashboard/login"
