@@ -74,9 +74,10 @@
 // then create layer
 var layer = new Konva.Layer();
 var templayer = new Konva.Layer();
-const blockHeight = 40;
+const blockHeight = 50;
 const blockWidth = 100;
 const circle_radius = 10;
+const hitboxCircleRadius = 20;
 var inputDict = new Map([]);
 var trashcanlayer = new Konva.Layer();
 
@@ -172,9 +173,19 @@ class condition {
             fill: 'white',
             stroke: 'black',
         });
-        inputDict.set(this.inputCircle, this);
+        this.inputCircleHitbox = new Konva.Circle({
+            y: 0,
+            x: this.rect.width() / 2,
+            radius: hitboxCircleRadius,
+            fill: 'white',
+            stroke: 'black',
+            opacity: 0
+        });
+
+        inputDict.set(this.inputCircleHitbox, this);
 
         this.group.add(this.inputCircle);
+        this.group.add(this.inputCircleHitbox);
     }
 
     //base rectangle which contains the condition text
@@ -224,9 +235,9 @@ class condition {
             draggable: true,
             y: circle.y(),
             x: circle.x(),
-            radius: circle_radius,
+            radius: hitboxCircleRadius,
             fill: 'black',
-            opacity: 0.5
+            opacity: 0
         });
 
 
@@ -262,7 +273,6 @@ class condition {
                 this.tempArrow.absolutePosition({x:0, y:0});
                 var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
                 this.tempArrow.points(points.map(function(p){return p / stage.scale}));
-                console.log(this.tempArrow.x());
             templayer.batchDraw();
         });
         let g = this.group;
@@ -496,9 +506,143 @@ class actionNode {
 class startNode {
     arrow;
 
-    constructor() {
-        //    bla insert shape and a point which can be dragged to a condition/action
+    _trueArrow = null;
+
+    get trueArrow() {
+        return this._trueArrow;
     }
+
+    set trueArrow(value) {
+        this._trueArrow = value;
+    }
+
+    constructor(stage, layer) {
+        //    bla insert shape and a point which can be dragged to a condition/action
+        this.createGroup(stage, layer);
+    }
+
+    createGroup(stage, layer){
+        this.group = new Konva.Group({
+            draggable: true
+        });
+        this.createRect();
+        this.createTrueCircle();
+        this.createDragCircle(this.trueCircle, stage, layer);
+        let node = this;
+        var conditionNode = this;
+        this.group.on("dragmove", function(){
+               node.updateArrows(stage)
+        });
+    }
+
+    createRect() {
+        this.rect = new Konva.Rect({
+            x: 0,
+            y: 0,
+            width: blockWidth,
+            height: blockHeight,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 2,
+            cornerRadius: 10,
+        });
+        this.group.add(this.rect);
+    }
+
+    //create a circle from which the true connection is made to another node
+    createTrueCircle() {
+        this.trueCircle = new Konva.Circle({
+            y: this.rect.height(),
+            x: this.rect.width() / 2,
+            radius: circle_radius,
+            fill: 'green',
+            stroke: 'black',
+        });
+        this.group.add(this.trueCircle);
+
+    }
+
+    //creates an invisible circle used only for making a new connection between nodes, based on condition will create one for true or for false
+    createDragCircle(circle, stage, layer) {
+        let node = this;
+        let dragCircle = new Konva.Circle({
+            draggable: true,
+            y: circle.y(),
+            x: circle.x(),
+            radius: hitboxCircleRadius,
+            fill: 'black',
+            opacity: 0
+        });
+
+
+        this.group.add(dragCircle);
+
+        dragCircle.originalX = dragCircle.x();
+        dragCircle.originalY = dragCircle.y();
+
+        //when the invisible circle starts to be dragged create a new temporary arrow
+        dragCircle.on("dragstart", function () {
+            this.tempX = this.getAbsolutePosition().x;
+            this.tempY = this.getAbsolutePosition().y;
+            //it is important that the invisible circle is in a different layer in order to check what is under the cursor it later
+            this.moveTo(templayer);
+            this.tempArrow = new Konva.Arrow({
+                stroke: "black",
+                fill: "black"
+            });
+
+            //deleten any existing arrow
+            if (condition && node.trueArrow != null) {
+                node.trueArrow.delete();
+            } else if (!condition && node.falseArrow != null) {
+                node.falseArrow.delete();
+            }
+
+            templayer.add(this.tempArrow);
+        });
+
+        //update the temporary arrow
+        dragCircle.on("dragmove", function () {
+            //this is to offset the position of the stage
+                this.tempArrow.absolutePosition({x:0, y:0});
+                var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
+                this.tempArrow.points(points.map(function(p){return p / stage.scale}));
+            templayer.batchDraw();
+        });
+        let g = this.group;
+        //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
+        dragCircle.on("dragend", function () {
+            var touchPos = stage.getPointerPosition();
+            var intersect = layer.getIntersection(touchPos);
+            console.log(intersect);
+            console.log(inputDict[intersect]);
+            if (inputDict.has(intersect)) {
+                if (inputDict.get(intersect).inputArrow != null) {
+                    inputDict.get(intersect).inputArrow.delete();
+                }
+                new arrow(node, inputDict.get(intersect), true, stage);
+            }
+            this.moveTo(g);
+            this.x(this.originalX);
+            this.y(this.originalY);
+            this.tempArrow.destroy();
+            this.tempArrow = null;
+            layer.batchDraw();
+            templayer.batchDraw();
+        });
+    }
+
+    getTrueDotPosition() {
+        let pos = this.trueCircle.getAbsolutePosition();
+        return [pos.x, pos.y];
+    }
+
+    updateArrows(stage) {
+        if (this.trueArrow != null) {
+            this.trueArrow.update(stage);
+        }
+    }
+
 }
 
 function treeToJson(startnode) {
@@ -692,12 +836,14 @@ function jsonify(node) {
 function addCondition(stage, layer) {
     let newCondition = new condition(stage, layer);
     layer.add(newCondition.group);
+    newCondition.group.absolutePosition({x: stageWidth / 2, y: stageHeight / 2});
     stage.draw();
 }
 
 function addActionNode(stage, layer) {
     let newActionNode = new actionNode(stage, layer);
     layer.add(newActionNode.group);
+    newActionNode.group.absolutePosition({x: stageWidth / 2, y: stageHeight / 2});
     stage.draw();
 }
 
@@ -720,7 +866,6 @@ document.getElementById('addActionNode').addEventListener(
     },
     false
 );
-    console.log("hey, hoi, hallo");
 
 //make trashcan
 function addTrashcan(stage, trashcanlayer) {
@@ -743,6 +888,8 @@ function addTrashcan(stage, trashcanlayer) {
 
 }
 
+var s = new startNode(stage, layer);
+layer.add(s.group);
 stage.add(trashcanlayer);
 stage.add(layer);
 stage.add(templayer);
