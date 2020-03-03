@@ -2,9 +2,9 @@ from levelloader import LevelLoader
 from tank import Tank
 from objects import Object
 import visual_debug
-from EvaluationTree import EvaluationTree
-from ai.conditions import Condition
-from ai.actions import Action
+from AINode import ActionNode, ConditionNode
+from conditions import Condition
+from actions import Action
 from playback import PlayBack, PlayBackEncoder
 from level import Level
 
@@ -12,7 +12,7 @@ import json
 
 import time
 
-MAX_GAME_LENGTH = 1000
+MAX_GAME_LENGTH = 10000
 
 
 class SimulationState:
@@ -38,7 +38,7 @@ class Simulation:
     def set_starting_position(self):
         spawns = self.get_spawns()
         for i, tank in enumerate(self.get_tanks()):
-            tank.spawn = spawns[i] + (0.5, 0.5)
+            tank.spawn = spawns[i]
             tank.set_pos(tank.spawn[0], tank.spawn[1])
             if spawns[i][1] < self.state.level.get_height() / 2:
                 tank.set_rotation(180)
@@ -50,7 +50,7 @@ class Simulation:
 
         for obj, x, y in self.state.level.iterate():
             if obj == Object.SPAWN:
-                result.append((float(x), float(y)))
+                result.append((float(x) + 0.5, float(y) + 0.5))
         return result
 
     def has_ended(self):
@@ -99,17 +99,12 @@ class Simulation:
 if __name__ == "__main__":
     level_loader = LevelLoader()
 
-    ai = EvaluationTree()
-    ai.leaf = False
-    ai.condition = Condition(0, (Object.TANK, 5))
+    false_node = ActionNode([Action(8, {})])
+    true_node = ActionNode([Action(1, {'obj': Object.HILL}), Action(8, {}), Action(5, {'obj': Object.TANK})])
 
-    ai.set_yes_child(EvaluationTree())
-    ai.set_no_child(EvaluationTree())
+    ai = ConditionNode(Condition(1, {'obj': Object.TANK, 'distance': 10}), true_node, false_node)
 
-    ai.yes().actions = [Action(0, (Object.TANK,)), Action(3, ()), Action(2, (Object.TANK, ))]
-    ai.no().actions = [Action(3, ())]
-
-    a = Simulation(level_loader.load_level("levels/level1.png"), [ai, ai])
+    a = Simulation(level_loader.load_level("levels/level2.png"), [ai, ai])
 
     while not a.has_ended():
         print(a.step())

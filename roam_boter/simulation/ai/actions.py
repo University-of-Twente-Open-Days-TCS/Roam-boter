@@ -38,7 +38,6 @@ def move_to_nearest_object(tank, state, obj):
 
     else:
         # find nearest obj in state.level to move to.
-        goal = get_nearest_level_object(state, obj)
     move_to_position(state, tank, goal)
 
     pass

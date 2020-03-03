@@ -2,8 +2,8 @@ from objects import Object
 
 import math
 
-TANK_TURN_SPEED = 2.5
-TURRET_TURN_SPEED = 2.3
+TANK_TURN_SPEED = 3
+TURRET_TURN_SPEED = 4
 
 
 class Tank:
@@ -28,6 +28,8 @@ class Tank:
     width = 1
     height = 1
 
+    path = None
+
     def __init__(self, ai):
         self.ai = ai
         self.actions = []
@@ -49,8 +51,9 @@ class Tank:
     def move_forward(self, state):
         dx = -math.sin(math.radians(self.rotation)) * self.speed
         dy = -math.cos(math.radians(self.rotation)) * self.speed
-        if not self.check_collision(state, dx, dy):
-            self.move(dx, dy)
+        # if not self.check_collision(state, dx, dy):
+        #     self.move(dx, dy)
+        self.move(dx, dy)
 
     def set_rotation(self, angle):
         self.rotation = angle
@@ -115,7 +118,39 @@ class Tank:
     def get_health(self):
         return self.health
 
+    def visible_tanks(self, state):
+        visible_tanks = []
 
+        for other in state.tanks:
+            if other == self:
+                continue
+
+            vision_angle = self.get_rotation() + self.get_turret_rotation()
+
+            ax = -math.sin(math.radians(vision_angle))
+            ay = -math.cos(math.radians(vision_angle))
+
+            x, y = self.get_pos()
+            other_x, other_y = other.get_pos()
+            bx, by = other_x - x, other_y - y
+
+            len_a = 1
+            len_b = math.sqrt(bx ** 2 + by ** 2)
+
+            inproduct = ((ax * bx) + (ay * by)) / (len_a * len_b)
+            if inproduct > 1:
+                inproduct = 1
+
+            angle = math.degrees(math.acos(inproduct))
+
+            if angle < 20 or angle > 340:
+                if state.level.line_of_sight(self.get_pos(), other.get_pos()):
+                    visible_tanks.append(other)
+
+        return visible_tanks
+
+    def visible_bullets(self, state):
+        pass
 
 
 

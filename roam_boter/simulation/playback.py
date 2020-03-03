@@ -1,9 +1,10 @@
 from tank import Tank
 from bullet import Bullet
 from objects import Object
-from EvaluationTree import EvaluationTree
-from ai.conditions import Condition
-from ai.actions import Action
+from conditions import Condition
+from actions import Action
+from AINode import AINode
+from level import Level
 
 from copy import deepcopy
 
@@ -44,12 +45,14 @@ class PlayBackEncoder(JSONEncoder):
             return obj.__dict__
         elif isinstance(obj, Object):
             return obj.__str__()
-        elif isinstance(obj, EvaluationTree):
+        elif isinstance(obj, AINode):
             return obj.__dict__
         elif isinstance(obj, Action):
             return obj.__dict__
         elif isinstance(obj, Condition):
             return obj.__dict__
+        elif isinstance(obj, Level):
+            return None
         else:
             print(obj)
             return json.JSONEncoder.default(self, object)

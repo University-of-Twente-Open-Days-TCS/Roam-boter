@@ -30,4 +30,5 @@ ALL_OBJECTS = [
     Object.HEAL,
     Object.TANK,
     Object.BULLET,
+    Object.HILL,
 ]

@@ -3,25 +3,19 @@ from bullet import Bullet
 
 from utils import *
 
-
-# An action executable by a tank
-# Contains an id indicating which action in the ACTIONS list.
-# params is a tuple of parameters. VERY IMPORTANT
-# hint: tuples of 1 size can be made with (x, )
+"""Actions are described here."""
 class Action:
-    id = 0
-    params = () #TODO Will be replaced by a dict
 
-    def __init__(self, id=-1, params=()):
-        self.id = id
-        self.params = params
-        pass
+    def __init__(self, action_id, attributes):
+        self.action_id = action_id
+        self.attributes = attributes
 
     def execute(self, tank, state):
-        ACTIONS[self.id](tank, state, *self.params)
+        # pass execution to correct function
+        ACTIONS[self.action_id](tank, state, **self.attributes)
 
     def __repr__(self):
-        return ACTIONS[self.id].__name__ + " " + str(self.id) + " " + str(self.params)
+        return ACTIONS[self.action_id].__name__ + " " + str(self.action_id) + " " + str(self.attributes)
 
 
 # The function correlated with the action of the tank moving to a nearest object.
@@ -44,8 +38,9 @@ def move_to_nearest_object(tank, state, obj):
 
     else:
         # find nearest obj in state.level to move to.
-        goal = get_nearest_level_object(state, obj)
-    move_to_position(state, tank, goal)
+        goal = state.level.get_path_to_object(tank, obj)
+    if goal is not None:
+        move_to_position(state, tank, goal)
 
     pass
 
@@ -90,7 +85,10 @@ def aim_to_nearest_object(tank, state, obj):
 
     else:
         aim_goal = get_nearest_level_object(state, tank, obj)
-    aim_to_position(state, tank, aim_goal)
+
+    # Check if an object is found...
+    if aim_goal is not None:
+        aim_to_position(state, tank, aim_goal)
 
 
 def shoot(tank, state):
@@ -99,11 +97,38 @@ def shoot(tank, state):
         state.bullets.append(bullet)
         tank.shoot_ready = state.frames_passed + tank.reload_time
 
+def do_nothing(tank, state):
+    return
+
+
+def placeholder_action(tank, state):
+    raise NotImplementedError("Placeholder action should never be called")
+
 
 # List of possible actions that the AI can execute.
+# The action ID is based on the position of the action in the list.
+
 ACTIONS = [
-    move_to_nearest_object,
-    move_from_nearest_object,
-    aim_to_nearest_object,
-    shoot,
+    do_nothing,                             #0
+    move_to_nearest_object,                 #1
+    placeholder_action,                     #2
+    placeholder_action,                     #3
+    move_from_nearest_object,               #4
+    aim_to_nearest_object,                  #5
+    placeholder_action,                     #6
+    placeholder_action,                     #7
+    shoot,                                  #8
+    placeholder_action,                     #9
+    placeholder_action,                     #10
+    placeholder_action,                     #11
+    placeholder_action,                     #12
+    placeholder_action,                     #13
+    placeholder_action,                     #14
+    placeholder_action,                     #15
+    placeholder_action,                     #16
+    placeholder_action,                     #17
+    placeholder_action,                     #18
+    placeholder_action,                     #19
+    placeholder_action,                     #20
+    placeholder_action,                     #21
 ]

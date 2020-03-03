@@ -12,9 +12,7 @@ def get_nearest_tank(state, tank):
     closest = None
     closest_distance = 999999999
 
-    for other in state.tanks:
-        if other == tank:
-            continue
+    for other in tank.visible_tanks(state):
         dist = distance_squared((tank.x, tank.y), (other.x, other.y))
         if dist < closest_distance and within_turret_cone(tank, other.x, other.y):
             closest = other
@@ -43,16 +41,19 @@ def move_to_position(state, tank, goal):
 
     distance = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
-    dx = (x2 - x1) / distance * tank.speed
-    dy = (y2 - y1) / distance * tank.speed
+    dx, dy = 0, 0
 
-    ndx, ndy = 0, 0
+    if distance > 0:
+        dx = (x2 - x1) / distance * tank.speed
+        dy = (y2 - y1) / distance * tank.speed
 
-    if not tank.check_collision(state, dx=dx):
-        ndx = dx
+    ndx, ndy = dx, dy
 
-    if not tank.check_collision(state, dx=ndx, dy=dy):
-        ndy = dy
+    # if not tank.check_collision(state, dx=dx):
+    #     ndx = dx
+    #
+    # if not tank.check_collision(state, dx=ndx, dy=dy):
+    #     ndy = dy
 
     goal_angle = angle_tank_towards_position(state, tank, (ndx, ndy))
     angle_difference = ((goal_angle % 360) - (tank.get_rotation() % 360)) % 360

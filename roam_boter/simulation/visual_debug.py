@@ -1,10 +1,11 @@
 import pygame
 from objects import Object, ColorValues
 import time
+import math
 
 # TODO: Make it so that it is more a component that can be toggled on. 
 # Importing simulation imported this module, which resulted in the imgaes being loaded. 
-VISUAL_DEBUG = False
+VISUAL_DEBUG = True
 
 screen = None
 
@@ -27,6 +28,14 @@ def DRAW_WORLD(state):
         pygame.draw.rect(screen, color, (x * 10, y * 10, 10, 10))
 
     for tank in state.tanks:
+        if tank.path is None:
+            continue
+
+        for p in tank.path:
+            x, y = p
+            pygame.draw.rect(screen, (255, 0, 0,), (x * 10, y * 10, 10, 10))
+
+    for tank in state.tanks:
         # pygame.Surface.blit(tank_body, screen, (int(tank.x * 10), int(tank.y * 10), 10, 10))
         # pygame.Surface.blit(tank_turret, screen, (int(tank.x * 10), int(tank.y * 10), 10, 10))
         rotated_tank = pygame.transform.rotate(tank_body, tank.get_rotation())
@@ -43,6 +52,9 @@ def DRAW_WORLD(state):
 
     for bullet in state.bullets:
         pygame.draw.rect(screen, (0, 0, 0), (int(bullet.x * 10) - 2, int(bullet.y * 10) - 2, 4, 4))
+
+    for tank in state.tanks:
+        pygame.draw.rect(screen, (100, 100, 100), (math.floor(tank.get_pos()[0]) * 10, math.floor(tank.get_pos()[1]) * 10, 10, 10))
 
     new_surf = pygame.transform.scale(screen, (1920, 1080))
     display.blit(new_surf, (0, 0))
