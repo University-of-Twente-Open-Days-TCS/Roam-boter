@@ -1,9 +1,73 @@
     // first we need to create a stage
-    var stage = new Konva.Stage({
-        container: 'container',   // id of container <div>
-        width: 500,
-        height: 500
-    });
+    // var stageWidth = window.innerWidth;
+    // var stageHeight = window.innerHeight;
+    var stageWidth = 500;
+    var stageHeight = 500;
+//-----------------------------------------------------------
+// NOT OUR CODE. taken from https://konvajs.org/docs/sandbox/Multi-touch_Scale_Stage.html
+
+// by default Konva prevent some events when node is dragging
+      // it improve the performance and work well for 95% of cases
+      // we need to enable all events on Konva, even when we are dragging a node
+      // so it triggers touchmove correctly
+      Konva.hitOnDragEnabled = true;
+      var lastDist = 0;
+      var startScale = 1;
+
+      function getDistance(p1, p2) {
+        return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+      }
+
+      var stage = new Konva.Stage({
+        container: 'container',
+        width: stageWidth,
+        height: stageHeight,
+        draggable: true,
+        x: 0,
+        y: 0,
+      });
+      stage.scale = 1;
+
+      stage.on('touchmove', function(e) {
+        e.evt.preventDefault();
+        var touch1 = e.evt.touches[0];
+        var touch2 = e.evt.touches[1];
+
+        if (touch1 && touch2) {
+          var dist = getDistance(
+            {
+              x: touch1.clientX,
+              y: touch1.clientY
+            },
+            {
+              x: touch2.clientX,
+              y: touch2.clientY
+            }
+          );
+
+          if (!lastDist) {
+            lastDist = dist;
+          }
+
+          var scale = (stage.scaleX() * dist) / lastDist;
+
+          stage.scaleX(scale);
+          stage.scaleY(scale);
+          stage.scale = scale;
+          stage.batchDraw();
+          lastDist = dist;
+        }
+      });
+
+      stage.on('touchend', function() {
+        lastDist = 0;
+      });
+
+//-----------------------------------------------------------
+
+
+
+
 
     // then create layer
     var layer = new Konva.Layer();
@@ -34,19 +98,19 @@
             this.createInputCircle();
             let node = this;
             this.group.on("dragmove", function(){
-               node.updateArrows()
+               node.updateArrows(stage)
             });
         }
 
-        updateArrows(){
+        updateArrows(stage){
             if(this.trueArrow != null){
-                this.trueArrow.update();
+                this.trueArrow.update(stage);
             }
             if(this.falseArrow != null){
-                this.falseArrow.update();
+                this.falseArrow.update(stage);
             }
             if(this.inputArrow != null){
-                this.inputArrow.update();
+                this.inputArrow.update(stage);
             }
         }
 
@@ -149,8 +213,12 @@
 
             //update the temporary arrow
             dragCircle.on("dragmove", function(){
-                this.tempArrow.points([this.tempX, this.tempY, stage.getPointerPosition().x, stage.getPointerPosition().y]);
-                templayer.draw();
+                //this is to offset the position of the stage
+                this.tempArrow.absolutePosition({x:0, y:0});
+                var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
+                this.tempArrow.points(points.map(function(p){return p / stage.scale}));
+                console.log(this.tempArrow.x());
+                templayer.batchDraw();
             });
             let g = this.group;
             //when the drag is enden return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
@@ -163,15 +231,15 @@
                     if (inputDict.get(intersect).inputArrow != null){
                         inputDict.get(intersect).inputArrow.delete();
                     }
-                    new arrow(node, inputDict.get(intersect), condition);
+                    new arrow(node, inputDict.get(intersect), condition, stage);
                 }
                 this.moveTo(g);
                 this.x(this.originalX);
                 this.y(this.originalY);
                 this.tempArrow.destroy();
                 this.tempArrow = null;
-                layer.draw();
-                templayer.draw();
+                layer.batchDraw();
+                templayer.batchDraw();
             });
         }
 
@@ -215,7 +283,7 @@
         endpos;
 
         //Constructor takes the source node, destination node and whether it starts at the true- or false point as input/
-        constructor(src, dest, isTrue) {
+        constructor(src, dest, isTrue, stage) {
             this.src = src;
             this.dest = dest;
             this.isTrue = isTrue;
@@ -230,28 +298,28 @@
             this.dest.inputArrow = this;
 
             this.arrowline = new Konva.Arrow({
-                x: 0,
-                y: 0,
-                points: this.startpos.concat(this.endpos),
+                points: this.startpos.concat(this.endpos).map(function(p){return p / stage.scale}),
                 stroke: 'black'
             });
+            this.arrowline.absolutePosition({x:0, y:0});
             layer.add(this.arrowline);
-            layer.draw();
+            layer.batchDraw();
 
         }
 
 
         //Move the arrow and update the canvas
-        update() {
+        update(stage) {
             if(this.isTrue) {
                 this.startpos = this.src.getTrueDotPosition();
             } else {
                 this.startpos = this.src.getFalseDotPosition();
             }
             this.endpos = this.dest.getInputDotPosition();
-
-            this.arrowline.points(this.startpos.concat(this.endpos));
-            layer.draw();
+            //this is to offset the possible movement of the entire stage, otherwise the arrows would not be in the correct position
+            this.arrowline.absolutePosition({x:0, y:0});
+            this.arrowline.points(this.startpos.concat(this.endpos).map(function(p){return p / stage.scale}));
+            layer.batchDraw();
 
         }
 
@@ -264,7 +332,7 @@
             }
             this.dest.inputArrow = null;
             this.arrowline.destroy();
-            layer.draw();
+            layer.batchDraw();
         }
     }
 
@@ -301,7 +369,7 @@
             this.createInputCircle();
             let node = this;
             this.group.on("dragmove", function(){
-               node.updateArrows()
+               node.updateArrows(stage)
             });
         }
 
@@ -338,9 +406,9 @@
             return [pos.x, pos.y];
         }
 
-        updateArrows(){
+        updateArrows(stage){
             if(this.inputArrow != null){
-                this.inputArrow.update();
+                this.inputArrow.update(stage);
             }
         }
     }
@@ -561,7 +629,7 @@
         },
         false
     );
-
+    console.log("hey, hoi, hallo");
     stage.add(layer);
     stage.add(templayer);
 
