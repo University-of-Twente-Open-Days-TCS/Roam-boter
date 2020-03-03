@@ -1,23 +1,95 @@
-// first we need to create a stage
-var stage = new Konva.Stage({
-    container: 'container',   // id of container <div>
-    width: 500,
-    height: 500
-});
+    // first we need to create a stage
+    var stageWidth = window.innerWidth;
+    var stageHeight = window.innerHeight;
+    // var stageWidth = 1000;
+    // var stageHeight = 1000;
+//-----------------------------------------------------------
+// NOT OUR CODE. taken from https://konvajs.org/docs/sandbox/Multi-touch_Scale_Stage.html
+
+// by default Konva prevent some events when node is dragging
+      // it improve the performance and work well for 95% of cases
+      // we need to enable all events on Konva, even when we are dragging a node
+      // so it triggers touchmove correctly
+      Konva.hitOnDragEnabled = true;
+      var lastDist = 0;
+      var startScale = 1;
+
+      function getDistance(p1, p2) {
+        return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+      }
+
+      var stage = new Konva.Stage({
+        container: 'container',
+        width: stageWidth,
+        height: stageHeight,
+        draggable: true,
+        x: 0,
+        y: 0,
+      });
+      stage.scale = 1;
+
+      stage.on('touchmove', function(e) {
+        e.evt.preventDefault();
+        var touch1 = e.evt.touches[0];
+        var touch2 = e.evt.touches[1];
+
+        if (touch1 && touch2) {
+          var dist = getDistance(
+            {
+              x: touch1.clientX,
+              y: touch1.clientY
+            },
+            {
+              x: touch2.clientX,
+              y: touch2.clientY
+            }
+          );
+
+          if (!lastDist) {
+            lastDist = dist;
+          }
+
+          var scale = (stage.scaleX() * dist) / lastDist;
+
+          stage.scaleX(scale);
+          stage.scaleY(scale);
+          //the trashcan is the only thing which should not scale with the rest of the stage
+          trashcanlayer.scaleX(1 / scale);
+          trashcanlayer.scaleY(1 / scale);
+          stage.scale = scale;
+          stage.batchDraw();
+          lastDist = dist;
+        }
+      });
+
+      stage.on('touchend', function() {
+        lastDist = 0;
+      });
+
+//-----------------------------------------------------------
+
+
+
 
 // then create layer
 var layer = new Konva.Layer();
 var templayer = new Konva.Layer();
-var trashcanlayer = new Konva.Layer();
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
+const hitboxCircleRadius = 20;
 var inputDict = new Map([]);
+var trashcanlayer = new Konva.Layer();
 
 
 //coordinates where every new element spawns
 var spawnX = 0;
 var spawnY = 0;
+
+stage.on("dragmove", function(){
+    // when the stage is moved the trashcan should remain in the same position
+       trashcanlayer.absolutePosition({x:0, y:0});
+    });
 
 // var startnode = new startNode();
 
@@ -154,15 +226,15 @@ class condition {
     }
 
 
-    updateArrows() {
+    updateArrows(stage) {
         if (this.trueArrow != null) {
-            this.trueArrow.update();
+            this.trueArrow.update(stage);
         }
         if (this.falseArrow != null) {
-            this.falseArrow.update();
+            this.falseArrow.update(stage);
         }
         if (this.inputArrow != null) {
-            this.inputArrow.update();
+            this.inputArrow.update(stage);
         }
     }
 
@@ -175,9 +247,19 @@ class condition {
             fill: 'white',
             stroke: 'black',
         });
-        inputDict.set(this.inputCircle, this);
+        this.inputCircleHitbox = new Konva.Circle({
+            y: 0,
+            x: this.rect.width() / 2,
+            radius: hitboxCircleRadius,
+            fill: 'white',
+            stroke: 'black',
+            opacity: 0
+        });
+
+        inputDict.set(this.inputCircleHitbox, this);
 
         this.group.add(this.inputCircle);
+        this.group.add(this.inputCircleHitbox);
     }
 
     //create text for in the condition
@@ -222,12 +304,7 @@ class condition {
             });
         }
         this.group.add(this.rect);
-
-        // this.rect.on('click', function () {
-        //     alert('xss!');
-        // })
     }
-
 
     //create a circle from which the false connection is made to another node
     createFalseCircle() {
@@ -262,9 +339,9 @@ class condition {
             draggable: true,
             y: circle.y(),
             x: circle.x(),
-            radius: circle_radius,
+            radius: hitboxCircleRadius,
             fill: 'black',
-            opacity: 0.5
+            opacity: 0
         });
 
 
@@ -298,8 +375,11 @@ class condition {
 
         //update the temporary arrow
         dragCircle.on("dragmove", function () {
-            this.tempArrow.points([this.tempX, this.tempY, stage.getPointerPosition().x, stage.getPointerPosition().y]);
-            templayer.draw();
+            //this is to offset the position of the stage
+                this.tempArrow.absolutePosition({x:0, y:0});
+                var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
+                this.tempArrow.points(points.map(function(p){return p / stage.scale}));
+            templayer.batchDraw();
         });
         let g = this.group;
 
@@ -308,13 +388,13 @@ class condition {
         dragCircle.on("dragend", function () {
             var touchPos = stage.getPointerPosition();
             var intersect = layer.getIntersection(touchPos);
-            // console.log(intersect);
-            // console.log(inputDict[intersect]);
+            console.log(intersect);
+            console.log(inputDict[intersect]);
             if (inputDict.has(intersect)) {
                 if (inputDict.get(intersect).inputArrow != null) {
                     inputDict.get(intersect).inputArrow.delete();
                 }
-                new arrow(node, inputDict.get(intersect), condition);
+                new arrow(node, inputDict.get(intersect), condition, stage);
             }
             this.moveTo(g);
             this.x(this.originalX);
@@ -468,7 +548,7 @@ class arrow {
     endpos;
 
     //Constructor takes the source node, destination node and whether it starts at the true- or false point as input/
-    constructor(src, dest, isTrue) {
+    constructor(src, dest, isTrue, stage) {
         this.src = src;
         this.dest = dest;
         this.isTrue = isTrue;
@@ -484,33 +564,34 @@ class arrow {
         this.dest.inputArrow = this;
 
         this.arrowline = new Konva.Arrow({
-            x: 0,
-            y: 0,
-            points: this.startpos.concat(this.endpos),
+            points: this.startpos.concat(this.endpos).map(function(p){return p / stage.scale}),
             stroke: 'black'
         });
+        this.arrowline.absolutePosition({x:0, y:0});
         layer.add(this.arrowline);
-        layer.draw();
+        this.update(stage);
 
     }
 
 
     //Move the arrow and update the canvas
-    update() {
+    update(stage) {
         if (this.isTrue) {
             this.startpos = this.src.getTrueDotPosition();
         } else {
             this.startpos = this.src.getFalseDotPosition();
         }
         this.endpos = this.dest.getInputDotPosition();
-
-        this.arrowline.points(this.startpos.concat(this.endpos));
-        layer.draw();
+        //this is to offset the possible movement of the entire stage, otherwise the arrows would not be in the correct position
+        this.arrowline.absolutePosition({x:0, y:0});
+        this.arrowline.points(this.startpos.concat(this.endpos).map(function(p){return p / stage.scale}));
+        layer.batchDraw();
 
     }
 
     //Remove the arrow from the canvas and set the corresponding values at the src&dest nodes to null
     delete() {
+        console.log("delete arrow!");
         if (this.isTrue) {
             this.src.trueArrow = null;
         } else {
@@ -556,7 +637,7 @@ class actionNode {
         this.createInputCircle();
         let node = this;
         this.group.on("dragmove", function () {
-            node.updateArrows()
+            node.updateArrows(stage)
         });
         let thisActionNode = this;
         this.group.on("dragend", function () {
@@ -603,9 +684,9 @@ class actionNode {
         return [pos.x, pos.y];
     }
 
-    updateArrows() {
+    updateArrows(stage) {
         if (this.inputArrow != null) {
-            this.inputArrow.update();
+            this.inputArrow.update(stage);
         }
     }
 
@@ -621,9 +702,143 @@ class actionNode {
 class startNode {
     arrow;
 
-    constructor() {
-        //    bla insert shape and a point which can be dragged to a condition/action
+    _trueArrow = null;
+
+    get trueArrow() {
+        return this._trueArrow;
     }
+
+    set trueArrow(value) {
+        this._trueArrow = value;
+    }
+
+    constructor(stage, layer) {
+        //    bla insert shape and a point which can be dragged to a condition/action
+        this.createGroup(stage, layer);
+    }
+
+    createGroup(stage, layer){
+        this.group = new Konva.Group({
+            draggable: true
+        });
+        this.createRect();
+        this.createTrueCircle();
+        this.createDragCircle(this.trueCircle, stage, layer);
+        let node = this;
+        var conditionNode = this;
+        this.group.on("dragmove", function(){
+               node.updateArrows(stage)
+        });
+    }
+
+    createRect() {
+        this.rect = new Konva.Rect({
+            x: 0,
+            y: 0,
+            width: blockWidth,
+            height: blockHeight,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 2,
+            cornerRadius: 10,
+        });
+        this.group.add(this.rect);
+    }
+
+    //create a circle from which the true connection is made to another node
+    createTrueCircle() {
+        this.trueCircle = new Konva.Circle({
+            y: this.rect.height(),
+            x: this.rect.width() / 2,
+            radius: circle_radius,
+            fill: 'green',
+            stroke: 'black',
+        });
+        this.group.add(this.trueCircle);
+
+    }
+
+    //creates an invisible circle used only for making a new connection between nodes, based on condition will create one for true or for false
+    createDragCircle(circle, stage, layer) {
+        let node = this;
+        let dragCircle = new Konva.Circle({
+            draggable: true,
+            y: circle.y(),
+            x: circle.x(),
+            radius: hitboxCircleRadius,
+            fill: 'black',
+            opacity: 0
+        });
+
+
+        this.group.add(dragCircle);
+
+        dragCircle.originalX = dragCircle.x();
+        dragCircle.originalY = dragCircle.y();
+
+        //when the invisible circle starts to be dragged create a new temporary arrow
+        dragCircle.on("dragstart", function () {
+            this.tempX = this.getAbsolutePosition().x;
+            this.tempY = this.getAbsolutePosition().y;
+            //it is important that the invisible circle is in a different layer in order to check what is under the cursor it later
+            this.moveTo(templayer);
+            this.tempArrow = new Konva.Arrow({
+                stroke: "black",
+                fill: "black"
+            });
+
+            //deleten any existing arrow
+            if (condition && node.trueArrow != null) {
+                node.trueArrow.delete();
+            } else if (!condition && node.falseArrow != null) {
+                node.falseArrow.delete();
+            }
+
+            templayer.add(this.tempArrow);
+        });
+
+        //update the temporary arrow
+        dragCircle.on("dragmove", function () {
+            //this is to offset the position of the stage
+                this.tempArrow.absolutePosition({x:0, y:0});
+                var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
+                this.tempArrow.points(points.map(function(p){return p / stage.scale}));
+            templayer.batchDraw();
+        });
+        let g = this.group;
+        //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
+        dragCircle.on("dragend", function () {
+            var touchPos = stage.getPointerPosition();
+            var intersect = layer.getIntersection(touchPos);
+            console.log(intersect);
+            console.log(inputDict[intersect]);
+            if (inputDict.has(intersect)) {
+                if (inputDict.get(intersect).inputArrow != null) {
+                    inputDict.get(intersect).inputArrow.delete();
+                }
+                new arrow(node, inputDict.get(intersect), true, stage);
+            }
+            this.moveTo(g);
+            this.x(this.originalX);
+            this.y(this.originalY);
+            this.tempArrow.destroy();
+            this.tempArrow = null;
+            layer.batchDraw();
+            templayer.batchDraw();
+        });
+    }
+
+    getTrueDotPosition() {
+        let pos = this.trueCircle.getAbsolutePosition();
+        return [pos.x, pos.y];
+    }
+
+    updateArrows(stage) {
+        if (this.trueArrow != null) {
+            this.trueArrow.update(stage);
+        }
+    }
+
 }
 
 function treeToJson(startnode) {
@@ -813,18 +1028,18 @@ function jsonify(node) {
     }
 }
 
-var newCondition = null;
 
-function addCondition(stage, layer, id, distance, object, label, health) {
-    newCondition = new condition(stage, layer, id, distance, object, label, health);
-    layer.add(newCondition.group)
-
+function addCondition(stage, layer) {
+    let newCondition = new condition(stage, layer);
+    layer.add(newCondition.group);
+    newCondition.group.absolutePosition({x: stageWidth / 2, y: stageHeight / 2});
     stage.draw();
 }
 
 function addActionNode(stage, layer) {
     let newActionNode = new actionNode(stage, layer);
     layer.add(newActionNode.group);
+    newActionNode.group.absolutePosition({x: stageWidth / 2, y: stageHeight / 2});
     stage.draw();
 
 }
@@ -854,7 +1069,7 @@ window.onclick = function (event) {
 document.getElementById('addCondition').addEventListener(
     'click',
     function () {
-        addCondition(stage, layer, id = 1, "5", "tank");
+        addCondition(stage, layer)
     },
     false
 );
@@ -868,7 +1083,6 @@ document.getElementById('addActionNode').addEventListener(
     false
 );
 
-
 //make trashcan
 function addTrashcan(stage, trashcanlayer) {
     var imageObj = new Image();
@@ -876,8 +1090,8 @@ function addTrashcan(stage, trashcanlayer) {
     imageObj.src = 'https://cdn0.iconfinder.com/data/icons/shopping-359/512/Bin_bin_delete_trashcan_garbage_dust-512.png';
     imageObj.onload = function () {
         let trashcan = new Konva.Image({
-            x: 420,
-            y: 50,
+            x: stageWidth - 60,
+            y: 100,
             image: imageObj,
             width: 60,
             height: 60
@@ -890,6 +1104,8 @@ function addTrashcan(stage, trashcanlayer) {
 
 }
 
+var s = new startNode(stage, layer);
+layer.add(s.group);
 stage.add(trashcanlayer);
 stage.add(layer);
 stage.add(templayer);
