@@ -1,12 +1,20 @@
 import pygame
 from objects import Object, ColorValues
+import time
+import math
 
+# TODO: Make it so that it is more a component that can be toggled on. 
+# Importing simulation imported this module, which resulted in the imgaes being loaded. 
 VISUAL_DEBUG = True
 
 screen = None
 
+
 if VISUAL_DEBUG:
-    screen = pygame.display.set_mode((480, 270))
+    tank_body = pygame.image.load("debug_images/tank_body.png")
+    tank_turret = pygame.image.load("debug_images/tank_turret.png")
+    display = pygame.display.set_mode((1920, 1080))
+    screen = pygame.Surface((610, 410))
 
 
 def DRAW_WORLD(state):
@@ -15,14 +23,40 @@ def DRAW_WORLD(state):
 
     screen.fill((255, 255, 255))
 
-    for y, row in enumerate(state.level):
-        for x, cell in enumerate(row):
-            color = next(key for key, value in ColorValues.items() if value == cell)
-            pygame.draw.rect(screen, color, (x * 10, y * 10, 10, 10))
+    for obj, x, y in state.level.iterate():
+        color = next(key for key, value in ColorValues.items() if value == obj)
+        pygame.draw.rect(screen, color, (x * 10, y * 10, 10, 10))
 
     for tank in state.tanks:
-        pygame.draw.rect(screen, (128, 128, 128), (int(tank.x * 10), int(tank.y * 10), 10, 10))
+        if tank.path is None:
+            continue
 
+        for p in tank.path:
+            x, y = p
+            pygame.draw.rect(screen, (255, 0, 0,), (x * 10, y * 10, 10, 10))
 
+    for tank in state.tanks:
+        # pygame.Surface.blit(tank_body, screen, (int(tank.x * 10), int(tank.y * 10), 10, 10))
+        # pygame.Surface.blit(tank_turret, screen, (int(tank.x * 10), int(tank.y * 10), 10, 10))
+        rotated_tank = pygame.transform.rotate(tank_body, tank.get_rotation())
+        rx, ry = rotated_tank.get_size()
+        draw_x = tank.x * 10 - (rx / 2)
+        draw_y = tank.y * 10 - (ry / 2)
+        screen.blit(rotated_tank, (int(draw_x), int(draw_y)))
 
+        rotated_turret = pygame.transform.rotate(tank_turret, tank.get_turret_rotation() + tank.get_rotation())
+        rx, ry = rotated_turret.get_size()
+        draw_x = tank.x * 10 - (rx / 2)
+        draw_y = tank.y * 10 - (ry / 2)
+        screen.blit(rotated_turret, (int(draw_x), int(draw_y)))
+
+    for bullet in state.bullets:
+        pygame.draw.rect(screen, (0, 0, 0), (int(bullet.x * 10) - 2, int(bullet.y * 10) - 2, 4, 4))
+
+    for tank in state.tanks:
+        pygame.draw.rect(screen, (100, 100, 100), (math.floor(tank.get_pos()[0]) * 10, math.floor(tank.get_pos()[1]) * 10, 10, 10))
+
+    new_surf = pygame.transform.scale(screen, (1920, 1080))
+    display.blit(new_surf, (0, 0))
     pygame.display.flip()
+    time.sleep(0.017)

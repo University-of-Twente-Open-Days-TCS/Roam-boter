@@ -38,9 +38,7 @@ def move_to_nearest_object(tank, state, obj):
 
     else:
         # find nearest obj in state.level to move to.
-        goal = state.level.get_path_to_object(tank, obj)
-    if goal is not None:
-        move_to_position(state, tank, goal)
+    move_to_position(state, tank, goal)
 
     pass
 
@@ -85,10 +83,7 @@ def aim_to_nearest_object(tank, state, obj):
 
     else:
         aim_goal = get_nearest_level_object(state, tank, obj)
-
-    # Check if an object is found...
-    if aim_goal is not None:
-        aim_to_position(state, tank, aim_goal)
+    aim_to_position(state, tank, aim_goal)
 
 
 def shoot(tank, state):
@@ -106,7 +101,7 @@ def placeholder_action(tank, state):
 
 
 # List of possible actions that the AI can execute.
-# The action ID is based on the position of the action in the list.
+# The action ID is based on the position of the action in the list. 
 
 ACTIONS = [
     do_nothing,                             #0

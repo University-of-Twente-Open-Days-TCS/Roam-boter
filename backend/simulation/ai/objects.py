@@ -8,6 +8,8 @@ class Object(Enum):
     HEAL = 3
     FLAG = 4
     HILL = 5
+    TANK = 6
+    BULLET = 7
 
 
 ColorValues = {
@@ -18,3 +20,15 @@ ColorValues = {
     (255, 0, 0): Object.FLAG,
     (255, 255, 0): Object.HILL
 }
+
+
+ALL_OBJECTS = [
+    Object.WALL,
+    Object.SPAWN,
+    Object.HEAL,
+    Object.FLAG,
+    Object.HEAL,
+    Object.TANK,
+    Object.BULLET,
+    Object.HILL,
+]
