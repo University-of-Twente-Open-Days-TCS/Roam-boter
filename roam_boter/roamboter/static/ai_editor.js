@@ -53,6 +53,9 @@
 
           stage.scaleX(scale);
           stage.scaleY(scale);
+          //the trashcan is the only thing which should not scale with the rest of the stage
+          trashcanlayer.scaleX(1 / scale);
+          trashcanlayer.scaleY(1 / scale);
           stage.scale = scale;
           stage.batchDraw();
           lastDist = dist;
@@ -68,7 +71,6 @@
 
 
 
-
 // then create layer
 var layer = new Konva.Layer();
 var templayer = new Konva.Layer();
@@ -77,6 +79,11 @@ const blockWidth = 100;
 const circle_radius = 10;
 var inputDict = new Map([]);
 var trashcanlayer = new Konva.Layer();
+
+stage.on("dragmove", function(){
+    // when the stage is moved the trashcan should remain in the same position
+       trashcanlayer.absolutePosition({x:0, y:0});
+    });
 
 // var startnode = new startNode();
 
@@ -722,8 +729,8 @@ function addTrashcan(stage, trashcanlayer) {
     imageObj.src = 'https://cdn0.iconfinder.com/data/icons/shopping-359/512/Bin_bin_delete_trashcan_garbage_dust-512.png';
     imageObj.onload = function () {
         let trashcan = new Konva.Image({
-            x: 420,
-            y: 50,
+            x: stageWidth - 60,
+            y: 100,
             image: imageObj,
             width: 60,
             height: 60
