@@ -3,20 +3,13 @@ from enum import Enum
 
 class Object(Enum):
     EMPTY = 0
-    FRIENDLY_TANK = 1
-    ENEMY_TANK = 2
-    FRIENDLY_BULLET = 3
-    ENEMY_BULLET = 4
-    WALL = 5
-    FRIENDLY_SPAWN = 6
-    ENEMY_SPAWN = 7
-    HEAL = 8
-    FLAG = 9
-    HILL = 10
-    SPAWN = 11
-    TANK = 12
-    BULLET = 13
-
+    WALL = 1
+    SPAWN = 2
+    HEAL = 3
+    FLAG = 4
+    HILL = 5
+    TANK = 6
+    BULLET = 7
 
 
 ColorValues = {
