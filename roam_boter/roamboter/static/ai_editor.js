@@ -1,8 +1,8 @@
     // first we need to create a stage
-    // var stageWidth = window.innerWidth;
-    // var stageHeight = window.innerHeight;
-    var stageWidth = 500;
-    var stageHeight = 500;
+    var stageWidth = window.innerWidth;
+    var stageHeight = window.innerHeight;
+    // var stageWidth = 1000;
+    // var stageHeight = 1000;
 //-----------------------------------------------------------
 // NOT OUR CODE. taken from https://konvajs.org/docs/sandbox/Multi-touch_Scale_Stage.html
 
@@ -130,10 +130,6 @@ class condition {
         this.createDragCircle(this.falseCircle, false, stage, layer);
         this.createInputCircle();
         let node = this;
-        this.group.on("dragmove", function () {
-            node.updateArrows();
-            console.log("dragmove");
-        });
         var conditionNode = this;
         this.group.on("dragend", function () {
             var touchPos = stage.getPointerPosition();
@@ -143,23 +139,10 @@ class condition {
                 conditionNode.remove();
             }
         })
-    }
-        //creates the group which represents a condition
-        createGroup(stage, layer) {
-            this.group = new Konva.Group({
-                draggable: true
-            });
-            this.createRect();
-            this.createFalseCircle();
-            this.createTrueCircle();
-            this.createDragCircle(this.trueCircle, true, stage, layer);
-            this.createDragCircle(this.falseCircle, false, stage, layer);
-            this.createInputCircle();
-            let node = this;
-            this.group.on("dragmove", function(){
+        this.group.on("dragmove", function(){
                node.updateArrows(stage)
-            });
-        }
+        });
+    }
 
     updateArrows(stage) {
         if (this.trueArrow != null) {
@@ -367,13 +350,13 @@ class arrow {
         this.endpos = this.dest.getInputDotPosition();
         this.dest.inputArrow = this;
 
-            this.arrowline = new Konva.Arrow({
-                points: this.startpos.concat(this.endpos).map(function(p){return p / stage.scale}),
+        this.arrowline = new Konva.Arrow({
+            points: this.startpos.concat(this.endpos).map(function(p){return p / stage.scale}),
             stroke: 'black'
         });
         this.arrowline.absolutePosition({x:0, y:0});
-            layer.add(this.arrowline);
-            layer.batchDraw();
+        layer.add(this.arrowline);
+        this.update(stage);
 
     }
 
@@ -386,8 +369,8 @@ class arrow {
             this.startpos = this.src.getFalseDotPosition();
         }
         this.endpos = this.dest.getInputDotPosition();
-            //this is to offset the possible movement of the entire stage, otherwise the arrows would not be in the correct position
-            this.arrowline.absolutePosition({x:0, y:0});
+        //this is to offset the possible movement of the entire stage, otherwise the arrows would not be in the correct position
+        this.arrowline.absolutePosition({x:0, y:0});
         this.arrowline.points(this.startpos.concat(this.endpos).map(function(p){return p / stage.scale}));
         layer.batchDraw();
 
