@@ -4,22 +4,90 @@
     <script src="https://unpkg.com/konva@4.1.5/konva.min.js"></script>
     <style>
         #buttons {
-        position: absolute;
-        top: 5px;
-        left: 300px;
-      }
-      #buttons > input {
-        padding: 10px;
-        display: inline-block;
-        margin-right: 5px;
-      }
+            position: absolute;
+            top: 5px;
+            left: 300px;
+        }
+
+        #buttons > input {
+            padding: 10px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        /*CREDITS TO https://www.w3schools.com/howto/howto_js_dropdown.asp */
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Dropdown button on hover & focus */
+        .dropbtn:hover, .dropbtn:focus {
+            background-color: #2980B9;
+        }
+
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            top: 5px;
+            left: 400px;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #ddd
+        }
+
+        /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+        .show {
+            display: block;
+        }
     </style>
 </head>
 <body>
 <div id="container"></div>
 <div id="buttons">
-    <input type="button" id="addCondition" value="Add Condition" />
-    <input type="button" id="addActionNode" value="Add ActionNode" />
+    <input type="button" id="addCondition" value="Add Condition"/>
+    <input type="button" id="addActionNode" value="Add ActionNode"/>
+</div>
+<div class="dropdown">
+    <button onclick="spawnActionNode()" class="dropbtn">New Action</button>
+    <div id="actionNodeList" class="dropdown-content">
+        <a href="#">Do Nothing </a>
+        <a href="#">Go to nearest <b>object</b></a>
+        <a href="#">Scout </a>
+        <a href="#">Patrol <b>object</b> </a>
+        <a href="#">Move away from nearest <b>object</b></a>
+        <a href="#">Aim to nearest <b>object</b> </a>
+        <a href="#">Aim <b>dir</b></a>
+        <a href="#">Aim left DEG / Aim right DEG </a>
+        <a href="#">Shoot</a>
+        <a href="#">Self-destruct</a>
+    </div>
 </div>
 <script src="ai_editor.js"></script>
 </body>

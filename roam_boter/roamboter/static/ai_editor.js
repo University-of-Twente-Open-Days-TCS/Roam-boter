@@ -8,58 +8,48 @@ var stage = new Konva.Stage({
 // then create layer
 var layer = new Konva.Layer();
 var templayer = new Konva.Layer();
+var trashcanlayer = new Konva.Layer();
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
 var inputDict = new Map([]);
-var trashcanlayer = new Konva.Layer();
+
+
+//coordinates where every new element spawns
+var spawnX = 0;
+var spawnY = 0;
 
 // var startnode = new startNode();
 
 class condition {
 
-
     _inputArrow = null;
     _trueArrow = null;
     _falseArrow = null;
+    _conditiontext = null;
+    _id = null;
+    _distance = null;
+    _object = null;
+    _label = null;
+    _health = null;
+    _stage = null;
+    _layer = null;
 
-
-    constructor(stage, layer) {
-
-        this.createGroup(stage, layer);
-    }
-
-    //Getters and setters for arrows
-    get inputArrow() {
-        return this._inputArrow;
-    }
-
-    set inputArrow(value) {
-        this._inputArrow = value;
-    }
-
-    get trueArrow() {
-        return this._trueArrow;
-    }
-
-    set trueArrow(value) {
-        this._trueArrow = value;
-    }
-
-    get falseArrow() {
-        return this._falseArrow;
-    }
-
-    set falseArrow(value) {
-        this._falseArrow = value;
-    }
-
-    //creates the group which represents a condition
-    createGroup(stage, layer) {
+    //Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
+    // and if (all) its appropriate parameter(s) is given this will be included.
+    constructor(stage, layer, id = null, distance = null, object = null, label = null, health = null) {
         this.group = new Konva.Group({
             draggable: true
         });
+
+        this.conditiontext = this.setConditionText(id, distance, object, label, health);
+        if (this.conditiontext != null) {
+            this.createText(this.conditiontext);
+        }
         this.createRect();
+        if (this.conditiontext != null) {
+            this.conditiontext.moveToTop();
+        }
         this.createFalseCircle();
         this.createTrueCircle();
         this.createDragCircle(this.trueCircle, true, stage, layer);
@@ -78,8 +68,91 @@ class condition {
             if (trashcanlayer.getIntersection(touchPos) != null) {
                 conditionNode.remove();
             }
-        })
+        });
+        this.id = id;
+        this.stage = stage;
+        this.layer = layer;
+        this.distance = distance;
+        this.object = object;
+        this.label = label;
+        this.health = health;
+        stage.draw();
+
     }
+
+    //Edit the text of a condition and with that its size
+    editCondition(stage, layer, id = null, distance = null, object = null, label = null, health = null) {
+        this.id = id;
+        this.distance = distance;
+        this.object = object;
+        this.label = label;
+        this.health = health;
+        this.conditiontext.text(this.setConditionText(id, distance, object, label, health));
+
+        //TODO make 'setsize()' method which sets the size of the blue obj and all its input/false/truedots around
+        if (this.conditiontext.text != null) {
+            this.rect.width(this.conditiontext.width());
+            this.rect.height(this.conditiontext.height());
+        } else {
+            this.rect.width(blockWidth);
+            this.rect.height(blockHeight);
+        }
+
+        stage.draw();
+
+
+    }
+
+
+    //Returns the entire next of the condition, based on its ID and possible parameters.
+    setConditionText(id, distance, object, label, health) {
+        switch (id) {
+            case 1:
+                // provide both distance and object, otherwise both will be ignored
+                if (distance == null || object == null) {
+                    return "If distance to nearest \n _object_ is greater \n than _distance_";
+                } else {
+                    return "If distance to nearest \n" + object + " is greater \n than " + distance;
+                }
+            case 2:
+                if (object == null) {
+                    return "If _object_ \n is visible";
+                } else {
+                    return "If " + object + " \n is  visible";
+                }
+            case 3:
+                if (object == null) {
+                    return "If aimed at _object_";
+                } else {
+                    return "If aimed at \n" + object;
+                }
+            case 4:
+                if (object == null) {
+                    return "If _object_ exists";
+                } else {
+                    return "If " + object + "\n exists";
+                }
+            case 5:
+                return "Bullet ready";
+            case 6:
+                if (label == null) {
+                    return "If _label_ set";
+                } else {
+                    return "If " + label + " set";
+                }
+            case 7:
+                if (health == null) {
+                    return "If health is \n greater than _amount_";
+                } else {
+                    return "If health is \n greater than " + health;
+                }
+            default:
+                return null;
+            //No or invalid ID
+        }
+
+    }
+
 
     updateArrows() {
         if (this.trueArrow != null) {
@@ -107,20 +180,54 @@ class condition {
         this.group.add(this.inputCircle);
     }
 
+    //create text for in the condition
+    createText(conditionText) {
+        this.conditiontext = new Konva.Text({
+            x: spawnX,
+            y: spawnY,
+            text: conditionText,
+            fontSize: 12,
+            fill: '#FFF',
+            fontFamily: 'Monospace',
+            align: 'center',
+            padding: 10
+        });
+        this.group.add(this.conditiontext);
+    }
+
+
     //base rectangle which contains the condition text
     createRect() {
-        this.rect = new Konva.Rect({
-            x: 0,
-            y: 0,
-            width: blockWidth,
-            height: blockHeight,
-            fill: 'blue',
-            stroke: 'black',
-            strokeWidth: 2,
-            cornerRadius: 10,
-        });
+        if (this.conditiontext != null) {
+            this.rect = new Konva.Rect({
+                x: 0,
+                y: 0,
+                width: this.conditiontext.width(),
+                height: this.conditiontext.height(),
+                fill: 'blue',
+                stroke: 'black',
+                strokeWidth: 2,
+                cornerRadius: 10,
+            });
+        } else {
+            this.rect = new Konva.Rect({
+                x: 0,
+                y: 0,
+                width: blockWidth,
+                height: blockHeight,
+                fill: 'blue',
+                stroke: 'black',
+                strokeWidth: 2,
+                cornerRadius: 10,
+            });
+        }
         this.group.add(this.rect);
+
+        // this.rect.on('click', function () {
+        //     alert('xss!');
+        // })
     }
+
 
     //create a circle from which the false connection is made to another node
     createFalseCircle() {
@@ -147,7 +254,8 @@ class condition {
 
     }
 
-    //creates an invisible circle used only for making a new connection between nodes, based on condition will create one for true or for false
+    //creates an invisible circle used only for making a new connection between nodes,
+    // based on condition will create one for true or for false
     createDragCircle(circle, condition, stage, layer) {
         let node = this;
         let dragCircle = new Konva.Circle({
@@ -169,14 +277,16 @@ class condition {
         dragCircle.on("dragstart", function () {
             this.tempX = this.getAbsolutePosition().x;
             this.tempY = this.getAbsolutePosition().y;
-            //it is important that the invisible circle is in a different layer in order to check what is under the cursor it later
+
+            //it is important that the invisible circle is in a different layer
+            // in order to check what is under the cursor later
             this.moveTo(templayer);
             this.tempArrow = new Konva.Arrow({
                 stroke: "black",
                 fill: "black"
             });
 
-            //deleten any existing arrow
+            //delete any existing arrow
             if (condition && node.trueArrow != null) {
                 node.trueArrow.delete();
             } else if (!condition && node.falseArrow != null) {
@@ -192,12 +302,14 @@ class condition {
             templayer.draw();
         });
         let g = this.group;
-        //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
+
+        //when the drag has ended, return the invisible circle to its original position, remove the temporary arrow
+        // and create a new connection between nodes if applicable
         dragCircle.on("dragend", function () {
             var touchPos = stage.getPointerPosition();
             var intersect = layer.getIntersection(touchPos);
-            console.log(intersect);
-            console.log(inputDict[intersect]);
+            // console.log(intersect);
+            // console.log(inputDict[intersect]);
             if (inputDict.has(intersect)) {
                 if (inputDict.get(intersect).inputArrow != null) {
                     inputDict.get(intersect).inputArrow.delete();
@@ -232,7 +344,6 @@ class condition {
     remove() {
         if (this.trueArrow != null) {
             this.trueArrow.delete();
-            console.log("Delete arrow!!")
         }
         if (this.falseArrow != null) {
             this.falseArrow.delete();
@@ -242,6 +353,95 @@ class condition {
         }
         this.group.destroy();
         layer.draw();
+    }
+
+    //Getters and setters for arrows and conditiontext
+    get inputArrow() {
+        return this._inputArrow;
+    }
+
+    set inputArrow(value) {
+        this._inputArrow = value;
+    }
+
+    get trueArrow() {
+        return this._trueArrow;
+    }
+
+    set trueArrow(value) {
+        this._trueArrow = value;
+    }
+
+    get falseArrow() {
+        return this._falseArrow;
+    }
+
+    set falseArrow(value) {
+        this._falseArrow = value;
+    }
+
+    get conditiontext() {
+        return this._conditiontext;
+    }
+
+    set conditiontext(value) {
+        this._conditiontext = value;
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    set id(value) {
+        this._id = value;
+    }
+
+    get stage() {
+        return this._stage;
+    }
+
+    set stage(value) {
+        this._stage = value;
+    }
+
+    get layer() {
+        return this._layer;
+    }
+
+    set layer(value) {
+        this._layer = value;
+    }
+
+    get distance() {
+        return this._distance;
+    }
+
+    set distance(value) {
+        this._distance = value;
+    }
+
+    get object() {
+        return this._object;
+    }
+
+    set object(value) {
+        this._object = value;
+    }
+
+    get label() {
+        return this._label;
+    }
+
+    set label(value) {
+        this._label = value;
+    }
+
+    get health() {
+        return this._health;
+    }
+
+    set health(value) {
+        this._health = value;
     }
 
 }
@@ -311,7 +511,6 @@ class arrow {
 
     //Remove the arrow from the canvas and set the corresponding values at the src&dest nodes to null
     delete() {
-        console.log("delete arrow!")
         if (this.isTrue) {
             this.src.trueArrow = null;
         } else {
@@ -359,7 +558,7 @@ class actionNode {
         this.group.on("dragmove", function () {
             node.updateArrows()
         });
-        let thisActionNode  = this;
+        let thisActionNode = this;
         this.group.on("dragend", function () {
             var touchPos = stage.getPointerPosition();
             console.log("dragend");
@@ -446,8 +645,8 @@ function jsonify(node) {
             case 1:
                 tree.condition.push({
                     "type-id": 1,
-                    "child-true": jsonify(node.trueArrow().dest),
-                    "child-false": jsonify(node.falseArrow().dest),
+                    "child-true": jsonify(node.trueArrow.dest),
+                    "child-false": jsonify(node.falseArrow.dest),
                     "attributes": {
                         "distance": node.distance,
                         "object": node.object
@@ -460,8 +659,8 @@ function jsonify(node) {
             case 2:
                 tree.condition.push({
                     "type-id": 2,
-                    "child-true": jsonify(node.trueArrow().dest),
-                    "child-false": jsonify(node.falseArrow().dest),
+                    "child-true": jsonify(node.trueArrow.dest),
+                    "child-false": jsonify(node.falseArrow.dest),
                     "attributes": {"object": node.object}
                 });
                 break;
@@ -470,8 +669,8 @@ function jsonify(node) {
             case 3:
                 tree.condition.push({
                     "type-id": 3,
-                    "child-true": jsonify(node.trueArrow().dest),
-                    "child-false": jsonify(node.falseArrow().dest),
+                    "child-true": jsonify(node.trueArrow.dest),
+                    "child-false": jsonify(node.falseArrow.dest),
                     "attributes": {"object": node.object}
                 });
 
@@ -481,8 +680,8 @@ function jsonify(node) {
             case 4:
                 tree.condition.push({
                     "type-id": 4,
-                    "child-true": jsonify(node.trueArrow().dest),
-                    "child-false": jsonify(node.falseArrow().dest),
+                    "child-true": jsonify(node.trueArrow.dest),
+                    "child-false": jsonify(node.falseArrow.dest),
                     "attributes": {"object": node.object}
                 });
 
@@ -492,8 +691,8 @@ function jsonify(node) {
             case 5:
                 tree.condition.push({
                     "type-id": 5,
-                    "child-true": jsonify(node.trueArrow().dest),
-                    "child-false": jsonify(node.falseArrow().dest),
+                    "child-true": jsonify(node.trueArrow.dest),
+                    "child-false": jsonify(node.falseArrow.dest),
                     "attributes": {}
                 });
 
@@ -503,8 +702,8 @@ function jsonify(node) {
             case 6:
                 tree.condition.push({
                     "type-id": 6,
-                    "child-true": jsonify(node.trueArrow().dest),
-                    "child-false": jsonify(node.falseArrow().dest),
+                    "child-true": jsonify(node.trueArrow.dest),
+                    "child-false": jsonify(node.falseArrow.dest),
                     "attributes": {"label": node.label}
                 });
 
@@ -514,8 +713,8 @@ function jsonify(node) {
             case 7:
                 tree.condition.push({
                     "type-id": 7,
-                    "child-true": jsonify(node.trueArrow().dest),
-                    "child-false": jsonify(node.falseArrow().dest),
+                    "child-true": jsonify(node.trueArrow.dest),
+                    "child-false": jsonify(node.falseArrow.dest),
                     "attributes": {"amount": node.amount}
                 });
 
@@ -614,10 +813,12 @@ function jsonify(node) {
     }
 }
 
+var newCondition = null;
 
-function addCondition(stage, layer) {
-    let newCondition = new condition(stage, layer);
-    layer.add(newCondition.group);
+function addCondition(stage, layer, id, distance, object, label, health) {
+    newCondition = new condition(stage, layer, id, distance, object, label, health);
+    layer.add(newCondition.group)
+
     stage.draw();
 }
 
@@ -625,6 +826,26 @@ function addActionNode(stage, layer) {
     let newActionNode = new actionNode(stage, layer);
     layer.add(newActionNode.group);
     stage.draw();
+
+}
+
+//on click, toggle between hiding and showing dropdown content
+function spawnActionNode() {
+    document.getElementById("actionNodeList").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function (event) {
+    if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
 }
 
 //Buttons
@@ -633,7 +854,7 @@ function addActionNode(stage, layer) {
 document.getElementById('addCondition').addEventListener(
     'click',
     function () {
-        addCondition(stage, layer)
+        addCondition(stage, layer, id = 1, "5", "tank");
     },
     false
 );
