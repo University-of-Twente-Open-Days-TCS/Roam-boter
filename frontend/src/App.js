@@ -1,72 +1,59 @@
-// frontend/src/App.js
+import React from 'react';
+import logo from './logo.svg';
+import './App.css';
+import {getCsrfToken} from './utils.js'
 
-import React, {Component} from "react";
-import AppContent from "./components/AppContent";
-import Fullscreen from "react-full-screen";
-import Button from "@material-ui/core/Button";
+const API_HOST = "http://localhost:8000"
 
-let _csrfToken = null
-const API_HOST = 'http://localhost:8000'
-
-async function getCsrfToken() {
-    // Gets a csrf token from the django api
-    if (_csrfToken === null){
-        const response = await fetch(`${API_HOST}/csrf/`, {
-            credentials: 'include',
-        });
-        const data = await response.json();
-        _csrfToken = data.csrfToken
-    }
-    return _csrfToken
-}
-
-
-class App extends Component {
-    constructor(props) {
-        super();
-
-        this.state = {
-            isFull: false,
-        };
-    }
-
-    goFull = () => {
-        this.setState({isFull: true});
-    }
-
-    testAPI = async function() {
+async function testAPI() {
+    let csrfToken = await getCsrfToken()
+    try {
+        //Try the test
         const response = await fetch(`${API_HOST}/test/`, {
             method: 'POST',
             credentials: 'include',
             headers: {
-                'X-CSRFTOKEN': await getCsrfToken()
+                'X-CSRFToken' : csrfToken
             }
-        });
+        })
         let data = await response.json()
-        console.log(data)
-    }
+        if (data.test == "OK"){
+            console.log(data)
+        }else {
+            throw "API Test unsuccessful"
+        }
 
-    render() {
-        return (
-            <div>
-                <h1>This app only works fullscreen, please click below to enter the app!</h1>
-                <Button onClick={this.goFull} margin-left="auto" margin-right="auto">
-                    Go Fullscreen
-                </Button>
-                <Button onClick={this.testAPI}>
-                    Test API
-                </Button>
-                <Fullscreen
-                    enabled={this.state.isFull}
-                    onChange={isFull => this.setState({isFull})}
-                >
-                    <div className="full-screenable-node">
-                        {this.state.isFull ? <AppContent/> : null}
-                    </div>
-                </Fullscreen>
-            </div>
-        );
+    }catch (e) {
+        console.error(e)
     }
+    
+}
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+
+        <button
+            onClick={testAPI}
+        >
+            Test API
+        </button>
+      </header>
+    </div>
+  );
 }
 
 export default App;

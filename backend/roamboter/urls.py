@@ -29,7 +29,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),                #standard django admin urls
     path(r'ai/', include(AIapi_urls)),
     path(r'dashboard/', include(dashboard_urls)),
-    path(r'csrf/', views.csrf),                     #csrf token 
+    path(r'csrf/', views.csrf),                     #ping server. Useful for setting csrf cookie.
     path(r'test/', views.test),                     #ping test
     path(r'', include(home_urls)),]
 
