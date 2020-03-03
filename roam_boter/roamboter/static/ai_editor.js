@@ -129,7 +129,7 @@ class condition {
         this.createInputCircle();
         let node = this;
         this.group.on("dragmove", function () {
-            node.updateArrows();
+            node.updateArrows(stage);
             console.log("dragmove");
         });
         var conditionNode = this;
