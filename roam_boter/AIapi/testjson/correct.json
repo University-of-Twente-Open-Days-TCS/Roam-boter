@@ -1,0 +1,47 @@
+{ "AI" : 
+    {
+        "name" : "jelle",
+        "creator-id" : 231,
+        "root" : 
+            { 
+                "condition" : 
+                    {
+                       "type-id" : 12,
+                       "child-true" : 
+                            {
+                                "actionblock" : 
+                                    [
+                                        {
+                                            "type-id" : 1,
+                                            "attributes" : {}
+                                        }, 
+                                        {
+                                            "type-id" : 4,
+                                            "attributes" : 
+                                                {
+                                                    "key" : "value",
+                                                    "key2" : 2
+                                                }
+
+                                        }
+                                    ]
+                            },
+                        "child-false" : 
+                            {
+                                "actionblock" : 
+                                    [
+                                        {
+                                            "type-id" : 1,
+                                            "attributes" : {}
+                                        } 
+                                    ]
+                            },
+                        "attributes" : 
+                            {
+                                "target" : "nearestenemey"        
+                            }
+                    }
+            }
+            
+    }
+}

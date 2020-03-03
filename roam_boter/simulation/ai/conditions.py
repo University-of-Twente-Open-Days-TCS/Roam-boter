@@ -1,8 +1,9 @@
 from enum import Enum
-from objects import Object
-from utils import distance_squared
 
 from math import sqrt
+
+from .objects import Object
+from .utils import distance_squared
 
 
 # A condition has an id and a tuple of arguments. VERY IMPORTANT THAT IT IS ACTUALLY A TUPLE

@@ -1,6 +1,6 @@
 grammar aiJson;
 
-startrule : LBR ai RBR EOF ;
+startrule : LBR ai RBR EOF;
 
 
 ai      : AI SC info;
