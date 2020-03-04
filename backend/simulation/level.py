@@ -1,17 +1,22 @@
-import .objects
+from .objects import Object, ALL_OBJECTS
+
 import pickle
 import math
 
+import os
+
 class Level:
+
 
     def __init__(self, path, objects):
         self.objects = objects
         self.nearest_objects = self.cache_or_prepare_nearest_objects()
         self.nearest_paths = self.cache_or_prepare_nearest_paths()
 
+
     def cache_or_prepare_nearest_objects(self):
         nearest_objects = None
-        pickle_path = 'caching/nearest_objects.p'
+        pickle_path = os.path.join(self.get_caching_directory(), "nearest_objects.p")
         print(pickle_path)
         try:
             with open(pickle_path, 'rb') as f:
@@ -24,9 +29,13 @@ class Level:
         print(nearest_objects)
         return nearest_objects
 
+    def get_caching_directory(self):
+        this_dir = os.path.dirname(os.path.realpath(__file__))
+        return os.path.join(this_dir, "caching")
+
     def prepare_nearest_objects(self):
         # for y, for x, for object collect nearest of obj from x, y
-        return [[{obj: self.find_nearest_object(obj, x, y) for obj in objects.ALL_OBJECTS} for x, cell in enumerate(row)]for y, row in enumerate(self.objects)]
+        return [[{obj: self.find_nearest_object(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)]for y, row in enumerate(self.objects)]
 
     def find_nearest_object(self, obj, x, y):
         print(x, y)
@@ -68,7 +77,7 @@ class Level:
 
     def cache_or_prepare_nearest_paths(self):
         nearest_paths = None
-        pickle_path = 'caching/nearest_paths.p'
+        pickle_path = os.path.join(self.get_caching_directory(), "nearest_paths.p")
         print(pickle_path)
         try:
             with open(pickle_path, 'rb') as f:
@@ -81,11 +90,11 @@ class Level:
         return nearest_paths
 
     def prepare_nearest_paths(self):
-        return [[{obj: self.find_nearest_path(obj, x, y) for obj in objects.ALL_OBJECTS} for x, cell in enumerate(row)] for y, row in enumerate(self.objects)]
+        return [[{obj: self.find_nearest_path(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)] for y, row in enumerate(self.objects)]
 
     def find_nearest_path(self, obj, x, y):
         # A tank can always walk straight towards the nearest wall
-        if obj == objects.Object.WALL:
+        if obj == Object.WALL:
             return [self.find_nearest_object(obj, x, y)]
 
         queue = [(None, x, y)]
@@ -105,14 +114,14 @@ class Level:
 
             collision = False
             if first_node:
-                if self.get_object(a, b) == objects.Object.WALL:
+                if self.get_object(a, b) == Object.WALL:
                     first_node = False
                     continue
             else:
                 for wa in range(a - 1, a + 2):
                     for wb in range(b - 1, b + 2):
                         try:
-                            if self.get_object(wa, wb) == objects.Object.WALL:
+                            if self.get_object(wa, wb) == Object.WALL:
                                 collision = True
                                 break
                         except Exception:
@@ -181,7 +190,7 @@ class Level:
             for wx in range(x - 1, x + 2):
                 for wy in range(y - 1, y + 2):
                     try:
-                        if self.get_object(wx, wy) == objects.Object.WALL:
+                        if self.get_object(wx, wy) == Object.WALL:
                             return False
                     except Exception:
                         return False
