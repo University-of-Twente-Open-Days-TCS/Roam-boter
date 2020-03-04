@@ -1,0 +1,8 @@
+FROM node:13.8.0-alpine
+
+WORKDIR /frontend/
+
+# expose port
+EXPOSE 3000
+# start application
+CMD npm install ; npm start 

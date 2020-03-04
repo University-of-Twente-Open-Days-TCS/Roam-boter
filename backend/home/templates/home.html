@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load fontawesome_5 %}
+
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'home/css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div>
+        <h1>RoamB{% fa5_icon 'robot' %}t-er </h1>
+        <p>Build and Test your own AI against the wits of others.</p>
+    </div>
+
+    <br>
+    <br>
+    <div> 
+        <h2>You are in team: {{ request.session.team_id }}</h2>  
+        <button type="button">Load AI</button><br><br>
+        <button type="button">Play Match</button>
+    </div>
+    
+    <br>
+    <br>
+
+    <div>
+        <form method="POST" action="{% url 'leave_team_api' %}">
+            {% csrf_token %}
+            <input type="submit" value="Leave Team"></input>
+        </form>
+    </div>
+    
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}
+
+{% csrf_token %}
