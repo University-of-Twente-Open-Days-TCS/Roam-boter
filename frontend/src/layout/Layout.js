@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Children, useState} from 'react';
 import clsx from 'clsx';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -11,16 +11,13 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import AIMenuList from "../layout/menu/AIMenuList";
-import PlayMenuList from "../layout/menu/PlayMenuList";
 import {
     Route,
     NavLink,
     HashRouter
 } from "react-router-dom";
-import Home from "./Home";
-import AIEditor from "./AIEditor";
-import MatchHistory from "./MatchHistory";
+import AIMenuList from "./menu/AIMenuList";
+import PlayMenuList from "./menu/PlayMenuList";
 
 
 const drawerWidth = 240;
@@ -86,10 +83,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function FullScreenContainer() {
+export default function Layout(props) {
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -151,9 +148,7 @@ export default function FullScreenContainer() {
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.toolbar}/>
-                    <Route exact path="/" component={Home}/>
-                    <Route path="/AIEditor" component={AIEditor}/>
-                    <Route path="/MatchHistory" component={MatchHistory}/>
+                    { props.children }
                 </main>
             </HashRouter>
         </div>

@@ -1,10 +1,24 @@
 import React, {Component} from 'react';
-import './App.css';
+import './css/App.css';
 import {getCsrfToken} from './utils.js';
 
 import FullScreenContainer from "./components/FullScreenContainer";
 import Fullscreen from "react-full-screen";
 import Button from "@material-ui/core/Button";
+
+import {
+    Route,
+    NavLink,
+    HashRouter
+} from "react-router-dom";
+import Home from "./components/Home";
+import AIEditor from "./components/AIEditor";
+import Layout from "./layout/Layout";
+import MatchHistory from "./components/MatchHistory";
+import AIMenuList from "./layout/menu/AIMenuList";
+import ListAIs from "./components/ListAIs";
+import PlayvsBot from "./components/PlayvsBot";
+import PlayvsPlayer from "./components/PlayvsPlayer";
 
 const API_HOST = "http://localhost:8000";
 
@@ -49,17 +63,27 @@ class App extends Component {
     render() {
         return (
             <div>
-                <h1>This app only works fullscreen, please click below to enter the app!</h1>
-                <Button onClick={this.goFull} margin-left="auto" margin-right="auto">
-                    Go Fullscreen
-                </Button>
-                <Button onClick={this.testAPI}>Test API</Button>
                 <Fullscreen
                     enabled={this.state.isFull}
                     onChange={isFull => this.setState({isFull})}
-                >
+                ><Button onClick={this.goFull} margin={"200px"}>
+                    Go Fullscreen
+                </Button>
                     <div className="full-screenable-node">
-                        {this.state.isFull ? <FullScreenContainer/> : null}
+                        {/*<h1>This app only works fullscreen, please click below to enter the app!</h1>*/}
+
+                        {/*<Button onClick={this.testAPI}>Test API</Button>*/}
+
+
+                        <Layout>
+                            {/*<AIMenuList/>*/}
+                            <Route exact path="/" component={Home}/>
+                            <Route path="/AIEditor" component={AIEditor}/>
+                            <Route path="/ListAIs" component={ListAIs}/>
+                            <Route path="/MatchHistory" component={MatchHistory}/>
+                            <Route path="/PlayvsBot" component={PlayvsBot}/>
+                            <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
+                        </Layout>
                     </div>
                 </Fullscreen>
             </div>
