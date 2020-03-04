@@ -53,6 +53,8 @@ def link_user_session_to_team(team_code, session):
     if teams.exists():
         # valid code. Link session to team.
         team = teams.first()
+        team.active = True
+        team.save()
 
         if UserSession.objects.filter(team=team, session=session_id).exists():
             # session already exists
