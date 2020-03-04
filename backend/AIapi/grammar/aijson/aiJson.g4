@@ -1,6 +1,6 @@
 grammar aiJson;
 
-startrule : LBR ai RBR EOF ;
+startrule : LBR ai RBR EOF;
 
 
 ai      : AI SC info;
@@ -16,10 +16,6 @@ condition   : LBR CONDITION SC conditiondata RBR ;
 conditiondata : LBR type_id COM childtrue COM childfalse COM attributes RBR ;
 childtrue   : CHILDTRUE SC node ;
 childfalse  : CHILDFALSE SC node ;
-
-
-
-
 
 
 actionblock : LBR ACTIONBLOCK SC actionlist RBR ;

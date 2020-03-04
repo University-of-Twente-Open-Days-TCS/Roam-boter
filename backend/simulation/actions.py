@@ -1,7 +1,7 @@
-from objects import Object
-from bullet import Bullet
+from .objects import Object
+from .bullet import Bullet
 
-from utils import *
+from .utils import *
 
 """Actions are described here."""
 class Action:

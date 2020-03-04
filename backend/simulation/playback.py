@@ -1,10 +1,10 @@
-from tank import Tank
-from bullet import Bullet
-from objects import Object
-from conditions import Condition
-from actions import Action
-from AINode import AINode
-from level import Level
+from .tank import Tank
+from .bullet import Bullet
+from .objects import Object
+from .conditions import Condition
+from .actions import Action
+from .AINode import AINode
+from .level import Level
 
 from copy import deepcopy
 

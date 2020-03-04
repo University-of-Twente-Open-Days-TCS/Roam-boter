@@ -1,14 +1,16 @@
-from levelloader import LevelLoader
-from tank import Tank
-from objects import Object
-import visual_debug
-from AINode import ActionNode, ConditionNode
-from conditions import Condition
-from actions import Action
-from playback import PlayBack, PlayBackEncoder
-from level import Level
+from .levelloader import LevelLoader
+from .tank import Tank
+from .objects import Object
+from .visual_debug import *
+from .AINode import ActionNode, ConditionNode
+from .conditions import Condition
+from .actions import Action
+from .playback import PlayBack, PlayBackEncoder
+from .level import Level
 
 import json
+
+import os
 
 import time
 
@@ -81,7 +83,7 @@ class Simulation:
             if tank.get_health() <= 0:
                 self.state.tanks.remove(tank)
 
-        visual_debug.DRAW_WORLD(self.state)
+        DRAW_WORLD(self.state)
         self.state.frames_passed += 1
 
         self.playback.add_frame(self.state)
@@ -96,7 +98,7 @@ class Simulation:
             return None
 
 
-if __name__ == "__main__":
+def test_simulation():
     level_loader = LevelLoader()
 
     false_node = ActionNode([Action(8, {})])
@@ -104,7 +106,11 @@ if __name__ == "__main__":
 
     ai = ConditionNode(Condition(1, {'obj': Object.TANK, 'distance': 10}), true_node, false_node)
 
-    a = Simulation(level_loader.load_level("levels/level2.png"), [ai, ai])
+    this_dir = os.path.dirname(os.path.realpath(__file__))
+    level_dir = os.path.join(this_dir, "levels")
+    level2_path = os.path.join(level_dir, "level2.png")
+
+    a = Simulation(level_loader.load_level(level2_path), [ai, ai])
 
     while not a.has_ended():
         print(a.step())

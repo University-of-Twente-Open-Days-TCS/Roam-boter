@@ -1,6 +1,6 @@
 from enum import Enum
-from objects import Object
-from utils import distance_squared
+from .objects import Object
+from .utils import distance_squared
 
 from math import sqrt
 

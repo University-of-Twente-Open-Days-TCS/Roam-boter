@@ -1,7 +1,7 @@
-from actions import Action
-from conditions import Condition
+from .actions import Action
+from .conditions import Condition
 
-from objects import Object
+from .objects import Object
 
 class AINode(object):
     """Represents a node in the EvaluationTree"""

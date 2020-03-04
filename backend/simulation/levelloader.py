@@ -1,6 +1,6 @@
 from PIL import Image
-from objects import Object, ColorValues
-from level import Level
+from .objects import Object, ColorValues
+from .level import Level
 
 
 class LevelLoader:
