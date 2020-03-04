@@ -19,9 +19,10 @@ class TeamDetail(APIView):
         """
         Return the details of team associated with this request
         """
+
         session = request.session
         if session.session_key is None or 'team_id' not in session:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"reason": "Session invalid"}, status=status.HTTP_401_UNAUTHORIZED)
 
         team_id = session['team_id']
         team = self.get_team(team_id)

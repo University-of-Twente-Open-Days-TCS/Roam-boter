@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 
     # External Apps
     'corsheaders',
+    'rest_framework',
     'fontawesome_5',
 
     # Our App

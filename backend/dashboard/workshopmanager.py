@@ -43,30 +43,32 @@ def link_user_session_to_team(team_code, session):
     if session.session_key is None:
         raise ValidationError("Session does not exist")
 
-    session_id = session.session_key
-
     if all_workshops_closed():
         raise ValidationError("No workshop is open")
 
+    session_id = session.session_key
+
     cur_workshop = get_cur_workshop()
     teams = Team.objects.filter(workshop=cur_workshop, team_code=team_code)
+
     if teams.exists():
-        # valid code. Link session to team.
+        # the team code was valid. Link session to team.
         team = teams.first()
+        # set the team to active, since at least one user registered.
         team.active = True
         team.save()
 
         if UserSession.objects.filter(team=team, session=session_id).exists():
-            # session already exists
+            # UserSession already exists
             session['team_id'] = team.id
             return True
 
+        # create a new UserSession and associate it with this session_id
         user_session = UserSession(team=team, session=session_id)
         user_session.save()
 
         # make sure that the session is registered as active
         session['team_id'] = team.id
-
         return True
 
     # Code was invalid
@@ -84,8 +86,10 @@ def remove_user_session(session):
         # Delete all sessions related to the key
         userSession.delete()
 
-    # Delete the session
-    session.clear()
+    # Delete the team_id associated with this session
+    if 'team_id' in session:
+        del session['team_id']
+
 
 
 def open_workshop():
