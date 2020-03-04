@@ -1,21 +1,16 @@
 import React, {Component} from 'react';
 import './css/App.css';
 import {getCsrfToken} from './utils.js';
-
-import FullScreenContainer from "./components/FullScreenContainer";
 import Fullscreen from "react-full-screen";
 import Button from "@material-ui/core/Button";
 
 import {
     Route,
-    NavLink,
-    HashRouter
 } from "react-router-dom";
 import Home from "./components/Home";
 import AIEditor from "./components/AIEditor";
 import Layout from "./layout/Layout";
 import MatchHistory from "./components/MatchHistory";
-import AIMenuList from "./layout/menu/AIMenuList";
 import ListAIs from "./components/ListAIs";
 import PlayvsBot from "./components/PlayvsBot";
 import PlayvsPlayer from "./components/PlayvsPlayer";
@@ -66,9 +61,7 @@ class App extends Component {
                 <Fullscreen
                     enabled={this.state.isFull}
                     onChange={isFull => this.setState({isFull})}
-                ><Button onClick={this.goFull} margin={"200px"}>
-                    Go Fullscreen
-                </Button>
+                >
                     <div className="full-screenable-node">
                         {/*<h1>This app only works fullscreen, please click below to enter the app!</h1>*/}
 
@@ -83,6 +76,9 @@ class App extends Component {
                             <Route path="/MatchHistory" component={MatchHistory}/>
                             <Route path="/PlayvsBot" component={PlayvsBot}/>
                             <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
+                            <hr/>
+                            <Button onClick={this.testAPI}>Test API</Button>
+                            <Button onClick={this.goFull} margin={"200px"}>Go Fullscreen</Button>
                         </Layout>
                     </div>
                 </Fullscreen>

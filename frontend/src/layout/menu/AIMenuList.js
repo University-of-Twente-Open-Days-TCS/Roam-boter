@@ -38,9 +38,9 @@ export default function AIMenuList(text) {
     return (
         <List>
             {
-                items.map(({text, icon, url}) =>
-                    <NavLink to={url}>
-                        <ListItem button key={text}>
+                items.map(({text, icon, url}, i) =>
+                    <NavLink to={url} key={i}>
+                        <ListItem button key={i}>
 
                             <ListItemIcon>{icon}</ListItemIcon>
                             <ListItemText primary={text}/>
