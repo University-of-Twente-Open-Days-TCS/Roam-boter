@@ -172,7 +172,6 @@ class ConverterErrorListener(ErrorListener):
 
 def convert_aijson(json):
     """Converts a string of json to an AINode tree."""
-    # TODO: ERROR CHECKING
     eval_tree = None
 
     input_stream = InputStream(json)
@@ -188,5 +187,20 @@ def convert_aijson(json):
 
 
     return eval_tree
+
+def is_valid_aijson(json):
+    """Checks whether a given json string is valid"""
+    input_stream = InputStream(json)
+    lexer = aiJsonLexer(input_stream)
+    stream = CommonTokenStream(lexer)
+    parser = aiJsonParser(stream)
+    parser._listeners = [ConverterErrorListener()]
+
+    try:
+        root_node = parser.startrule()
+        # no exception has occurred. 
+        return True
+    except Exception as e:
+        return False
 
 

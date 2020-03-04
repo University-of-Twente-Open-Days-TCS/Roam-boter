@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class MatchmakingConfig(AppConfig):
+class AIapiConfig(AppConfig):
     name = 'AIapi'
