@@ -27,8 +27,8 @@ class Match(models.Model):
 
     winner = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(auto_now_add=True)
-    gamemode = models.CharField(max_length=2, GameModes.choices)
-    simulation = models.TextField(null=True)
+    gamemode = models.CharField(max_length=2, choices=GameModes.choices)
+    simulation = models.TextField(blank=True)
 
 
 
