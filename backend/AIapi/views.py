@@ -5,10 +5,6 @@ from django.views import View
 
 import json
 
-import logging
-
-logger = logging.getLogger(__name__)
-
 
 # Create your views here.
 

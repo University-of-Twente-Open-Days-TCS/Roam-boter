@@ -7,9 +7,6 @@ from .serializers import AISerializer
 from .models import AI
 
 
-import logging
-logger = logging.getLogger("debugLogger")
-
 class AIList(APIView):
 
     permission_classes = [InTeamPermission]
@@ -32,7 +29,6 @@ class AIList(APIView):
 
         if serializer.is_valid():
             # save new AI 
-            logger.debug(serializer.validated_data)
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
