@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import AI
 from dashboard.models import Team
 
-from .converter import is_valid_aijson
+from .grammar.converter import is_valid_aijson
 
 import json
 

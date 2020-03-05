@@ -6,7 +6,7 @@ class InTeamPermission(permissions.BasePermission):
     """
     Only allow users that are in a team.
     """
-    message = "You need to be in a team"
+    message = "You are not signed in a team"
 
     def has_permission(self, request, view):
         session = request.session

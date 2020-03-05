@@ -7,7 +7,7 @@ from dashboard.models import Team, Workshop
 
 from .models import AI
 
-from .converter import convert_aijson
+from .grammar.converter import convert_aijson
 
 
 TEST_CORRECT_JSON_PATH = "./AIapi/testjson/correct.json"

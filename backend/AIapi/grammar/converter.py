@@ -3,8 +3,8 @@ import sys
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 
-from .grammar.aijson.aiJsonLexer import aiJsonLexer
-from .grammar.aijson.aiJsonParser import aiJsonParser
+from .aijson.aiJsonLexer import aiJsonLexer
+from .aijson.aiJsonParser import aiJsonParser
 
 
 from simulation.actions import Action
