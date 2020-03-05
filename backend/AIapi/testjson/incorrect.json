@@ -1,10 +1,5 @@
-{ "AI" : 
-    {
-        "name" : "jelle",
-        "creator-id" : 231,
-        "root" : 
-            { 
-                "condition" : 
+          { 
+                "condition"invalidjsonsyntax : 
                     {
                        "type-id" : 12,
                        "child-true" : 
@@ -28,7 +23,7 @@
                             },
                         "child-false" : 
                             {
-                                "actionblock"l : 
+                                "actionblock" : 
                                     [
                                         {
                                             "type-id" : 1,
@@ -42,6 +37,3 @@
                             }
                     }
             }
-            
-    }
-}

@@ -17,33 +17,7 @@ class EvaluationTreeConverter(ParseTreeVisitor):
 
     # Visit a parse tree produced by aiJsonParser#startrule.
     def visitStartrule(self, ctx:aiJsonParser.StartruleContext):
-        return self.visitAi(ctx.ai())
-
-
-    # Visit a parse tree produced by aiJsonParser#ai.
-    def visitAi(self, ctx:aiJsonParser.AiContext):
-        return self.visitInfo(ctx.info())
-
-
-    # Visit a parse tree produced by aiJsonParser#info.
-    def visitInfo(self, ctx:aiJsonParser.InfoContext):
-        return self.visitRoot(ctx.root())
-
-
-    # Visit a parse tree produced by aiJsonParser#name.
-    def visitName(self, ctx:aiJsonParser.NameContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by aiJsonParser#creator_id.
-    def visitCreator_id(self, ctx:aiJsonParser.Creator_idContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by aiJsonParser#root.
-    def visitRoot(self, ctx:aiJsonParser.RootContext):
         return self.visitNode(ctx.node())
-
 
     # Visit a parse tree produced by aiJsonParser#node.
     def visitNode(self, ctx:aiJsonParser.NodeContext):
@@ -169,6 +143,9 @@ class ConverterErrorListener(ErrorListener):
     def reportContextSensitivity(self, recognizer, dfa, startIndex, stopIndex, prediction, configs):
         raise Exception("Context Sensitivity Error")
 #=====================================================================
+
+import logging
+logger = logging.getLogger("debugLogger")
 
 def convert_aijson(json):
     """Converts a string of json to an AINode tree."""

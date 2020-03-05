@@ -14,31 +14,6 @@ class aiJsonVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by aiJsonParser#ai.
-    def visitAi(self, ctx:aiJsonParser.AiContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by aiJsonParser#info.
-    def visitInfo(self, ctx:aiJsonParser.InfoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by aiJsonParser#name.
-    def visitName(self, ctx:aiJsonParser.NameContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by aiJsonParser#creator_id.
-    def visitCreator_id(self, ctx:aiJsonParser.Creator_idContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by aiJsonParser#root.
-    def visitRoot(self, ctx:aiJsonParser.RootContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by aiJsonParser#node.
     def visitNode(self, ctx:aiJsonParser.NodeContext):
         return self.visitChildren(ctx)

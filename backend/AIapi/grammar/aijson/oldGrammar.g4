@@ -1,7 +1,15 @@
 grammar aiJson;
 
-startrule : node EOF;
+startrule : LBR ai RBR EOF;
 
+
+ai      : AI SC info;
+info    : LBR name COM creator_id COM root RBR ;
+
+name        : NAME SC APHSTRING ;
+creator_id  : CREATOR_ID SC INTEGER ; 
+
+root        : ROOT SC node ;
 node        : condition | actionblock;
 
 condition   : LBR CONDITION SC conditiondata RBR ;
@@ -27,6 +35,9 @@ type_id     : TYPE_ID SC INTEGER ;
 
 
 
+AI          : APH 'AI' APH ;
+NAME        : APH 'name' APH ; 
+CREATOR_ID  : APH 'creator-id' APH ;
 ROOT        : APH 'root' APH ;
 CONDITION   : APH 'condition' APH ;
 

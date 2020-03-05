@@ -1,8 +1,3 @@
-{ "AI" : 
-    {
-        "name" : "jelle",
-        "creator-id" : 231,
-        "root" : 
             { 
                 "condition" : 
                     {
@@ -41,7 +36,4 @@
                                 "target" : "nearestenemey"        
                             }
                     }
-            }
-            
-    }
-}
+            } 
