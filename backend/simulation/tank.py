@@ -131,6 +131,7 @@ class Tank:
             ay = -math.cos(math.radians(vision_angle))
 
             x, y = self.get_pos()
+
             other_x, other_y = other.get_pos()
             bx, by = other_x - x, other_y - y
 

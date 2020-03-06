@@ -7,6 +7,7 @@ from conditions import Condition
 from actions import Action
 from playback import PlayBack, PlayBackEncoder
 from level import Level
+import cProfile
 
 import json
 
@@ -143,5 +144,6 @@ if __name__ == "__main__":
 
     ai = ConditionNode(Condition(1, {'obj': Object.TANK, 'distance': 10}), true_node, false_node)
 
-    print(simulate([ai, ai]))
+    cProfile.run("simulate([ai, ai])")
+    #print(simulate([ai, ai]))
     # PlayBackEncoder.encode(a.get_playback())

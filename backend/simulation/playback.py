@@ -33,9 +33,12 @@ class Frame:
     tanks = []
     bullets = []
 
+    # Extract a frame from state data.
     def __init__(self, state):
         self.tanks = deepcopy(state.tanks)
         self.bullets = deepcopy(state.bullets)
+        self.visibility = [{'tanks': t.visible_tanks(state), 'bullets': t.visible_bullets(state)} for t in state.tanks]
+        self.events = []
 
 
 class PlayBackEncoder(JSONEncoder):
