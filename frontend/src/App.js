@@ -14,6 +14,7 @@ import MatchHistory from "./components/MatchHistory";
 import ListAIs from "./components/ListAIs";
 import PlayvsBot from "./components/PlayvsBot";
 import PlayvsPlayer from "./components/PlayvsPlayer";
+import MatchReplay from "./components/MatchReplay";
 
 const API_HOST = "http://localhost:8000";
 
@@ -76,6 +77,7 @@ class App extends Component {
                             <Route path="/MatchHistory" component={MatchHistory}/>
                             <Route path="/PlayvsBot" component={PlayvsBot}/>
                             <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
+                            <Route path="/MatchReplay" component={MatchReplay}/>
                             <hr/>
                             <Button onClick={this.testAPI}>Test API</Button>
                             <Button onClick={this.goFull} margin={"200px"}>Go Fullscreen</Button>
