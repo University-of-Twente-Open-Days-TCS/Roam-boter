@@ -6,47 +6,16 @@ import arrow from "./arrow.js";
 
 
 export default class startNode {
-    get rect() {
-        return this._rect;
-    }
-
-    set rect(value) {
-        this._rect = value;
-    }
-
-    get trueCircle() {
-        return this._trueCircle;
-    }
-
-    set trueCircle(value) {
-        this._trueCircle = value;
-    }
-
-    get dragCircle() {
-        return this._dragCircle;
-    }
-
-    set dragCircle(value) {
-        this._dragCircle = value;
-    }
 
     arrow;
 
-    _trueArrow = null;
+    _trueArrow;
     _layer;
     _stage;
     _group;
     _rect;
     _trueCircle;
     _dragCircle;
-
-    get group() {
-        return this._group;
-    }
-
-    set group(value) {
-        this._group = value;
-    }
 
     constructor(stage, layer) {
         //    bla insert shape and a point which can be dragged to a condition/action
@@ -75,7 +44,7 @@ export default class startNode {
             y: 0,
             width: blockWidth,
             height: blockHeight,
-            fill: 'green',
+            fill: 'black',
             stroke: 'black',
             strokeWidth: 2,
             cornerRadius: 10,
@@ -199,6 +168,38 @@ export default class startNode {
 
     set layer(value) {
         this._layer = value;
+    }
+        get rect() {
+        return this._rect;
+    }
+
+    set rect(value) {
+        this._rect = value;
+    }
+
+    get trueCircle() {
+        return this._trueCircle;
+    }
+
+    set trueCircle(value) {
+        this._trueCircle = value;
+    }
+
+    get dragCircle() {
+        return this._dragCircle;
+    }
+
+    set dragCircle(value) {
+        this._dragCircle = value;
+    }
+
+
+    get group() {
+        return this._group;
+    }
+
+    set group(value) {
+        this._group = value;
     }
 
 }
