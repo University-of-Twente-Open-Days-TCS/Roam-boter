@@ -1,4 +1,6 @@
 import arrow from "./arrow.js";
+import popup from "./popup.js"
+
 
 const blockHeight = 40;
 const blockWidth = 100;
@@ -77,6 +79,12 @@ export default class conditionNode {
             if (node.stage.trashcanlayer.getIntersection(touchPos) != null) {
                 node.remove();
             }
+        });
+
+        this.group.on("click", () => {
+            this.stage.trashcanlayer.add(new popup(this.stage, this.stage.trashcanlayer).group);
+            this.stage.trashcanlayer.moveToTop();
+            this.stage.draw();
         });
 
         this.stage.draw();
