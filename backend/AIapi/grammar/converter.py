@@ -57,9 +57,12 @@ class EvaluationTreeConverter(ParseTreeVisitor):
 
     # Visit a parse tree produced by aiJsonParser#actionblock.
     def visitActionblock(self, ctx:aiJsonParser.ActionblockContext):
-        actions = self.visitActionlist(ctx.actionlist())
+        actions = self.visitActiondata(ctx.actiondata())
         return ActionNode(actions)
 
+    # Visit a parse tree produced by aiJsonParser#actiondata.
+    def visitActiondata(self, ctx:aiJsonParser.ActiondataContext):
+        return self.visitActionlist(ctx.actionlist())
 
     # Visit a parse tree produced by aiJsonParser#actionlist.
     def visitActionlist(self, ctx:aiJsonParser.ActionlistContext):

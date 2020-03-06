@@ -59,14 +59,14 @@ class AIValidationTest(TestCase):
     def test_valid_json(self):
         # should save to the database
         self.assertFalse(AI.objects.all().exists())
-        ai = AI(team=self.team, aijson=self.correct_json)
+        ai = AI(team=self.team, ai=self.correct_json)
         ai.save()
         self.assertTrue(AI.objects.all().exists())
 
     def test_invalid_json(self):
         # should not save to the database
         self.assertFalse(AI.objects.all().exists())
-        ai = AI(team=self.team, aijson=self.incorrect_json)
+        ai = AI(team=self.team, ai=self.incorrect_json)
 
         with self.assertRaises(Exception):
             ai.save()

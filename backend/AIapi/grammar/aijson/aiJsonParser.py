@@ -7,38 +7,49 @@ import sys
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\27")
-        buf.write("p\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
-        buf.write("\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16\t")
-        buf.write("\16\4\17\t\17\3\2\3\2\3\2\3\3\3\3\5\3$\n\3\3\4\3\4\3\4")
-        buf.write("\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3")
-        buf.write("\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\b")
-        buf.write("\3\t\3\t\3\t\3\t\7\tH\n\t\f\t\16\tK\13\t\3\t\3\t\3\n\3")
-        buf.write("\n\3\n\3\n\3\n\3\n\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3\f")
-        buf.write("\7\f]\n\f\f\f\16\f`\13\f\5\fb\n\f\3\f\3\f\3\r\3\r\3\r")
-        buf.write("\3\r\3\16\3\16\3\17\3\17\3\17\3\17\3\17\2\2\20\2\4\6\b")
-        buf.write("\n\f\16\20\22\24\26\30\32\34\2\3\3\2\n\13\2e\2\36\3\2")
-        buf.write("\2\2\4#\3\2\2\2\6%\3\2\2\2\b+\3\2\2\2\n\65\3\2\2\2\f9")
-        buf.write("\3\2\2\2\16=\3\2\2\2\20C\3\2\2\2\22N\3\2\2\2\24T\3\2\2")
-        buf.write("\2\26X\3\2\2\2\30e\3\2\2\2\32i\3\2\2\2\34k\3\2\2\2\36")
-        buf.write("\37\5\4\3\2\37 \7\2\2\3 \3\3\2\2\2!$\5\6\4\2\"$\5\16\b")
-        buf.write("\2#!\3\2\2\2#\"\3\2\2\2$\5\3\2\2\2%&\7\23\2\2&\'\7\4\2")
-        buf.write("\2\'(\7\22\2\2()\5\b\5\2)*\7\24\2\2*\7\3\2\2\2+,\7\23")
-        buf.write("\2\2,-\5\34\17\2-.\7\21\2\2./\5\n\6\2/\60\7\21\2\2\60")
-        buf.write("\61\5\f\7\2\61\62\7\21\2\2\62\63\5\24\13\2\63\64\7\24")
-        buf.write("\2\2\64\t\3\2\2\2\65\66\7\5\2\2\66\67\7\22\2\2\678\5\4")
-        buf.write("\3\28\13\3\2\2\29:\7\6\2\2:;\7\22\2\2;<\5\4\3\2<\r\3\2")
-        buf.write("\2\2=>\7\23\2\2>?\7\7\2\2?@\7\22\2\2@A\5\20\t\2AB\7\24")
-        buf.write("\2\2B\17\3\2\2\2CD\7\25\2\2DI\5\22\n\2EF\7\21\2\2FH\5")
-        buf.write("\22\n\2GE\3\2\2\2HK\3\2\2\2IG\3\2\2\2IJ\3\2\2\2JL\3\2")
-        buf.write("\2\2KI\3\2\2\2LM\7\26\2\2M\21\3\2\2\2NO\7\23\2\2OP\5\34")
-        buf.write("\17\2PQ\7\21\2\2QR\5\24\13\2RS\7\24\2\2S\23\3\2\2\2TU")
-        buf.write("\7\t\2\2UV\7\22\2\2VW\5\26\f\2W\25\3\2\2\2Xa\7\23\2\2")
-        buf.write("Y^\5\30\r\2Z[\7\21\2\2[]\5\30\r\2\\Z\3\2\2\2]`\3\2\2\2")
-        buf.write("^\\\3\2\2\2^_\3\2\2\2_b\3\2\2\2`^\3\2\2\2aY\3\2\2\2ab")
-        buf.write("\3\2\2\2bc\3\2\2\2cd\7\24\2\2d\27\3\2\2\2ef\7\n\2\2fg")
-        buf.write("\7\22\2\2gh\5\32\16\2h\31\3\2\2\2ij\t\2\2\2j\33\3\2\2")
-        buf.write("\2kl\7\b\2\2lm\7\22\2\2mn\7\13\2\2n\35\3\2\2\2\6#I^a")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\33")
+        buf.write("\u008e\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
+        buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\3\2\3\2")
+        buf.write("\3\2\3\3\3\3\5\3*\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\5\3\5")
+        buf.write("\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3")
+        buf.write("\6\3\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\b\3\t\3\t\3\t")
+        buf.write("\3\t\3\t\3\t\3\t\3\t\3\n\3\n\3\n\3\n\7\nX\n\n\f\n\16\n")
+        buf.write("[\13\n\3\n\3\n\3\13\3\13\3\13\3\13\3\13\3\13\3\f\3\f\3")
+        buf.write("\f\3\f\3\r\3\r\3\r\3\r\7\rm\n\r\f\r\16\rp\13\r\5\rr\n")
+        buf.write("\r\3\r\3\r\3\16\3\16\3\16\3\16\3\17\3\17\3\20\3\20\3\20")
+        buf.write("\3\20\3\21\3\21\3\21\3\21\3\21\3\21\3\21\3\21\3\21\3\21")
+        buf.write("\3\22\3\22\3\22\3\22\3\22\2\2\23\2\4\6\b\n\f\16\20\22")
+        buf.write("\24\26\30\32\34\36 \"\2\3\3\2\16\17\2\u0080\2$\3\2\2\2")
+        buf.write("\4)\3\2\2\2\6+\3\2\2\2\b\61\3\2\2\2\n=\3\2\2\2\fA\3\2")
+        buf.write("\2\2\16E\3\2\2\2\20K\3\2\2\2\22S\3\2\2\2\24^\3\2\2\2\26")
+        buf.write("d\3\2\2\2\30h\3\2\2\2\32u\3\2\2\2\34y\3\2\2\2\36{\3\2")
+        buf.write("\2\2 \177\3\2\2\2\"\u0089\3\2\2\2$%\5\4\3\2%&\7\2\2\3")
+        buf.write("&\3\3\2\2\2\'*\5\6\4\2(*\5\16\b\2)\'\3\2\2\2)(\3\2\2\2")
+        buf.write("*\5\3\2\2\2+,\7\27\2\2,-\7\4\2\2-.\7\26\2\2./\5\b\5\2")
+        buf.write("/\60\7\30\2\2\60\7\3\2\2\2\61\62\7\27\2\2\62\63\5\"\22")
+        buf.write("\2\63\64\7\25\2\2\64\65\5\n\6\2\65\66\7\25\2\2\66\67\5")
+        buf.write("\f\7\2\678\7\25\2\289\5\26\f\29:\7\25\2\2:;\5\36\20\2")
+        buf.write(";<\7\30\2\2<\t\3\2\2\2=>\7\5\2\2>?\7\26\2\2?@\5\4\3\2")
+        buf.write("@\13\3\2\2\2AB\7\6\2\2BC\7\26\2\2CD\5\4\3\2D\r\3\2\2\2")
+        buf.write("EF\7\27\2\2FG\7\7\2\2GH\7\26\2\2HI\5\20\t\2IJ\7\30\2\2")
+        buf.write("J\17\3\2\2\2KL\7\27\2\2LM\7\b\2\2MN\7\26\2\2NO\5\22\n")
+        buf.write("\2OP\7\25\2\2PQ\5\36\20\2QR\7\30\2\2R\21\3\2\2\2ST\7\31")
+        buf.write("\2\2TY\5\24\13\2UV\7\25\2\2VX\5\24\13\2WU\3\2\2\2X[\3")
+        buf.write("\2\2\2YW\3\2\2\2YZ\3\2\2\2Z\\\3\2\2\2[Y\3\2\2\2\\]\7\32")
+        buf.write("\2\2]\23\3\2\2\2^_\7\27\2\2_`\5\"\22\2`a\7\25\2\2ab\5")
+        buf.write("\26\f\2bc\7\30\2\2c\25\3\2\2\2de\7\t\2\2ef\7\26\2\2fg")
+        buf.write("\5\30\r\2g\27\3\2\2\2hq\7\27\2\2in\5\32\16\2jk\7\25\2")
+        buf.write("\2km\5\32\16\2lj\3\2\2\2mp\3\2\2\2nl\3\2\2\2no\3\2\2\2")
+        buf.write("or\3\2\2\2pn\3\2\2\2qi\3\2\2\2qr\3\2\2\2rs\3\2\2\2st\7")
+        buf.write("\30\2\2t\31\3\2\2\2uv\7\16\2\2vw\7\26\2\2wx\5\34\17\2")
+        buf.write("x\33\3\2\2\2yz\t\2\2\2z\35\3\2\2\2{|\7\n\2\2|}\7\26\2")
+        buf.write("\2}~\5 \21\2~\37\3\2\2\2\177\u0080\7\27\2\2\u0080\u0081")
+        buf.write("\7\13\2\2\u0081\u0082\7\26\2\2\u0082\u0083\7\17\2\2\u0083")
+        buf.write("\u0084\7\25\2\2\u0084\u0085\7\f\2\2\u0085\u0086\7\26\2")
+        buf.write("\2\u0086\u0087\7\17\2\2\u0087\u0088\7\30\2\2\u0088!\3")
+        buf.write("\2\2\2\u0089\u008a\7\r\2\2\u008a\u008b\7\26\2\2\u008b")
+        buf.write("\u008c\7\17\2\2\u008c#\3\2\2\2\6)Ynq")
         return buf.getvalue()
 
 
@@ -55,13 +66,15 @@ class aiJsonParser ( Parser ):
     literalNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                      "<INVALID>", "<INVALID>", "'\"'", "','", "':'", "'{'", 
                      "'}'", "'['", "']'" ]
 
     symbolicNames = [ "<INVALID>", "ROOT", "CONDITION", "CHILDTRUE", "CHILDFALSE", 
-                      "ACTIONBLOCK", "TYPE_ID", "ATTRIBUTES", "APHSTRING", 
-                      "INTEGER", "STRING", "ALPHANUMERIC", "CHAR", "DIGIT", 
-                      "APH", "COM", "SC", "LBR", "RBR", "LB", "RB", "WS" ]
+                      "ACTIONBLOCK", "ACTIONLIST", "ATTRIBUTES", "POSITION", 
+                      "X", "Y", "TYPE_ID", "APHSTRING", "INTEGER", "STRING", 
+                      "ALPHANUMERIC", "CHAR", "DIGIT", "APH", "COM", "SC", 
+                      "LBR", "RBR", "LB", "RB", "WS" ]
 
     RULE_startrule = 0
     RULE_node = 1
@@ -70,18 +83,21 @@ class aiJsonParser ( Parser ):
     RULE_childtrue = 4
     RULE_childfalse = 5
     RULE_actionblock = 6
-    RULE_actionlist = 7
-    RULE_action = 8
-    RULE_attributes = 9
-    RULE_attributevalues = 10
-    RULE_attributevalue = 11
-    RULE_value = 12
-    RULE_type_id = 13
+    RULE_actiondata = 7
+    RULE_actionlist = 8
+    RULE_action = 9
+    RULE_attributes = 10
+    RULE_attributevalues = 11
+    RULE_attributevalue = 12
+    RULE_value = 13
+    RULE_position = 14
+    RULE_positiondata = 15
+    RULE_type_id = 16
 
     ruleNames =  [ "startrule", "node", "condition", "conditiondata", "childtrue", 
-                   "childfalse", "actionblock", "actionlist", "action", 
-                   "attributes", "attributevalues", "attributevalue", "value", 
-                   "type_id" ]
+                   "childfalse", "actionblock", "actiondata", "actionlist", 
+                   "action", "attributes", "attributevalues", "attributevalue", 
+                   "value", "position", "positiondata", "type_id" ]
 
     EOF = Token.EOF
     ROOT=1
@@ -89,22 +105,26 @@ class aiJsonParser ( Parser ):
     CHILDTRUE=3
     CHILDFALSE=4
     ACTIONBLOCK=5
-    TYPE_ID=6
+    ACTIONLIST=6
     ATTRIBUTES=7
-    APHSTRING=8
-    INTEGER=9
-    STRING=10
-    ALPHANUMERIC=11
-    CHAR=12
-    DIGIT=13
-    APH=14
-    COM=15
-    SC=16
-    LBR=17
-    RBR=18
-    LB=19
-    RB=20
-    WS=21
+    POSITION=8
+    X=9
+    Y=10
+    TYPE_ID=11
+    APHSTRING=12
+    INTEGER=13
+    STRING=14
+    ALPHANUMERIC=15
+    CHAR=16
+    DIGIT=17
+    APH=18
+    COM=19
+    SC=20
+    LBR=21
+    RBR=22
+    LB=23
+    RB=24
+    WS=25
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -153,9 +173,9 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 0, self.RULE_startrule)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 28
+            self.state = 34
             self.node()
-            self.state = 29
+            self.state = 35
             self.match(aiJsonParser.EOF)
         except RecognitionException as re:
             localctx.exception = re
@@ -204,18 +224,18 @@ class aiJsonParser ( Parser ):
         localctx = aiJsonParser.NodeContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_node)
         try:
-            self.state = 33
+            self.state = 39
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,0,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 31
+                self.state = 37
                 self.condition()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 32
+                self.state = 38
                 self.actionblock()
                 pass
 
@@ -276,15 +296,15 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 4, self.RULE_condition)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 35
+            self.state = 41
             self.match(aiJsonParser.LBR)
-            self.state = 36
+            self.state = 42
             self.match(aiJsonParser.CONDITION)
-            self.state = 37
+            self.state = 43
             self.match(aiJsonParser.SC)
-            self.state = 38
+            self.state = 44
             self.conditiondata()
-            self.state = 39
+            self.state = 45
             self.match(aiJsonParser.RBR)
         except RecognitionException as re:
             localctx.exception = re
@@ -325,6 +345,10 @@ class aiJsonParser ( Parser ):
             return self.getTypedRuleContext(aiJsonParser.AttributesContext,0)
 
 
+        def position(self):
+            return self.getTypedRuleContext(aiJsonParser.PositionContext,0)
+
+
         def RBR(self):
             return self.getToken(aiJsonParser.RBR, 0)
 
@@ -354,23 +378,27 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 6, self.RULE_conditiondata)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 41
-            self.match(aiJsonParser.LBR)
-            self.state = 42
-            self.type_id()
-            self.state = 43
-            self.match(aiJsonParser.COM)
-            self.state = 44
-            self.childtrue()
-            self.state = 45
-            self.match(aiJsonParser.COM)
-            self.state = 46
-            self.childfalse()
             self.state = 47
-            self.match(aiJsonParser.COM)
+            self.match(aiJsonParser.LBR)
             self.state = 48
-            self.attributes()
+            self.type_id()
             self.state = 49
+            self.match(aiJsonParser.COM)
+            self.state = 50
+            self.childtrue()
+            self.state = 51
+            self.match(aiJsonParser.COM)
+            self.state = 52
+            self.childfalse()
+            self.state = 53
+            self.match(aiJsonParser.COM)
+            self.state = 54
+            self.attributes()
+            self.state = 55
+            self.match(aiJsonParser.COM)
+            self.state = 56
+            self.position()
+            self.state = 57
             self.match(aiJsonParser.RBR)
         except RecognitionException as re:
             localctx.exception = re
@@ -422,11 +450,11 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 8, self.RULE_childtrue)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 51
+            self.state = 59
             self.match(aiJsonParser.CHILDTRUE)
-            self.state = 52
+            self.state = 60
             self.match(aiJsonParser.SC)
-            self.state = 53
+            self.state = 61
             self.node()
         except RecognitionException as re:
             localctx.exception = re
@@ -478,11 +506,11 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 10, self.RULE_childfalse)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 55
+            self.state = 63
             self.match(aiJsonParser.CHILDFALSE)
-            self.state = 56
+            self.state = 64
             self.match(aiJsonParser.SC)
-            self.state = 57
+            self.state = 65
             self.node()
         except RecognitionException as re:
             localctx.exception = re
@@ -507,8 +535,8 @@ class aiJsonParser ( Parser ):
         def SC(self):
             return self.getToken(aiJsonParser.SC, 0)
 
-        def actionlist(self):
-            return self.getTypedRuleContext(aiJsonParser.ActionlistContext,0)
+        def actiondata(self):
+            return self.getTypedRuleContext(aiJsonParser.ActiondataContext,0)
 
 
         def RBR(self):
@@ -540,15 +568,92 @@ class aiJsonParser ( Parser ):
         self.enterRule(localctx, 12, self.RULE_actionblock)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 59
+            self.state = 67
             self.match(aiJsonParser.LBR)
-            self.state = 60
+            self.state = 68
             self.match(aiJsonParser.ACTIONBLOCK)
-            self.state = 61
+            self.state = 69
             self.match(aiJsonParser.SC)
-            self.state = 62
+            self.state = 70
+            self.actiondata()
+            self.state = 71
+            self.match(aiJsonParser.RBR)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+    class ActiondataContext(ParserRuleContext):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def LBR(self):
+            return self.getToken(aiJsonParser.LBR, 0)
+
+        def ACTIONLIST(self):
+            return self.getToken(aiJsonParser.ACTIONLIST, 0)
+
+        def SC(self):
+            return self.getToken(aiJsonParser.SC, 0)
+
+        def actionlist(self):
+            return self.getTypedRuleContext(aiJsonParser.ActionlistContext,0)
+
+
+        def COM(self):
+            return self.getToken(aiJsonParser.COM, 0)
+
+        def position(self):
+            return self.getTypedRuleContext(aiJsonParser.PositionContext,0)
+
+
+        def RBR(self):
+            return self.getToken(aiJsonParser.RBR, 0)
+
+        def getRuleIndex(self):
+            return aiJsonParser.RULE_actiondata
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterActiondata" ):
+                listener.enterActiondata(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitActiondata" ):
+                listener.exitActiondata(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitActiondata" ):
+                return visitor.visitActiondata(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def actiondata(self):
+
+        localctx = aiJsonParser.ActiondataContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 14, self.RULE_actiondata)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 73
+            self.match(aiJsonParser.LBR)
+            self.state = 74
+            self.match(aiJsonParser.ACTIONLIST)
+            self.state = 75
+            self.match(aiJsonParser.SC)
+            self.state = 76
             self.actionlist()
-            self.state = 63
+            self.state = 77
+            self.match(aiJsonParser.COM)
+            self.state = 78
+            self.position()
+            self.state = 79
             self.match(aiJsonParser.RBR)
         except RecognitionException as re:
             localctx.exception = re
@@ -606,27 +711,27 @@ class aiJsonParser ( Parser ):
     def actionlist(self):
 
         localctx = aiJsonParser.ActionlistContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 14, self.RULE_actionlist)
+        self.enterRule(localctx, 16, self.RULE_actionlist)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 65
+            self.state = 81
             self.match(aiJsonParser.LB)
-            self.state = 66
+            self.state = 82
             self.action()
-            self.state = 71
+            self.state = 87
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==aiJsonParser.COM:
-                self.state = 67
+                self.state = 83
                 self.match(aiJsonParser.COM)
-                self.state = 68
+                self.state = 84
                 self.action()
-                self.state = 73
+                self.state = 89
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 74
+            self.state = 90
             self.match(aiJsonParser.RB)
         except RecognitionException as re:
             localctx.exception = re
@@ -682,18 +787,18 @@ class aiJsonParser ( Parser ):
     def action(self):
 
         localctx = aiJsonParser.ActionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 16, self.RULE_action)
+        self.enterRule(localctx, 18, self.RULE_action)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 76
+            self.state = 92
             self.match(aiJsonParser.LBR)
-            self.state = 77
+            self.state = 93
             self.type_id()
-            self.state = 78
+            self.state = 94
             self.match(aiJsonParser.COM)
-            self.state = 79
+            self.state = 95
             self.attributes()
-            self.state = 80
+            self.state = 96
             self.match(aiJsonParser.RBR)
         except RecognitionException as re:
             localctx.exception = re
@@ -742,14 +847,14 @@ class aiJsonParser ( Parser ):
     def attributes(self):
 
         localctx = aiJsonParser.AttributesContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 18, self.RULE_attributes)
+        self.enterRule(localctx, 20, self.RULE_attributes)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 82
+            self.state = 98
             self.match(aiJsonParser.ATTRIBUTES)
-            self.state = 83
+            self.state = 99
             self.match(aiJsonParser.SC)
-            self.state = 84
+            self.state = 100
             self.attributevalues()
         except RecognitionException as re:
             localctx.exception = re
@@ -807,33 +912,33 @@ class aiJsonParser ( Parser ):
     def attributevalues(self):
 
         localctx = aiJsonParser.AttributevaluesContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 20, self.RULE_attributevalues)
+        self.enterRule(localctx, 22, self.RULE_attributevalues)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 86
+            self.state = 102
             self.match(aiJsonParser.LBR)
-            self.state = 95
+            self.state = 111
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==aiJsonParser.APHSTRING:
-                self.state = 87
+                self.state = 103
                 self.attributevalue()
-                self.state = 92
+                self.state = 108
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while _la==aiJsonParser.COM:
-                    self.state = 88
+                    self.state = 104
                     self.match(aiJsonParser.COM)
-                    self.state = 89
+                    self.state = 105
                     self.attributevalue()
-                    self.state = 94
+                    self.state = 110
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
 
 
 
-            self.state = 97
+            self.state = 113
             self.match(aiJsonParser.RBR)
         except RecognitionException as re:
             localctx.exception = re
@@ -882,14 +987,14 @@ class aiJsonParser ( Parser ):
     def attributevalue(self):
 
         localctx = aiJsonParser.AttributevalueContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 22, self.RULE_attributevalue)
+        self.enterRule(localctx, 24, self.RULE_attributevalue)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 99
+            self.state = 115
             self.match(aiJsonParser.APHSTRING)
-            self.state = 100
+            self.state = 116
             self.match(aiJsonParser.SC)
-            self.state = 101
+            self.state = 117
             self.value()
         except RecognitionException as re:
             localctx.exception = re
@@ -934,17 +1039,158 @@ class aiJsonParser ( Parser ):
     def value(self):
 
         localctx = aiJsonParser.ValueContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 24, self.RULE_value)
+        self.enterRule(localctx, 26, self.RULE_value)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 103
+            self.state = 119
             _la = self._input.LA(1)
             if not(_la==aiJsonParser.APHSTRING or _la==aiJsonParser.INTEGER):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+    class PositionContext(ParserRuleContext):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def POSITION(self):
+            return self.getToken(aiJsonParser.POSITION, 0)
+
+        def SC(self):
+            return self.getToken(aiJsonParser.SC, 0)
+
+        def positiondata(self):
+            return self.getTypedRuleContext(aiJsonParser.PositiondataContext,0)
+
+
+        def getRuleIndex(self):
+            return aiJsonParser.RULE_position
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterPosition" ):
+                listener.enterPosition(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitPosition" ):
+                listener.exitPosition(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitPosition" ):
+                return visitor.visitPosition(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def position(self):
+
+        localctx = aiJsonParser.PositionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 28, self.RULE_position)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 121
+            self.match(aiJsonParser.POSITION)
+            self.state = 122
+            self.match(aiJsonParser.SC)
+            self.state = 123
+            self.positiondata()
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+    class PositiondataContext(ParserRuleContext):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def LBR(self):
+            return self.getToken(aiJsonParser.LBR, 0)
+
+        def X(self):
+            return self.getToken(aiJsonParser.X, 0)
+
+        def SC(self, i:int=None):
+            if i is None:
+                return self.getTokens(aiJsonParser.SC)
+            else:
+                return self.getToken(aiJsonParser.SC, i)
+
+        def INTEGER(self, i:int=None):
+            if i is None:
+                return self.getTokens(aiJsonParser.INTEGER)
+            else:
+                return self.getToken(aiJsonParser.INTEGER, i)
+
+        def COM(self):
+            return self.getToken(aiJsonParser.COM, 0)
+
+        def Y(self):
+            return self.getToken(aiJsonParser.Y, 0)
+
+        def RBR(self):
+            return self.getToken(aiJsonParser.RBR, 0)
+
+        def getRuleIndex(self):
+            return aiJsonParser.RULE_positiondata
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterPositiondata" ):
+                listener.enterPositiondata(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitPositiondata" ):
+                listener.exitPositiondata(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitPositiondata" ):
+                return visitor.visitPositiondata(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def positiondata(self):
+
+        localctx = aiJsonParser.PositiondataContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 30, self.RULE_positiondata)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 125
+            self.match(aiJsonParser.LBR)
+            self.state = 126
+            self.match(aiJsonParser.X)
+            self.state = 127
+            self.match(aiJsonParser.SC)
+            self.state = 128
+            self.match(aiJsonParser.INTEGER)
+            self.state = 129
+            self.match(aiJsonParser.COM)
+            self.state = 130
+            self.match(aiJsonParser.Y)
+            self.state = 131
+            self.match(aiJsonParser.SC)
+            self.state = 132
+            self.match(aiJsonParser.INTEGER)
+            self.state = 133
+            self.match(aiJsonParser.RBR)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -991,14 +1237,14 @@ class aiJsonParser ( Parser ):
     def type_id(self):
 
         localctx = aiJsonParser.Type_idContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 26, self.RULE_type_id)
+        self.enterRule(localctx, 32, self.RULE_type_id)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 105
+            self.state = 135
             self.match(aiJsonParser.TYPE_ID)
-            self.state = 106
+            self.state = 136
             self.match(aiJsonParser.SC)
-            self.state = 107
+            self.state = 137
             self.match(aiJsonParser.INTEGER)
         except RecognitionException as re:
             localctx.exception = re

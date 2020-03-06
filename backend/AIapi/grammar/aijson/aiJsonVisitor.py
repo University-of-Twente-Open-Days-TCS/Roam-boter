@@ -44,6 +44,11 @@ class aiJsonVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by aiJsonParser#actiondata.
+    def visitActiondata(self, ctx:aiJsonParser.ActiondataContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by aiJsonParser#actionlist.
     def visitActionlist(self, ctx:aiJsonParser.ActionlistContext):
         return self.visitChildren(ctx)
@@ -71,6 +76,16 @@ class aiJsonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by aiJsonParser#value.
     def visitValue(self, ctx:aiJsonParser.ValueContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by aiJsonParser#position.
+    def visitPosition(self, ctx:aiJsonParser.PositionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by aiJsonParser#positiondata.
+    def visitPositiondata(self, ctx:aiJsonParser.PositiondataContext):
         return self.visitChildren(ctx)
 
 

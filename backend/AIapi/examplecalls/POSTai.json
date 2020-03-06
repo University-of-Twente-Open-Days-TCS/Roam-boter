@@ -1,43 +1,50 @@
 {
-	"name" : "ai-number-1",        
-	"ai" : 
-            { 
-                "condition" : 
-                    {
-                       "type-id" : 12,
-                       "child-true" : 
-                            {
-                                "actionblock" : 
-                                    [
-                                        {
-                                            "type-id" : 1,
-                                            "attributes" : {}
-                                        }, 
-                                        {
-                                            "type-id" : 4,
-                                            "attributes" : 
-                                                {
-                                                    "key" : "value",
-                                                    "key2" : 2
-                                                }
-
-                                        }
-                                    ]
-                            },
-                        "child-false" : 
-                            {
-                                "actionblock" : 
-                                    [
-                                        {
-                                            "type-id" : 1,
-                                            "attributes" : {}
-                                        } 
-                                    ]
-                            },
-                        "attributes" : 
-                            {
-                                "target" : "nearestenemey"        
-                            }
+    "name": "ai-number-1",
+    "ai": {
+        "condition": {
+            "attributes": {
+                "target": "nearestenemey"
+            },
+            "child-false": {
+                "actionblock": {
+                    "actionlist": [
+                        {
+                            "attributes": {},
+                            "type-id": 1
+                        }
+                    ],
+                    "position": {
+                        "x": 9,
+                        "y": 2
                     }
-            } 
+                }
+            },
+            "child-true": {
+                "actionblock": {
+                    "actionlist": [
+                        {
+                            "attributes": {},
+                            "type-id": 1
+                        },
+                        {
+                            "attributes": {
+                                "key": "value",
+                                "key2": 2
+                            },
+                            "type-id": 4
+                        }
+                    ],
+                    "position": {
+                        "x": 9,
+                        "y": 2
+                    }
+                }
+            },
+            "position": {
+                "x": 13,
+                "y": 14
+            },
+            "type-id": 12
+        }
+    }
 }
