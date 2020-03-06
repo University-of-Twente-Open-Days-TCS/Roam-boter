@@ -12,6 +12,9 @@ from .models import AI
 from dashboard.models import Team
 
 
+import logging
+logger = logging.getLogger("debugLogger")
+
 class AIList(APIView):
 
     permission_classes = [InTeamPermission]

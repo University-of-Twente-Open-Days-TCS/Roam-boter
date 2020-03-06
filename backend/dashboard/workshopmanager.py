@@ -40,8 +40,9 @@ def generate_teamcodes(amount):
 
 def link_user_session_to_team(team_code, session):
     """Links a user session to team specified by the team code"""
-    if session.session_key is None:
-        raise ValidationError("Session does not exist")
+    if not session.session_key:
+        # session has not yet been saved to the database
+        session.save()
 
     if all_workshops_closed():
         raise ValidationError("No workshop is open")

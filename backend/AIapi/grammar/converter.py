@@ -147,6 +147,7 @@ class ConverterErrorListener(ErrorListener):
         raise Exception("Context Sensitivity Error")
 #=====================================================================
 
+
 def convert_aijson(json):
     """Converts a string of json to an AINode tree."""
     eval_tree = None

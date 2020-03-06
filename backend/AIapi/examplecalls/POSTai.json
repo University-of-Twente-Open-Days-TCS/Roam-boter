@@ -1,50 +1,51 @@
 {
     "name": "ai-number-1",
-    "ai": {
-        "condition": {
-            "attributes": {
-                "target": "nearestenemey"
-            },
-            "child-false": {
-                "actionblock": {
-                    "actionlist": [
-                        {
-                            "attributes": {},
-                            "type-id": 1
-                        }
-                    ],
-                    "position": {
-                        "x": 9,
-                        "y": 2
-                    }
-                }
-            },
-            "child-true": {
-                "actionblock": {
-                    "actionlist": [
-                        {
-                            "attributes": {},
-                            "type-id": 1
-                        },
-                        {
-                            "attributes": {
-                                "key": "value",
-                                "key2": 2
+    "ai": 
+        {
+            "condition": {
+                "type-id": 12,
+                "child-true": {
+                    "actionblock": {
+                        "actionlist": [
+                            {
+                                "type-id": 1,
+                                "attributes": {}
                             },
-                            "type-id": 4
+                            {
+                                "type-id": 4,
+                                "attributes": {
+                                    "key": "value",
+                                    "key2": 2
+                                }
+                            }
+                        ],
+                        "position": {
+                            "x": 9,
+                            "y": 2
                         }
-                    ],
-                    "position": {
-                        "x": 9,
-                        "y": 2
                     }
+                },
+                "child-false": {
+                    "actionblock": {
+                        "actionlist": [
+                            {
+                                "type-id": 1,
+                                "attributes": {}
+                            }
+                        ],
+                        "position": {
+                            "x": 9,
+                            "y": 2
+                        }
+                    }
+                },
+                "attributes": {
+                    "target": "nearestenemey"
+                },
+                "position": {
+                    "x": 13,
+                    "y": 14
                 }
-            },
-            "position": {
-                "x": 13,
-                "y": 14
-            },
-            "type-id": 12
+            }
         }
-    }
 }

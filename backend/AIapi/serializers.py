@@ -7,6 +7,8 @@ from .grammar.converter import is_valid_aijson
 
 import json
 
+import logging
+logger = logging.getLogger("debugLogger")
 
 class AISerializer(serializers.Serializer):
 
@@ -26,6 +28,7 @@ class AISerializer(serializers.Serializer):
     def create(self, validated_data):
         """Returns an AI instance from the serializer"""
         # convert json to actual text
+
         json_string = json.dumps(validated_data['ai'])
         name = validated_data['name']
 
