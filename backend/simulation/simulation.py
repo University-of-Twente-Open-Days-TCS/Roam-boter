@@ -122,7 +122,12 @@ class Simulation:
 # Params: [AINode]
 # Returns: PlayBack
 def simulate(ais):
-    sim = Simulation(level_loader.load_level("levels/level2.png"), ais)
+    level_loader = LevelLoader()
+
+    this_dir = os.path.dirname(os.path.realpath(__file__))
+    level_file = os.path.join(this_dir, "levels/level2.png")
+
+    sim = Simulation(level_loader.load_level(level_file), ais)
     while not sim.has_ended():
         sim.step()
 
@@ -140,14 +145,14 @@ def simulate(ais):
 
 
 def test_simulation():
-    level_loader = LevelLoader()
 
     false_node = ActionNode([Action(8, {})])
     true_node = ActionNode([Action(1, {'obj': Object.HILL}), Action(8, {}), Action(5, {'obj': Object.TANK})])
 
     ai = ConditionNode(Condition(1, {'obj': Object.TANK, 'distance': 10}), true_node, false_node)
+    simulate([ai, ai])
 
-    cProfile.run("simulate([ai, ai])")
+    # cProfile.run("simulate([ai, ai])")
     # PlayBackEncoder.encode(a.get_playback())
 
 
