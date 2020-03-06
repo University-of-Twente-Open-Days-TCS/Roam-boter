@@ -1,6 +1,8 @@
 import math
 
 
+# Return the squared distance between points, this saves an expensive sqrt call and will
+# still work for comparing distances.
 def distance_squared(pos1: (float, float), pos2: (float, float)):
     x1, y1 = pos1
     x2, y2 = pos2
@@ -8,6 +10,7 @@ def distance_squared(pos1: (float, float), pos2: (float, float)):
     return ((x1 - x2) ** 2) + ((y1 - y2) ** 2)
 
 
+# Return the nearest visible tank.
 def get_nearest_tank(state, tank):
     closest = None
     closest_distance = 999999999
@@ -20,10 +23,11 @@ def get_nearest_tank(state, tank):
     return closest
 
 
+# Return the nearest visible bullet.
 def get_nearest_bullet(state, tank):
     closest = None
     closest_distance = 999999999
-    for bullet in state.bullets:
+    for bullet in tank.visible_bullets(state):
         dist = distance_squared(tank.get_pos(), bullet.get_pos())
         if dist < closest_distance and within_turret_cone(tank, *bullet.get_pos()):
             closest_distance = dist
@@ -31,10 +35,12 @@ def get_nearest_bullet(state, tank):
     return closest
 
 
+# Returns the position of the nearest level object, this equals the position of the tank itself.
 def get_nearest_level_object(state, tank, obj):
     return tank.get_pos()
 
 
+# Rotate and move towards a given point. (This does not hold into account walls)
 def move_to_position(state, tank, goal):
     x1, y1 = tank.get_pos()
     x2, y2 = goal
@@ -61,10 +67,12 @@ def move_to_position(state, tank, goal):
         tank.move_forward(state)
 
 
+# Move straight away from a position.
 def move_from_position(state, tank, goal):
     move_to_position(state, tank, -goal)
 
 
+# Calculate the angle towards the goal and let the tank rotate slowly towards this angle.
 def angle_tank_towards_position(state, tank, goal):
     dx, dy = goal
 
@@ -88,6 +96,7 @@ def angle_tank_towards_position(state, tank, goal):
     return angle_towards_goal
 
 
+# Ain the turret slowly to a certain position.
 def aim_to_position(state, tank, goal):
     gx, gy = goal
     tx, ty = tank.get_pos()
