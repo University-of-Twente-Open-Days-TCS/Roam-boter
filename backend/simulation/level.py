@@ -12,7 +12,6 @@ class Level:
     def cache_or_prepare_nearest_objects(self):
         nearest_objects = None
         pickle_path = 'caching/nearest_objects.p'
-        print(pickle_path)
         try:
             with open(pickle_path, 'rb') as f:
                 nearest_objects = pickle.load(f)
@@ -21,7 +20,6 @@ class Level:
             with open(pickle_path, 'wb') as f:
                 pickle.dump(nearest_objects, f)
 
-        print(nearest_objects)
         return nearest_objects
 
     def prepare_nearest_objects(self):
@@ -29,7 +27,6 @@ class Level:
         return [[{obj: self.find_nearest_object(obj, x, y) for obj in objects.ALL_OBJECTS} for x, cell in enumerate(row)]for y, row in enumerate(self.objects)]
 
     def find_nearest_object(self, obj, x, y):
-        print(x, y)
         queue = [(x, y)]
         visited = set()
 
@@ -69,7 +66,6 @@ class Level:
     def cache_or_prepare_nearest_paths(self):
         nearest_paths = None
         pickle_path = 'caching/nearest_paths.p'
-        print(pickle_path)
         try:
             with open(pickle_path, 'rb') as f:
                 nearest_paths = pickle.load(f)

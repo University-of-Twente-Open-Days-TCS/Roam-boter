@@ -3,6 +3,7 @@ from objects import Object
 import math
 
 
+# The bullet class keeping track of every thing a bullet has/does.
 class Bullet:
     x = 0
     y = 0
@@ -20,22 +21,26 @@ class Bullet:
 
         pass
 
+    # Set the absolute position of the bullet.
     def set_pos(self, x, y):
         self.x = x
         self.y = y
 
+    # Get the absolute position of the bullet.
     def get_pos(self):
         return self.x, self.y
 
+    # Check if a bullet has a collision with a wall.
     def check_collision_wall(self, state):
         if self.x < 0 or self.y < 0 or self.x > state.level.get_width() - 1 or self.y > state.level.get_height() - 1:
             return True
 
-        print(self.x, self.y)
         if state.level.get_object(round(self.x), round(self.y)) == Object.WALL:
             return True
         return False
 
+    # Check if a bullet has a collision with a tank.
+    # TODO: This is now a rectangle collision, do we want it to stay that way?
     def check_collision_tank(self, state):
         for tank in state.tanks:
             if tank == self.owner:
@@ -46,17 +51,21 @@ class Bullet:
                 return tank
         return None
 
+    # Process all bullet events.
     def update(self, state):
+        # Check if there are wall collisions.
         if self.check_collision_wall(state):
             state.bullets.remove(self)
             return
 
+        # Tank collisions.
         tank = self.check_collision_tank(state)
         if tank is not None:
             state.bullets.remove(self)
             tank.hit(self)
             return
 
+        # Update position based on speed.
         self.x -= self.speed * math.sin(math.radians(self.angle_dir))
         self.y -= self.speed * math.cos(math.radians(self.angle_dir))
 

@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class Object(Enum):
+class Object(IntEnum):
     EMPTY = 0
     FRIENDLY_TANK = 1
     ENEMY_TANK = 2
@@ -16,7 +16,6 @@ class Object(Enum):
     SPAWN = 11
     TANK = 12
     BULLET = 13
-
 
 
 ColorValues = {
