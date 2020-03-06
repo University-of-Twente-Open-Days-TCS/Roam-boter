@@ -311,7 +311,6 @@ class conditionNode {
         this.setAssetSizes()
     }
 
-    //TODO make 'setsize()' method which sets the size of the blue obj and all its input/false/truedots around
 
     //sets the size of the node and its input/false/true-nodes around
     setAssetSizes() {
@@ -323,7 +322,6 @@ class conditionNode {
             this.rect.height(blockHeight);
         }
 
-        //TODO @LEO check if this is the correct way to adjust the locations
         //adjust inputcircles & hitbox
         this.inputCircle.y(this.rect.y());
         this.inputCircle.x(this.rect.x() + (this.rect.width() / 2));
@@ -385,7 +383,8 @@ class conditionNode {
                     "attributes": {
                         "distance": this.condition.distance,
                         "object": this.condition.object
-                    }
+                    },
+                    "position:": this.getAbsolutePosition()
                 });
 
                 break;
@@ -396,7 +395,9 @@ class conditionNode {
                     "type-id": 2,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"object": this.condition.object}
+                    "attributes": {"object": this.condition.object},
+                    "position:": this.getAbsolutePosition()
+
                 });
                 break;
 
@@ -406,7 +407,9 @@ class conditionNode {
                     "type-id": 3,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"object": this.condition.object}
+                    "attributes": {"object": this.condition.object},
+                    "position:": this.getAbsolutePosition()
+
                 });
 
                 break;
@@ -417,7 +420,9 @@ class conditionNode {
                     "type-id": 4,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"object": this.condition.object}
+                    "attributes": {"object": this.condition.object},
+                    "position:": this.getAbsolutePosition()
+
                 });
 
                 break;
@@ -428,7 +433,9 @@ class conditionNode {
                     "type-id": 5,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {}
+                    "attributes": {},
+                    "position:": this.getAbsolutePosition()
+
                 });
 
                 break;
@@ -439,7 +446,9 @@ class conditionNode {
                     "type-id": 6,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"label": this.condition.label}
+                    "attributes": {"label": this.condition.label},
+                    "position:": this.getAbsolutePosition()
+
                 });
 
                 break;
@@ -450,7 +459,9 @@ class conditionNode {
                     "type-id": 7,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"amount": this.condition.amount}
+                    "attributes": {"amount": this.condition.amount},
+                    "position:": this.getAbsolutePosition()
+
                 });
 
 
@@ -620,7 +631,7 @@ class conditionNode {
                 if (inputDict.get(intersect).inputArrow != null) {
                     inputDict.get(intersect).inputArrow.delete();
                 }
-                new arrow(node, inputDict.get(intersect), condition, stage);
+                new arrow(node, inputDict.get(intersect), condition, this.stage, this.layer);
             }
             this.moveTo(g);
             this.x(this.originalX);
@@ -808,11 +819,18 @@ class arrow {
     //The end coordinates on the canvas (absolute)
     _endpos;
 
+    //The stage&layer
+    _layer;
+    _stage;
+
+
     //Constructor takes the source node, destination node and whether it starts at the true- or false point as input/
-    constructor(src, dest, isTrue, stage) {
+    constructor(src, dest, isTrue, stage, layer) {
         this.src = src;
         this.dest = dest;
         this.isTrue = isTrue;
+        this.stage = stage;
+        this.layer = layer;
 
         if (isTrue) {
             this.startpos = this.src.getTrueDotPosition();
@@ -831,8 +849,8 @@ class arrow {
             stroke: 'black'
         });
         this.arrowline.absolutePosition({x: 0, y: 0});
-        //TODO MAKE ARROW USE GIVEN LAYER, NOT GLOBAL VAR
-        layer.add(this.arrowline);
+
+        this.layer.add(this.arrowline);
         this.update(stage);
     }
 
@@ -847,10 +865,11 @@ class arrow {
         this.endpos = this.dest.getInputDotPosition();
         //this is to offset the possible movement of the entire stage, otherwise the arrows would not be in the correct position
         this.arrowline.absolutePosition({x: 0, y: 0});
+        let arrow = this;
         this.arrowline.points(this.startpos.concat(this.endpos).map(function (p) {
-            return p / stage.scale
+            return p / arrow.stage.scale
         }));
-        layer.batchDraw();
+        this.layer.batchDraw();
 
     }
 
@@ -863,7 +882,7 @@ class arrow {
         }
         this.dest.inputArrow = null;
         this.arrowline.destroy();
-        layer.draw();
+        this.layer.draw();
     }
 
     //All getters&setters
@@ -914,6 +933,23 @@ class arrow {
     set arrowline(value) {
         this._arrowline = value;
     }
+
+    get stage() {
+        return this._stage;
+    }
+
+    set stage(value) {
+        this._stage = value;
+    }
+
+    get layer() {
+        return this._layer;
+    }
+
+    set layer(value) {
+        this._layer = value;
+    }
+
 }
 
 //Action (NOT A NODE), has zero or more attributes, by default null. DOES NOT WORK WITH LABELS YET
@@ -999,6 +1035,11 @@ class actionNode {
 
     _actionList;
     _actionNodeText;
+    _actionNodeTextObj;
+    _group;
+    _rect;
+    _inputCircle;
+
 
     constructor(stage, layer, actionList) {
         this.group = new Konva.Group({
@@ -1023,11 +1064,54 @@ class actionNode {
                 layer.draw();
             }
         });
+        this.stage = stage;
+        this.layer = layer;
     }
 
-    //TODO FIX METHOD WHICH TOSTRINGS ALL ACTIONS, ADDS NEWLINES AND A METHOD WHICH FIXES THE NODE-SIZE (SEE CONDITIONNODE setassetsizes())
     createActionNodeText() {
+        let actionNodeString = "";
+        let actionListLength = this.actionList.length;
+        this.actionList.forEach(function (action, index) {
+            actionNodeString.concat(action.toString());
+            if (index + 1 < actionListLength) {
+                actionNodeString.concat("\n");
+            }
+        })
+    }
 
+    setassetsizes() {
+        //Adjust rect size
+        if (this.actionNodeText.text != null) {
+            this.rect.width(this.actionNodeTextObj.width());
+            this.rect.height(this.actionNodeTextObj.height());
+        } else {
+            this.rect.width(blockWidth);
+            this.rect.height(blockHeight);
+        }
+
+        //adjust inputcircle
+        this.inputCircle.y(this.rect.y());
+        this.inputCircle.x(this.rect.x() + (this.rect.width() / 2));
+
+        //adjust arrows
+        this.updateArrows(this.stage);
+
+        this.stage.draw();
+    }
+
+    //create text for in the condition
+    createTextObject(actionNodeText) {
+        this.actionNodeTextObj = new Konva.Text({
+            x: spawnX,
+            y: spawnY,
+            text: actionNodeText,
+            fontSize: 12,
+            fill: '#FFF',
+            fontFamily: 'Monospace',
+            align: 'center',
+            padding: 10
+        });
+        return this.actionNodeTextObj;
     }
 
     jsonify() {
@@ -1042,67 +1126,98 @@ class actionNode {
             switch (action.id) {
                 // Finds shortest path to reach given object.
                 case 1:
-                    tree.actionblock.push({"type-id": 1, "attributes": {"object": action.object}});
+                    tree.actionblock.push({
+                        "type-id": 1, "attributes": {"object": action.object},
+                        "position:": this.getAbsolutePosition()
+                    });
 
                     break;
                 //Follows a pre-defined path clockwise or anticlockwise along the map
                 case 2:
-                    tree.actionblock.push({"type-id": 2, "attributes": {}});
+                    tree.actionblock.push({
+                        "type-id": 2, "attributes": {},
+                        "position:": this.getAbsolutePosition()
+                    });
                     break;
 
                 // Patrols in a possible eight-figure around a location.
                 case 3:
-                    tree.actionblock.push({"type-id": 3, "attributes": {"object": action.object}});
+                    tree.actionblock.push({
+                        "type-id": 3, "attributes": {"object": action.object},
+                        "position:": this.getAbsolutePosition()
+                    });
                     break;
 
 
                 //Keeps moving in a straight away from object, if wall is hit keeps increasing either x or y-value to increase distance
                 case 4:
-                    tree.actionblock.push({"type-id": 4, "attributes": {"object": action.object}});
+                    tree.actionblock.push({
+                        "type-id": 4, "attributes": {"object": action.object},
+                        "position:": this.getAbsolutePosition()
+                    });
                     break;
 
 
                 //Aims at an object. It aims according to the predicted position and bullet travel time
                 case 5:
-                    tree.actionblock.push({"type-id": 5, "attributes": {"object": action.object}});
+                    tree.actionblock.push({
+                        "type-id": 5, "attributes": {"object": action.object},
+                        "position:": this.getAbsolutePosition()
+                    });
                     break;
 
 
                 //Aims at a certain direction based on either the tank or map
                 case 6:
-                    tree.actionblock.push({"type-id": 6, "attributes": {"dir": action.dir}});
+                    tree.actionblock.push({
+                        "type-id": 6, "attributes": {"dir": action.dir},
+                        "position:": this.getAbsolutePosition()
+                    });
                     break;
 
 
                 //Aims at a certain direction based on either the tank or map
                 case 7:
-                    tree.actionblock.push({"type-id": 7, "attributes": {"deg": action.deg}});
+                    tree.actionblock.push({
+                        "type-id": 7, "attributes": {"deg": action.deg},
+                        "position:": this.getAbsolutePosition()
+                    });
                     break;
 
                 //Fires a bullet
                 case 8:
-                    tree.actionblock.push({"type-id": 8, "attributes": {}});
+                    tree.actionblock.push({
+                        "type-id": 8, "attributes": {}, "position:": this.getAbsolutePosition()
+                    });
                     break;
                 //Blows up your own tank, dealing equal damage to your surroundings
                 case 9:
-                    tree.actionblock.push({"type-id": 9, "attributes": {}});
+                    tree.actionblock.push({
+                        "type-id": 9, "attributes": {}, "position:": this.getAbsolutePosition()
+                    });
 
                     break;
                 //Sets a certain label to true
                 case 10:
-                    tree.actionblock.push({"type-id": 10, "attributes": {"label": action.label}});
+                    tree.actionblock.push({
+                        "type-id": 10, "attributes": {"label": action.label}, "position:": this.getAbsolutePosition()
+                    });
 
                     break;
 
                 //Sets a certain label to false
                 case 11:
-                    tree.actionblock.push({"type-id": 10, "attributes": {"label": action.label}});
+                    tree.actionblock.push({
+                        "type-id": 10, "attributes": {"label": action.label}, "position:": this.getAbsolutePosition()
+                    });
 
                     break;
 
                 //Sets a certain label to true for X seconds
                 case 12:
-                    tree.actionblock.push({"type-id": 10, "attributes": {"label": action.label}});
+                    tree.actionblock.push({
+                        "type-id": 10, "attributes": {"label": action.label}, "position:": this.getAbsolutePosition()
+                    });
 
                     break;
 
@@ -1159,7 +1274,7 @@ class actionNode {
             this.inputArrow.delete();
         }
         this.group.destroy();
-        layer.draw();
+        this.layer.draw();
     }
 
     get actionList() {
@@ -1178,24 +1293,104 @@ class actionNode {
         this._actionNodeText = value;
     }
 
+    get actionNodeTextObj() {
+        return this._actionNodeTextObj;
+    }
+
+    set actionNodeTextObj(value) {
+        this._actionNodeTextObj = value;
+    }
+
+    get stage() {
+        return this._stage;
+    }
+
+    set stage(value) {
+        this._stage = value;
+    }
+
+    get layer() {
+        return this._layer;
+    }
+
+    set layer(value) {
+        this._layer = value;
+    }
+
+    get group() {
+        return this._group;
+    }
+
+    set group(value) {
+        this._group = value;
+    }
+
+    get rect() {
+        return this._rect;
+    }
+
+    set rect(value) {
+        this._rect = value;
+    }
+
+
+    get inputCircle() {
+        return this._inputCircle;
+    }
+
+    set inputCircle(value) {
+        this._inputCircle = value;
+    }
 }
 
 class startNode {
+    get rect() {
+        return this._rect;
+    }
+
+    set rect(value) {
+        this._rect = value;
+    }
+
+    get trueCircle() {
+        return this._trueCircle;
+    }
+
+    set trueCircle(value) {
+        this._trueCircle = value;
+    }
+
+    get dragCircle() {
+        return this._dragCircle;
+    }
+
+    set dragCircle(value) {
+        this._dragCircle = value;
+    }
+
     arrow;
 
     _trueArrow = null;
+    _layer;
+    _stage;
+    _group;
+    _rect;
+    _trueCircle;
+    _dragCircle;
 
-    get trueArrow() {
-        return this._trueArrow;
+    get group() {
+        return this._group;
     }
 
-    set trueArrow(value) {
-        this._trueArrow = value;
+    set group(value) {
+        this._group = value;
     }
 
     constructor(stage, layer) {
         //    bla insert shape and a point which can be dragged to a condition/action
         this.createGroup(stage, layer);
+        this.stage = stage;
+        this.layer = layer;
     }
 
     createGroup(stage, layer) {
@@ -1204,7 +1399,7 @@ class startNode {
         });
         this.createRect();
         this.createTrueCircle();
-        this.createDragCircle(this.trueCircle, stage, layer);
+        this.createDragCircle();
         let node = this;
         var conditionNode = this;
         this.group.on("dragmove", function () {
@@ -1240,12 +1435,12 @@ class startNode {
     }
 
     //creates an invisible circle used only for making a new connection between nodes, based on condition will create one for true or for false
-    createDragCircle(circle, stage, layer) {
+    createDragCircle() {
         let node = this;
-        let dragCircle = new Konva.Circle({
+        this.dragCircle = new Konva.Circle({
             draggable: true,
-            y: circle.y(),
-            x: circle.x(),
+            y: this.trueCircle.y(),
+            x: this.trueCircle.x(),
             radius: hitboxCircleRadius,
             fill: 'black',
             opacity: 0
@@ -1254,11 +1449,11 @@ class startNode {
 
         this.group.add(dragCircle);
 
-        dragCircle.originalX = dragCircle.x();
-        dragCircle.originalY = dragCircle.y();
+        this.dragCircle.originalX = this.dragCircle.x();
+        this.dragCircle.originalY = this.dragCircle.y();
 
         //when the invisible circle starts to be dragged create a new temporary arrow
-        dragCircle.on("dragstart", function () {
+        this.dragCircle.on("dragstart", function () {
             this.tempX = this.getAbsolutePosition().x;
             this.tempY = this.getAbsolutePosition().y;
             //it is important that the invisible circle is in a different layer in order to check what is under the cursor it later
@@ -1279,18 +1474,18 @@ class startNode {
         });
 
         //update the temporary arrow
-        dragCircle.on("dragmove", function () {
+        this.dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
             this.tempArrow.absolutePosition({x: 0, y: 0});
             var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
             this.tempArrow.points(points.map(function (p) {
-                return p / stage.scale
+                return p / node.stage.scale
             }));
             templayer.batchDraw();
         });
         let g = this.group;
         //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
-        dragCircle.on("dragend", function () {
+        this.dragCircle.on("dragend", function () {
             var touchPos = stage.getPointerPosition();
             var intersect = layer.getIntersection(touchPos);
             console.log(intersect);
@@ -1299,14 +1494,14 @@ class startNode {
                 if (inputDict.get(intersect).inputArrow != null) {
                     inputDict.get(intersect).inputArrow.delete();
                 }
-                new arrow(node, inputDict.get(intersect), true, stage);
+                new arrow(node, inputDict.get(intersect), true, this.stage, this.layer);
             }
             this.moveTo(g);
             this.x(this.originalX);
             this.y(this.originalY);
             this.tempArrow.destroy();
             this.tempArrow = null;
-            layer.batchDraw();
+            node.layer.batchDraw();
             templayer.batchDraw();
         });
     }
@@ -1320,6 +1515,30 @@ class startNode {
         if (this.trueArrow != null) {
             this.trueArrow.update(stage);
         }
+    }
+
+    get trueArrow() {
+        return this._trueArrow;
+    }
+
+    set trueArrow(value) {
+        this._trueArrow = value;
+    }
+
+    get stage() {
+        return this._stage;
+    }
+
+    set stage(value) {
+        this._stage = value;
+    }
+
+    get layer() {
+        return this._layer;
+    }
+
+    set layer(value) {
+        this._layer = value;
     }
 
 }
