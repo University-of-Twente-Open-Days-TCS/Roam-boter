@@ -9,6 +9,7 @@ class LevelLoader:
     def __init__(self):
         pass
 
+    # Search whether the level exists in cache or not.
     def load_level(self, path):
         if path in self.current_loaded_levels:
             return self.current_loaded_levels[path]
