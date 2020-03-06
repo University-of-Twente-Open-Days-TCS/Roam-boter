@@ -98,13 +98,9 @@ class Simulation:
             if tank.get_health() <= 0:
                 self.state.tanks.remove(tank)
 
-<<<<<<< HEAD
         DRAW_WORLD(self.state)
-=======
         # Draw the world if VISUAL_DEBUG is True.
-        visual_debug.DRAW_WORLD(self.state)
 
->>>>>>> origin/simulation_setup
         self.state.frames_passed += 1
 
         # Add the frame to the playback.
@@ -122,9 +118,6 @@ class Simulation:
             return None
 
 
-<<<<<<< HEAD
-def test_simulation():
-=======
 # Run the simulation with an array of ais to be executed.
 # Params: [AINode]
 # Returns: PlayBack
@@ -146,8 +139,7 @@ def simulate(ais):
     return sim.get_playback()
 
 
-if __name__ == "__main__":
->>>>>>> origin/simulation_setup
+def test_simulation():
     level_loader = LevelLoader()
 
     false_node = ActionNode([Action(8, {})])
@@ -155,26 +147,9 @@ if __name__ == "__main__":
 
     ai = ConditionNode(Condition(1, {'obj': Object.TANK, 'distance': 10}), true_node, false_node)
 
-<<<<<<< HEAD
-    this_dir = os.path.dirname(os.path.realpath(__file__))
-    level_dir = os.path.join(this_dir, "levels")
-    level2_path = os.path.join(level_dir, "level2.png")
-
-    a = Simulation(level_loader.load_level(level2_path), [ai, ai])
-
-    while not a.has_ended():
-        print(a.step())
-
-    if a.get_winner() is not None:
-        print("PLAYER: " + a.__str__() + " has won!!!!")
-    else:
-        print("Its a tie")
-
-    encoder = PlayBackEncoder()
-
-    print(encoder.encode(a.get_playback()))
-=======
     cProfile.run("simulate([ai, ai])")
-    #print(simulate([ai, ai]))
->>>>>>> origin/simulation_setup
     # PlayBackEncoder.encode(a.get_playback())
+
+
+if __name__ == "__main__":
+    test_simulation()
