@@ -52,42 +52,42 @@ export default class condition {
         switch (this.id) {
             case 1:
                 // provide both distance and object, otherwise both will be ignored
-                if (distance == null || object == null) {
+                if (this.distance == null || this.object == null) {
                     return "If distance to nearest \n _object_ is greater \n than _distance_";
                 } else {
-                    return "If distance to nearest \n" + object + " is greater \n than " + distance;
+                    return "If distance to nearest \n" + this.object + " is greater \n than " + this.distance;
                 }
             case 2:
-                if (object == null) {
+                if (this.object == null) {
                     return "If _object_ \n is visible";
                 } else {
-                    return "If " + object + " \n is  visible";
+                    return "If " + this.object + " \n is  visible";
                 }
             case 3:
-                if (object == null) {
+                if (this.object == null) {
                     return "If aimed at _object_";
                 } else {
-                    return "If aimed at \n" + object;
+                    return "If aimed at \n" + this.object;
                 }
             case 4:
-                if (object == null) {
+                if (this.object == null) {
                     return "If _object_ exists";
                 } else {
-                    return "If " + object + "\n exists";
+                    return "If " + this.object + "\n exists";
                 }
             case 5:
                 return "Bullet ready";
             case 6:
-                if (label == null) {
+                if (this.label == null) {
                     return "If _label_ set";
                 } else {
-                    return "If " + label + " set";
+                    return "If " + this.label + " set";
                 }
             case 7:
-                if (health == null) {
+                if (this.health == null) {
                     return "If health is \n greater than _amount_";
                 } else {
-                    return "If health is \n greater than " + health;
+                    return "If health is \n greater than " + this.health;
                 }
             default:
                 return null;

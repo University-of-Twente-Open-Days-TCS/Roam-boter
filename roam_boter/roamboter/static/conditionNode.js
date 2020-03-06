@@ -12,6 +12,7 @@ var spawnY = 0;
 
 export default class conditionNode {
 
+
     //The node itself
     _rect;
 
@@ -40,6 +41,9 @@ export default class conditionNode {
     //The text which corresponds to the condition
     _conditionText;
 
+    //
+    _conditionTextObj;
+
     //Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
     // and if (all) its appropriate parameter(s) is given this will be included.
     constructor(stage, layer, condition) {
@@ -58,7 +62,7 @@ export default class conditionNode {
         }
         this.createRect();
         if (this.conditionText != null) {
-            this.conditionText.moveToTop();
+            this.conditionTextObj.moveToTop();
         }
 
         this.createFalseCircle();
@@ -75,8 +79,8 @@ export default class conditionNode {
         this.group.on("dragend", function () {
             var touchPos = node.stage.getPointerPosition();
             console.log("dragend");
-            console.log(node.stage.trashcanlayer.getIntersection(touchPos));
-            if (node.stage.trashcanlayer.getIntersection(touchPos) != null) {
+            console.log(node.stage.staticlayer.getIntersection(touchPos));
+            if (node.stage.staticlayer.getIntersection(touchPos) != null) {
                 node.remove();
             }
         });
@@ -101,9 +105,9 @@ export default class conditionNode {
 
     //sets the size of the node and its input/false/true-nodes around
     setAssetSizes() {
-        if (this.conditiontext.text != null) {
-            this.rect.width(this.conditiontext.width());
-            this.rect.height(this.conditiontext.height());
+        if (this.conditionTextObj.text != null) {
+            this.rect.width(this.conditionTextObj.width());
+            this.rect.height(this.conditionTextObj.height());
         } else {
             this.rect.width(blockWidth);
             this.rect.height(blockHeight);
@@ -148,22 +152,22 @@ export default class conditionNode {
 
 
     trueChild() {
-        return this.condition.trueArrow.dest;
+        return this.trueArrow.dest;
     }
 
     falseChild() {
-        return this.condition.falseArrow.dest;
+        return this.falseArrow.dest;
     }
 
     jsonify() {
+        let node = this.rect;
         let tree = {};
-        tree.condition = {};
 
         //case Condition:
         switch (this.condition.id) {
             //distance to nearest object greater than distance
             case 1:
-                tree.condition.push({
+                tree.condition = {
                     "type-id": 1,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
@@ -171,88 +175,90 @@ export default class conditionNode {
                         "distance": this.condition.distance,
                         "object": this.condition.object
                     },
-                    "position:": this.getAbsolutePosition()
-                });
+                    "position:": node.getAbsolutePosition()
+                };
 
-                break;
+                return tree;
 
             //object visible
             case 2:
-                tree.condition.push({
+                tree.condition = {
                     "type-id": 2,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {"object": this.condition.object},
-                    "position:": this.getAbsolutePosition()
+                    "position:": node.getAbsolutePosition()
 
-                });
-                break;
+                };
+                return tree;
+                ;
 
             //aimed at object
             case 3:
-                tree.condition.push({
+                tree.condition = {
                     "type-id": 3,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {"object": this.condition.object},
-                    "position:": this.getAbsolutePosition()
+                    "position:": node.getAbsolutePosition()
 
-                });
+                };
 
-                break;
+                return tree;
+                ;
 
             // if object exists
             case 4:
-                tree.condition.push({
+                tree.condition = {
                     "type-id": 4,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {"object": this.condition.object},
-                    "position:": this.getAbsolutePosition()
+                    "position:": node.getAbsolutePosition()
 
-                });
+                };
 
-                break;
+                return tree;
 
             //bullet ready
             case 5:
-                tree.condition.push({
+                tree.condition = {
                     "type-id": 5,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {},
-                    "position:": this.getAbsolutePosition()
+                    "position:": node.getAbsolutePosition()
 
-                });
+                };
 
-                break;
+                return tree;
 
             //if label set
             case 6:
-                tree.condition.push({
+                tree.condition = {
                     "type-id": 6,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {"label": this.condition.label},
-                    "position:": this.getAbsolutePosition()
+                    "position:": node.getAbsolutePosition()
 
-                });
+                };
 
-                break;
+                return tree;
 
             //health greater than amount
             case 7:
-                tree.condition.push({
+                tree.condition = {
                     "type-id": 7,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {"amount": this.condition.amount},
-                    "position:": this.getAbsolutePosition()
+                    "position:": node.getAbsolutePosition()
 
-                });
+                };
 
 
-                break;
+                return tree;
 
             default:
             //Raise error, wrong ID
@@ -286,7 +292,7 @@ export default class conditionNode {
 
     //create text for in the condition
     createTextObject(conditionText) {
-        this.conditiontext = new Konva.Text({
+        this.conditionTextObj = new Konva.Text({
             x: spawnX,
             y: spawnY,
             text: conditionText,
@@ -296,18 +302,18 @@ export default class conditionNode {
             align: 'center',
             padding: 10
         });
-        this.group.add(this.conditiontext);
+        this.group.add(this.conditionTextObj);
     }
 
 
     //base rectangle which contains the condition text
     createRect() {
-        if (this.conditiontext != null) {
+        if (this.conditionText != null) {
             this.rect = new Konva.Rect({
                 x: 0,
                 y: 0,
-                width: this.conditiontext.width(),
-                height: this.conditiontext.height(),
+                width: this.conditionTextObj.width(),
+                height: this.conditionTextObj.height(),
                 fill: 'blue',
                 stroke: 'black',
                 strokeWidth: 2,
@@ -581,6 +587,14 @@ export default class conditionNode {
 
     set rect(value) {
         this._rect = value;
+    }
+
+    get conditionTextObj() {
+        return this._conditionTextObj;
+    }
+
+    set conditionTextObj(value) {
+        this._conditionTextObj = value;
     }
 
 }

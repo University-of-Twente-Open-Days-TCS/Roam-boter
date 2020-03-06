@@ -26,7 +26,11 @@ export default class actionNode {
 
         this.actionList = actionList;
         this.actionNodeText = this.createActionNodeText();
+        this.createTextObject();
         this.createRect();
+        if (this.actionNodeText != null) {
+            this.actionNodeTextObj.moveToTop();
+        }
         this.createInputCircle();
         let node = this;
         this.group.on("dragmove", function () {
@@ -36,8 +40,8 @@ export default class actionNode {
         this.group.on("dragend", () => {
             var touchPos = stage.getPointerPosition();
             console.log("dragend");
-            console.log(this.stage.trashcanlayer.getIntersection(touchPos));
-            if (this.stage.trashcanlayer.getIntersection(touchPos) != null) {
+            console.log(this.stage.staticlayer.getIntersection(touchPos));
+            if (this.stage.staticlayer.getIntersection(touchPos) != null) {
                 thisActionNode.remove();
                 layer.draw();
             }
@@ -47,20 +51,28 @@ export default class actionNode {
 
     createActionNodeText() {
         let actionNodeString = "";
+        let i = 0;
         if (this.actionList != null) {
+            console.log(this.actionList);
             let actionListLength = this.actionList.length;
-            this.actionList.forEach(function (action, index) {
-            actionNodeString.concat(action.toString());
-            if (index + 1 < actionListLength) {
-                actionNodeString.concat("\n");
-            }
-        })
+            this.actionList.forEach(element => {
+                console.log(element.toString());
+                actionNodeString = actionNodeString.concat(element.toString());
+                if (i + 1 < actionListLength) {
+                    actionNodeString = actionNodeString.concat("\n");
+                }
+                i = i + 1;
+            });
+            console.log(actionNodeString);
+            return actionNodeString
         } else {
             return null;
         }
 
 
     }
+
+    //TODO editActionNode method which utilizes setAssetSizes
 
     setassetsizes() {
         //Adjust rect size
@@ -83,35 +95,45 @@ export default class actionNode {
     }
 
     //create text for in the condition
-    createTextObject(actionNodeText) {
+    createTextObject() {
         this.actionNodeTextObj = new Konva.Text({
             x: spawnX,
             y: spawnY,
-            text: actionNodeText,
+            text: this.actionNodeText,
             fontSize: 12,
             fill: '#FFF',
             fontFamily: 'Monospace',
             align: 'center',
             padding: 10
         });
-        return this.actionNodeTextObj;
+        this.group.add(this.actionNodeTextObj);
+
     }
 
     jsonify() {
-
+        let node = this.rect;
         let tree = {};
         tree.actionblock = [];
 
+        console.log(this.actionList);
         //Iterate over all actions and add its json to the actionblock
-        this.actionList.forEach(function (action) {
+        this.actionList.forEach(item => {
 
             //case Action:
-            switch (action.id) {
+            switch (item.id) {
+
+                //Do Nothing
+                case 0:
+                    tree.actionblock.push({
+                        "type-id": 0, "attributes": {},
+                        "position:": node.getAbsolutePosition()
+                    });
+                    break;
                 // Finds shortest path to reach given object.
                 case 1:
                     tree.actionblock.push({
-                        "type-id": 1, "attributes": {"object": action.object},
-                        "position:": this.getAbsolutePosition()
+                        "type-id": 1, "attributes": {"object": item.object},
+                        "position:": node.getAbsolutePosition()
                     });
 
                     break;
@@ -119,15 +141,15 @@ export default class actionNode {
                 case 2:
                     tree.actionblock.push({
                         "type-id": 2, "attributes": {},
-                        "position:": this.getAbsolutePosition()
+                        "position:": node.getAbsolutePosition()
                     });
                     break;
 
                 // Patrols in a possible eight-figure around a location.
                 case 3:
                     tree.actionblock.push({
-                        "type-id": 3, "attributes": {"object": action.object},
-                        "position:": this.getAbsolutePosition()
+                        "type-id": 3, "attributes": {"object": item.object},
+                        "position:": node.getAbsolutePosition()
                     });
                     break;
 
@@ -135,8 +157,8 @@ export default class actionNode {
                 //Keeps moving in a straight away from object, if wall is hit keeps increasing either x or y-value to increase distance
                 case 4:
                     tree.actionblock.push({
-                        "type-id": 4, "attributes": {"object": action.object},
-                        "position:": this.getAbsolutePosition()
+                        "type-id": 4, "attributes": {"object": item.object},
+                        "position:": node.getAbsolutePosition()
                     });
                     break;
 
@@ -144,8 +166,8 @@ export default class actionNode {
                 //Aims at an object. It aims according to the predicted position and bullet travel time
                 case 5:
                     tree.actionblock.push({
-                        "type-id": 5, "attributes": {"object": action.object},
-                        "position:": this.getAbsolutePosition()
+                        "type-id": 5, "attributes": {"object": item.object},
+                        "position:": node.getAbsolutePosition()
                     });
                     break;
 
@@ -153,8 +175,8 @@ export default class actionNode {
                 //Aims at a certain direction based on either the tank or map
                 case 6:
                     tree.actionblock.push({
-                        "type-id": 6, "attributes": {"dir": action.dir},
-                        "position:": this.getAbsolutePosition()
+                        "type-id": 6, "attributes": {"dir": item.dir},
+                        "position:": node.getAbsolutePosition()
                     });
                     break;
 
@@ -162,28 +184,28 @@ export default class actionNode {
                 //Aims at a certain direction based on either the tank or map
                 case 7:
                     tree.actionblock.push({
-                        "type-id": 7, "attributes": {"deg": action.deg},
-                        "position:": this.getAbsolutePosition()
+                        "type-id": 7, "attributes": {"deg": item.deg},
+                        "position:": node.getAbsolutePosition()
                     });
                     break;
 
                 //Fires a bullet
                 case 8:
                     tree.actionblock.push({
-                        "type-id": 8, "attributes": {}, "position:": this.getAbsolutePosition()
+                        "type-id": 8, "attributes": {}, "position:": node.getAbsolutePosition()
                     });
                     break;
                 //Blows up your own tank, dealing equal damage to your surroundings
                 case 9:
                     tree.actionblock.push({
-                        "type-id": 9, "attributes": {}, "position:": this.getAbsolutePosition()
+                        "type-id": 9, "attributes": {}, "position:": node.getAbsolutePosition()
                     });
 
                     break;
                 //Sets a certain label to true
                 case 10:
                     tree.actionblock.push({
-                        "type-id": 10, "attributes": {"label": action.label}, "position:": this.getAbsolutePosition()
+                        "type-id": 10, "attributes": {"label": item.label}, "position:": node.getAbsolutePosition()
                     });
 
                     break;
@@ -191,7 +213,7 @@ export default class actionNode {
                 //Sets a certain label to false
                 case 11:
                     tree.actionblock.push({
-                        "type-id": 10, "attributes": {"label": action.label}, "position:": this.getAbsolutePosition()
+                        "type-id": 11, "attributes": {"label": item.label}, "position:": node.getAbsolutePosition()
                     });
 
                     break;
@@ -199,7 +221,7 @@ export default class actionNode {
                 //Sets a certain label to true for X seconds
                 case 12:
                     tree.actionblock.push({
-                        "type-id": 10, "attributes": {"label": action.label}, "position:": this.getAbsolutePosition()
+                        "type-id": 12, "attributes": {"label": item.label}, "position:": node.getAbsolutePosition()
                     });
 
                     break;

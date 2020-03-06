@@ -63,8 +63,8 @@ stage.on('touchmove', function (e) {
         stage.scaleX(scale);
         stage.scaleY(scale);
         //the trashcan is the only thing which should not scale with the rest of the stage
-        stage.trashcanlayer.scaleX(1 / scale);
-        stage.trashcanlayer.scaleY(1 / scale);
+        stage.staticlayer.scaleX(1 / scale);
+        stage.staticlayer.scaleY(1 / scale);
         stage.scale = scale;
         stage.batchDraw();
         lastDist = dist;
@@ -82,11 +82,11 @@ stage.on('touchend', function () {
 var layer = new Konva.Layer();
 stage.templayer = new Konva.Layer();
 const blockHeight = 40;
- const blockWidth = 100;
+const blockWidth = 100;
 const circle_radius = 10;
 const hitboxCircleRadius = 20;
 stage.inputDict = new Map([]);
-stage.trashcanlayer = new Konva.Layer();
+stage.staticlayer = new Konva.Layer();
 
 
 //coordinates where every new element spawns
@@ -95,15 +95,17 @@ var spawnY = 0;
 
 stage.on("dragmove", function () {
     // when the stage is moved the trashcan should remain in the same position
-    stage.trashcanlayer.absolutePosition({x: 0, y: 0});
+    stage.staticlayer.absolutePosition({x: 0, y: 0});
 });
 
 // var startnode = new startNode();
 
 
 function treeToJson(startnode) {
+    console.log(startnode);
     return startnode.trueArrow.dest.jsonify();
 }
+
 
 //make trashcan
 function addTrashcan(stage) {
@@ -119,8 +121,8 @@ function addTrashcan(stage) {
             height: 60
         });
 
-        stage.trashcanlayer.add(trashcan);
-        stage.trashcanlayer.draw();
+        stage.staticlayer.add(trashcan);
+        stage.staticlayer.draw();
     }
 
 
@@ -129,7 +131,7 @@ function addTrashcan(stage) {
 //Create the canvas
 var s = new startNode(stage, layer);
 layer.add(s.group);
-stage.add(stage.trashcanlayer);
+stage.add(stage.staticlayer);
 stage.add(layer);
 stage.add(stage.templayer);
 layer.draw();
@@ -138,19 +140,19 @@ layer.draw();
 //add trashcan
 addTrashcan(stage);
 layer.draw();
-stage.trashcanlayer.draw();
+stage.staticlayer.draw();
 
 
 //BELOW THIS LINE ARE ONLY BUTTON-INTERACTION-FUNCTION DEMOS, MOST LIKELY TO BE REPLACED BY REACT
 function addCondition(stage, layer) {
-    let newCondition = new conditionNode(stage, layer);
+    let newCondition = new conditionNode(stage, layer, new condition(3, null, "tank"));
     layer.add(newCondition.group);
     newCondition.group.absolutePosition({x: stageWidth / 2, y: stageHeight / 2});
     stage.draw();
 }
 
 function addActionNode(stage, layer) {
-    let newActionNode = new actionNode(stage, layer);
+    let newActionNode = new actionNode(stage, layer, [new action(0), new action(2)]);
     layer.add(newActionNode.group);
     newActionNode.group.absolutePosition({x: stageWidth / 2, y: stageHeight / 2});
     stage.draw();
@@ -187,7 +189,7 @@ document.getElementById('addCondition').addEventListener(
     false
 );
 
-//Add condition
+//Add action
 document.getElementById('addActionNode').addEventListener(
     'click',
     function () {
@@ -195,3 +197,13 @@ document.getElementById('addActionNode').addEventListener(
     },
     false
 );
+//Add condition
+document.getElementById('printJson').addEventListener(
+    'click',
+    function () {
+        console.log("textTreeToJson")
+        console.log(JSON.stringify(treeToJson(s)));
+    },
+    false
+);
+

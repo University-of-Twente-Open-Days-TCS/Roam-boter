@@ -2,12 +2,13 @@
 //Action (NOT A NODE), has zero or more attributes, by default null. DOES NOT WORK WITH LABELS YET
 
 export default class action {
-    id;
-    object;
-    dir;
-    deg;
+    _id;
+    _object;
+    _dir;
+    _deg;
 
-    // label;
+
+// label;
 
     constructor(id, object = null, dir = null, deg = null) {
         this.id = id;
@@ -74,6 +75,38 @@ export default class action {
 
 
         }
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    set id(value) {
+        this._id = value;
+    }
+
+    get object() {
+        return this._object;
+    }
+
+    set object(value) {
+        this._object = value;
+    }
+
+    get dir() {
+        return this._dir;
+    }
+
+    set dir(value) {
+        this._dir = value;
+    }
+
+    get deg() {
+        return this._deg;
+    }
+
+    set deg(value) {
+        this._deg = value;
     }
 
 }
