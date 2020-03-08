@@ -6,6 +6,7 @@ import conditionNode from "./conditionNode.js";
 import startNode from "./startNode.js";
 
 
+
 // first we need to create a stage
 var stageWidth = window.innerWidth;
 var stageHeight = window.innerHeight;

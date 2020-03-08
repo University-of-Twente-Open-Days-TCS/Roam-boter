@@ -27,7 +27,7 @@ export default class startNode {
 
     createGroup(stage, layer) {
         this.group = new Konva.Group({
-            draggable: true
+            x: stage.width() / 2
         });
         this.createRect();
         this.createTrueCircle();
