@@ -46,18 +46,6 @@ const distanceList = [
     new distance(3)
 ];
 
-const reldirList = [
-    new reldir(0),
-    new reldir(1),
-    new reldir(2)
-];
-
-const winddirList = [
-    new winddir(0),
-    new winddir(1),
-    new winddir(2)
-];
-
 const healthList = [
     new health(0),
     new health(20),
@@ -152,6 +140,7 @@ export default class conditionNode {
                 node.remove();
             }
         });
+
         //Popup to edit the condition
         this.group.on("click", () => {
 
@@ -165,7 +154,7 @@ export default class conditionNode {
 
     }
 
-    //Edits an attibute of the condition or the condition in total.
+    //Edits an attibute of the condition or the condition itself.
     editCondition(attribute) {
 
         //check whether attribute is condition, distance, etc, then set it accordingly
@@ -203,7 +192,6 @@ export default class conditionNode {
         }
 
 
-
     }
 
 
@@ -239,7 +227,7 @@ export default class conditionNode {
                 wantedList = healthList;
                 break;
         }
-
+        //If there is still an attribute missing, will ask for it via the popup
         if (wantedList != null) {
             this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editCondition()).group);
             this.stage.staticlayer.moveToTop();

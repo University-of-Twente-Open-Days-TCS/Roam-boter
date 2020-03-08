@@ -1,11 +1,68 @@
+import popup from "./popup.js"
+import action from "./action.js";
+import object from "./object.js";
+import distance from "./distance.js";
+import reldir from "./reldir.js";
+import winddir from "./winddir.js";
+import label from "./label.js";
+import health from "./health.js";
+
+//TODO place all these variables somewhere nicer
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
 const hitboxCircleRadius = 20;
-//coordinates where every new element spawns
 var spawnX = 0;
 var spawnY = 0;
 
+const allActionsList = [
+    new action(0),
+    new action(1),
+    new action(2),
+    new action(3),
+    new action(4),
+    new action(5),
+    new action(6),
+    new action(7),
+    new action(8),
+    new action(9)
+];
+
+const objectList = [
+    new object(1),
+    new object(2),
+    new object(3),
+    new object(4),
+    new object(5),
+    new object(6),
+    new object(7),
+    new object(8),
+    new object(9),
+    new object(10)
+
+];
+
+const reldirList = [
+    new reldir(0),
+    new reldir(1),
+    new reldir(2)
+];
+
+const winddirList = [
+    new winddir(0),
+    new winddir(1),
+    new winddir(2)
+];
+
+//LABELS DO NOT YET EXIST
+const labelList = [
+    new label(0),
+    new label(1),
+    new label(2),
+    new label(3),
+    new label(4),
+
+];
 export default class actionNode {
 
 
@@ -47,6 +104,18 @@ export default class actionNode {
             }
         });
 
+
+        //Popup to add an action to the actionList within the node
+        this.group.on("click", () => {
+
+            //TODO could just make this by calling editAction with object null (no action yet) probs
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, allActionsList, this.editAction()).group);
+            this.stage.staticlayer.moveToTop();
+            this.stage.draw();
+        });
+
+        this.stage.draw();
+
     }
 
     createActionNodeText() {
@@ -69,10 +138,92 @@ export default class actionNode {
             return null;
         }
 
+    }
+
+    //Adds an action to the actionlist, or adds an attribute to the last action of the actionList
+    editAction(attribute) {
+        switch (attribute.constructor) {
+            case (action):
+                this.actionList = this.actionList.concat(attribute);
+                break;
+            case(object):
+                this.actionList[this.actionList.length - 1].object = attribute;
+                break;
+            case(winddir):
+                this.actionList[this.actionList.length - 1].winddir = attribute;
+                break;
+            case(reldir):
+                this.actionList[this.actionList.length - 1].reldir = attribute;
+                break;
+            case(label):
+                this.actionList[this.actionList.length - 1].label = attribute;
+                break;
+            default:
+                //Empty by design, should not arrive here
+                break;
+        }
+
+        //Fill the actionNode with the newly added info
+        this.actionNodeText = this.createActionNodeText();
+        this.createTextObject();
+        this.setassetsizes();
+
+        //Check if the last added action still misses an attribute
+        if (!this.actionList[this.actionList.length - 1].isValid()) {
+            this.createAdditionalInfoPopup();
+        }
 
     }
 
-    //TODO editActionNode method which utilizes setAssetSizes
+    createAdditionalInfoPopup() {
+        let wantedList;
+        switch (this.actionList[this.actionList.length - 1].id) {
+            case 0:
+                break;
+            case 1:
+                wantedList = objectList;
+                break;
+            case 2:
+                break;
+            case 3:
+                wantedList = objectList;
+                break;
+            case 4:
+                wantedList = objectList;
+                break;
+            case 5:
+                wantedList = objectList;
+                break;
+            case 6:
+                wantedList = winddirList;
+                break;
+            case 7:
+                wantedList = reldirList;
+                break;
+            case 8:
+                break;
+            case 9:
+                break;
+            case 10:
+                wantedList = labelList;
+                break;
+            case 11:
+                wantedList = labelList;
+                break;
+            case 12:
+                wantedList = labelList;
+                break;
+            default:
+            //Empty by design, should not come here
+        }
+
+        //If there is still an attribute missing, will ask for it via the popup
+        if (wantedList != null) {
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editCondition()).group);
+            this.stage.staticlayer.moveToTop();
+            this.stage.draw();
+        }
+    }
 
     setassetsizes() {
         //Adjust rect size
