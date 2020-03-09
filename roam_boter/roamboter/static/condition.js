@@ -43,6 +43,8 @@ export default class condition {
                 return (this.label != null);
             case 7:
                 return (this.health != null);
+            default:
+                return false;
         }
     }
 

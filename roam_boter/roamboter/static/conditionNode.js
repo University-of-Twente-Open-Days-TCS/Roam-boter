@@ -1,14 +1,70 @@
 import arrow from "./arrow.js";
 import popup from "./popup.js"
+import condition from "./condition.js";
+import object from "./object.js";
+import distance from "./distance.js";
+import reldir from "./reldir.js";
+import winddir from "./winddir.js";
+import label from "./label.js";
+import health from "./health.js";
 
-
+//TODO place all these variables somewhere nicer
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
 const hitboxCircleRadius = 20;
-//coordinates where every new element spawns
 var spawnX = 0;
 var spawnY = 0;
+
+const conditionList = [
+    new condition(1),
+    new condition(2),
+    new condition(3),
+    new condition(4),
+    new condition(5),
+    new condition(6),
+    new condition(7),
+];
+
+const objectList = [
+    new object(1),
+    new object(2),
+    new object(3),
+    new object(4),
+    new object(5),
+    new object(6),
+    new object(7),
+    new object(8),
+    new object(9),
+    new object(10)
+
+];
+
+const distanceList = [
+    new distance(1),
+    new distance(2),
+    new distance(3)
+];
+
+const healthList = [
+    new health(0),
+    new health(20),
+    new health(40),
+    new health(60),
+    new health(80),
+
+];
+
+//LABELS DO NOT YET EXIST
+const labelList = [
+    new label(0),
+    new label(1),
+    new label(2),
+    new label(3),
+    new label(4),
+
+];
+
 
 export default class conditionNode {
 
@@ -85,8 +141,11 @@ export default class conditionNode {
             }
         });
 
+        //Popup to edit the condition
         this.group.on("click", () => {
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer).group);
+
+            //TODO could just make this by calling editCondition with object null (no condition yet) probs
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, conditionList, this.editCondition()).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -95,11 +154,85 @@ export default class conditionNode {
 
     }
 
-    //Edit the text of a condition and with that its size and location of its input/true/false circles
-    editCondition(id, distance, object, label, health) {
-        this.condition.editCondition(id, distance, object, label, health);
-        this.conditionText = this.createTextObject(this.condition.toString());
-        this.setAssetSizes()
+    //Edits an attibute of the condition or the condition itself.
+    editCondition(attribute) {
+
+        //check whether attribute is condition, distance, etc, then set it accordingly
+        switch (attribute.constructor) {
+            case (condition):
+                this.condition = attribute;
+                break;
+            case (distance):
+                this.condition.distance = attribute;
+                break;
+            case (object):
+                this.condition.object = attribute;
+                break;
+            case (label):
+                this.condition.label = attribute;
+                break;
+            case (health):
+                this.condition.health = attribute;
+                break;
+            default:
+                //Should never end up here
+                return null;
+        }
+
+        //Set the new text in the conditionNode and adapt its input/false/truecircles
+        if (this.condition != null) {
+            this.conditionText = this.condition.toString();
+            this.createTextObject(this.conditionText);
+        }
+        this.setAssetSizes();
+
+        //if not all necessary info is known, create a popup asking for additional info
+        if (!this.condition.isValid()) {
+            this.createAdditionalInfoPopup();
+        }
+
+
+    }
+
+
+    //Creates a popup asking for additional information concerning the selected condition
+    createAdditionalInfoPopup() {
+        let wantedList;
+        switch (this.condition.id) {
+            case 1:
+                //First ask for distance, if not yet known
+                if (this.condition.distance == null) {
+                    wantedList = distanceList;
+                } else {
+                    //Otherwise prompt for object
+                    wantedList = objectList;
+                }
+                break;
+            case 2:
+                wantedList = objectList;
+                break;
+            case 3:
+                wantedList = objectList;
+                break;
+            case 4:
+                wantedList = objectList;
+                break;
+            case 5:
+                //empty by design, no further prompts necessary
+                break;
+            case 6:
+                wantedList = labelList;
+                break;
+            case 7:
+                wantedList = healthList;
+                break;
+        }
+        //If there is still an attribute missing, will ask for it via the popup
+        if (wantedList != null) {
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editCondition()).group);
+            this.stage.staticlayer.moveToTop();
+            this.stage.draw();
+        }
     }
 
 
@@ -191,7 +324,7 @@ export default class conditionNode {
 
                 };
                 return tree;
-                ;
+
 
             //aimed at object
             case 3:
@@ -205,7 +338,7 @@ export default class conditionNode {
                 };
 
                 return tree;
-                ;
+
 
             // if object exists
             case 4:

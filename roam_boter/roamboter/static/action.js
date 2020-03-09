@@ -1,28 +1,60 @@
-
 //Action (NOT A NODE), has zero or more attributes, by default null. DOES NOT WORK WITH LABELS YET
 
 export default class action {
     _id;
     _object;
-    _dir;
-    _deg;
+    _winddir;
+    _reldir;
+    _label;
 
 
-// label;
-
-    constructor(id, object = null, dir = null, deg = null) {
+    constructor(id, object = null, winddir = null, reldir = null, label = null) {
         this.id = id;
         this.object = object;
-        this.dir = dir;
-        this.deg = deg;
-        //this.label = label;
+        this.winddir = winddir;
+        this.reldir = reldir;
+        this.label = label;
+    }
+
+    //Returns whether the current action has all its necessary attributes
+    isValid() {
+        switch (this.id) {
+            case 0:
+                return true;
+            case 1:
+                return (this.object != null);
+            case 2:
+                return true;
+            case 3:
+                return (this.object != null);
+            case 4:
+                return (this.object != null);
+            case 5:
+                return (this.object != null);
+            case 6:
+                return (this.winddir != null);
+            case 7:
+                return (this.reldir != null);
+            case 8:
+                return true;
+            case 9:
+                return true;
+            //TODO this only works for 1 label, may need to encorporate multiple
+            case 10:
+                return (this.label != null);
+            case 11:
+                return (this.label != null);
+            case 12:
+                return (this.label != null);
+
+        }
     }
 
     editAction(id, object = null, dir = null, deg = null) {
         this.id = id;
         this.object = object;
-        this.dir = dir;
-        this.deg = deg;
+        this.winddir = dir;
+        this.reldir = deg;
     }
 
     //ToString method of an Action, currently hardcoded enters to avoid too long lines #TODO insert variable newlines
@@ -57,14 +89,14 @@ export default class action {
                     return "Aim to nearest \n _object_"
                 }
             case 6:
-                if (this.dir != null) {
-                    return "Aim " + this.dir;
+                if (this.winddir != null) {
+                    return "Aim " + this.winddir;
                 } else {
                     return "Aim _dir_";
                 }
             case 7:
-                if (this.deg != null) {
-                    return "Aim " + this.deg;
+                if (this.reldir != null) {
+                    return "Aim " + this.reldir;
                 } else {
                     return "Aim _deg_";
                 }
@@ -93,20 +125,27 @@ export default class action {
         this._object = value;
     }
 
-    get dir() {
-        return this._dir;
+    get winddir() {
+        return this._winddir;
     }
 
-    set dir(value) {
-        this._dir = value;
+    set winddir(value) {
+        this._winddir = value;
     }
 
-    get deg() {
-        return this._deg;
+    get reldir() {
+        return this._reldir;
     }
 
-    set deg(value) {
-        this._deg = value;
+    set reldir(value) {
+        this._reldir = value;
     }
 
+    get label() {
+        return this._label;
+    }
+
+    set label(value) {
+        this._label = value;
+    }
 }
