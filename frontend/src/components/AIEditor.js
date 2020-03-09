@@ -1,6 +1,6 @@
 import React from "react";
 
-const AIEditor = () => {
+const AIEditor = (handleSubmit) => {
     return (
         <div>
             <h1>AI Editor</h1>

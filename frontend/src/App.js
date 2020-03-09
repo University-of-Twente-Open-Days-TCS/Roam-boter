@@ -58,6 +58,26 @@ class App extends Component {
         this.setState({
             csrfToken: token
         })
+
+        fetch(`${API_HOST}/ai/`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': await getCsrfToken()
+            }
+        })
+            .then(res => res.json())
+            .then(json => this.setState({AIs: json}))
+    }
+
+    handleSubmitAI = async AI => {
+        const response = await fetch(`${API_HOST}/ai/`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': await getCsrfToken()
+            }
+        });
     }
 
     handleSubmitLogin = async teamCode => {
@@ -85,27 +105,26 @@ class App extends Component {
     render() {
         return (
             (this.state.loggedIn) ? (
-            <div>
-                <Fullscreen
-                    enabled={this.state.isFull}
-                    onChange={isFull => this.setState({isFull})}
-                >
-                    <div className="full-screenable-node">
-                        <Layout>
-                            AIs: {console.log(this.state.AIs)}
-                            <Route exact path="/" component={Home}/>
-                            <Route path="/AIEditor" component={AIEditor}/>
-                            <Route path="/ListAIs" component={ListAIs}/>
-                            <Route path="/MatchHistory" component={MatchHistory}/>
-                            <Route path="/PlayvsBot" component={PlayvsBot}/>
-                            <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
-                            <hr/>
-                            <Button onClick={this.testAPI}>Test API</Button>
-                            <Button onClick={this.goFull} margin={"200px"}>Go Fullscreen</Button>
-                        </Layout>
-                    </div>
-                </Fullscreen>
-            </div>) : (<Login handleSubmit={this.handleSubmitLogin.bind(this)}/>)
+                <div>
+                    <Fullscreen
+                        enabled={this.state.isFull}
+                        onChange={isFull => this.setState({isFull})}
+                    >
+                        <div className="full-screenable-node">
+                            <Layout>
+                                <Route exact path="/" component={Home}/>
+                                <Route path="/AIEditor" render={(props) => <AIEditor {...props} handleSubmit={this.handleSubmitAI} />}/>
+                                <Route path="/ListAIs" render={(props) => <ListAIs {...props} AIs={this.state.AIs} />}/>
+                                <Route path="/MatchHistory" component={MatchHistory}/>
+                                <Route path="/PlayvsBot" component={PlayvsBot}/>
+                                <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
+                                <hr/>
+                                <Button onClick={this.testAPI}>Test API</Button>
+                                <Button onClick={this.goFull} margin={"200px"}>Go Fullscreen</Button>
+                            </Layout>
+                        </div>
+                    </Fullscreen>
+                </div>) : (<Login handleSubmit={this.handleSubmitLogin.bind(this)}/>)
         );
     }
 }
