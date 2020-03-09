@@ -311,8 +311,8 @@ export default class conditionNode {
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {
-                        "distance": this.condition.distance,
-                        "object": this.condition.object
+                        "distance": this.condition.distance.id  ,
+                        "obj": this.condition.object.id
                     },
                     "position:": node.getAbsolutePosition()
                 };
@@ -325,7 +325,7 @@ export default class conditionNode {
                     "type-id": 2,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"object": this.condition.object},
+                    "attributes": {"obj": this.condition.object.id},
                     "position:": node.getAbsolutePosition()
 
                 };
@@ -338,7 +338,7 @@ export default class conditionNode {
                     "type-id": 3,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"object": this.condition.object},
+                    "attributes": {"obj": this.condition.object.id},
                     "position:": node.getAbsolutePosition()
 
                 };
@@ -352,7 +352,7 @@ export default class conditionNode {
                     "type-id": 4,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"object": this.condition.object},
+                    "attributes": {"obj": this.condition.object.id},
                     "position:": node.getAbsolutePosition()
 
                 };
@@ -378,7 +378,7 @@ export default class conditionNode {
                     "type-id": 6,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"label": this.condition.label},
+                    "attributes": {"label": this.condition.label.id},
                     "position:": node.getAbsolutePosition()
 
                 };
@@ -391,7 +391,7 @@ export default class conditionNode {
                     "type-id": 7,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"amount": this.condition.amount},
+                    "attributes": {"amount": this.condition.amount.id},
                     "position:": node.getAbsolutePosition()
 
                 };
