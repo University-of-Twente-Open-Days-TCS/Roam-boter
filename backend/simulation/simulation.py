@@ -147,8 +147,8 @@ def simulate(ais):
 
 def test_simulation():
 
-    false_node = ActionNode([Action(8, {})])
-    true_node = ActionNode([Action(1, {'obj': Object.HILL}), Action(8, {}), Action(5, {'obj': Object.ENEMY_TANK})])
+    false_node = ActionNode([Action(10, {})])
+    true_node = ActionNode([Action(1, {'obj': Object.HILL}), Action(10, {}), Action(5, {'obj': Object.ENEMY_TANK})])
 
     ai = ConditionNode(Condition(1, {'obj': Object.HILL, 'distance': 10}), true_node, false_node)
     simulate([ai, ai])
