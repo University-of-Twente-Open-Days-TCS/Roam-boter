@@ -26,7 +26,7 @@ class App extends Component {
         this.state = {
             isFull: false,
             AIs: [],
-            loggedIn: false,
+            loggedIn: true,
         };
     }
 
@@ -70,13 +70,16 @@ class App extends Component {
             .then(json => this.setState({AIs: json}))
     }
 
-    handleSubmitAI = async AI => {
+    handleSaveAI = async (ai) => {
+        console.log({ai})
         const response = await fetch(`${API_HOST}/ai/`, {
             method: 'POST',
             credentials: 'include',
             headers: {
-                'X-CSRFToken': await getCsrfToken()
-            }
+                'X-CSRFToken': await getCsrfToken(),
+                'Content-Type': "application/json",
+            },
+            body: JSON.stringify({name: "first-name", ai})
         });
     }
 
@@ -113,7 +116,7 @@ class App extends Component {
                         <div className="full-screenable-node">
                             <Layout>
                                 <Route exact path="/" component={Home}/>
-                                <Route path="/AIEditor" render={(props) => <AIEditor {...props} handleSubmit={this.handleSubmitAI} />}/>
+                                <Route path="/AIEditor" render={(props) => <AIEditor {...props} handleSaveAI={this.handleSaveAI} />}/>
                                 <Route path="/ListAIs" render={(props) => <ListAIs {...props} AIs={this.state.AIs} />}/>
                                 <Route path="/MatchHistory" component={MatchHistory}/>
                                 <Route path="/PlayvsBot" component={PlayvsBot}/>
