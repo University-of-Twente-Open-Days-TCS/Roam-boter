@@ -14,6 +14,7 @@ import MatchHistory from "./components/MatchHistory";
 import ListAIs from "./components/ListAIs";
 import PlayvsBot from "./components/PlayvsBot";
 import PlayvsPlayer from "./components/PlayvsPlayer";
+import Login from "./login/Login";
 
 const API_HOST = "http://localhost:8000";
 
@@ -24,18 +25,19 @@ class App extends Component {
 
         this.state = {
             isFull: false,
+            AIs: [],
+            loggedIn: false,
         };
     }
 
     async testAPI() {
-        let csrfToken = await getCsrfToken();
         try {
             //Try the test
             const response = await fetch(`${API_HOST}/test/`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'X-CSRFToken': csrfToken
+                    'X-CSRFToken': await getCsrfToken()
                 }
             });
             let data = await response.json();
@@ -51,25 +53,46 @@ class App extends Component {
 
     }
 
+    async componentDidMount() {
+        const token = await getCsrfToken()
+        this.setState({
+            csrfToken: token
+        })
+    }
+
+    handleSubmitLogin = async teamCode => {
+        const formData = new FormData()
+
+        formData.append('team_code', teamCode);
+        formData.append('csrfmiddlewaretoken', this.state.csrfToken);
+
+        const response = await fetch(`${API_HOST}/dashboard/team/enter/`, {
+            method: 'POST',
+            credentials: 'include',
+            // headers: {
+            //     'X-CSRFToken': this.state.csrfToken
+            // },
+            body: formData
+        })
+        // let data = await response.json()
+        response.ok ? this.setState({loggedIn: true}) : this.setState({loggedIn: false})
+    }
+
     goFull = () => {
         this.setState({isFull: true});
     };
 
     render() {
         return (
+            (this.state.loggedIn) ? (
             <div>
                 <Fullscreen
                     enabled={this.state.isFull}
                     onChange={isFull => this.setState({isFull})}
                 >
                     <div className="full-screenable-node">
-                        {/*<h1>This app only works fullscreen, please click below to enter the app!</h1>*/}
-
-                        {/*<Button onClick={this.testAPI}>Test API</Button>*/}
-
-
                         <Layout>
-                            {/*<AIMenuList/>*/}
+                            AIs: {console.log(this.state.AIs)}
                             <Route exact path="/" component={Home}/>
                             <Route path="/AIEditor" component={AIEditor}/>
                             <Route path="/ListAIs" component={ListAIs}/>
@@ -82,7 +105,7 @@ class App extends Component {
                         </Layout>
                     </div>
                 </Fullscreen>
-            </div>
+            </div>) : (<Login handleSubmit={this.handleSubmitLogin.bind(this)}/>)
         );
     }
 }
