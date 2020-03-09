@@ -1,4 +1,5 @@
 import math
+from .objects import Object
 
 
 # Return the squared distance between points, this saves an expensive sqrt call and will
@@ -8,6 +9,41 @@ def distance_squared(pos1: (float, float), pos2: (float, float)):
     x2, y2 = pos2
 
     return ((x1 - x2) ** 2) + ((y1 - y2) ** 2)
+
+
+def distance(pos1, pos2):
+    return math.sqrt(distance_squared(pos1, pos2))
+
+
+# Return the paths to objects.
+def filter_objects(tank, state, obj):
+    paths = []
+
+    if obj.isTank():
+        for t in filter_tanks(tank, obj, tank.visible_tanks(state)):
+            paths.append([t.get_pos()])
+
+    elif obj.isBullet():
+        for b in filter_bullets(tank, obj, tank.visible_bullets(state)):
+            paths.append([b.get_pos()])
+
+    else:
+        p = state.level.get_path_to_object(tank, obj)
+        if len(p) > 0:
+            paths.append(state.level.get_path_to_object(tank, obj))
+    return paths
+
+
+# Closest object based on path lengths.
+def closest_object_in_paths(tank, paths):
+    closest = None
+    closest_dist = float('inf')
+    for p in paths:
+        d = path_length(p)
+        if d < closest_dist:
+            closest_dist = d
+            closest = p
+    return closest
 
 
 # Return the nearest visible tank.
@@ -37,6 +73,7 @@ def get_nearest_bullet(state, tank):
 
 # Returns the position of the nearest level object, this equals the position of the tank itself.
 def get_nearest_level_object(state, tank, obj):
+
     return tank.get_pos()
 
 
@@ -69,7 +106,13 @@ def move_to_position(state, tank, goal):
 
 # Move straight away from a position.
 def move_from_position(state, tank, goal):
-    move_to_position(state, tank, -goal)
+    x, y = goal
+    tx, ty = tank.get_pos()
+
+    relative_x, relative_y = x - tx, y - ty
+
+    tank.path = [(tx - relative_x, ty - relative_y)]
+    move_to_position(state, tank, (tx - relative_x, ty - relative_y))
 
 
 # Calculate the angle towards the goal and let the tank rotate slowly towards this angle.
@@ -115,8 +158,42 @@ def aim_to_position(state, tank, goal):
     tank.rotate_turret_towards(angle_towards_goal - tank.get_rotation())
 
 
-# returns whether an object is located within the vision cone of the tank turret.
-def within_turret_cone(tank, x, y):
-    # TODO: implement this.
+# Calculate the length of a given path
+def path_length(path):
+    if len(path) <= 1:
+        return 0.0
 
-    return True
+    total = 0.0
+    for i in range(1, len(path)):
+        total += math.sqrt(distance_squared(path[i-1], path[i]))
+    return total
+
+
+# filter between friendly, enemy and all tanks.
+def filter_tanks(tank, obj, tanks):
+    if obj == Object.FRIENDLY_TANK:
+        return list(filter(lambda x: x.team_id == tank.team_id, tanks))
+
+    if obj == Object.ENEMY_TANK:
+        return list(filter(lambda x: x.team_id != tank.team_id, tanks))
+
+    return tanks
+
+
+def filter_bullets(tank, obj, bullets):
+    if obj == Object.FRIENDLY_BULLET:
+        return list(filter(lambda x: x.team_id == tank.team_id, bullets))
+
+    if obj == Object.ENEMY_BULLET:
+        return list(filter(lambda x: x.team_id != tank.team_id, bullets))
+
+    return bullets
+
+
+# Returns angle between 0 and 360 degrees
+def vector_angle(pos1, pos2):
+    x1, y1 = pos1
+    x2, y2 = pos2
+
+    inproduct = ((x1 * x2 + y1 * y2) / (math.sqrt(distance_squared((0, 0), pos1)), math.sqrt(distance_squared((0, 0), pos2))))
+    return math.degrees(math.acos(inproduct)) % 360
