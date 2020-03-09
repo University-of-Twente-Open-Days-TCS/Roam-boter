@@ -7,7 +7,6 @@ export default class dropdown {
         this.topBoxText = new Konva.Text({text: "select an item", padding: 10});
         this.topBoxRect = new Konva.Rect({
             height: this.blockHeight,
-            width: 100,
             fill: "white",
             stroke: 'black',
             strokeWidth: 1,
@@ -35,9 +34,9 @@ export default class dropdown {
         let max = Math.max(min, Math.max(...(textObjects.map((obj) => {
             return obj.width()
         })))) + 20;
-        console.log("max: " + max);
         let i;
         for (i = 0; i < textObjects.length; i++) {
+            let g = new Konva.Group();
             let rect = new Konva.Rect({
                 y: this.blockHeight * (i + 1),
                 height: this.blockHeight,
@@ -48,15 +47,16 @@ export default class dropdown {
             });
             let txt = textObjects[i];
             let obj = items[i];
-            rect.on("click", () => {
+            g.on("click", () => {
                 this.topBoxText.text(txt.text());
                 layer.draw();
                 this.f(obj);
             });
 
             textObjects[i].y(this.blockHeight * (i + 1));
-            list.add(rect);
-            list.add(textObjects[i]);
+            g.add(rect);
+            g.add(textObjects[i]);
+            list.add(g);
         }
         this.topBoxRect.width(max);
         return list;

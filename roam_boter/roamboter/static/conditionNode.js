@@ -103,7 +103,6 @@ export default class conditionNode {
     //Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
     // and if (all) its appropriate parameter(s) is given this will be included.
     constructor(stage, layer, condition) {
-
         this.group = new Konva.Group({
             draggable: true
         });
@@ -145,7 +144,7 @@ export default class conditionNode {
         this.group.on("click", () => {
 
             //TODO could just make this by calling editCondition with object null (no condition yet) probs
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, conditionList, this.editCondition()).group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, conditionList, this.editCondition.bind(this)).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -156,7 +155,6 @@ export default class conditionNode {
 
     //Edits an attibute of the condition or the condition itself.
     editCondition(attribute) {
-
         //check whether attribute is condition, distance, etc, then set it accordingly
         switch (attribute.constructor) {
             case (condition):
@@ -229,7 +227,7 @@ export default class conditionNode {
         }
         //If there is still an attribute missing, will ask for it via the popup
         if (wantedList != null) {
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editCondition()).group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editCondition.bind(this)).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         }

@@ -3,22 +3,20 @@ export default class popup {
     _stage;
     _layer;
 
-    constructor(stage, layer) {
+    constructor(stage, layer, list, f) {
         this._stage = stage;
         this._layer = layer;
-        this.createGroup(stage, layer);
+        this.createGroup(stage, layer, list, f);
     }
 
-    createGroup(stage, layer) {
+    createGroup(stage, layer, list, f) {
         this.group = new Konva.Group({
             x: stage.width() * 0.2,
             y: stage.height() * 0.2,
         });
         this.createRect(stage, layer);
         this.createClose(stage, layer);
-        let dDown = new dropdown(stage, layer, [1, 2, 3], function (x) {
-            console.log(x.toString())
-        });
+        let dDown = new dropdown(stage, layer, list, f);
         this.group.add(dDown.group);
         //dropdown = new dropdown();
     }

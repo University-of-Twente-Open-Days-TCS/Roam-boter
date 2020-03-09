@@ -109,7 +109,7 @@ export default class actionNode {
         this.group.on("click", () => {
 
             //TODO could just make this by calling editAction with object null (no action yet) probs
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, allActionsList, this.editAction()).group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, allActionsList, this.editAction.bind(this)).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -219,7 +219,7 @@ export default class actionNode {
 
         //If there is still an attribute missing, will ask for it via the popup
         if (wantedList != null) {
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editCondition()).group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editAction.bind(this)).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         }
