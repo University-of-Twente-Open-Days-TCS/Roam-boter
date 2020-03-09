@@ -5,7 +5,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from roamboter.api_permission import InTeamPermission
+from roamboter.api.permissions import InTeamPermission
 
 from .serializers import AISerializer
 from .models import AI

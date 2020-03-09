@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 
 
-from roamboter.api_permission import InTeamPermission
+from roamboter.api.permissions import InTeamPermission
+from roamboter.api.generics import RetrieveTeamObjectAPIView
 
 from dashboard.models import Team
 
@@ -65,24 +66,12 @@ class BotMatchHistoryListAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BotMatchHistoryRetrieveAPI(APIView):
+class BotMatchHistoryRetrieveAPI(RetrieveTeamObjectAPIView):
     """
     API that retrieves a single match
     """
 
     permission_classes = [InTeamPermission]
 
-    def get_object(self, pk, team_pk):
-        try:
-            botmatch = BotMatch.objects.get(pk=pk)
-            if botmatch.team.pk == team_pk:
-                return botmatch
-            else:
-                raise PermissionDenied(detail="Match does not belong to your team")
-        except BotMatch.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, *args, **kwargs):
-        botmatch = self.get_object(pk, request.session['team_id'])
-        serializer = BotMatchDetailedSerializer(botmatch)
-        return Response(serializer.data)
+    queryset = BotMatch.objects.all()
+    serializer_class = BotMatchDetailedSerializer
