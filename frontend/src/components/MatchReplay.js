@@ -27,6 +27,12 @@ class MatchReplay extends Component {
 
         this.ctx = ''
         this.canvas = ''
+
+        this.tankSprite = new Image();
+        this.tankSprite.src = "simulation_images/tank_body.png";
+
+        this.tankTurretSprite = new Image();
+        this.tankTurretSprite.src = "simulation_images/tank_turret.png"
         // this.state.match_data = props.match_data
     }
 
@@ -34,28 +40,53 @@ class MatchReplay extends Component {
       this.canvas = this.refs.canvas;
       this.ctx2d = this.canvas.getContext("2d");
       this.interval = setInterval(() => this.drawNextFrame(), 16);
+      // this.canvas.width = this.canvas.parentNode.width;
+      // this.canvas.height = this.canvas.parentNode.height;
+      // console.log(this.canvas.parentNode);
     }
 
     drawNextFrame() {
       // DRAW THE LEVEL BACKGROUND.
       var ctx = this.ctx2d;
       var blockColors = this.blockColors;
+      var tankSprite = this.tankSprite;
+      var turretSprite = this.tankTurretSprite;
+      var width = this.canvas.width;
+      var height = this.canvas.height;
+
+      var cellsize_y = height / this.game_data.level.length;
+      var cellsize_x = width /  this.game_data.level[0].length;
+
+      var scaling = width / (this.game_data.level[0].length * 10);
+
+      function drawImage(image, x, y, scale, rotation){
+          ctx.setTransform(scale, 0, 0, scale, x, y); // sets scale and origin
+          ctx.rotate(rotation * (Math.PI / 180));
+          ctx.drawImage(image, -image.width / 2, -image.height / 2);
+      }
+
+
+      ctx.setTransform(1,0,0,1,0,0);
 
       this.game_data.level.forEach(function (row, y) {
         row.forEach(function(cell, x) {
             ctx.fillStyle = blockColors[cell];
-            ctx.fillRect((x * 20), (y * 20), 20, 20);
+            ctx.fillRect((x * cellsize_x), (y * cellsize_y), cellsize_x, cellsize_y);
         });
       });
 
       this.game_data.frames[this.currentFrame].tanks.forEach(function (elem, index) {
-        ctx.fillStyle = "#00FF00";
-        ctx.fillRect((elem.pos[0] * 20 - 10), elem.pos[1] * 20 - 10, 20, 20);
+        drawImage(tankSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
+        drawImage(turretSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation - elem.turret_rotation);
+        //ctx.drawImage(tankSprite, elem.pos[0] * 20 - 32, elem.pos[1] * 20 - 32, 64, 64);
+        //ctx.fillRect((elem.pos[0] * 20 - 10), elem.pos[1] * 20 - 10, 20, 20);
       });
+
+      ctx.setTransform(1,0,0,1,0,0);
 
       this.game_data.frames[this.currentFrame].bullets.forEach(function (elem, index) {
         ctx.fillStyle = "#000000";
-        ctx.fillRect(elem.pos[0] * 20 - 2, elem.pos[1] * 20 - 2, 4, 4);
+        ctx.fillRect(elem.pos[0] * cellsize_x - 2, elem.pos[1] * cellsize_y - 2, 4, 4);
       });
 
       this.currentFrame += 1;
@@ -67,7 +98,7 @@ class MatchReplay extends Component {
         return (
             <div>
                 <h1>Match Replay</h1>
-                <canvas ref="canvas" width={1220} height={820} />
+                  <canvas ref="canvas" width={610} height={410}/>
             </div>
         )
     }
