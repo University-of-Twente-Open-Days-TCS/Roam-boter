@@ -17,6 +17,46 @@ class Object(IntEnum):
     TANK = 12
     BULLET = 13
 
+    def isTank(self):
+        return self == Object.TANK or self == Object.FRIENDLY_TANK or self == Object.ENEMY_TANK
+
+    def isBullet(self):
+        return self == Object.BULLET or self == Object.FRIENDLY_BULLET or self == Object.ENEMY_BULLET
+
+
+class RelDir(IntEnum):
+    FORWARD = 0
+    BACKWARD = 1
+    LEFT = 2
+    RIGHT = 3
+
+    def angle(self):
+        if self == RelDir.FORWARD:
+            return 0
+        if self == RelDir.BACKWARD:
+            return 180
+        if self == RelDir.LEFT:
+            return 90
+        if self == RelDir.RIGHT:
+            return 270
+
+
+class WindDir(IntEnum):
+    North = 0
+    East = 1
+    South = 2
+    West = 3
+
+    def angle(self):
+        if self == WindDir.North:
+            return 0
+        if self == WindDir.East:
+            return 270
+        if self == WindDir.South:
+            return 180
+        if self == WindDir.West:
+            return 90
+
 
 ColorValues = {
     (255, 255, 255): Object.EMPTY,

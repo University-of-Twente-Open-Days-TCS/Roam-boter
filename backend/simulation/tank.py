@@ -1,6 +1,7 @@
 from .objects import Object
 
 import math
+import numpy
 
 TANK_TURN_SPEED = 3
 TURRET_TURN_SPEED = 4
@@ -51,9 +52,9 @@ class Tank:
     def move_forward(self, state):
         dx = -math.sin(math.radians(self.rotation)) * self.speed
         dy = -math.cos(math.radians(self.rotation)) * self.speed
-        # if not self.check_collision(state, dx, dy):
-        #     self.move(dx, dy)
-        self.move(dx, dy)
+        if not self.check_collision(state, dx, dy):
+            self.move(dx, dy)
+        # self.move(dx, dy)
 
     def set_rotation(self, angle):
         self.rotation = angle
@@ -94,21 +95,24 @@ class Tank:
         for action in self.actions:
             action.execute(self, state)
 
-    def check_collision(self, state, dx=0, dy=0):
+    def check_collision(self, state, dx=0.0, dy=0.0):
         x, y = self.get_pos()
         x += dx
         y += dy
-        x = int(round(x))
-        y = int(round(y))
+        # x = int(round(x))
+        # y = int(round(y))
 
-        for a in range(y - 1, y + 1):
-            for b in range(x - 1, x + 1):
+        # if state.level.get_object(math.floor(x), math.floor(y)) == Object.WALL:
+        #     return True
+
+        for a in numpy.arange(y - 0.8, y + 0.8, 0.2):
+            for b in numpy.arange(x - 0.8, x + 0.8, 0.2):
                 if not 0 <= a < state.level.get_height():
                     return True
                 if not 0 <= b < state.level.get_width():
                     return True
 
-                if state.level.get_object(b, a) == Object.WALL:
+                if state.level.get_object(int(math.floor(b)), int(math.floor(a))) == Object.WALL:
                     return True
         return False
 
@@ -117,6 +121,9 @@ class Tank:
 
     def get_health(self):
         return self.health
+
+    def bullet_ready(self, state):
+        return state.frames_passed >= self.shoot_ready
 
     def visible_tanks(self, state):
         visible_tanks = []
@@ -151,7 +158,36 @@ class Tank:
         return visible_tanks
 
     def visible_bullets(self, state):
-        pass
+        visible_bullets = []
+
+        for other in state.bullets:
+            if other == self:
+                continue
+
+            vision_angle = self.get_rotation() + self.get_turret_rotation()
+
+            ax = -math.sin(math.radians(vision_angle))
+            ay = -math.cos(math.radians(vision_angle))
+
+            x, y = self.get_pos()
+
+            other_x, other_y = other.get_pos()
+            bx, by = other_x - x, other_y - y
+
+            len_a = 1
+            len_b = math.sqrt(bx ** 2 + by ** 2)
+
+            inproduct = ((ax * bx) + (ay * by)) / (len_a * len_b)
+            if inproduct > 1:
+                inproduct = 1
+
+            angle = math.degrees(math.acos(inproduct))
+
+            if angle < 20 or angle > 340:
+                if state.level.line_of_sight(self.get_pos(), other.get_pos()):
+                    visible_bullets.append(other)
+
+        return visible_bullets
 
 
 
