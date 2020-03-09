@@ -6,38 +6,6 @@ import conditionNode from "./conditionNode.js";
 import startNode from "./startNode.js";
 
 
-let aiContainer = new aiCanvas('container');
-
-//Buttons
-
-//Add condition
-document.getElementById('addCondition').addEventListener(
-    'click',
-    function () {
-        aiContainer.addCondition(stage, layer)
-    },
-    false
-);
-
-//Add action
-document.getElementById('addActionNode').addEventListener(
-    'click',
-    function () {
-        aiContainer.addActionNode(stage, layer)
-    },
-    false
-);
-//Add condition
-document.getElementById('printJson').addEventListener(
-    'click',
-    function () {
-        console.log("textTreeToJson")
-        console.log(JSON.stringify(aiContainer.treeToJson(s)));
-    },
-    false
-);
-
-
 class aiCanvas {
 
     blockHeight = 40;
@@ -55,11 +23,13 @@ class aiCanvas {
     spawnX = 0;
     spawnY = 0;
 
+    _startNode;
 
     constructor(container) {
         //Create the stage
         this.createStage(container);
 
+        console.log("new constructor method!");
         // then create layer
         this.layer = new Konva.Layer();
         this.stage.templayer = new Konva.Layer();
@@ -68,16 +38,16 @@ class aiCanvas {
         this.stage.staticlayer = new Konva.Layer();
 
         //Create the canvas
-        var s = new startNode(this.stage, this.layer);
-        this.layer.add(s.group);
-        this.stage.add(stage.staticlayer);
-        this.stage.add(layer);
-        this.stage.add(stage.templayer);
+        this.startNode = new startNode(this.stage, this.layer);
+        this.layer.add(this.startNode.group);
+        this.stage.add(this.stage.staticlayer);
+        this.stage.add(this.layer);
+        this.stage.add(this.stage.templayer);
         this.layer.draw();
 
 
         //add trashcan
-        this.addTrashcan(stage);
+        this.addTrashcan(this.stage);
         this.layer.draw();
         this.stage.staticlayer.draw();
 
@@ -89,32 +59,32 @@ class aiCanvas {
     createStage(container) {
         this.stage = new Konva.Stage({
             container: container,
-            width: stageWidth,
-            height: stageHeight,
+            width: this.stageWidth,
+            height: this.stageHeight,
             draggable: true,
             x: 0,
             y: 0,
         });
-        stage.scale = 1;
+        this.stage.scale = 1;
     }
 
 
     //make trashcan
-    addTrashcan() {
+    addTrashcan(stage) {
         var imageObj = new Image();
         //TODO: FIX NORMAL IMAGE
         imageObj.src = 'https://cdn0.iconfinder.com/data/icons/shopping-359/512/Bin_bin_delete_trashcan_garbage_dust-512.png';
         imageObj.onload = function () {
             let trashcan = new Konva.Image({
-                x: stageWidth - 60,
+                x: this.stageWidth - 60,
                 y: 100,
                 image: imageObj,
                 width: 60,
                 height: 60
             });
 
-            this.stage.staticlayer.add(trashcan);
-            this.stage.staticlayer.draw();
+            stage.staticlayer.add(trashcan);
+            stage.staticlayer.draw();
         }
 
     }
@@ -136,7 +106,7 @@ class aiCanvas {
             return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
         }
 
-
+        let thisStage = this.stage;
         this.stage.on('touchmove', function (e) {
             e.evt.preventDefault();
             var touch1 = e.evt.touches[0];
@@ -158,15 +128,15 @@ class aiCanvas {
                     lastDist = dist;
                 }
 
-                var scale = (this.stage.scaleX() * dist) / lastDist;
+                var scale = (thisStage.scaleX() * dist) / lastDist;
 
-                this.stage.scaleX(scale);
-                this.stage.scaleY(scale);
+                thisStage.scaleX(scale);
+                thisStage.scaleY(scale);
                 //the trashcan is the only thing which should not scale with the rest of the stage
-                this.stage.staticlayer.scaleX(1 / scale);
-                this.stage.staticlayer.scaleY(1 / scale);
-                this.stage.scale = scale;
-                this.stage.batchDraw();
+                thisStage.staticlayer.scaleX(1 / scale);
+                thisStage.staticlayer.scaleY(1 / scale);
+                thisStage.scale = scale;
+                thisStage.batchDraw();
                 lastDist = dist;
             }
         });
@@ -178,33 +148,35 @@ class aiCanvas {
 
         this.stage.on("dragmove", function () {
             // when the stage is moved the trashcan should remain in the same position
-            this.stage.staticlayer.absolutePosition({x: 0, y: 0});
+            thisStage.staticlayer.absolutePosition({x: 0, y: 0});
         });
     }
 
-    treeToJson(startnode) {
-        console.log(startnode);
-        return startnode.trueArrow.dest.jsonify();
+    treeToJson() {
+        console.log(this.startNode);
+        return this.startNode.trueArrow.dest.jsonify();
     }
+
+//-----------------------------------------------------------
 
 
 //BELOW THIS LINE ARE ONLY BUTTON-INTERACTION-FUNCTION DEMOS, MOST LIKELY TO BE REPLACED BY REACT
-    addCondition(stage, layer) {
-        let newCondition = new conditionNode(stage, layer, new condition(3, null, "tank"));
-        layer.add(newCondition.group);
-        newCondition.group.absolutePosition({x: stageWidth / 2, y: stageHeight / 2});
-        stage.draw();
+    addCondition() {
+        let newCondition = new conditionNode(this.stage, this.layer, new condition(3, null, "tank"));
+        this.layer.add(newCondition.group);
+        newCondition.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
+        this.stage.draw();
     }
 
     addActionNode(stage, layer) {
-        let newActionNode = new actionNode(stage, layer, [new action(0), new action(2)]);
-        layer.add(newActionNode.group);
-        newActionNode.group.absolutePosition({x: stageWidth / 2, y: stageHeight / 2});
-        stage.draw();
+        let newActionNode = new actionNode(this.stage, this.layer, [new action(0), new action(2)]);
+        this.layer.add(newActionNode.group);
+        newActionNode.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
+        this.stage.draw();
 
     }
 
-
+    //getters&setters
     get stage() {
         return this._stage;
     }
@@ -221,5 +193,45 @@ class aiCanvas {
         this._layer = value;
     }
 
+    get startNode() {
+        return this._startNode;
+    }
+
+    set startNode(value) {
+        this._startNode = value;
+    }
+
+
 }
+
+let aiContainer = new aiCanvas('container');
+
+//Buttons
+
+//Add condition
+document.getElementById('addCondition').addEventListener(
+    'click',
+    function () {
+        aiContainer.addCondition()
+    },
+    false
+);
+
+//Add action
+document.getElementById('addActionNode').addEventListener(
+    'click',
+    function () {
+        aiContainer.addActionNode()
+    },
+    false
+);
+//Add condition
+document.getElementById('printJson').addEventListener(
+    'click',
+    function () {
+        console.log("textTreeToJson")
+        console.log(JSON.stringify(aiContainer.treeToJson()));
+    },
+    false
+);
 
