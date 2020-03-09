@@ -26,7 +26,9 @@ import dashboard.urls as dashboard_urls
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),                #standard django admin urls
+    path('admin/', admin.site.urls),                    #standard django admin urls
+    path('api-auth/', include('rest_framework.urls')),  #rest_framework urls 
+    #Our apps url configuration
     path(r'ai/', include(AIapi_urls)),
     path(r'dashboard/', include(dashboard_urls)),
     path(r'csrf/', views.csrf),                     #ping server. Useful for setting csrf cookie.

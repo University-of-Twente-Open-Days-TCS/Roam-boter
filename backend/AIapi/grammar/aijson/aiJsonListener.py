@@ -17,51 +17,6 @@ class aiJsonListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by aiJsonParser#ai.
-    def enterAi(self, ctx:aiJsonParser.AiContext):
-        pass
-
-    # Exit a parse tree produced by aiJsonParser#ai.
-    def exitAi(self, ctx:aiJsonParser.AiContext):
-        pass
-
-
-    # Enter a parse tree produced by aiJsonParser#info.
-    def enterInfo(self, ctx:aiJsonParser.InfoContext):
-        pass
-
-    # Exit a parse tree produced by aiJsonParser#info.
-    def exitInfo(self, ctx:aiJsonParser.InfoContext):
-        pass
-
-
-    # Enter a parse tree produced by aiJsonParser#name.
-    def enterName(self, ctx:aiJsonParser.NameContext):
-        pass
-
-    # Exit a parse tree produced by aiJsonParser#name.
-    def exitName(self, ctx:aiJsonParser.NameContext):
-        pass
-
-
-    # Enter a parse tree produced by aiJsonParser#creator_id.
-    def enterCreator_id(self, ctx:aiJsonParser.Creator_idContext):
-        pass
-
-    # Exit a parse tree produced by aiJsonParser#creator_id.
-    def exitCreator_id(self, ctx:aiJsonParser.Creator_idContext):
-        pass
-
-
-    # Enter a parse tree produced by aiJsonParser#root.
-    def enterRoot(self, ctx:aiJsonParser.RootContext):
-        pass
-
-    # Exit a parse tree produced by aiJsonParser#root.
-    def exitRoot(self, ctx:aiJsonParser.RootContext):
-        pass
-
-
     # Enter a parse tree produced by aiJsonParser#node.
     def enterNode(self, ctx:aiJsonParser.NodeContext):
         pass
@@ -116,6 +71,15 @@ class aiJsonListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by aiJsonParser#actiondata.
+    def enterActiondata(self, ctx:aiJsonParser.ActiondataContext):
+        pass
+
+    # Exit a parse tree produced by aiJsonParser#actiondata.
+    def exitActiondata(self, ctx:aiJsonParser.ActiondataContext):
+        pass
+
+
     # Enter a parse tree produced by aiJsonParser#actionlist.
     def enterActionlist(self, ctx:aiJsonParser.ActionlistContext):
         pass
@@ -167,6 +131,24 @@ class aiJsonListener(ParseTreeListener):
 
     # Exit a parse tree produced by aiJsonParser#value.
     def exitValue(self, ctx:aiJsonParser.ValueContext):
+        pass
+
+
+    # Enter a parse tree produced by aiJsonParser#position.
+    def enterPosition(self, ctx:aiJsonParser.PositionContext):
+        pass
+
+    # Exit a parse tree produced by aiJsonParser#position.
+    def exitPosition(self, ctx:aiJsonParser.PositionContext):
+        pass
+
+
+    # Enter a parse tree produced by aiJsonParser#positiondata.
+    def enterPositiondata(self, ctx:aiJsonParser.PositiondataContext):
+        pass
+
+    # Exit a parse tree produced by aiJsonParser#positiondata.
+    def exitPositiondata(self, ctx:aiJsonParser.PositiondataContext):
         pass
 
 
