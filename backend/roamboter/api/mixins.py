@@ -1,5 +1,6 @@
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
+from rest_framework import status
 
 class RetrieveTeamObjectMixin(object):
     """
@@ -13,5 +14,21 @@ class RetrieveTeamObjectMixin(object):
         if team_pk == instance.team.pk:
             serializer = self.get_serializer(instance)
             return Response(serializer.data)
+        else:
+            raise PermissionDenied("Your team does not own this object")
+
+
+class DestroyTeamObjectMixin(object):
+    """
+    Destroys a team object
+    """
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # check that instance belongs to team
+        team_pk = request.session['team_id']
+        if team_pk == instance.team.pk:
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             raise PermissionDenied("Your team does not own this object")

@@ -1,0 +1,57 @@
+{
+    "name": "move-to-hill-ai",
+    "ai": 
+        {
+            "condition": {
+                "type-id": 1,
+                "child-true": {
+                    "actionblock": {
+                        "actionlist": [
+                            {
+                                "type-id": 1,
+                                "attributes": {
+                                    "obj": 10 
+                                }
+                            },
+                            {
+                                "type-id": 10,
+                                "attributes": {}
+                            },
+                            {
+                                "type-id": 5,
+                                "attributes": {
+                                    "obj": 2 
+                                }
+                            }
+                        ],
+                        "position": {
+                            "x": 10,
+                            "y": 10
+                        }
+                    }
+                },
+                "child-false": {
+                    "actionblock": {
+                        "actionlist": [
+                            {
+                                "type-id": 10,
+                                "attributes": {}
+                            }
+                        ],
+                        "position": {
+                            "x": 2,
+                            "y": 10
+                        }
+                    }
+                },
+                "attributes": {
+                    "obj": 10,
+                    "distance": 10
+                },
+                "position": {
+                    "x": 4,
+                    "y": 4
+                }
+            }
+        }
+}

@@ -51,6 +51,7 @@ class Match(models.Model):
         """
         Possible Simulation States
         """
+        IDLE = 'IDLE', 'Idle'
         PENDING = 'PEND', 'Pending'
         BUSY = 'BUSY', 'Busy'
         DONE = 'DONE', 'Done'
@@ -59,7 +60,7 @@ class Match(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     gamemode = models.CharField(max_length=2, choices=GameModes.choices, blank=False)
     simulation = models.TextField(blank=True)
-    simulation_state = models.CharField(max_length=4, choices=SimulationState.choices, blank=False)
+    simulation_state = models.CharField(max_length=4, choices=SimulationState.choices, default="IDLE")
 
     class Meta:
         abstract = True

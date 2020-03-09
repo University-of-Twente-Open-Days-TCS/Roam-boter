@@ -176,6 +176,8 @@ class Tank:
 
             len_a = 1
             len_b = math.sqrt(bx ** 2 + by ** 2)
+            if len_b == 0:
+                continue
 
             inproduct = ((ax * bx) + (ay * by)) / (len_a * len_b)
             if inproduct > 1:

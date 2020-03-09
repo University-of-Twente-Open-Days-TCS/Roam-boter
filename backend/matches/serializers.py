@@ -50,7 +50,7 @@ class BotMatchSerializer(serializers.Serializer):
         bot = validated_data['bot']
         ai = validated_data['ai']
 
-        botmatch = BotMatch(team=team, gamemode=gamemode, bot=bot, ai=ai)
+        botmatch = BotMatch(team=team, **validated_data)
         botmatch.save()
         return botmatch
 

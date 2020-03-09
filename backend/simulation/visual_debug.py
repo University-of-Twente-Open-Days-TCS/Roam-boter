@@ -1,4 +1,3 @@
-import pygame
 from .objects import Object, ColorValues
 import time
 import math
@@ -7,12 +6,13 @@ import sys, os
 
 # TODO: Make it so that it is more a component that can be toggled on. 
 # Importing simulation imported this module, which resulted in the imgaes being loaded. 
-VISUAL_DEBUG = True
+VISUAL_DEBUG = False
 
 screen = None
 
 
 if VISUAL_DEBUG:
+    import pygame
     this_dir = os.path.dirname(os.path.realpath(__file__))
     image_dir = os.path.join(this_dir, "debug_images/")
     tank_body = pygame.image.load(image_dir+"tank_body.png")

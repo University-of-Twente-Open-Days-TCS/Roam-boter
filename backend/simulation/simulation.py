@@ -126,7 +126,7 @@ def simulate(ais):
     level_loader = LevelLoader()
 
     this_dir = os.path.dirname(os.path.realpath(__file__))
-    level_file = os.path.join(this_dir, "levels/level2.png")
+    level_file = os.path.join(this_dir, "levels/level1.png")
 
     sim = Simulation(level_loader.load_level(level_file), ais)
     while not sim.has_ended():
@@ -152,8 +152,8 @@ def test_simulation():
     true_node = ActionNode([Action(1, {'obj': 10}), Action(10, {}), Action(5, {'obj': 2})])
 
     ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 10}), true_node, false_node)
-    simulate([ai, ai])
-
+    playback = simulate([ai, ai])
+    print(playback.to_json())
     # cProfile.run("simulate([ai, ai])")
     # PlayBackEncoder.encode(a.get_playback())
 
