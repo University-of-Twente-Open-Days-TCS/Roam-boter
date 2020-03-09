@@ -5,7 +5,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from roamboter.api_permission import InTeamPermission
+from roamboter.api.permissions import InTeamPermission
 
 from .serializers import AISerializer
 from .models import AI
@@ -31,7 +31,7 @@ class AIList(APIView):
         team_pk = request.session['team_id']
         team = Team.objects.get(pk=team_pk)
 
-        serializer = AISerializer(data=request.data, context={'team_pk': team})
+        serializer = AISerializer(data=request.data, context={'team': team})
 
         if serializer.is_valid():
             # save new AI 

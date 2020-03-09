@@ -1,4 +1,3 @@
-import pygame
 from .objects import Object, ColorValues
 import time
 import math
@@ -7,12 +6,13 @@ import sys, os
 
 # TODO: Make it so that it is more a component that can be toggled on. 
 # Importing simulation imported this module, which resulted in the imgaes being loaded. 
-VISUAL_DEBUG = True
+VISUAL_DEBUG = False
 
 screen = None
 
 
 if VISUAL_DEBUG:
+    import pygame
     this_dir = os.path.dirname(os.path.realpath(__file__))
     image_dir = os.path.join(this_dir, "debug_images/")
     tank_body = pygame.image.load(image_dir+"tank_body.png")
@@ -35,9 +35,10 @@ def DRAW_WORLD(state):
         if tank.path is None:
             continue
 
-        for p in tank.path:
+        for i, p in enumerate(tank.path):
             x, y = p
-            pygame.draw.rect(screen, (255, 0, 0,), (x * 10, y * 10, 10, 10))
+            x, y = x - 0.5, y - 0.5
+            pygame.draw.rect(screen, (min(30 * i, 255), 0, 0,), (x * 10, y * 10, 10, 10))
 
     for tank in state.tanks:
         # pygame.Surface.blit(tank_body, screen, (int(tank.x * 10), int(tank.y * 10), 10, 10))

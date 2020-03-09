@@ -45,6 +45,7 @@ class Simulation:
         spawns = self.get_spawns()
         for i, tank in enumerate(self.get_tanks()):
             tank.spawn = spawns[i]
+            tank.team_id = i
             tank.set_pos(tank.spawn[0], tank.spawn[1])
             if spawns[i][1] < self.state.level.get_height() / 2:
                 tank.set_rotation(180)
@@ -125,12 +126,13 @@ def simulate(ais):
     level_loader = LevelLoader()
 
     this_dir = os.path.dirname(os.path.realpath(__file__))
-    level_file = os.path.join(this_dir, "levels/level2.png")
+    level_file = os.path.join(this_dir, "levels/level1.png")
 
     sim = Simulation(level_loader.load_level(level_file), ais)
     while not sim.has_ended():
         sim.step()
 
+    # Get index of winning ai
     if sim.get_winner() is not None:
         ai = sim.get_winner()
         sim.winner = -1
@@ -146,12 +148,12 @@ def simulate(ais):
 
 def test_simulation():
 
-    false_node = ActionNode([Action(8, {})])
-    true_node = ActionNode([Action(1, {'obj': Object.HILL}), Action(8, {}), Action(5, {'obj': Object.TANK})])
+    false_node = ActionNode([Action(10, {})])
+    true_node = ActionNode([Action(1, {'obj': 10}), Action(10, {}), Action(5, {'obj': 2})])
 
-    ai = ConditionNode(Condition(1, {'obj': Object.TANK, 'distance': 10}), true_node, false_node)
-    simulate([ai, ai])
-
+    ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 10}), true_node, false_node)
+    playback = simulate([ai, ai])
+    print(playback.to_json())
     # cProfile.run("simulate([ai, ai])")
     # PlayBackEncoder.encode(a.get_playback())
 

@@ -17,7 +17,7 @@ class AISerializer(serializers.Serializer):
     team = serializers.PrimaryKeyRelatedField(read_only=True)
     name = serializers.CharField(max_length=20)
 
-    def validate_aijson(self, value):
+    def validate_ai(self, value):
         # Checks whether aijson is valid
         json_string = json.dumps(value)
         valid = is_valid_aijson(json_string)
@@ -32,8 +32,8 @@ class AISerializer(serializers.Serializer):
         json_string = json.dumps(validated_data['ai'])
         name = validated_data['name']
 
-        team_pk = self.context['team_pk']
-        return AI.objects.create(ai=json_string, name=name, team=team_pk)
+        team = self.context['team']
+        return AI.objects.create(ai=json_string, name=name, team=team)
 
     def update(self, instance, validated_data):
         # only allow for the name and ai to be updated.   
