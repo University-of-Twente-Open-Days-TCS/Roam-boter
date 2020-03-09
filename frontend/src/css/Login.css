@@ -1,0 +1,12 @@
+.login-form {
+    display: block;
+    width: 300px;
+    height: 300px;
+    margin: 50px auto auto;
+    align-content: center;
+}
+
+input {
+    width: 250px;
+    padding: 5px;
+}
