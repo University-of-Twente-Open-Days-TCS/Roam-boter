@@ -3,8 +3,6 @@ import popup from "./popup.js"
 import condition from "./condition.js";
 import object from "./object.js";
 import distance from "./distance.js";
-import reldir from "./reldir.js";
-import winddir from "./winddir.js";
 import label from "./label.js";
 import health from "./health.js";
 
@@ -176,6 +174,11 @@ export default class conditionNode {
             this.conditionTextObj.text(this.condition.toString());
             this.conditionTextObj.moveToTop();
 
+            //make sure the text does not cover the drag&inputcircles
+            this.inputCircleHitbox.moveToTop();
+            this.trueDragCircle.moveToTop();
+            this.falseDragCircle.moveToTop();
+
         }
         this.setAssetSizes();
 
@@ -311,7 +314,7 @@ export default class conditionNode {
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {
-                        "distance": this.condition.distance.id  ,
+                        "distance": this.condition.distance.id,
                         "obj": this.condition.object.id
                     },
                     "position:": node.getAbsolutePosition()
@@ -391,7 +394,7 @@ export default class conditionNode {
                     "type-id": 7,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"amount": this.condition.amount.id},
+                    "attributes": {"health": this.condition.health.id},
                     "position:": node.getAbsolutePosition()
 
                 };

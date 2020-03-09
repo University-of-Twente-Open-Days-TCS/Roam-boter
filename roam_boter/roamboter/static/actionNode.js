@@ -1,18 +1,15 @@
 import popup from "./popup.js"
 import action from "./action.js";
 import object from "./object.js";
-import distance from "./distance.js";
 import reldir from "./reldir.js";
 import winddir from "./winddir.js";
 import label from "./label.js";
-import health from "./health.js";
 import speed from "./speed.js";
 
 //TODO place all these variables somewhere nicer
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
-const hitboxCircleRadius = 20;
 var spawnX = 0;
 var spawnY = 0;
 
@@ -34,13 +31,15 @@ const objectList = [
 const reldirList = [
     new reldir(0),
     new reldir(1),
-    new reldir(2)
+    new reldir(2),
+    new reldir(3)
 ];
 
 const winddirList = [
     new winddir(0),
     new winddir(1),
-    new winddir(2)
+    new winddir(2),
+    new winddir(3)
 ];
 
 const speedList = [
@@ -175,6 +174,7 @@ export default class actionNode {
             this.actionNodeText = this.createActionNodeText();
             this.actionNodeTextObj.text(this.actionNodeText);
             this.setassetsizes();
+            this.inputCircle.moveToTop();
         }
 
     }
