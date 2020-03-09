@@ -22,6 +22,7 @@ class AISerializer(serializers.Serializer):
         json_string = json.dumps(value)
         valid = is_valid_aijson(json_string)
         if not valid:
+            logger.debug(json_string)
             raise serializers.ValidationError("Invalid AI Json")
         return value
 
