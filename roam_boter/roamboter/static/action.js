@@ -8,7 +8,7 @@ export default class action {
     _label;
 
 
-    constructor(id, object = null, winddir = null, reldir = null) {
+    constructor(id, object = null, winddir = null, reldir = null, label = null) {
         this.id = id;
         this.object = object;
         this.winddir = winddir;
