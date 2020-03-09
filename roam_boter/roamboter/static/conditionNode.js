@@ -86,8 +86,8 @@ export default class conditionNode {
         });
 
         this.group.on("click", () => {
-            this.stage.trashcanlayer.add(new popup(this.stage, this.stage.trashcanlayer).group);
-            this.stage.trashcanlayer.moveToTop();
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer).group);
+            this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
 

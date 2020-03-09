@@ -1,3 +1,4 @@
+import dropdown from "./dropdown.js";
 export default class popup {
     _stage;
     _layer;
@@ -9,16 +10,21 @@ export default class popup {
     }
 
     createGroup(stage, layer) {
-        this.group = new Konva.Group();
+        this.group = new Konva.Group({
+            x: stage.width() * 0.2,
+            y: stage.height() * 0.2,
+        });
         this.createRect(stage, layer);
         this.createClose(stage, layer);
+        let dDown = new dropdown(stage, layer, [1, 2, 3], function (x) {
+            console.log(x.toString())
+        });
+        this.group.add(dDown.group);
         //dropdown = new dropdown();
     }
 
     createRect(stage, layer) {
         var rect = new Konva.Rect({
-            x: stage.width() * 0.2,
-            y: stage.height() * 0.2,
             width: stage.width() * 0.6,
             height: stage.height() * 0.6,
             fill: 'blue',
@@ -31,8 +37,8 @@ export default class popup {
 
     createClose(stage, layer) {
         var rect = new Konva.Rect({
-            x: stage.width() * 0.8 - 50,
-            y: stage.height() * 0.2 + 10,
+            x: stage.width() * 0.6 - 50,
+            y: 10,
             width: 40,
             height: 40,
             fill: 'black',

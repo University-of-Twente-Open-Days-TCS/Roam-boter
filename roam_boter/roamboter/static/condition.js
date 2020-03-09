@@ -1,4 +1,3 @@
-
 export default class condition {
 
     //The attributes of a condition
