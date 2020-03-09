@@ -43,4 +43,4 @@ async function getCsrfToken() {
     return _csrfToken
 }
 
-export {getCsrfToken}
+export {getCsrfToken, API_HOST}

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { render } from "@testing-library/react";
 
-import { getCsrfToken } from '../utils.js'
+import { getCsrfToken, API_HOST } from '../utils.js'
 
 
 
@@ -21,7 +21,7 @@ class MatchHistory extends Component {
 
     async getMatchHistory() {
         let csrfToken = await getCsrfToken()
-        const response = await fetch('http://localhost:8000/matches/botmatches/',
+        const response = await fetch(`${API_HOST}/matches/botmatches/`,
         {
             'method' : 'GET',
             'credentials': 'include'
