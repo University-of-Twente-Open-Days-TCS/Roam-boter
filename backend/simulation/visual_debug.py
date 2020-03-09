@@ -35,9 +35,10 @@ def DRAW_WORLD(state):
         if tank.path is None:
             continue
 
-        for p in tank.path:
+        for i, p in enumerate(tank.path):
             x, y = p
-            pygame.draw.rect(screen, (255, 0, 0,), (x * 10, y * 10, 10, 10))
+            x, y = x - 0.5, y - 0.5
+            pygame.draw.rect(screen, (min(30 * i, 255), 0, 0,), (x * 10, y * 10, 10, 10))
 
     for tank in state.tanks:
         # pygame.Surface.blit(tank_body, screen, (int(tank.x * 10), int(tank.y * 10), 10, 10))

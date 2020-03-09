@@ -5,10 +5,6 @@ from django.views import View
 
 import json
 
-import logging
-
-logger = logging.getLogger(__name__)
-
 
 # Create your views here.
 
@@ -25,3 +21,4 @@ class SaveAIView(View):
             return HttpResponse(json.dumps(response), content_type='application/json')
         else:
            return HttpResponse('Unauthorized')
+

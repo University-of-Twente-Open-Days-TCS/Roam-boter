@@ -1,8 +1,8 @@
 from enum import Enum
 from .objects import Object
-from .utils import distance_squared
+from .utils import distance_squared, filter_objects, vector_angle
 
-from math import sqrt
+import math
 
 
 # A condition has an id and a tuple of arguments. VERY IMPORTANT THAT IT IS ACTUALLY A TUPLE
@@ -19,24 +19,48 @@ class Condition:
 
 
 def distance_to_nearest_object_greater_than(tank, state, obj, distance):
+    # Collect the closest tank and compare to distance.
+    paths = filter_objects(tank, state, obj)
+    nearest_dist = float('inf')
 
-    if obj == Object.TANK:
-        for t in tank.visible_tanks(state):
+    for p in paths:
+        # p[-1] is last element of path, this indicates the actual position of the object.
+        dist = math.sqrt(distance_squared(tank.get_pos(), p[-1]))
+        if dist > nearest_dist:
+            nearest_dist = dist
 
-            if sqrt(distance_squared(t.get_pos(), tank.get_pos())) > distance:
-                return True
-            else:
-                return False
-        return True
+    return nearest_dist > distance
 
-    # TODO: finish implementation
 
-    if obj == Object.BULLET:
-        # look through state.bullets
-        pass
+def object_visible(tank, state, obj):
+    paths = filter_objects(tank, state, obj)
+    for p in paths:
+        # If any of the possible paths has an end node that is visible, there exists an object of type obj that is.
+        if state.level.line_of_sight(tank.get_pos(), p[-1]):
+            return True
+    return False
 
-    # search through objects on state.level
-    pass
+
+def aimed_at_object(tank, state, obj):
+    paths = filter_objects(tank, state, obj)
+    for p in paths:
+        location = p[-1]
+        if 0.5 > vector_angle(tank.get_pos(), location) > 359.5:
+            return True
+    return False
+
+
+def object_exists(tank, state, obj):
+    paths = filter_objects(tank, state, obj)
+    return len(paths) > 0
+
+
+def bullet_ready(tank, state):
+    return tank.bullet_ready(state)
+
+
+def health_greater_than(tank, state, health):
+    return tank.health > health
 
 
 def placeholder_condition(tank, state):
@@ -48,12 +72,12 @@ def placeholder_condition(tank, state):
 CONDITIONS = [
     placeholder_condition,                          #0
     distance_to_nearest_object_greater_than,        #1
-    placeholder_condition,                          #2
-    placeholder_condition,                          #3
-    placeholder_condition,                          #4
-    placeholder_condition,                          #5
+    object_visible,                                 #2
+    aimed_at_object,                                #3
+    object_exists,                                  #4
+    bullet_ready,                                   #5
     placeholder_condition,                          #6
-    placeholder_condition,                          #7
+    health_greater_than,                            #7
     placeholder_condition,                          #8
     placeholder_condition,                          #9
     placeholder_condition,                          #10

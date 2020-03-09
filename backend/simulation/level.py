@@ -17,7 +17,6 @@ class Level:
     def cache_or_prepare_nearest_objects(self):
         nearest_objects = None
         pickle_path = os.path.join(self.get_caching_directory(), "nearest_objects.p")
-        print(pickle_path)
         try:
             with open(pickle_path, 'rb') as f:
                 nearest_objects = pickle.load(f)
@@ -26,7 +25,6 @@ class Level:
             with open(pickle_path, 'wb') as f:
                 pickle.dump(nearest_objects, f)
 
-        print(nearest_objects)
         return nearest_objects
 
     def get_caching_directory(self):
@@ -38,7 +36,6 @@ class Level:
         return [[{obj: self.find_nearest_object(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)]for y, row in enumerate(self.objects)]
 
     def find_nearest_object(self, obj, x, y):
-        print(x, y)
         queue = [(x, y)]
         visited = set()
 
@@ -78,7 +75,6 @@ class Level:
     def cache_or_prepare_nearest_paths(self):
         nearest_paths = None
         pickle_path = os.path.join(self.get_caching_directory(), "nearest_paths.p")
-        print(pickle_path)
         try:
             with open(pickle_path, 'rb') as f:
                 nearest_paths = pickle.load(f)
@@ -93,6 +89,8 @@ class Level:
         return [[{obj: self.find_nearest_path(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)] for y, row in enumerate(self.objects)]
 
     def find_nearest_path(self, obj, x, y):
+        if x == 0:
+            print(y)
         # A tank can always walk straight towards the nearest wall
         if obj == Object.WALL:
             return [self.find_nearest_object(obj, x, y)]
@@ -155,6 +153,7 @@ class Level:
                 break
 
             goal = visited[parent]
+        path = list(reversed(path))
 
         # decrease path based on line of sight smoothing
         i = 0
@@ -163,7 +162,8 @@ class Level:
                 del path[i + 1]
             i += 1
 
-        return path
+        # Remove the first element from the path.
+        return path[1:]
 
     def get_path_to_object(self, tank, obj):
         x, y = tank.get_pos()
@@ -174,14 +174,18 @@ class Level:
             if 0 < y < self.get_height() - 1:
                 path = self.nearest_paths[y][x][obj]
 
-        tank.path = path
-        if len(path) >= 2:
-            return path[-2]
-        else:
-            return None
+        return path
 
     def line_of_sight(self, pos1, pos2):
-        points = self.points(pos1, pos2)
+        # x1, y1 = pos1
+        # x2, y2 = pos2
+        #
+        # inproduct = ((x1 + x2) * (y1 + y2)) / (math.sqrt(x1 * x1 + y1 * y1) * math.sqrt(x2 * x2 + y2 * y2))
+        # angle = math.degrees(math.acos(inproduct))
+        #
+        # points = self.points((x1 - 0.5, y1 - 0.5), (x2 - 0, y2 - 0.5)) + self.points((x1 + 0.5, y1 + 0.5), (x2 + 0, y2 + 0.5))
+
+        points = list(self.points(pos1, pos2))
         if len(points) <= 2:
             return True
 
@@ -215,7 +219,7 @@ class Level:
             cx += dx
             cy += dy
 
-        return list(points)
+        return points
 
     # https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
     @staticmethod
