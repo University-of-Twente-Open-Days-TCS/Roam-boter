@@ -17,7 +17,7 @@ class AISerializer(serializers.Serializer):
     team = serializers.PrimaryKeyRelatedField(read_only=True)
     name = serializers.CharField(max_length=20)
 
-    def validate_aijson(self, value):
+    def validate_ai(self, value):
         # Checks whether aijson is valid
         json_string = json.dumps(value)
         valid = is_valid_aijson(json_string)

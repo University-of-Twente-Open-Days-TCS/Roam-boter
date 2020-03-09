@@ -282,9 +282,8 @@ export default class actionNode {
     jsonify() {
         let node = this.rect;
         let tree = {};
-        tree.actionblock = [];
+        tree.actionlist = [];
 
-        console.log(this.actionList);
         //Iterate over all actions and add its json to the actionblock
         this.actionList.forEach(item => {
 
@@ -293,114 +292,110 @@ export default class actionNode {
 
                 //Do Nothing
                 case 0:
-                    tree.actionblock.push({
-                        "type-id": 0, "attributes": {},
-                        "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 0, "attributes": {}
                     });
                     break;
                 // Finds shortest path to reach given object.
                 case 1:
-                    tree.actionblock.push({
-                        "type-id": 1, "attributes": {"object": item.object},
-                        "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 1, "attributes": {"object": item.object}
                     });
 
                     break;
                 //Follows a pre-defined path clockwise or anticlockwise along the map
                 case 2:
-                    tree.actionblock.push({
-                        "type-id": 2, "attributes": {},
-                        "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 2, "attributes": {}
                     });
                     break;
 
                 // Patrols in a possible eight-figure around a location.
                 case 3:
-                    tree.actionblock.push({
-                        "type-id": 3, "attributes": {"object": item.object},
-                        "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 3, "attributes": {"object": item.object}
                     });
                     break;
 
 
                 //Keeps moving in a straight away from object, if wall is hit keeps increasing either x or y-value to increase distance
                 case 4:
-                    tree.actionblock.push({
-                        "type-id": 4, "attributes": {"object": item.object},
-                        "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 4, "attributes": {"object": item.object}
                     });
                     break;
 
 
                 //Aims at an object. It aims according to the predicted position and bullet travel time
                 case 5:
-                    tree.actionblock.push({
-                        "type-id": 5, "attributes": {"object": item.object},
-                        "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 5, "attributes": {"object": item.object}
                     });
                     break;
 
 
                 //Aims at a certain direction based on either the tank or map
                 case 6:
-                    tree.actionblock.push({
-                        "type-id": 6, "attributes": {"dir": item.dir},
-                        "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 6, "attributes": {"dir": item.dir}
                     });
                     break;
 
 
                 //Aims at a certain direction based on either the tank or map
                 case 7:
-                    tree.actionblock.push({
-                        "type-id": 7, "attributes": {"deg": item.deg},
-                        "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 7, "attributes": {"deg": item.deg}
                     });
                     break;
 
                 //Fires a bullet
                 case 8:
-                    tree.actionblock.push({
-                        "type-id": 8, "attributes": {}, "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 8, "attributes": {}
                     });
                     break;
                 //Blows up your own tank, dealing equal damage to your surroundings
                 case 9:
-                    tree.actionblock.push({
-                        "type-id": 9, "attributes": {}, "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 9, "attributes": {}
                     });
 
                     break;
                 //Sets a certain label to true
                 case 10:
-                    tree.actionblock.push({
-                        "type-id": 10, "attributes": {"label": item.label}, "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 10, "attributes": {"label": item.label}
                     });
 
                     break;
 
                 //Sets a certain label to false
                 case 11:
-                    tree.actionblock.push({
-                        "type-id": 11, "attributes": {"label": item.label}, "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 11, "attributes": {"label": item.label}
                     });
 
                     break;
 
                 //Sets a certain label to true for X seconds
                 case 12:
-                    tree.actionblock.push({
-                        "type-id": 12, "attributes": {"label": item.label}, "position:": this.intifyPosition(node.getAbsolutePosition())
+                    tree.actionlist.push({
+                        "type-id": 12, "attributes": {"label": item.label}
                     });
 
                     break;
 
                 default:
-                //Raise error, wrong ID
+                //Raise error, wrong ID TODO:
             }
-        });
 
-        return tree;
+
+        });
+        tree.position = this.intifyPosition(node.getAbsolutePosition())
+        let result = {}
+        result.actionblock = tree
+        return result;
     }
 
 
