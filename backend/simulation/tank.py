@@ -158,7 +158,36 @@ class Tank:
         return visible_tanks
 
     def visible_bullets(self, state):
-        pass
+        visible_bullets = []
+
+        for other in state.bullets:
+            if other == self:
+                continue
+
+            vision_angle = self.get_rotation() + self.get_turret_rotation()
+
+            ax = -math.sin(math.radians(vision_angle))
+            ay = -math.cos(math.radians(vision_angle))
+
+            x, y = self.get_pos()
+
+            other_x, other_y = other.get_pos()
+            bx, by = other_x - x, other_y - y
+
+            len_a = 1
+            len_b = math.sqrt(bx ** 2 + by ** 2)
+
+            inproduct = ((ax * bx) + (ay * by)) / (len_a * len_b)
+            if inproduct > 1:
+                inproduct = 1
+
+            angle = math.degrees(math.acos(inproduct))
+
+            if angle < 20 or angle > 340:
+                if state.level.line_of_sight(self.get_pos(), other.get_pos()):
+                    visible_bullets.append(other)
+
+        return visible_bullets
 
 
 

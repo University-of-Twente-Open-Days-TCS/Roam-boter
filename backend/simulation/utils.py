@@ -46,37 +46,6 @@ def closest_object_in_paths(tank, paths):
     return closest
 
 
-# Return the nearest visible tank.
-def get_nearest_tank(state, tank):
-    closest = None
-    closest_distance = 999999999
-
-    for other in tank.visible_tanks(state):
-        dist = distance_squared((tank.x, tank.y), (other.x, other.y))
-        if dist < closest_distance and within_turret_cone(tank, other.x, other.y):
-            closest = other
-            closest_distance = dist
-    return closest
-
-
-# Return the nearest visible bullet.
-def get_nearest_bullet(state, tank):
-    closest = None
-    closest_distance = 999999999
-    for bullet in tank.visible_bullets(state):
-        dist = distance_squared(tank.get_pos(), bullet.get_pos())
-        if dist < closest_distance and within_turret_cone(tank, *bullet.get_pos()):
-            closest_distance = dist
-            closest = bullet
-    return closest
-
-
-# Returns the position of the nearest level object, this equals the position of the tank itself.
-def get_nearest_level_object(state, tank, obj):
-
-    return tank.get_pos()
-
-
 # Rotate and move towards a given point. (This does not hold into account walls)
 def move_to_position(state, tank, goal):
     x1, y1 = tank.get_pos()
