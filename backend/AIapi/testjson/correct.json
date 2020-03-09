@@ -1,47 +1,47 @@
-{ "AI" : 
-    {
-        "name" : "jelle",
-        "creator-id" : 231,
-        "root" : 
-            { 
-                "condition" : 
+{
+    "condition": {
+        "type-id": 12,
+        "child-true": {
+            "actionblock": {
+                "actionlist": [
                     {
-                       "type-id" : 12,
-                       "child-true" : 
-                            {
-                                "actionblock" : 
-                                    [
-                                        {
-                                            "type-id" : 1,
-                                            "attributes" : {}
-                                        }, 
-                                        {
-                                            "type-id" : 4,
-                                            "attributes" : 
-                                                {
-                                                    "key" : "value",
-                                                    "key2" : 2
-                                                }
-
-                                        }
-                                    ]
-                            },
-                        "child-false" : 
-                            {
-                                "actionblock" : 
-                                    [
-                                        {
-                                            "type-id" : 1,
-                                            "attributes" : {}
-                                        } 
-                                    ]
-                            },
-                        "attributes" : 
-                            {
-                                "target" : "nearestenemey"        
-                            }
+                        "type-id": 1,
+                        "attributes": {}
+                    },
+                    {
+                        "type-id": 4,
+                        "attributes": {
+                            "key": "value",
+                            "key2": 2
+                        }
                     }
+                ],
+                "position": {
+                    "x": 9,
+                    "y": 2
+                }
             }
-            
+        },
+        "child-false": {
+            "actionblock": {
+                "actionlist": [
+                    {
+                        "type-id": 1,
+                        "attributes": {}
+                    }
+                ],
+                "position": {
+                    "x": 9,
+                    "y": 2
+                }
+            }
+        },
+        "attributes": {
+            "target": "nearestenemey"
+        },
+        "position": {
+            "x": 13,
+            "y": 14
+        }
     }
 }

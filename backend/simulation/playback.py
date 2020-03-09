@@ -17,19 +17,28 @@ class PlayBack:
     def __init__(self, level):
         self.level = level
         self.frames = []
+
+        # index of the winning ai
         self.winner = None
 
     def add_frame(self, state):
         self.frames.append(Frame(state))
+
+    def to_json(self):
+        encoder = PlayBackEncoder()
+        return encoder.encode(self)
 
 
 class Frame:
     tanks = []
     bullets = []
 
+    # Extract a frame from state data.
     def __init__(self, state):
         self.tanks = deepcopy(state.tanks)
         self.bullets = deepcopy(state.bullets)
+        self.visibility = [{'tanks': t.visible_tanks(state), 'bullets': t.visible_bullets(state)} for t in state.tanks]
+        self.events = []
 
 
 class PlayBackEncoder(JSONEncoder):
@@ -40,20 +49,14 @@ class PlayBackEncoder(JSONEncoder):
         elif isinstance(obj, Frame):
             return obj.__dict__
         elif isinstance(obj, Tank):
-            return obj.__dict__
+            return {'pos': obj.get_pos(), 'rotation': obj.get_rotation(), 'turret_rotation': obj.get_turret_rotation()}
         elif isinstance(obj, Bullet):
-            return obj.__dict__
+            return {'pos': obj.get_pos()}
         elif isinstance(obj, Object):
-            return obj.__str__()
-        elif isinstance(obj, AINode):
-            return obj.__dict__
-        elif isinstance(obj, Action):
-            return obj.__dict__
-        elif isinstance(obj, Condition):
-            return obj.__dict__
+            return int(obj)
         elif isinstance(obj, Level):
-            return None
+            return obj.objects
         else:
             print(obj)
-            return json.JSONEncoder.default(self, object)
+            #return json.JSONEncoder.default(self, object)
 

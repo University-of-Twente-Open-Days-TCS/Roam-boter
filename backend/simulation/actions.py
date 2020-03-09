@@ -71,6 +71,7 @@ def move_from_nearest_object(tank, state, obj):
     pass
 
 
+# Let the tank aim to the nearest object.
 def aim_to_nearest_object(tank, state, obj):
     aim_goal = None
     if obj == Object.TANK:
@@ -91,12 +92,15 @@ def aim_to_nearest_object(tank, state, obj):
         aim_to_position(state, tank, aim_goal)
 
 
+# Perform the shoot action.
 def shoot(tank, state):
     if state.frames_passed >= tank.shoot_ready:
         bullet = Bullet(tank)
         state.bullets.append(bullet)
         tank.shoot_ready = state.frames_passed + tank.reload_time
 
+
+# Do not execute any action.
 def do_nothing(tank, state):
     return
 

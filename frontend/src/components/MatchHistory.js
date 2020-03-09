@@ -1,14 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 
-class MatchHistory extends Component {
-    render() {
-        return (
-            <div>
-                <h1>Match History</h1>
-                <p>Match History will be visible here.</p>
-            </div>
-        )
-    }
+const MatchHistory = () => {
+    return (
+        <div>
+            <h1>Match History</h1>
+            <p>Match History will be visible here.</p>
+        </div>
+    )
 }
 
 export default MatchHistory;

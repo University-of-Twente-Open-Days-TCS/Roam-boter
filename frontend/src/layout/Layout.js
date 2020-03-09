@@ -1,4 +1,4 @@
-import React, {Children, useState} from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -12,8 +12,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import {
-    Route,
-    NavLink,
     HashRouter
 } from "react-router-dom";
 import AIMenuList from "./menu/AIMenuList";

@@ -3,8 +3,8 @@ import sys
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 
-from .grammar.aijson.aiJsonLexer import aiJsonLexer
-from .grammar.aijson.aiJsonParser import aiJsonParser
+from .aijson.aiJsonLexer import aiJsonLexer
+from .aijson.aiJsonParser import aiJsonParser
 
 
 from simulation.actions import Action
@@ -17,33 +17,7 @@ class EvaluationTreeConverter(ParseTreeVisitor):
 
     # Visit a parse tree produced by aiJsonParser#startrule.
     def visitStartrule(self, ctx:aiJsonParser.StartruleContext):
-        return self.visitAi(ctx.ai())
-
-
-    # Visit a parse tree produced by aiJsonParser#ai.
-    def visitAi(self, ctx:aiJsonParser.AiContext):
-        return self.visitInfo(ctx.info())
-
-
-    # Visit a parse tree produced by aiJsonParser#info.
-    def visitInfo(self, ctx:aiJsonParser.InfoContext):
-        return self.visitRoot(ctx.root())
-
-
-    # Visit a parse tree produced by aiJsonParser#name.
-    def visitName(self, ctx:aiJsonParser.NameContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by aiJsonParser#creator_id.
-    def visitCreator_id(self, ctx:aiJsonParser.Creator_idContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by aiJsonParser#root.
-    def visitRoot(self, ctx:aiJsonParser.RootContext):
         return self.visitNode(ctx.node())
-
 
     # Visit a parse tree produced by aiJsonParser#node.
     def visitNode(self, ctx:aiJsonParser.NodeContext):
@@ -83,9 +57,12 @@ class EvaluationTreeConverter(ParseTreeVisitor):
 
     # Visit a parse tree produced by aiJsonParser#actionblock.
     def visitActionblock(self, ctx:aiJsonParser.ActionblockContext):
-        actions = self.visitActionlist(ctx.actionlist())
+        actions = self.visitActiondata(ctx.actiondata())
         return ActionNode(actions)
 
+    # Visit a parse tree produced by aiJsonParser#actiondata.
+    def visitActiondata(self, ctx:aiJsonParser.ActiondataContext):
+        return self.visitActionlist(ctx.actionlist())
 
     # Visit a parse tree produced by aiJsonParser#actionlist.
     def visitActionlist(self, ctx:aiJsonParser.ActionlistContext):
@@ -170,9 +147,9 @@ class ConverterErrorListener(ErrorListener):
         raise Exception("Context Sensitivity Error")
 #=====================================================================
 
+
 def convert_aijson(json):
     """Converts a string of json to an AINode tree."""
-    # TODO: ERROR CHECKING
     eval_tree = None
 
     input_stream = InputStream(json)
@@ -188,5 +165,20 @@ def convert_aijson(json):
 
 
     return eval_tree
+
+def is_valid_aijson(json):
+    """Checks whether a given json string is valid"""
+    input_stream = InputStream(json)
+    lexer = aiJsonLexer(input_stream)
+    stream = CommonTokenStream(lexer)
+    parser = aiJsonParser(stream)
+    parser._listeners = [ConverterErrorListener()]
+
+    try:
+        root_node = parser.startrule()
+        # no exception has occurred. 
+        return True
+    except Exception as e:
+        return False
 
 

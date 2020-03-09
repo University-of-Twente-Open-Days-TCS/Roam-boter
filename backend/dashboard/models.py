@@ -28,7 +28,7 @@ class Team(models.Model):
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, verbose_name="Workshop")
 
     def __str__(self):
-        return "Team: "+str(self.team_name)
+        return "Team: "+str(self.team_name)+"("+str(self.id)+")"
 
 
 '''UserSession model'''
