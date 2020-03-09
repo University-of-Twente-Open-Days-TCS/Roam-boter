@@ -19,6 +19,7 @@ class Condition:
 
 
 def distance_to_nearest_object_greater_than(tank, state, obj, distance):
+    obj = Object(obj)
     # Collect the closest tank and compare to distance.
     paths = filter_objects(tank, state, obj)
     nearest_dist = float('inf')
@@ -33,6 +34,7 @@ def distance_to_nearest_object_greater_than(tank, state, obj, distance):
 
 
 def object_visible(tank, state, obj):
+    obj = Object(obj)
     paths = filter_objects(tank, state, obj)
     for p in paths:
         # If any of the possible paths has an end node that is visible, there exists an object of type obj that is.
@@ -42,6 +44,7 @@ def object_visible(tank, state, obj):
 
 
 def aimed_at_object(tank, state, obj):
+    obj = Object(obj)
     paths = filter_objects(tank, state, obj)
     for p in paths:
         location = p[-1]
@@ -51,6 +54,7 @@ def aimed_at_object(tank, state, obj):
 
 
 def object_exists(tank, state, obj):
+    obj = Object(obj)
     paths = filter_objects(tank, state, obj)
     return len(paths) > 0
 

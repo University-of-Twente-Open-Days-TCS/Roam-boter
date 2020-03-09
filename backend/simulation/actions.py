@@ -1,8 +1,7 @@
-from .objects import Object
+from .objects import Object, RelDir, WindDir
 from .bullet import Bullet
 
 from .utils import *
-
 
 
 """Actions are described here."""
@@ -27,6 +26,7 @@ def do_nothing(tank, state):
 
 # The function correlated with the action of the tank moving to a nearest object.
 def move_to_nearest_object(tank, state, obj):
+    obj = Object(obj)
     paths = filter_objects(tank, state, obj)
 
     nearest_path = closest_object_in_paths(tank, paths)
@@ -45,6 +45,7 @@ def patrol(tank, state):
 
 # The tank moving straight back from a nearest object.
 def move_from_nearest_object(tank, state, obj):
+    obj = Object(obj)
     paths = filter_objects(tank, state, obj)
     nearest_path = closest_object_in_paths(tank, paths)
     if nearest_path is not None and len(nearest_path) > 0:
@@ -53,6 +54,7 @@ def move_from_nearest_object(tank, state, obj):
 
 # Let the tank aim to the nearest object.
 def aim_to_nearest_object(tank, state, obj):
+    obj = Object(obj)
     paths = filter_objects(tank, state, obj)
 
     nearest_path = closest_object_in_paths(tank, paths)
@@ -60,16 +62,14 @@ def aim_to_nearest_object(tank, state, obj):
         aim_to_position(state, tank, nearest_path[0])
 
 
-def aim_winddir(tank, state, dir):
-    raise NotImplementedError("Aiming at a wind direction is not implemented yet")
-
-
 def aim_reldir(tank, state, reldir):
+    reldir = RelDir(reldir)
     angle = reldir.get_angle()
     tank.rotate_turret_towards(angle)
 
 
 def aim_winddir(tank, state, winddir):
+    winddir = WindDir(winddir)
     angle = winddir.get_angle()
     tank.rotate_turret_towards(angle - tank.get_rotation())
 
