@@ -131,6 +131,7 @@ def simulate(ais):
     while not sim.has_ended():
         sim.step()
 
+    # Get index of winning ai
     if sim.get_winner() is not None:
         ai = sim.get_winner()
         sim.winner = -1

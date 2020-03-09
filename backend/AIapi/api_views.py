@@ -31,7 +31,7 @@ class AIList(APIView):
         team_pk = request.session['team_id']
         team = Team.objects.get(pk=team_pk)
 
-        serializer = AISerializer(data=request.data, context={'team_pk': team})
+        serializer = AISerializer(data=request.data, context={'team': team})
 
         if serializer.is_valid():
             # save new AI 
