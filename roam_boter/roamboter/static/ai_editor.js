@@ -69,6 +69,7 @@ class aiCanvas {
     }
 
 
+    //TODO quickfix this.stagewidth, and make it use correct state without giving it as a parameter
     //make trashcan
     addTrashcan(stage) {
         var imageObj = new Image();
@@ -162,14 +163,14 @@ class aiCanvas {
 
 //BELOW THIS LINE ARE ONLY BUTTON-INTERACTION-FUNCTION DEMOS, MOST LIKELY TO BE REPLACED BY REACT
     addCondition() {
-        let newCondition = new conditionNode(this.stage, this.layer, new condition(3, null, "tank"));
+        let newCondition = new conditionNode(this.stage, this.layer);
         this.layer.add(newCondition.group);
         newCondition.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
         this.stage.draw();
     }
 
     addActionNode(stage, layer) {
-        let newActionNode = new actionNode(this.stage, this.layer, [new action(0), new action(2)]);
+        let newActionNode = new actionNode(this.stage, this.layer);
         this.layer.add(newActionNode.group);
         newActionNode.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
         this.stage.draw();

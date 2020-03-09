@@ -16,15 +16,6 @@ const hitboxCircleRadius = 20;
 var spawnX = 0;
 var spawnY = 0;
 
-const conditionList = [
-    new condition(1),
-    new condition(2),
-    new condition(3),
-    new condition(4),
-    new condition(5),
-    new condition(6),
-    new condition(7),
-];
 
 const objectList = [
     new object(1),
@@ -114,7 +105,10 @@ export default class conditionNode {
         if (this.condition != null) {
             this.conditionText = this.condition.toString();
             this.createTextObject(this.conditionText);
+        } else {
+            this.createTextObject("");
         }
+
         this.createRect();
         if (this.conditionText != null) {
             this.conditionTextObj.moveToTop();
@@ -144,7 +138,7 @@ export default class conditionNode {
         this.group.on("click", () => {
 
             //TODO could just make this by calling editCondition with object null (no condition yet) probs
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, conditionList, this.editCondition.bind(this)).group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateConditionList(), this.editCondition.bind(this)).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -179,8 +173,9 @@ export default class conditionNode {
 
         //Set the new text in the conditionNode and adapt its input/false/truecircles
         if (this.condition != null) {
-            this.conditionText = this.condition.toString();
-            this.createTextObject(this.conditionText);
+            this.conditionTextObj.text(this.condition.toString());
+            this.conditionTextObj.moveToTop();
+
         }
         this.setAssetSizes();
 
@@ -198,12 +193,12 @@ export default class conditionNode {
         let wantedList;
         switch (this.condition.id) {
             case 1:
-                //First ask for distance, if not yet known
-                if (this.condition.distance == null) {
-                    wantedList = distanceList;
+                //First ask for object, if not yet known
+                if (this.condition.object == null) {
+                    wantedList = objectList;
                 } else {
                     //Otherwise prompt for object
-                    wantedList = objectList;
+                    wantedList = distanceList;
                 }
                 break;
             case 2:
@@ -288,6 +283,19 @@ export default class conditionNode {
 
     falseChild() {
         return this.falseArrow.dest;
+    }
+
+    generateConditionList() {
+        let conditionList = [
+            new condition(1),
+            new condition(2),
+            new condition(3),
+            new condition(4),
+            new condition(5),
+            new condition(6),
+            new condition(7),
+        ];
+        return conditionList
     }
 
     jsonify() {

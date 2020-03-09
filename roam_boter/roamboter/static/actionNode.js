@@ -15,18 +15,6 @@ const hitboxCircleRadius = 20;
 var spawnX = 0;
 var spawnY = 0;
 
-const allActionsList = [
-    new action(0),
-    new action(1),
-    new action(2),
-    new action(3),
-    new action(4),
-    new action(5),
-    new action(6),
-    new action(7),
-    new action(8),
-    new action(9)
-];
 
 const objectList = [
     new object(1),
@@ -81,7 +69,11 @@ export default class actionNode {
         this.stage = stage;
         this.layer = layer;
 
-        this.actionList = actionList;
+        if (actionList != null) {
+            this.actionList = actionList;
+        } else {
+            this.actionList = [];
+        }
         this.actionNodeText = this.createActionNodeText();
         this.createTextObject();
         this.createRect();
@@ -109,7 +101,7 @@ export default class actionNode {
         this.group.on("click", () => {
 
             //TODO could just make this by calling editAction with object null (no action yet) probs
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, allActionsList, this.editAction.bind(this)).group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateActionsList(), this.editAction.bind(this)).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -163,14 +155,15 @@ export default class actionNode {
                 break;
         }
 
-        //Fill the actionNode with the newly added info
-        this.actionNodeText = this.createActionNodeText();
-        this.createTextObject();
-        this.setassetsizes();
 
         //Check if the last added action still misses an attribute
         if (!this.actionList[this.actionList.length - 1].isValid()) {
             this.createAdditionalInfoPopup();
+        } else {
+            //Fill the actionNode with the newly added info
+            this.actionNodeText = this.createActionNodeText();
+            this.actionNodeTextObj.text(this.actionNodeText);
+            this.setassetsizes();
         }
 
     }
@@ -225,9 +218,27 @@ export default class actionNode {
         }
     }
 
+
+    generateActionsList() {
+        let allActionsList = [
+            new action(0),
+            new action(1),
+            new action(2),
+            new action(3),
+            new action(4),
+            new action(5),
+            new action(6),
+            new action(7),
+            new action(8),
+            new action(9)
+        ];
+        return allActionsList;
+
+    }
+
     setassetsizes() {
         //Adjust rect size
-        if (this.actionNodeText.text != null) {
+        if (this.actionNodeTextObj.text != null) {
             this.rect.width(this.actionNodeTextObj.width());
             this.rect.height(this.actionNodeTextObj.height());
         } else {
@@ -247,6 +258,9 @@ export default class actionNode {
 
     //create text for in the condition
     createTextObject() {
+        if (this.actionNodeText == null) {
+            this.actionNodeText = "";
+        }
         this.actionNodeTextObj = new Konva.Text({
             x: spawnX,
             y: spawnY,
