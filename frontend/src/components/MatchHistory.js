@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { render } from "@testing-library/react";
 
 import { getCsrfToken, API_HOST } from '../utils.js'
+import {NavLink} from "react-router-dom";
 
 
 
@@ -14,9 +15,13 @@ class MatchHistory extends Component {
     }
 
     async componentDidMount() {
-        let data = await this.getMatchHistory()
-        let new_state = {matches: data}
-        this.setState(new_state)
+        let data = this.getMatchHistory().then((data) => {
+            let new_state = {matches: data}
+            console.log(new_state)
+            this.setState(new_state)
+        }).catch((e) =>
+            console.log(e)
+        )
     }
 
     async getMatchHistory() {
@@ -36,7 +41,7 @@ class MatchHistory extends Component {
             <h1>Match History</h1>
             { 
                 this.state.matches.map((match, i) => {
-                    return (<div key={i}>AI {match.ai} : DATE {match.date} <button>Watch Simulation</button></div>)
+                    return (<NavLink to={'/MatchReplay/' + match.pk}><div key={i}>AI {match.ai} : DATE {match.date}</div></NavLink>)
                 })
             }
         </div>

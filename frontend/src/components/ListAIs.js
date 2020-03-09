@@ -1,4 +1,24 @@
+import { getCsrfToken, API_HOST } from '../utils.js'
 import React from "react";
+
+const playBotMatch = async function (ai) {
+    const response = await fetch(`${API_HOST}/matches/botmatches/`, {
+        credentials : 'include',
+        method : 'POST',
+        headers : {
+            'X-CSRFToken' : await getCsrfToken(),
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify({
+            gamemode: "DM",
+            bot: 1,
+            ai: ai
+        })
+    })
+    let data = await response.json()
+    return data
+}
+
 
 const ListAIs = ({AIs}) => {
     return (
@@ -7,7 +27,7 @@ const ListAIs = ({AIs}) => {
             A list of the team's AIs will be visible here.
             <ul>
                 {AIs.map((ai, i) =>
-                    <li key={i}>{ai.name}</li>
+                    <li key={i}>{ai.name} <button onClick={() => playBotMatch(ai.pk)}>Play BotMatch</button></li>
                 )}
             </ul>
         </div>

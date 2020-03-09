@@ -14,6 +14,7 @@ import MatchHistory from "./components/MatchHistory";
 import ListAIs from "./components/ListAIs";
 import PlayvsBot from "./components/PlayvsBot";
 import PlayvsPlayer from "./components/PlayvsPlayer";
+import MatchReplay from "./components/MatchReplay";
 import Login from "./login/Login";
 
 const API_HOST = "http://localhost:8000";
@@ -26,7 +27,7 @@ class App extends Component {
         this.state = {
             isFull: false,
             AIs: [],
-            loggedIn: true,
+            loggedIn: false,
         };
     }
 
@@ -116,11 +117,13 @@ class App extends Component {
                         <div className="full-screenable-node">
                             <Layout>
                                 <Route exact path="/" component={Home}/>
-                                <Route path="/AIEditor" render={(props) => <AIEditor {...props} handleSaveAI={this.handleSaveAI} />}/>
-                                <Route path="/ListAIs" render={(props) => <ListAIs {...props} AIs={this.state.AIs} />}/>
+                                <Route path="/AIEditor"
+                                       render={(props) => <AIEditor {...props} handleSaveAI={this.handleSaveAI}/>}/>
+                                <Route path="/ListAIs" render={(props) => <ListAIs {...props} AIs={this.state.AIs}/>}/>
                                 <Route path="/MatchHistory" component={MatchHistory}/>
                                 <Route path="/PlayvsBot" component={PlayvsBot}/>
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
+                                <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
                                 <hr/>
                                 <Button onClick={this.testAPI}>Test API</Button>
                                 <Button onClick={this.goFull} margin={"200px"}>Go Fullscreen</Button>

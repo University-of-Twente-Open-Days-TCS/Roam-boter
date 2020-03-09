@@ -47,7 +47,7 @@ class AIEditor extends Component {
                 <div id="buttons">
                     <input type="button" id="addCondition" value="Add Condition"/>
                     <input type="button" id="addActionNode" value="Add ActionNode"/>
-                    <input type="button" id="saveAI" value="Print JSON"/>
+                    <input type="button" id="saveAI" value="Save"/>
                 </div>
             </div>
         );
