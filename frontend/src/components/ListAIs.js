@@ -1,14 +1,17 @@
-import React, {Component} from "react";
+import React from "react";
 
-class ListAIs extends Component {
-    render() {
-        return (
-            <div>
-                <h1>List of AIs</h1>
-                A list of the team's AIs will be visible here.
-            </div>
-        );
-    }
+const ListAIs = ({AIs}) => {
+    return (
+        <div>
+            <h1>List of AIs</h1>
+            A list of the team's AIs will be visible here.
+            <ul>
+                {AIs.map((ai, i) =>
+                    <li key={i}>{ai.name}</li>
+                )}
+            </ul>
+        </div>
+    );
 }
 
 export default ListAIs;
