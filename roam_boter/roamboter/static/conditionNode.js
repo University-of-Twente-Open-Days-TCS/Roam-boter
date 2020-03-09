@@ -114,8 +114,8 @@ export default class conditionNode {
 
         this.createFalseCircle();
         this.createTrueCircle();
-        this.trueDragCircle = this.createDragCircle(this.trueCircle, true, this.stage, layer);
-        this.falseDragCircle = this.createDragCircle(this.falseCircle, false, this.stage, layer);
+        this.trueDragCircle = this.createDragCircle(this.trueCircle, true);
+        this.falseDragCircle = this.createDragCircle(this.falseCircle, false);
         this.createInputCircle();
         let node = this;
         this.group.on("dragmove", function () {
@@ -174,13 +174,14 @@ export default class conditionNode {
             this.conditionTextObj.text(this.condition.toString());
             this.conditionTextObj.moveToTop();
 
-            //make sure the text does not cover the drag&inputcircles
-            this.inputCircleHitbox.moveToTop();
-            this.trueDragCircle.moveToTop();
-            this.falseDragCircle.moveToTop();
 
         }
         this.setAssetSizes();
+
+        //make sure the text does not cover the drag&inputcircles
+        this.inputCircleHitbox.moveToTop();
+        this.trueDragCircle.moveToTop();
+        this.falseDragCircle.moveToTop();
 
         //if not all necessary info is known, create a popup asking for additional info
         if (!this.condition.isValid()) {
@@ -257,6 +258,11 @@ export default class conditionNode {
         this.falseDragCircle.x(this.rect.x());
         this.trueDragCircle.y(this.rect.y() + this.rect.height());
         this.trueDragCircle.x(this.rect.x() + this.rect.width());
+
+        this.trueDragCircle.originalX = this.trueDragCircle.x();
+        this.trueDragCircle.originalY = this.trueDragCircle.y();
+        this.falseDragCircle.originalX = this.falseDragCircle.x();
+        this.falseDragCircle.originalY = this.falseDragCircle.y();
 
 
         //adjust arrows
