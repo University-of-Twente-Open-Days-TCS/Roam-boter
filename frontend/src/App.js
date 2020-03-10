@@ -11,7 +11,7 @@ import Home from "./components/Home";
 import AIEditor from "./components/AIEditor";
 import Layout from "./layout/Layout";
 import MatchHistory from "./components/MatchHistory";
-import ListAIs from "./components/ListAIs";
+import AIList from "./components/AIList";
 import PlayvsBot from "./components/PlayvsBot";
 import PlayvsPlayer from "./components/PlayvsPlayer";
 import MatchReplay from "./components/MatchReplay";
@@ -54,7 +54,7 @@ class App extends Component {
                                 <Route exact path="/" component={Home}/>
                                 <Route path="/AIEditor"
                                        render={(props) => <AIEditor {...props} handleSaveAI={this.handleSaveAI}/>}/>
-                                <Route path="/ListAIs" component={ListAIs}/>
+                                <Route path="/AIList" component={AIList}/>
                                 <Route path="/MatchHistory" component={MatchHistory}/>
                                 <Route path="/PlayvsBot" component={PlayvsBot}/>
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
