@@ -6,7 +6,11 @@ const Login = ({handleSubmit}) => {
 
     return (
         <div className="login-form">
-            <form className="login-form" noValidate autoComplete="off" onSubmit={() => handleSubmit(teamCode)}>
+            <form className="login-form" noValidate autoComplete="off" onSubmit={(event) => { 
+                    event.preventDefault()
+                    handleSubmit(teamCode)
+                    }
+                }>
                 <label>Team code </label>
                 <input type="text" data-test="team-code" value={teamCode} onChange={e => setTeamCode(e.target.value)}/>
 

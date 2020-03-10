@@ -84,7 +84,7 @@ class App extends Component {
         });
     }
 
-    handleSubmitLogin = async teamCode => {
+    handleSubmitLogin = async (teamCode) => {
         const formData = new FormData()
 
         formData.append('team_code', teamCode);
@@ -98,7 +98,7 @@ class App extends Component {
             // },
             body: formData
         })
-        // let data = await response.json()
+
         response.ok ? this.setState({loggedIn: true}) : this.setState({loggedIn: false})
     }
 
