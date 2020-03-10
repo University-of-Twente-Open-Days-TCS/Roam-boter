@@ -5,9 +5,7 @@ import React from "react";
 import List from "@material-ui/core/List";
 import {Add, Create, History, Home} from "@material-ui/icons";
 import {
-    Route,
-    NavLink,
-    HashRouter
+    NavLink
 } from "react-router-dom";
 
 

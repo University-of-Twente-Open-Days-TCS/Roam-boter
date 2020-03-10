@@ -12,7 +12,7 @@ childfalse  : CHILDFALSE SC node ;
 
 actionblock : LBR ACTIONBLOCK SC actiondata RBR ;
 actiondata  : LBR ACTIONLIST SC actionlist COM position RBR ;
-actionlist  : LB action (COM action)* RB ;
+actionlist  : LB (action (COM action)*)? RB ;
 action      : LBR type_id COM attributes RBR;
 
 

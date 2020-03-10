@@ -1,11 +1,12 @@
 from django.http import Http404
 
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from roamboter.api_permission import InTeamPermission
+from roamboter.api.permissions import InTeamPermission
+from roamboter.api.mixins import RetrieveTeamObjectMixin
 
 from .serializers import AISerializer
 from .models import AI
@@ -31,7 +32,7 @@ class AIList(APIView):
         team_pk = request.session['team_id']
         team = Team.objects.get(pk=team_pk)
 
-        serializer = AISerializer(data=request.data, context={'team_pk': team})
+        serializer = AISerializer(data=request.data, context={'team': team})
 
         if serializer.is_valid():
             # save new AI 
@@ -41,31 +42,19 @@ class AIList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AIDetail(APIView):
+class AIDetail(RetrieveTeamObjectMixin, generics.GenericAPIView):
 
     permission_classes = [InTeamPermission]
 
-    def get_object(self, pk, team_pk):
-        """
-        Returns the AI object. Only returns the AI if the AI belongs to the users team.
-        """
-        try:
-            ai = AI.objects.get(pk=pk)
-            if ai.team.pk == team_pk:
-                return ai
-            else:
-                raise PermissionDenied(detail="AI does not belong to your team")
-        except AI.DoesNotExist:
-            raise Http404
+    queryset = AI.objects.all()
+    serializer_class = AISerializer
 
-    def get(self, request, pk):
+
+    def get(self, request, *args, **kwargs):
         """
         Get a single AI
         """
-        ai = self.get_object(pk, request.session['team_id'])
-        serializer = AISerializer(ai)
-        return Response(serializer.data)
-
+        return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, pk):
         """

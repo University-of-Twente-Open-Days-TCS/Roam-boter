@@ -22,17 +22,19 @@ from django.urls import path
 import home.urls as home_urls
 import AIapi.urls as AIapi_urls
 import dashboard.urls as dashboard_urls
+import matches.urls as matches_urls
 
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),                    #standard django admin urls
-    path('api-auth/', include('rest_framework.urls')),  #rest_framework urls 
+    path('admin/', admin.site.urls),                    # standard django admin urls
+    path('api-auth/', include('rest_framework.urls')),  # rest_framework urls 
     #Our apps url configuration
-    path(r'ai/', include(AIapi_urls)),
+    path(r'ai/', include(AIapi_urls)),                  # saving and getting AI's
+    path(r'matches/', include(matches_urls)),           # playing matches and retrieving bots.
     path(r'dashboard/', include(dashboard_urls)),
-    path(r'csrf/', views.csrf),                     #ping server. Useful for setting csrf cookie.
-    path(r'test/', views.test),                     #ping test
+    path(r'csrf/', views.csrf),                         # sets csrf cookie.
+    path(r'test/', views.test),                         # ping test
     path(r'', include(home_urls)),]
 
 
