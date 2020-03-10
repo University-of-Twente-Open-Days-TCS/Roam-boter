@@ -20,33 +20,10 @@ class RoamBotAPI {
      * API endpoint for RoamBot-er
      */
 
+    API_HOST = "http://localhost:8000"
 
     constructor() {
-        this.API_HOST = "http://localhost:8000"
         this._csrfToken = null
-    }
-
-    async _getCsrfToken() {
-        /** Returns the csrftoken cookie. If the cookie is not present it will ping the server to set the cookie. **/
-        if (this._csrfToken === null) {
-            let csrfCookie = getCookie('csrftoken')
-
-            if (csrfCookie === null){
-                // Cookie is not set. Ping the server to set the cookie.
-                const response = await fetch(`${this.API_HOST}/csrf/`, {
-                    credentials: 'include'
-                })
-                let data = await response.json()
-                // Get the newly set cookie.
-                csrfCookie = getCookie('csrftoken')
-                if (csrfCookie === null){
-                    // Something went wrong.
-                    throw "No csrf Cookie"
-                }
-            }
-            this._csrfToken = csrfCookie
-        }
-        return this._csrfToken
     }
 
     async callApi(url, method, data) {
@@ -114,13 +91,39 @@ class RoamBotAPI {
         return response
     }
 
+    aiList() {
+        /**
+         * Gets a list from ai's associated with this request.
+         */
+        let response = this.callApi('ai/', 'GET')
+        return response
+    }
 
-    
+    async _getCsrfToken() {
+        /** Returns the csrftoken cookie. If the cookie is not present it will ping the server to set the cookie. **/
+        if (this._csrfToken === null) {
+            let csrfCookie = getCookie('csrftoken')
 
+            if (csrfCookie === null){
+                // Cookie is not set. Ping the server to set the cookie.
+                const response = await fetch(`${this.API_HOST}/csrf/`, {
+                    credentials: 'include'
+                })
+                let data = await response.json()
+                // Get the newly set cookie.
+                csrfCookie = getCookie('csrftoken')
+                if (csrfCookie === null){
+                    // Something went wrong.
+                    throw "No csrf Cookie"
+                }
+            }
+            this._csrfToken = csrfCookie
+        }
+        return this._csrfToken
+    }
 
 }
 
 
 let roamBotAPI = new RoamBotAPI()
-
 export default roamBotAPI 
