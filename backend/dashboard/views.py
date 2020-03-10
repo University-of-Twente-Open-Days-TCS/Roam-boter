@@ -1,8 +1,3 @@
-# TODO: 
-#   1. Open Workshop Session
-#   2. Close Workshop Session
-#   3. Generate Team Codes
-
 from django.views import View
 from django.views.generic import TemplateView
 
@@ -23,6 +18,7 @@ logger = logging.getLogger('debugLogger')
 
 
 """API CALL VIEWS ENTERING/LEAVING TEAMS"""
+
 class EnterTeamView(View):
     """View that will link a session to a team. Given that team_code is valid"""
 

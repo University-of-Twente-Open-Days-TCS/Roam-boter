@@ -1,7 +1,8 @@
-from .objects import Object
+from .objects import Object, RelDir, WindDir
 from .bullet import Bullet
 
 from .utils import *
+
 
 """Actions are described here."""
 class Action:
@@ -18,87 +19,89 @@ class Action:
         return ACTIONS[self.action_id].__name__ + " " + str(self.action_id) + " " + str(self.attributes)
 
 
+# Do not execute any action.
+def do_nothing(tank, state):
+    return
+
+
 # The function correlated with the action of the tank moving to a nearest object.
 def move_to_nearest_object(tank, state, obj):
-    goal = None
+    obj = Object(obj)
+    paths = filter_objects(tank, state, obj)
 
-    if obj == Object.TANK:
-        # find nearest tank to move to.
-        other_tank = get_nearest_tank(state, tank)
-        if other_tank is not None:
-            goal = other_tank.get_pos()
-        pass
+    nearest_path = closest_object_in_paths(tank, paths)
+    if nearest_path is not None and len(nearest_path) > 0:
+        tank.path = nearest_path
+        move_to_position(state, tank, nearest_path[0])
 
-    elif obj == Object.BULLET:
-        # find nearest bullet to move to.
-        bullet = get_nearest_bullet(state, tank)
-        if bullet is not None:
-            goal = bullet.get_pos()
-        pass
 
-    else:
-        # find nearest obj in state.level to move to.
-        goal = state.level.get_path_to_object(tank, obj)
-    if goal is not None:
-        move_to_position(state, tank, goal)
+def scout(tank, state):
+    raise NotImplementedError("Scouting is not possible yet")
 
-    pass
+
+def patrol(tank, state):
+    raise NotImplementedError("Patrolling is not possible yet")
 
 
 # The tank moving straight back from a nearest object.
 def move_from_nearest_object(tank, state, obj):
-    goal = None
-
-    if obj == Object.TANK:
-        # find nearest tank to move to.
-        other_tank = get_nearest_tank(state, tank)
-        if other_tank is not None:
-            goal = other_tank.get_pos()
-        pass
-
-    elif obj == Object.BULLET:
-        # find nearest bullet to move to.
-        bullet = get_nearest_bullet(state, tank)
-        if bullet is not None:
-            goal = bullet.get_pos()
-        pass
-
-    else:
-        # find nearest obj in state.level to move to.
-        goal = get_nearest_level_object(state, tank, obj)
-    move_from_position(state, tank, goal)
-
-    pass
+    obj = Object(obj)
+    paths = filter_objects(tank, state, obj)
+    nearest_path = closest_object_in_paths(tank, paths)
+    if nearest_path is not None and len(nearest_path) > 0:
+        move_from_position(state, tank, nearest_path[0])
 
 
+# Let the tank aim to the nearest object.
 def aim_to_nearest_object(tank, state, obj):
-    aim_goal = None
-    if obj == Object.TANK:
-        other_tank = get_nearest_tank(state, tank)
-        if other_tank is not None:
-            aim_goal = other_tank.get_pos()
+    obj = Object(obj)
+    paths = filter_objects(tank, state, obj)
 
-    elif obj == Object.BULLET:
-        bullet = get_nearest_bullet(state, tank)
-        if bullet is not None:
-            aim_goal = bullet.get_pos()
-
-    else:
-        aim_goal = get_nearest_level_object(state, tank, obj)
-
-    # Check if an object is found...
-    if aim_goal is not None:
-        aim_to_position(state, tank, aim_goal)
+    nearest_path = closest_object_in_paths(tank, paths)
+    if nearest_path is not None and len(nearest_path) > 0:
+        aim_to_position(state, tank, nearest_path[0])
 
 
+def aim_reldir(tank, state, reldir):
+    reldir = RelDir(reldir)
+    angle = reldir.get_angle()
+    tank.rotate_turret_towards(angle)
+
+
+def aim_winddir(tank, state, winddir):
+    winddir = WindDir(winddir)
+    angle = winddir.get_angle()
+    tank.rotate_turret_towards(angle - tank.get_rotation())
+
+
+def aim_to_left(tank, state, speed):
+    speed = speed / 5
+    rotation = tank.get_turret_rotation()
+    tank.rotate_turret_towards(rotation + speed)
+
+
+def aim_to_right(tank, state, speed):
+    speed = speed / 5
+    rotation = tank.get_turret_rotation()
+    tank.rotate_turret_towards(rotation - speed)
+
+
+# Perform the shoot action.
 def shoot(tank, state):
-    if state.frames_passed >= tank.shoot_ready:
+    if tank.bullet_ready(state):
         bullet = Bullet(tank)
         state.bullets.append(bullet)
         tank.shoot_ready = state.frames_passed + tank.reload_time
 
-def do_nothing(tank, state):
-    return
+
+EXPLOSION_RADIUS = 3
+
+
+def self_destruct(tank, state):
+    tanks = state.level.tanks
+    for t in tanks:
+        if distance(tank.get_pos(), t.get_pos()) < EXPLOSION_RADIUS:
+            t.health -= 200
 
 
 def placeholder_action(tank, state):
@@ -111,19 +114,16 @@ def placeholder_action(tank, state):
 ACTIONS = [
     do_nothing,                             #0
     move_to_nearest_object,                 #1
-    placeholder_action,                     #2
-    placeholder_action,                     #3
+    scout,                                  #2
+    patrol,                                 #3
     move_from_nearest_object,               #4
     aim_to_nearest_object,                  #5
-    placeholder_action,                     #6
-    placeholder_action,                     #7
-    shoot,                                  #8
-    placeholder_action,                     #9
-    placeholder_action,                     #10
-    placeholder_action,                     #11
-    placeholder_action,                     #12
-    placeholder_action,                     #13
-    placeholder_action,                     #14
+    aim_winddir,                            #6
+    aim_reldir,                             #7
+    aim_to_left,                            #8
+    aim_to_right,                           #9
+    shoot,                                  #13
+    self_destruct,                          #14
     placeholder_action,                     #15
     placeholder_action,                     #16
     placeholder_action,                     #17
