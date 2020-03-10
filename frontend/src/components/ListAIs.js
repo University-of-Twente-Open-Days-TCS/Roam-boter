@@ -1,23 +1,5 @@
-import { getCsrfToken, API_HOST } from '../RoamBotAPI.js'
+import RoamBotAPI from '../RoamBotAPI.js'
 import React from "react";
-
-const playBotMatch = async function (ai) {
-    const response = await fetch(`${API_HOST}/matches/botmatches/`, {
-        credentials : 'include',
-        method : 'POST',
-        headers : {
-            'X-CSRFToken' : await getCsrfToken(),
-            'Content-Type' : 'application/json'
-        },
-        body : JSON.stringify({
-            gamemode: "DM",
-            bot: 1,
-            ai: ai
-        })
-    })
-    let data = await response.json()
-    return data
-}
 
 
 

@@ -7,3 +7,9 @@ class TeamSerializer(serializers.Serializer):
     team_code = serializers.IntegerField(read_only=True)
     team_name = serializers.CharField(max_length=20, required=False, allow_blank=True)
     active = serializers.BooleanField(read_only=True)
+
+
+class TeamCodeSerializer(serializers.Serializer):
+
+    team_code = serializers.IntegerField()
+
