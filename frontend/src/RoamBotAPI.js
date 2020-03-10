@@ -19,17 +19,7 @@ function getCookie(name) {
 }
 
 
-class RoamBotAPI {
-    /*
-     * This class handles interaction with the backend API
-     */
-
-    constructor() {
-        // get csrf token
-        this._csrfToken = null
-    }
-
-    async getCsrfToken() {
+    async function getCsrfToken() {
     
         /** Returns the csrftoken cookie. If the cookie is not present it will ping the server to set the cookie. **/
     
@@ -52,6 +42,18 @@ class RoamBotAPI {
         }
         return _csrfToken
     }
+
+
+class RoamBotAPI {
+    /*
+     * This class handles interaction with the backend API
+     */
+
+    constructor() {
+        // get csrf token
+        this._csrfToken = null
+    }
+
 
 }
 
