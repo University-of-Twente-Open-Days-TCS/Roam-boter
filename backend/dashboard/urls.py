@@ -5,7 +5,7 @@ from django.contrib.auth import urls as auth_urls
 
 from .views import OpenWorkshopView, CloseWorkshopView, GenerateTeamCodes, DashboardView, EnterTeamView, LeaveTeamView
 
-from .api_views import TeamDetail
+from .api_views import TeamDetailAPI
 
 
 urlpatterns = [
@@ -18,7 +18,7 @@ urlpatterns = [
     path(r'team/enter/', EnterTeamView.as_view(), name="enter_team_api"),
     path(r'team/leave/', LeaveTeamView.as_view(), name="leave_team_api"),
     # API
-    path(r'team/detail/', TeamDetail.as_view()),
+    path(r'team/detail/', TeamDetailAPI.as_view()),
 
     # Put the django.contrib.auth urls under the dashboard app.
     path(r'login/', auth_views.LoginView.as_view(template_name="dashlogin.html")),

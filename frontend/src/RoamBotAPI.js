@@ -18,29 +18,41 @@ function getCookie(name) {
     return cookieValue;
 }
 
-async function getCsrfToken() {
 
-    /** Returns the csrftoken cookie. If the cookie is not present it will ping the server to set the cookie. **/
+class RoamBotAPI {
+    /*
+     * This class handles interaction with the backend API
+     */
 
-    if (_csrfToken === null) {
-        let csrfCookie = getCookie('csrftoken')
-        if (csrfCookie === null){
-            // Cookie is not set. Ping the server to set the cookie.
-            const response = await fetch(`${API_HOST}/csrf/`, {
-                credentials: 'include'
-            })
-            let data = await response.json()
-            // Get the newly set cookie.
-            csrfCookie = getCookie('csrftoken')
-            if (csrfCookie === null){
-                // Something went wrong.
-                throw "No csrf Cookie"
-            }
-        }
-        _csrfToken = csrfCookie
+    constructor() {
+        // get csrf token
+        this._csrfToken = null
     }
 
-    return _csrfToken
+    async getCsrfToken() {
+    
+        /** Returns the csrftoken cookie. If the cookie is not present it will ping the server to set the cookie. **/
+    
+        if (_csrfToken === null) {
+            let csrfCookie = getCookie('csrftoken')
+            if (csrfCookie === null){
+                // Cookie is not set. Ping the server to set the cookie.
+                const response = await fetch(`${API_HOST}/csrf/`, {
+                    credentials: 'include'
+                })
+                let data = await response.json()
+                // Get the newly set cookie.
+                csrfCookie = getCookie('csrftoken')
+                if (csrfCookie === null){
+                    // Something went wrong.
+                    throw "No csrf Cookie"
+                }
+            }
+            _csrfToken = csrfCookie
+        }
+        return _csrfToken
+    }
+
 }
 
 export {getCsrfToken, API_HOST}
