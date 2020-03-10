@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { render } from "@testing-library/react";
 
-import { getCsrfToken, API_HOST } from '../utils.js'
+import { getCsrfToken, API_HOST } from '../RoamBotAPI.js'
 import {NavLink} from "react-router-dom";
 
 

@@ -1,4 +1,4 @@
-import { getCsrfToken, API_HOST } from '../utils.js'
+import { getCsrfToken, API_HOST } from '../RoamBotAPI.js'
 import React from "react";
 
 const playBotMatch = async function (ai) {
@@ -20,15 +20,16 @@ const playBotMatch = async function (ai) {
 }
 
 
+
 const ListAIs = ({AIs}) => {
+    
+
     return (
         <div>
             <h1>List of AIs</h1>
             A list of the team's AIs will be visible here.
             <ul>
-                {AIs.map((ai, i) =>
-                    <li key={i}>{ai.name} <button onClick={() => playBotMatch(ai.pk)}>Play BotMatch</button></li>
-                )}
+                TODO: List AIs
             </ul>
         </div>
     );

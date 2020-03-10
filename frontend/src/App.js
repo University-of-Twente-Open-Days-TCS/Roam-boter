@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './css/App.css';
-import {getCsrfToken} from './utils.js';
+import { getCsrfToken } from './RoamBotAPI.js';
 import Fullscreen from "react-full-screen";
 import Button from "@material-ui/core/Button";
 
@@ -120,7 +120,7 @@ class App extends Component {
                                 <Route exact path="/" component={Home}/>
                                 <Route path="/AIEditor"
                                        render={(props) => <AIEditor {...props} handleSaveAI={this.handleSaveAI}/>}/>
-                                <Route path="/ListAIs" render={(props) => <ListAIs {...props} AIs={this.state.AIs}/>}/>
+                                <Route path="/ListAIs" component={ListAIs}/>
                                 <Route path="/MatchHistory" component={MatchHistory}/>
                                 <Route path="/PlayvsBot" component={PlayvsBot}/>
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
