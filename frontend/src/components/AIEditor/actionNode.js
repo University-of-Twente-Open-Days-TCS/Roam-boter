@@ -1,19 +1,17 @@
 import popup from "./popup.js"
 import action from "./action.js";
 import object from "./object.js";
-import distance from "./distance.js";
 import reldir from "./reldir.js";
 import winddir from "./winddir.js";
 import label from "./label.js";
-import health from "./health.js";
 import Konva from "konva"
 
+import speed from "./speed.js";
 
 //TODO place all these variables somewhere nicer
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
-const hitboxCircleRadius = 20;
 var spawnX = 0;
 var spawnY = 0;
 
@@ -35,14 +33,23 @@ const objectList = [
 const reldirList = [
     new reldir(0),
     new reldir(1),
-    new reldir(2)
+    new reldir(2),
+    new reldir(3)
 ];
 
 const winddirList = [
     new winddir(0),
     new winddir(1),
-    new winddir(2)
+    new winddir(2),
+    new winddir(3)
 ];
+
+const speedList = [
+    new speed(0),
+    new speed(1),
+    new speed(2)
+];
+
 
 //LABELS DO NOT YET EXIST
 const labelList = [
@@ -149,6 +156,9 @@ export default class actionNode {
             case(reldir):
                 this.actionList[this.actionList.length - 1].reldir = attribute;
                 break;
+            case(speed):
+                this.actionList[this.actionList.length - 1].speed = attribute;
+                break;
             case(label):
                 this.actionList[this.actionList.length - 1].label = attribute;
                 break;
@@ -166,6 +176,7 @@ export default class actionNode {
             this.actionNodeText = this.createActionNodeText();
             this.actionNodeTextObj.text(this.actionNodeText);
             this.setassetsizes();
+            this.inputCircle.moveToTop();
         }
 
     }
@@ -196,16 +207,22 @@ export default class actionNode {
                 wantedList = reldirList;
                 break;
             case 8:
+                wantedList = speedList;
                 break;
             case 9:
+                wantedList = speedList;
                 break;
             case 10:
-                wantedList = labelList;
                 break;
             case 11:
-                wantedList = labelList;
                 break;
             case 12:
+                wantedList = labelList;
+                break;
+            case 13:
+                wantedList = labelList;
+                break;
+            case 14:
                 wantedList = labelList;
                 break;
             default:
@@ -232,7 +249,9 @@ export default class actionNode {
             new action(6),
             new action(7),
             new action(8),
-            new action(9)
+            new action(9),
+            new action(10),
+            new action(11)
         ];
         return allActionsList;
 
@@ -299,7 +318,7 @@ export default class actionNode {
                 // Finds shortest path to reach given object.
                 case 1:
                     tree.actionlist.push({
-                        "type-id": 1, "attributes": {"object": item.object}
+                        "type-id": 1, "attributes": {"obj": item.object.id}
                     });
 
                     break;
@@ -313,7 +332,7 @@ export default class actionNode {
                 // Patrols in a possible eight-figure around a location.
                 case 3:
                     tree.actionlist.push({
-                        "type-id": 3, "attributes": {"object": item.object}
+                        "type-id": 3, "attributes": {"obj": item.object.id}
                     });
                     break;
 
@@ -321,7 +340,7 @@ export default class actionNode {
                 //Keeps moving in a straight away from object, if wall is hit keeps increasing either x or y-value to increase distance
                 case 4:
                     tree.actionlist.push({
-                        "type-id": 4, "attributes": {"object": item.object}
+                        "type-id": 4, "attributes": {"obj": item.object.id}
                     });
                     break;
 
@@ -329,7 +348,7 @@ export default class actionNode {
                 //Aims at an object. It aims according to the predicted position and bullet travel time
                 case 5:
                     tree.actionlist.push({
-                        "type-id": 5, "attributes": {"object": item.object}
+                        "type-id": 5, "attributes": {"obj": item.object.id}
                     });
                     break;
 
@@ -337,7 +356,7 @@ export default class actionNode {
                 //Aims at a certain direction based on either the tank or map
                 case 6:
                     tree.actionlist.push({
-                        "type-id": 6, "attributes": {"dir": item.dir}
+                        "type-id": 6, "attributes": {"winddir": item.winddir.id}
                     });
                     break;
 
@@ -345,43 +364,33 @@ export default class actionNode {
                 //Aims at a certain direction based on either the tank or map
                 case 7:
                     tree.actionlist.push({
-                        "type-id": 7, "attributes": {"deg": item.deg}
+                        "type-id": 7, "attributes": {"reldir": item.reldir.id}
+                    });
+                    break;
+
+                //Aim to left with Speed
+                case 8:
+                    tree.actionlist.push({
+                        "type-id": 8, "attributes": {"speed": item.speed.id}
+                    });
+                    break;
+
+                //Aim to right with Speed
+                case 9:
+                    tree.actionlist.push({
+                        "type-id": 9, "attributes": {"speed": item.speed.id}
                     });
                     break;
 
                 //Fires a bullet
-                case 8:
-                    tree.actionlist.push({
-                        "type-id": 8, "attributes": {}
-                    });
-                    break;
-                //Blows up your own tank, dealing equal damage to your surroundings
-                case 9:
-                    tree.actionlist.push({
-                        "type-id": 9, "attributes": {}
-                    });
-
-                    break;
-                //Sets a certain label to true
                 case 10:
                     tree.actionlist.push({
-                        "type-id": 10, "attributes": {"label": item.label}
+                        "type-id": 10, "attributes": {}
                     });
-
                     break;
-
-                //Sets a certain label to false
                 case 11:
                     tree.actionlist.push({
-                        "type-id": 11, "attributes": {"label": item.label}
-                    });
-
-                    break;
-
-                //Sets a certain label to true for X seconds
-                case 12:
-                    tree.actionlist.push({
-                        "type-id": 12, "attributes": {"label": item.label}
+                        "type-id": 11, "attributes": {}
                     });
 
                     break;

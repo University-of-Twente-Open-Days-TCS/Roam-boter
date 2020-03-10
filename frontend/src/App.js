@@ -99,6 +99,7 @@ class App extends Component {
             body: formData
         })
 
+        //let data = await response.json()
         response.ok ? this.setState({loggedIn: true}) : this.setState({loggedIn: false})
     }
 

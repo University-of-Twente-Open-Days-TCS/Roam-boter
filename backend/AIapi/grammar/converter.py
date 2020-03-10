@@ -146,6 +146,8 @@ class ConverterErrorListener(ErrorListener):
     def reportContextSensitivity(self, recognizer, dfa, startIndex, stopIndex, prediction, configs):
         raise Exception("Context Sensitivity Error")
 #=====================================================================
+import logging
+logger = logging.getLogger("debugLogger")
 
 
 def convert_aijson(json):
@@ -179,6 +181,7 @@ def is_valid_aijson(json):
         # no exception has occurred. 
         return True
     except Exception as e:
+        logger.debug(e)
         return False
 
 

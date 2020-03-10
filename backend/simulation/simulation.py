@@ -16,7 +16,7 @@ import os
 
 import time
 
-MAX_GAME_LENGTH = 10000000
+MAX_GAME_LENGTH = 1800
 
 
 class SimulationState:

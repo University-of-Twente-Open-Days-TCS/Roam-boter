@@ -7,14 +7,16 @@ export default class action {
     _winddir;
     _reldir;
     _label;
+    _speed;
 
 
-    constructor(id, object = null, winddir = null, reldir = null, label = null) {
+    constructor(id, object = null, winddir = null, reldir = null, speed = null, label = null) {
         this.id = id;
         this.object = object;
         this.winddir = winddir;
         this.reldir = reldir;
         this.label = label;
+        this.speed = speed;
     }
 
     //Returns whether the current action has all its necessary attributes
@@ -37,15 +39,19 @@ export default class action {
             case 7:
                 return (this.reldir != null);
             case 8:
-                return true;
+                return (this.speed != null);
             case 9:
+                return (this.speed != null);
+            case 10:
+                return true;
+            case 11:
                 return true;
             //TODO this only works for 1 label, may need to encorporate multiple
-            case 10:
-                return (this.label != null);
-            case 11:
-                return (this.label != null);
             case 12:
+                return (this.label != null);
+            case 13:
+                return (this.label != null);
+            case 14:
                 return (this.label != null);
 
         }
@@ -93,18 +99,32 @@ export default class action {
                 if (this.winddir != null) {
                     return "Aim " + this.winddir;
                 } else {
-                    return "Aim _dir_";
+                    return "Aim _winddir_";
                 }
             case 7:
                 if (this.reldir != null) {
                     return "Aim " + this.reldir;
                 } else {
-                    return "Aim _deg_";
+                    return "Aim _reldir_";
                 }
+
             case 8:
-                return "Shoot!";
+                if (this.speed != null) {
+                    return "Aim to left \n with " + this.speed;
+                } else {
+                    return "Aim to left \n with _speed_";
+                }
             case 9:
+                if (this.speed != null) {
+                    return "Aim to right \n with " + this.speed;
+                } else {
+                    return "Aim to right \n with _speed_";
+                }
+            case 10:
+                return "Shoot!";
+            case 11:
                 return "Self-destruct!";
+            //TODO encorporate labels
 
 
         }
@@ -149,4 +169,13 @@ export default class action {
     set label(value) {
         this._label = value;
     }
+
+    get speed() {
+        return this._speed;
+    }
+
+    set speed(value) {
+        this._speed = value;
+    }
+
 }

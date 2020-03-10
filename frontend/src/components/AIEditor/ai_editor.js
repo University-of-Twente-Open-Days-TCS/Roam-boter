@@ -15,7 +15,7 @@ class aiCanvas {
     hitboxCircleRadius = 20;
 
     stageWidth = window.innerWidth;
-    stageHeight = window.innerHeight/2;
+    stageHeight = window.innerHeight/1.5;
 
     _stage;
     _layer;

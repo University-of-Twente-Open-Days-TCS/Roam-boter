@@ -3,8 +3,6 @@ import popup from "./popup.js"
 import condition from "./condition.js";
 import object from "./object.js";
 import distance from "./distance.js";
-import reldir from "./reldir.js";
-import winddir from "./winddir.js";
 import label from "./label.js";
 import health from "./health.js";
 import Konva from "konva"
@@ -117,8 +115,8 @@ export default class conditionNode {
 
         this.createFalseCircle();
         this.createTrueCircle();
-        this.trueDragCircle = this.createDragCircle(this.trueCircle, true, this.stage, layer);
-        this.falseDragCircle = this.createDragCircle(this.falseCircle, false, this.stage, layer);
+        this.trueDragCircle = this.createDragCircle(this.trueCircle, true);
+        this.falseDragCircle = this.createDragCircle(this.falseCircle, false);
         this.createInputCircle();
         let node = this;
         this.group.on("dragmove", function () {
@@ -177,8 +175,14 @@ export default class conditionNode {
             this.conditionTextObj.text(this.condition.toString());
             this.conditionTextObj.moveToTop();
 
+
         }
         this.setAssetSizes();
+
+        //make sure the text does not cover the drag&inputcircles
+        this.inputCircleHitbox.moveToTop();
+        this.trueDragCircle.moveToTop();
+        this.falseDragCircle.moveToTop();
 
         //if not all necessary info is known, create a popup asking for additional info
         if (!this.condition.isValid()) {
@@ -256,6 +260,11 @@ export default class conditionNode {
         this.trueDragCircle.y(this.rect.y() + this.rect.height());
         this.trueDragCircle.x(this.rect.x() + this.rect.width());
 
+        this.trueDragCircle.originalX = this.trueDragCircle.x();
+        this.trueDragCircle.originalY = this.trueDragCircle.y();
+        this.falseDragCircle.originalX = this.falseDragCircle.x();
+        this.falseDragCircle.originalY = this.falseDragCircle.y();
+
 
         //adjust arrows
         this.updateArrows(this.stage);
@@ -314,10 +323,10 @@ export default class conditionNode {
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {
-                        "distance": this.condition.distance,
-                        "object": this.condition.object
+                        "distance": this.condition.distance.id,
+                        "obj": this.condition.object.id
                     },
-                    "position:": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.intifyPosition(node.getAbsolutePosition())
                 };
 
                 return tree;
@@ -328,9 +337,8 @@ export default class conditionNode {
                     "type-id": 2,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"object": this.condition.object},
-                    "position:": this.intifyPosition(node.getAbsolutePosition())
-
+                    "attributes": {"obj": this.condition.object.id},
+                    "position": this.intifyPosition(node.getAbsolutePosition())
                 };
                 return tree;
 
@@ -341,9 +349,8 @@ export default class conditionNode {
                     "type-id": 3,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"object": this.condition.object},
-                    "position:": this.intifyPosition(node.getAbsolutePosition())
-
+                    "attributes": {"obj": this.condition.object.id},
+                    "position": this.intifyPosition(node.getAbsolutePosition())
                 };
 
                 return tree;
@@ -355,9 +362,8 @@ export default class conditionNode {
                     "type-id": 4,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"object": this.condition.object},
-                    "position:": this.intifyPosition(node.getAbsolutePosition())
-
+                    "attributes": {"obj": this.condition.object.id},
+                    "position": this.intifyPosition(node.getAbsolutePosition())
                 };
 
                 return tree;
@@ -369,7 +375,7 @@ export default class conditionNode {
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {},
-                    "position:": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.intifyPosition(node.getAbsolutePosition())
 
                 };
 
@@ -381,9 +387,8 @@ export default class conditionNode {
                     "type-id": 6,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"label": this.condition.label},
-                    "position:": this.intifyPosition(node.getAbsolutePosition())
-
+                    "attributes": {"label": this.condition.label.id},
+                    "position": this.intifyPosition(node.getAbsolutePosition())
                 };
 
                 return tree;
@@ -394,9 +399,8 @@ export default class conditionNode {
                     "type-id": 7,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
-                    "attributes": {"amount": this.condition.amount},
-                    "position:": this.intifyPosition(node.getAbsolutePosition())
-
+                    "attributes": {"health": this.condition.health.id},
+                    "position": this.intifyPosition(node.getAbsolutePosition())
                 };
 
 
