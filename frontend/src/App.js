@@ -60,6 +60,14 @@ class App extends Component {
             csrfToken: token
         })
 
+        const response = await fetch(`${API_HOST}/dashboard/team/detail/`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': await getCsrfToken()
+            }
+        }).then(res => res.ok ? this.setState({loggedIn: true}) : this.setState({loggedIn: false}))
+
         fetch(`${API_HOST}/ai/`, {
             method: 'GET',
             credentials: 'include',
