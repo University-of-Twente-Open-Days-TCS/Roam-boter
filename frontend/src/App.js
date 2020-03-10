@@ -37,6 +37,14 @@ class App extends Component {
             })
     }
 
+    handleSubmitLogout = () => {
+        let response = RoamBotAPI.logoutUser()
+        response
+            .then((response) => {
+                response.ok ? this.setState({loggedIn: false}) : this.setState({loggedIn: true})
+            })
+    }
+
     goFull = () => {
         this.setState({isFull: true});
     };
@@ -60,8 +68,7 @@ class App extends Component {
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
                                 <hr/>
-                                <Button onClick={this.testAPI}>Test API</Button>
-                                <Button onClick={this.goFull} margin={"200px"}>Go Fullscreen</Button>
+                                <Button onClick={this.handleSubmitLogout}>Logout</Button>
                             </Layout>
                         </div>
                     </Fullscreen>

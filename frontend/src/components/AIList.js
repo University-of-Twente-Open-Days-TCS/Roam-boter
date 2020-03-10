@@ -7,7 +7,12 @@ class AIList extends Component {
 
     render() {
         return (
-            <div>AI List</div>
+            <div>
+                <h1>AI List</h1>
+                <ul>
+                    <div>Ai's will come here.</div>
+                </ul>
+            </div>
         )
     }
 }

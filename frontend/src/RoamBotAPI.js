@@ -106,6 +106,13 @@ class RoamBotAPI {
         return response
     }
 
+    async checkLogin(handler) {
+        /**
+         * Calls the team detail
+         */
+    }
+
+
     
 
 
