@@ -26,8 +26,7 @@ class TeamDetailAPI(APIView):
         """
         Return the details of team associated with this request
         """
-
-        team_id = session['team_id']
+        team_id = request.session['team_id']
         team = self.get_team(team_id)
 
         serializer = TeamSerializer(team)

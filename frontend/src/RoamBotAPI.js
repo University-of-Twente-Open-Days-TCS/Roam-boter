@@ -17,7 +17,7 @@ function getCookie(name) {
 
 class RoamBotAPI {
     /*
-     * This class handles interaction with the backend API
+     * API endpoint for RoamBot-er
      */
 
 
@@ -71,11 +71,11 @@ class RoamBotAPI {
 
 
         if (data !== null) {
+            // Add data to the body of the request
             options.body = JSON.stringify(data)
         }
 
         let response = await fetch(`${this.API_HOST}/`+url, options)
-
         return response
     }
 
@@ -87,29 +87,31 @@ class RoamBotAPI {
         return response
     }
 
-    async loginUser(teamCode) {
+    loginUser(teamCode) {
         /**
          * Calls the api to login a session.
          */
         let body = {
             'team_code' : teamCode
         }
-        let response = await this.callApi('dashboard/enter/', 'POST', body)
+        let response = this.callApi('dashboard/enter/', 'POST', body)
         return response
     }
 
-    async logoutUser() {
+    logoutUser() {
         /**
          * Calls te api to logout a session.
          */
-        let response = await this.callApi('dashboard/enter/', 'DELETE')
+        let response = this.callApi('dashboard/enter/', 'DELETE')
         return response
     }
 
-    async checkLogin(handler) {
+    teamDetail() {
         /**
-         * Calls the team detail
+         * Calls the team detail. If a user is in a team this returns team information.
          */
+        let response = this.callApi('dashboard/team/detail/', 'GET')
+        return response
     }
 
 
