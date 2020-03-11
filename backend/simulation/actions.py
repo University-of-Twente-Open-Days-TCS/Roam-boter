@@ -98,7 +98,7 @@ EXPLOSION_RADIUS = 3
 
 
 def self_destruct(tank, state):
-    tanks = state.level.tanks
+    tanks = state.tanks
     for t in tanks:
         if distance(tank.get_pos(), t.get_pos()) < EXPLOSION_RADIUS:
             t.health -= 200

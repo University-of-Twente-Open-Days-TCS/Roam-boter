@@ -1,6 +1,6 @@
 from enum import Enum
 from .objects import Object
-from .utils import distance_squared, filter_objects, vector_angle
+from .utils import distance_squared, filter_objects, vector_angle, distance
 
 import math
 
@@ -27,7 +27,7 @@ def distance_to_nearest_object_greater_than(tank, state, obj, distance):
     for p in paths:
         # p[-1] is last element of path, this indicates the actual position of the object.
         dist = math.sqrt(distance_squared(tank.get_pos(), p[-1]))
-        if dist > nearest_dist:
+        if dist < nearest_dist:
             nearest_dist = dist
 
     return nearest_dist > distance
