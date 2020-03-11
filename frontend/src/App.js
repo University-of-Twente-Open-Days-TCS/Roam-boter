@@ -31,7 +31,7 @@ class App extends Component {
 
     componentDidMount() {
         // Check whether the session is logged in
-        RoamBotAPI.teamDetail()
+        RoamBotAPI.getTeamDetail()
             .then((response) => {
                 if (response.ok) {
                     this.setState({loggedIn: true})

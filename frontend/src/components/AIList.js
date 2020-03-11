@@ -16,7 +16,7 @@ class AIList extends Component {
     }
 
     async componentDidMount() {
-        let response = await RoamBotAPI.aiList()
+        let response = await RoamBotAPI.getAiList()
         let aiList = await response.json()
         this.setState({ais: aiList})
     }
