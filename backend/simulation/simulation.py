@@ -16,7 +16,7 @@ import os
 
 import time
 
-MAX_GAME_LENGTH = 500
+MAX_GAME_LENGTH = 1800
 
 
 class SimulationState:
@@ -105,6 +105,7 @@ class Simulation:
         # Check if tanks don't have any HP left.
         for tank in self.get_tanks():
             if tank.get_health() <= 0:
+                self.state.scores[tank.get_team()] -= 1
                 tank.destroy(self.game_mode)
 
         DRAW_WORLD(self.state)
@@ -122,7 +123,7 @@ class Simulation:
 
     # Retrieve the winning AI object.
     def get_winner(self):
-        heighest_score = 0
+        heighest_score = -99999999
         winner = -1
 
         for i, s in enumerate(self.state.scores):
@@ -134,18 +135,14 @@ class Simulation:
                 winner = i
         return winner
 
-
-
-
     def check_game_end_condition(self):
-
         # Check if time limit has been exceeded.
         if self.state.frames_passed > MAX_GAME_LENGTH:
             self.ended = True
             return True
 
         # Check if there are still tanks alive.
-        if self.game_mode == "death_match" or self.game_mode == "team_death_match":
+        if self.game_mode == "DeathMatch" or self.game_mode == "TeamDeathMatch":
             multiple_teams_alive = False
             for t in self.get_tanks():
                 if multiple_teams_alive:
@@ -160,6 +157,7 @@ class Simulation:
                     multiple_teams_alive = True
                     break
             if not multiple_teams_alive:
+                self.ended = True
                 return True
 
     def handle_game_mode(self):
@@ -186,7 +184,7 @@ class Simulation:
 # Run the simulation with an array of ais to be executed.
 # Params: [AINode]
 # Returns: PlayBack
-def simulate(ais, game_mode="KingOfTheHill", level="level1"):
+def simulate(ais, game_mode="DeathMatch", level="level1"):
     level_loader = LevelLoader()
 
     sim = Simulation(level_loader.load_level(level), ais, game_mode)
