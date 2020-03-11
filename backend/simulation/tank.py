@@ -54,9 +54,9 @@ class Tank:
         self.x += x
         self.y += y
 
-    def move_forward(self, state):
-        dx = -math.sin(math.radians(self.rotation)) * self.speed
-        dy = -math.cos(math.radians(self.rotation)) * self.speed
+    def move_forward(self, state, max_dist=99999):
+        dx = -math.sin(math.radians(self.rotation)) * min(self.speed, max_dist)
+        dy = -math.cos(math.radians(self.rotation)) * min(self.speed, max_dist)
         if not self.check_collision(state, dx, dy):
             self.move(dx, dy)
         # self.move(dx, dy)
@@ -113,6 +113,13 @@ class Tank:
         # if state.level.get_object(math.floor(x), math.floor(y)) == Object.WALL:
         #     return True
 
+        for t in state.tanks:
+            if t == self:
+                continue
+
+            if distance(t.get_pos(), self.get_pos()) < 1.8:
+                return True
+
         for a in numpy.arange(y - 0.8, y + 0.8, 0.2):
             for b in numpy.arange(x - 0.8, x + 0.8, 0.2):
                 if not 0 <= a < state.level.get_height():
@@ -152,6 +159,9 @@ class Tank:
 
             len_a = 1
             len_b = math.sqrt(bx ** 2 + by ** 2)
+
+            if len_b == 0:
+                continue
 
             inproduct = ((ax * bx) + (ay * by)) / (len_a * len_b)
             if inproduct > 1:
@@ -213,8 +223,11 @@ class Tank:
 
     def on_hill(self, state):
         p = state.level.get_path_to_object(self, Object.HILL)
+        print("path: ", p)
         if p is not None and len(p) > 0:
-            return distance(self.get_pos(), p[-1]) < 5
+            d = distance(self.get_pos(), p[-1])
+            print(d)
+            return d < 5
 
     def get_team(self):
         return self.team_id

@@ -16,7 +16,7 @@ import os
 
 import time
 
-MAX_GAME_LENGTH = 1800
+MAX_GAME_LENGTH = 500
 
 
 class SimulationState:
@@ -117,14 +117,25 @@ class Simulation:
 
     # Return the playback object containing the entire replay.
     def get_playback(self):
+        self.playback.winner = self.get_winner()
         return self.playback
 
     # Retrieve the winning AI object.
     def get_winner(self):
-        if len(self.get_tanks()) == 1:
-            return self.get_tanks()[0].ai
-        else:
-            return None
+        heighest_score = 0
+        winner = -1
+
+        for i, s in enumerate(self.state.scores):
+            if s == heighest_score:
+                winner = -1
+
+            if s > heighest_score:
+                heighest_score = s
+                winner = i
+        return winner
+
+
+
 
     def check_game_end_condition(self):
 
@@ -157,10 +168,12 @@ class Simulation:
             on_hill = []
 
             for t in self.get_tanks():
+                print("tank: ", t.get_team(), t.get_pos(), t.destroyed)
                 if not t.destroyed and t.on_hill(self.state):
                     on_hill.append(t)  
 
             if len(on_hill) == 1:
+                print(on_hill[0].get_team())
                 self.state.scores[on_hill[0].get_team()] += 1
 
 
@@ -179,17 +192,6 @@ def simulate(ais, game_mode="KingOfTheHill", level="level1"):
     sim = Simulation(level_loader.load_level(level), ais, game_mode)
     while not sim.has_ended():
         sim.step()
-
-    # Get index of winning ai
-    if sim.get_winner() is not None:
-        ai = sim.get_winner()
-        sim.winner = -1
-        for i, x in enumerate(ais):
-            if x == ai:
-                sim.winner = i
-                break
-    else:
-        sim.winner = -1
 
     return sim.get_playback()
 

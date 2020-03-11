@@ -164,7 +164,10 @@ class Level:
             i += 1
 
         # Remove the first element from the path.
-        return path[1:]
+        if len(path) > 1:
+            return path[1:]
+        else:
+            return path
 
     def get_path_to_object(self, tank, obj):
         x, y = tank.get_pos()
