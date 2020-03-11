@@ -1,10 +1,11 @@
 from .objects import Object
+from .utils import distance
 
 import math
 import numpy
 
-TANK_TURN_SPEED = 3
-TURRET_TURN_SPEED = 4
+TANK_TURN_SPEED = 2
+TURRET_TURN_SPEED = 3
 
 
 class Tank:
@@ -17,6 +18,8 @@ class Tank:
     degrees_visibility = 30
     hacked = True
     spawn = (0.0, 0.0)
+    spawn_rotation = 0
+    destroyed = False
 
     health = 100
 
@@ -28,6 +31,8 @@ class Tank:
 
     width = 1
     height = 1
+
+    team_id = 0
 
     path = None
 
@@ -92,6 +97,9 @@ class Tank:
         self.actions = self.ai.evaluate(self, state)
 
     def executeActions(self, state):
+        if self.destroyed:
+            return
+
         for action in self.actions:
             action.execute(self, state)
 
@@ -190,6 +198,27 @@ class Tank:
                     visible_bullets.append(other)
 
         return visible_bullets
+
+    def destroy(self, game_mode):
+
+        if game_mode == "KingOfTheHill":
+            x, y = self.spawn
+            self.set_pos(x, y)
+            self.health = 100
+            self.rotation = self.spawn_rotation
+            self.turret_rotation = 0
+            self.shoot_ready = 0
+        else:
+            self.destroyed = True
+
+    def on_hill(self, state):
+        p = state.level.get_path_to_object(self, Object.HILL)
+        if p is not None and len(p) > 0:
+            return distance(self.get_pos(), p[-1]) < 5
+
+    def get_team(self):
+        return self.team_id
+
 
 
 
