@@ -19,14 +19,18 @@ export default function Layout(props) {
         setOpen(false);
     };
 
+    const handleClick = () => {
+        setOpen(false);
+    }
+
     return (
         <div>
             <div id="mySidenav" className={open ? "sidenav open" : "sidenav closed"}>
                 <HashRouter>
                 <a className="closebtn" onClick={handleDrawerClose}>&times;</a>
-                <AIMenuList />
+                <AIMenuList handleClick={handleClick}/>
                 <hr/>
-                <PlayMenuList/>
+                <PlayMenuList handleClick={handleClick}/>
                 </HashRouter>
             </div>
 

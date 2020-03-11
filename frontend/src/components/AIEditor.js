@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import aiCanvas from "./AIEditor/ai_editor";
+import "./../css/AIEditor.css";
 
 class AIEditor extends Component {
     constructor(props) {
@@ -42,13 +43,13 @@ class AIEditor extends Component {
 
     render() {
         return (
-            <div>
-                <div id="container"></div>
+            <div id="AIEditor">
                 <div id="buttons">
                     <input type="button" id="addCondition" value="Add Condition"/>
                     <input type="button" id="addActionNode" value="Add ActionNode"/>
                     <input type="button" id="saveAI" value="Save"/>
                 </div>
+                <div id="container"></div>
             </div>
         );
     }

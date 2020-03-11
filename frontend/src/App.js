@@ -82,6 +82,7 @@ class App extends Component {
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
                                 <hr/>
                                 <Button onClick={this.handleSubmitLogout}>Logout</Button>
+                                <Button onClick={this.goFull}>Go Fullscreen</Button>
                             </Layout>
                         </div>
                     </Fullscreen>

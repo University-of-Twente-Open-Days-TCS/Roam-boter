@@ -1,9 +1,11 @@
 .open {
-    width: 250px;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .closed {
-    width: 0;
+    margin-left: -250px;
+    margin-right: 250px;
 }
 
 .drawer-open {

@@ -7,7 +7,7 @@ import {Adb, Person} from "@material-ui/icons";
 import {NavLink} from "react-router-dom";
 
 
-export default function AIMenuList() {
+export default function AIMenuList({handleClick}) {
     const items = [
         {
             text: "Play versus Bot",
@@ -25,7 +25,7 @@ export default function AIMenuList() {
     return (
         items.map(({text, icon, url}, i) =>
             <NavLink to={url} key={i}>
-                <button>{text}</button>
+                <button onClick={handleClick}>{text}</button>
             </NavLink>
         )
     );
