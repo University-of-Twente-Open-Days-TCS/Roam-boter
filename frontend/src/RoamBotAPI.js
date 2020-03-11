@@ -83,7 +83,7 @@ class RoamBotAPI {
         return response
     }
 
-    teamDetail() {
+    getTeamDetail() {
         /**
          * Calls the team detail. If a user is in a team this returns team information.
          */
@@ -91,7 +91,7 @@ class RoamBotAPI {
         return response
     }
 
-    aiList() {
+    getAiList() {
         /**
          * Gets a list from ai's associated with this request.
          */
@@ -99,13 +99,23 @@ class RoamBotAPI {
         return response
     }
 
-    aiDetail(pk) {
+    getAiDetail(pk) {
         /**
          * Gets specific ai.
          */
         let response = this.callApi('ai/'+pk+'/', 'GET')
         return response
     }
+
+    getMatchHistoryList() {
+        /**
+         * Gets the match history of a team
+         */
+        let response = this.callApi('matches/botmatches/', 'GET')
+        return response
+    }
+    
+
 
     async _getCsrfToken() {
         /** Returns the csrftoken cookie. If the cookie is not present it will ping the server to set the cookie. **/
