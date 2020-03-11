@@ -12,12 +12,10 @@ export default function Layout(props) {
     const [open, setOpen] = useState(false);
 
     const handleDrawerOpen = () => {
-        console.log("set open")
         setOpen(true);
     };
 
     const handleDrawerClose = () => {
-        console.log("set close")
         setOpen(false);
     };
 
@@ -36,7 +34,7 @@ export default function Layout(props) {
 
 
             <div id="main" className={open ? "drawer-open" : "drawer-closed"}>
-                <span onClick={handleDrawerOpen}> <FontAwesomeIcon icon={faBars}/> </span>
+                <span onClick={handleDrawerOpen} style={open ? {visibility: "hidden"} : {visibility: "visible"}}> <FontAwesomeIcon icon={faBars} /> </span>
                 <HashRouter>
                     {props.children}
                 </HashRouter>
