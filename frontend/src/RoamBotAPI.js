@@ -99,6 +99,14 @@ class RoamBotAPI {
         return response
     }
 
+    aiDetail(pk) {
+        /**
+         * Gets specific ai.
+         */
+        let response = this.callApi('ai/'+pk+'/', 'GET')
+        return response
+    }
+
     async _getCsrfToken() {
         /** Returns the csrftoken cookie. If the cookie is not present it will ping the server to set the cookie. **/
         if (this._csrfToken === null) {

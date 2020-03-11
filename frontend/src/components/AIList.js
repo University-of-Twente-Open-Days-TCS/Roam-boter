@@ -1,6 +1,11 @@
 import RoamBotAPI from '../RoamBotAPI.js'
 import React, { Component } from "react";
 
+const AIItem = (props) => {
+    return (
+        <li>{props.ai.name}</li>
+    )
+}
 
 
 class AIList extends Component {
@@ -18,7 +23,7 @@ class AIList extends Component {
 
     render() {
 
-        const aiItems = this.state.ais.map((ai, i) => <li key={i}>{ai.name}</li>)
+        const aiItems = this.state.ais.map((ai, i) => <AIItem key={i} ai={ai}></AIItem>)
         console.log(aiItems)
         return (
             <div>
