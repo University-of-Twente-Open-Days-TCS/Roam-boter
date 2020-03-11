@@ -80,6 +80,9 @@ def remove_user_session(session):
     """Removes a user session ID. Including the related UserSession"""
     session_id = session.session_key
 
+    if session_id is None:
+        return
+
     # Delete UserSession object related to the key
     userSession = UserSession.objects.filter(session=session_id)
 

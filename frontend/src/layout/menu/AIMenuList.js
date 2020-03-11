@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 
 
-export default function AIMenuList(text) {
+export default function AIMenuList({handleClick}) {
     const items = [
         {
             text: "Home",
@@ -24,7 +24,7 @@ export default function AIMenuList(text) {
         {
             text: "Edit existing AI",
             icon: <Create/>,
-            url: "/ListAIs"
+            url: "/AIList"
         },
         {
             text: "View match history",
@@ -34,18 +34,9 @@ export default function AIMenuList(text) {
     ];
 
     return (
-        <List>
-            {
-                items.map(({text, icon, url}, i) =>
-                    <NavLink to={url} key={i}>
-                        <ListItem button key={i}>
-
-                            <ListItemIcon>{icon}</ListItemIcon>
-                            <ListItemText primary={text}/>
-
-                        </ListItem>
-                    </NavLink>)
-            }
-        </List>
+        items.map(({text, icon, url}, i) =>
+            <NavLink to={url} key={i}>
+                <button onClick={handleClick}>{text}</button>
+            </NavLink>)
     );
 }

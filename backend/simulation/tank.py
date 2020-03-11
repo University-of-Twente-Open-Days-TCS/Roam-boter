@@ -1,10 +1,12 @@
 from .objects import Object
+from .actions import is_movement_action, is_aim_action
+from .utils import distance
 
 import math
 import numpy
 
-TANK_TURN_SPEED = 3
-TURRET_TURN_SPEED = 4
+TANK_TURN_SPEED = 2
+TURRET_TURN_SPEED = 3
 
 
 class Tank:
@@ -17,6 +19,8 @@ class Tank:
     degrees_visibility = 30
     hacked = True
     spawn = (0.0, 0.0)
+    spawn_rotation = 0
+    destroyed = False
 
     health = 100
 
@@ -28,6 +32,8 @@ class Tank:
 
     width = 1
     height = 1
+
+    team_id = 0
 
     path = None
 
@@ -49,9 +55,9 @@ class Tank:
         self.x += x
         self.y += y
 
-    def move_forward(self, state):
-        dx = -math.sin(math.radians(self.rotation)) * self.speed
-        dy = -math.cos(math.radians(self.rotation)) * self.speed
+    def move_forward(self, state, max_dist=99999):
+        dx = -math.sin(math.radians(self.rotation)) * min(self.speed, max_dist)
+        dy = -math.cos(math.radians(self.rotation)) * min(self.speed, max_dist)
         if not self.check_collision(state, dx, dy):
             self.move(dx, dy)
         # self.move(dx, dy)
@@ -88,13 +94,35 @@ class Tank:
         else:
             self.turret_rotation += max(min(difference, TURRET_TURN_SPEED), -TURRET_TURN_SPEED)
 
+    # Collect the actions that the ai would execute within the current game state
     def collectActions(self, state):
         self.actions = self.ai.evaluate(self, state)
 
+    # Execute the movement actions that have been captured before by collectActions()
     def executeActions(self, state):
+        if self.destroyed:
+            return
+          
+        executed_move = False
+        executed_aim = False
+    
         for action in self.actions:
+            # Track whether a movement action has already been executed, if so cancel it.
+            if is_movement_action(action.action_id):
+                if executed_move:
+                    continue
+                executed_move = True
+
+            # Track whether an aim action has already been executed, if so cancel it.
+            if is_aim_action(action.action_id):
+                if executed_aim:
+                    continue
+                executed_aim = True
+
+            # Execute the action.
             action.execute(self, state)
 
+    # Check for wall collisions.
     def check_collision(self, state, dx=0.0, dy=0.0):
         x, y = self.get_pos()
         x += dx
@@ -104,6 +132,13 @@ class Tank:
 
         # if state.level.get_object(math.floor(x), math.floor(y)) == Object.WALL:
         #     return True
+
+        for t in state.tanks:
+            if t == self:
+                continue
+
+            if distance(t.get_pos(), self.get_pos()) < 1.8:
+                return True
 
         for a in numpy.arange(y - 0.8, y + 0.8, 0.2):
             for b in numpy.arange(x - 0.8, x + 0.8, 0.2):
@@ -144,6 +179,9 @@ class Tank:
 
             len_a = 1
             len_b = math.sqrt(bx ** 2 + by ** 2)
+
+            if len_b == 0:
+                continue
 
             inproduct = ((ax * bx) + (ay * by)) / (len_a * len_b)
             if inproduct > 1:
@@ -190,6 +228,30 @@ class Tank:
                     visible_bullets.append(other)
 
         return visible_bullets
+
+    def destroy(self, game_mode):
+
+        if game_mode == "KH":
+            x, y = self.spawn
+            self.set_pos(x, y)
+            self.health = 100
+            self.rotation = self.spawn_rotation
+            self.turret_rotation = 0
+            self.shoot_ready = 0
+        else:
+            self.destroyed = True
+
+    def on_hill(self, state):
+        p = state.level.get_path_to_object(self, Object.HILL)
+        print("path: ", p)
+        if p is not None and len(p) > 0:
+            d = distance(self.get_pos(), p[-1])
+            print(d)
+            return d < 5
+
+    def get_team(self):
+        return self.team_id
+
 
 
 

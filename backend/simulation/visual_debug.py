@@ -64,4 +64,4 @@ def DRAW_WORLD(state):
     new_surf = pygame.transform.scale(screen, (1920, 1080))
     display.blit(new_surf, (0, 0))
     pygame.display.flip()
-    time.sleep(0.017)
+    # time.sleep(0.017)
