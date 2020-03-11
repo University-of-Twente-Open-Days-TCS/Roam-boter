@@ -10,7 +10,6 @@ const AIItem = (props) => {
      * Props includes ai and refreshFunction
      */
     let ai = props.ai
-    console.log(props)
 
     const playVsBot = () => {
         /**

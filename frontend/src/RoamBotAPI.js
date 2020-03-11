@@ -130,7 +130,7 @@ class RoamBotAPI {
         return response
     }
 
-    getMatchHistoryList() {
+    getBotMatchHistoryList() {
         /**
          * Gets the match history of a team
          */
@@ -138,7 +138,17 @@ class RoamBotAPI {
         return response
     }
 
-    playBotMatch({gamemode, bot, ai}) {
+    getBotMatchDetails(pk) {
+        /**
+         * Gets details of a bot match including the simulation.
+         * @param pk Primary key of the match. 
+         * Only returns if you own the bot match.
+         */
+        let response = this.callApi('matches/botmatches/'+pk+'/', 'GET')
+        return response
+    }
+
+    postBotMatch({gamemode, bot, ai}) {
         /**
          * Play a match against a bot.
          * @param gamemode Gamemode to play.
