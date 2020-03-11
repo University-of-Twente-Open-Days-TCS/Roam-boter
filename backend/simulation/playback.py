@@ -39,6 +39,7 @@ class Frame:
         self.bullets = deepcopy(state.bullets)
         self.visibility = [{'tanks': t.visible_tanks(state), 'bullets': t.visible_bullets(state)} for t in state.tanks]
         self.events = []
+        self.scores = deepcopy(state.scores)
 
 
 class PlayBackEncoder(JSONEncoder):

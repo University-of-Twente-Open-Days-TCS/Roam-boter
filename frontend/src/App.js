@@ -33,14 +33,14 @@ class App extends Component {
         // Check whether the session is logged in
         RoamBotAPI.getTeamDetail()
             .then((response) => {
-                if(response.ok){
+                if (response.ok) {
                     this.setState({loggedIn: true})
-                }else {
+                } else {
                     this.setState({loggedIn: false})
                 }
             })
     }
-
+    
     handleSubmitLogin = (teamCode) => {
         let response = RoamBotAPI.loginUser(teamCode)
         response
@@ -81,6 +81,7 @@ class App extends Component {
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
                                 <hr/>
+                                <Button onClick={this.goFull}>Go Fullscreen</Button>
                                 <Button variant="contained" onClick={this.handleSubmitLogout}>Logout</Button>
                             </Layout>
                         </div>
