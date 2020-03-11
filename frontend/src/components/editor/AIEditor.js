@@ -3,7 +3,8 @@ import React, {Component} from "react";
 import RoamBotAPI from "../../RoamBotAPI"
 
 import aiCanvas from "./AIEditor/ai_editor";
-import "./../css/AIEditor.css";
+
+import "../../css/AIEditor.css";
 
 class AIEditor extends Component {
     constructor(props) {
