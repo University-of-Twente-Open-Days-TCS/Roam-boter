@@ -24,7 +24,7 @@ class MatchHistory extends Component {
             <h1>Match History</h1>
             { 
                 this.state.matches.map((match, i) => {
-                    return (<NavLink to={'/MatchReplay/' + match.pk}><div key={i}>AI {match.ai} : DATE {match.date}</div></NavLink>)
+                    return (<NavLink key={i} to={'/MatchReplay/' + match.pk}><div>AI {match.ai} : DATE {match.date}</div></NavLink>)
                 })
             }
         </div>
