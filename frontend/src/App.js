@@ -60,6 +60,7 @@ class App extends Component {
     goFull = () => {
         this.setState({isFull: true});
     };
+    
 
     render() {
         return (
