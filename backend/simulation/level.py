@@ -10,13 +10,14 @@ class Level:
 
     def __init__(self, path, objects):
         self.objects = objects
+        self.path = path
         self.nearest_objects = self.cache_or_prepare_nearest_objects()
         self.nearest_paths = self.cache_or_prepare_nearest_paths()
 
 
     def cache_or_prepare_nearest_objects(self):
         nearest_objects = None
-        pickle_path = os.path.join(self.get_caching_directory(), "nearest_objects.p")
+        pickle_path = os.path.join(self.get_caching_directory(), "nearest_objects_" + self.path + ".p")
         try:
             with open(pickle_path, 'rb') as f:
                 nearest_objects = pickle.load(f)
@@ -33,7 +34,7 @@ class Level:
 
     def prepare_nearest_objects(self):
         # for y, for x, for object collect nearest of obj from x, y
-        return [[{obj: self.find_nearest_object(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)]for y, row in enumerate(self.objects)]
+        return [] # return [[{obj: self.find_nearest_object(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)]for y, row in enumerate(self.objects)]
 
     def find_nearest_object(self, obj, x, y):
         queue = [(x, y)]
@@ -74,7 +75,7 @@ class Level:
 
     def cache_or_prepare_nearest_paths(self):
         nearest_paths = None
-        pickle_path = os.path.join(self.get_caching_directory(), "nearest_paths.p")
+        pickle_path = os.path.join(self.get_caching_directory(), "nearest_paths_" + self.path + ".p")
         try:
             with open(pickle_path, 'rb') as f:
                 nearest_paths = pickle.load(f)
@@ -163,7 +164,10 @@ class Level:
             i += 1
 
         # Remove the first element from the path.
-        return path[1:]
+        if len(path) > 1:
+            return path[1:]
+        else:
+            return path
 
     def get_path_to_object(self, tank, obj):
         x, y = tank.get_pos()
