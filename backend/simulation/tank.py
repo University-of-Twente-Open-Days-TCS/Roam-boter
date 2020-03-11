@@ -231,7 +231,7 @@ class Tank:
 
     def destroy(self, game_mode):
 
-        if game_mode == "KingOfTheHill":
+        if game_mode == "KH":
             x, y = self.spawn
             self.set_pos(x, y)
             self.health = 100

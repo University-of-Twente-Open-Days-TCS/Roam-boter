@@ -142,7 +142,7 @@ class Simulation:
             return True
 
         # Check if there are still tanks alive.
-        if self.game_mode == "DeathMatch" or self.game_mode == "TeamDeathMatch":
+        if self.game_mode == "DM":
             multiple_teams_alive = False
             for t in self.get_tanks():
                 if multiple_teams_alive:
@@ -161,7 +161,7 @@ class Simulation:
                 return True
 
     def handle_game_mode(self):
-        if self.game_mode == "KingOfTheHill":
+        if self.game_mode == "KH":
 
             on_hill = []
 
