@@ -13,7 +13,7 @@ class MatchHistory extends Component {
     }
 
     async componentDidMount() {
-        let response = await RoamBotAPI.getMatchHistoryList()
+        let response = await RoamBotAPI.getBotMatchHistoryList()
         let data = await response.json()
         this.setState({matches: data})
     }
