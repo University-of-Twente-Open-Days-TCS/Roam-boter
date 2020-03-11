@@ -46,8 +46,8 @@ Follow the following commands to ready the django database for errors.
 Go in the shell of your django docker container 
 
 3. `sudo docker exec -it roambot-er_web_1 /bin/bash`
-4. `sudo docker makemigrations <app-names>`
+4. `./manage.py makemigrations <app-names>`
 
    Fill in all apps to make sure all migrations happen.
 
-5. `sudo docker migrate`
+5. `./manage.py migrate`
