@@ -5,9 +5,7 @@ import RoamBotAPI from "../../RoamBotAPI"
 import {NavLink} from "react-router-dom";
 
 
-
 class MatchHistory extends Component {
-
 
     constructor(props) {
         super(props)

@@ -81,7 +81,7 @@ class App extends Component {
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
                                 <hr/>
-                                <Button onClick={this.handleSubmitLogout}>Logout</Button>
+                                <Button variant="contained" onClick={this.handleSubmitLogout}>Logout</Button>
                             </Layout>
                         </div>
                     </Fullscreen>
