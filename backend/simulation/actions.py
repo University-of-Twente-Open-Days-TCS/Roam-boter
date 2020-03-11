@@ -75,13 +75,13 @@ def aim_winddir(tank, state, winddir):
 
 
 def aim_to_left(tank, state, speed):
-    speed = speed / 5
+    speed = speed
     rotation = tank.get_turret_rotation()
     tank.rotate_turret_towards(rotation + speed)
 
 
 def aim_to_right(tank, state, speed):
-    speed = speed / 5
+    speed = speed
     rotation = tank.get_turret_rotation()
     tank.rotate_turret_towards(rotation - speed)
 
@@ -110,6 +110,18 @@ def placeholder_action(tank, state):
 
 # List of possible actions that the AI can execute.
 # The action ID is based on the position of the action in the list.
+
+def is_movement_action(action_id):
+    if action_id in [1, 2, 3, 4]:
+        return True
+    return False
+
+
+def is_aim_action(action_id):
+    if action_id in [5, 6, 7, 8, 9]:
+        return True
+    return False
+
 
 ACTIONS = [
     do_nothing,                             #0

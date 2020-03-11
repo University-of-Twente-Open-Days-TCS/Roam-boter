@@ -1,10 +1,11 @@
 from .objects import Object
+from .actions import is_movement_action, is_aim_action
 
 import math
 import numpy
 
 TANK_TURN_SPEED = 3
-TURRET_TURN_SPEED = 4
+TURRET_TURN_SPEED = 5
 
 
 class Tank:
@@ -92,7 +93,20 @@ class Tank:
         self.actions = self.ai.evaluate(self, state)
 
     def executeActions(self, state):
+        executed_move = False
+        executed_aim = False
+
         for action in self.actions:
+            if is_movement_action(action.action_id):
+                if executed_move:
+                    continue
+                executed_move = True
+
+            if is_aim_action(action.action_id):
+                if executed_aim:
+                    continue
+                executed_aim = True
+
             action.execute(self, state)
 
     def check_collision(self, state, dx=0.0, dy=0.0):
