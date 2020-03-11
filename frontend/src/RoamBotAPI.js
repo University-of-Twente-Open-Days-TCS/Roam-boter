@@ -99,6 +99,13 @@ class RoamBotAPI {
         return response
     }
 
+    postAI({name, ai}) {
+        let data = {name, ai}
+        let response = this.callApi('ai/', 'POST', data)
+        return response
+    }
+    
+
     getAiDetail(pk) {
         /**
          * Gets specific ai.
@@ -114,6 +121,20 @@ class RoamBotAPI {
         let response = this.callApi('matches/botmatches/', 'GET')
         return response
     }
+
+    playBotMatch({gamemode, bot, ai}) {
+        /**
+         * Play a match against a bot.
+         * @param gamemode Gamemode to play.
+         * @param bot Bot's pk to play against.
+         * @param ai Ai's pk to play with.
+         */
+        let data = {gamemode, bot, ai}
+        let response = this.callApi('matches/botmatches/', 'POST', data)
+        return response
+    }
+
+
     
 
 
@@ -143,5 +164,4 @@ class RoamBotAPI {
 }
 
 
-let roamBotAPI = new RoamBotAPI()
-export default roamBotAPI 
+export default new RoamBotAPI()

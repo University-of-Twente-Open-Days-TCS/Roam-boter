@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {getCsrfToken} from "../RoamBotAPI.js";
+
+import RoamBotAPI from "../../RoamBotAPI"
 
 class MatchReplay extends Component {
     constructor(props) {

@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { render } from "@testing-library/react";
 
-import RoamBotAPI from '../RoamBotAPI.js'
+import RoamBotAPI from "../../RoamBotAPI"
 import {NavLink} from "react-router-dom";
 
 
-
 class MatchHistory extends Component {
-
 
     constructor(props) {
         super(props)
@@ -26,7 +24,7 @@ class MatchHistory extends Component {
             <h1>Match History</h1>
             { 
                 this.state.matches.map((match, i) => {
-                    return (<NavLink to={'/MatchReplay/' + match.pk}><div key={i}>AI {match.ai} : DATE {match.date}</div></NavLink>)
+                    return (<NavLink key={i} to={'/MatchReplay/' + match.pk}><div>AI {match.ai} : DATE {match.date}</div></NavLink>)
                 })
             }
         </div>

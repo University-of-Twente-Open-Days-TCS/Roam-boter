@@ -1,4 +1,7 @@
 import React, {Component} from "react";
+
+import RoamBotAPI from "../../RoamBotAPI"
+
 import aiCanvas from "./AIEditor/ai_editor";
 import "./../css/AIEditor.css";
 
@@ -35,7 +38,22 @@ class AIEditor extends Component {
         document.getElementById('saveAI').addEventListener(
             'click',
             () => {
-                this.props.handleSaveAI(canvas.treeToJson());
+                // Save AI
+                let ai = canvas.treeToJson()
+                let data = {}
+                data.name = "saved-ai"
+                data.ai = ai
+                // call API
+                let response = RoamBotAPI.postAI(data)
+                response.then((res) => {
+                    //TODO: Proper error handling
+                    if(res.ok) {
+                        alert("AI Saved")
+                    }else {
+                        console.error(res)
+                        alert("An error occurred, see console.")
+                    }
+                })
             },
             false
         );
