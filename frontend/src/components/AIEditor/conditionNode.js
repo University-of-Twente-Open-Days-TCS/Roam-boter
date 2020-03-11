@@ -5,15 +5,19 @@ import object from "./object.js";
 import distance from "./distance.js";
 import label from "./label.js";
 import health from "./health.js";
+import action from "./action.js"
+import winddir from "./winddir.js";
+import reldir from "./reldir.js";
+import speed from "./speed.js"
 import Konva from "konva"
+import actionNode from "./actionNode";
 
 //TODO place all these variables somewhere nicer
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
 const hitboxCircleRadius = 20;
-var spawnX = 0;
-var spawnY = 0;
+const spawnPoint = {x: 0, y: 0};
 
 
 const objectList = [
@@ -90,9 +94,13 @@ export default class conditionNode {
     //
     _conditionTextObj;
 
-    //Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
+    //The position of the conditionNode
+    _position;
+
+
+//Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
     // and if (all) its appropriate parameter(s) is given this will be included.
-    constructor(stage, layer, condition) {
+    constructor(stage, layer, condition, position = spawnPoint) {
         this.group = new Konva.Group({
             draggable: true
         });
@@ -100,6 +108,8 @@ export default class conditionNode {
         this.condition = condition;
         this.stage = stage;
         this.layer = layer;
+        this.position = position;
+
 
         if (this.condition != null) {
             this.conditionText = this.condition.toString();
@@ -308,7 +318,7 @@ export default class conditionNode {
         return conditionList
     }
 
-    intifyPosition = ({x, y}) => ({"x" : parseInt(x), "y" : parseInt(y)})
+    intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
     jsonify() {
         let node = this.rect;
@@ -319,7 +329,7 @@ export default class conditionNode {
             //distance to nearest object greater than distance
             case 1:
                 tree.condition = {
-                    "type-id": 1,
+                    "type_id": 1,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {
@@ -334,7 +344,7 @@ export default class conditionNode {
             //object visible
             case 2:
                 tree.condition = {
-                    "type-id": 2,
+                    "type_id": 2,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
@@ -346,7 +356,7 @@ export default class conditionNode {
             //aimed at object
             case 3:
                 tree.condition = {
-                    "type-id": 3,
+                    "type_id": 3,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
@@ -359,7 +369,7 @@ export default class conditionNode {
             // if object exists
             case 4:
                 tree.condition = {
-                    "type-id": 4,
+                    "type_id": 4,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
@@ -371,7 +381,7 @@ export default class conditionNode {
             //bullet ready
             case 5:
                 tree.condition = {
-                    "type-id": 5,
+                    "type_id": 5,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {},
@@ -384,7 +394,7 @@ export default class conditionNode {
             //if label set
             case 6:
                 tree.condition = {
-                    "type-id": 6,
+                    "type_id": 6,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {"label": this.condition.label.id},
@@ -396,7 +406,7 @@ export default class conditionNode {
             //health greater than amount
             case 7:
                 tree.condition = {
-                    "type-id": 7,
+                    "type_id": 7,
                     "child-true": this.trueChild().jsonify(),
                     "child-false": this.falseChild().jsonify(),
                     "attributes": {"health": this.condition.health.id},
@@ -412,18 +422,145 @@ export default class conditionNode {
         }
     }
 
+    //Assumption: this conditionNode has already been drawn (otherwise couldn't be function-called), will draw its
+    // childnodes and an arrow to them
+    treeify(jsonFile) {
+        //create children
+        let newTrueChild = this.createChildNodeFromJson(jsonFile.trueChild);
+        let newFalseChild = this.createChildNodeFromJson(jsonFile.falseChild);
+
+        //Draw arrows to children
+        this.drawArrowFromJson(newTrueChild, true);
+        this.drawArrowFromJson(newFalseChild, false);
+
+        //treeify children
+        newTrueChild.treeify(jsonFile.trueChild);
+        newFalseChild.treeify(jsonFile.falseChild);
+    }
+
+    //Create a new node to which this will point.
+    createChildNodeFromJson(nodeJson) {
+        //If the new childNode is a condition
+        let newChildNode;
+        if (nodeJson.condition != null) {
+            switch (nodeJson.condition.type_id) {
+                case 1:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(1,
+                        new distance(nodeJson.condition.attributes.distance),
+                        new object(nodeJson.condition.attributes.obj)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                case 2:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(2,
+                        null,
+                        new object(nodeJson.condition.attributes.obj)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+
+                case 3:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(3,
+                        null,
+                        new object(nodeJson.condition.attributes.obj)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                case 4:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(4,
+                        null,
+                        new object(nodeJson.condition.attributes.obj)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                case 5:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(5),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                case 6:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(6,
+                        null, null, new label(nodeJson.condition.label)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                case 7:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(6,
+                        null, null, null, new health(nodeJson.condition.health)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                default:
+                //TODO throw exception, incorrect type_id in JSON
+            }
+        } else if (nodeJson.actionblock != null) {
+            //Otherwise if new childNode is an action
+            let newActionList;
+            nodeJson.actionblock.actionlist.forEach(actionItem => {
+                switch (actionItem.type_id) {
+                    case 1:
+                        newActionList = newActionList.concat(new action(1, new object(actionItem.attributes.obj)));
+                        break;
+                    case 2:
+                        newActionList = newActionList.concat(new action(2));
+                        break;
+                    case 3:
+                        newActionList = newActionList.concat(new action(3, new object(actionItem.attributes.obj)));
+                        break;
+                    case 4:
+                        newActionList = newActionList.concat(new action(4, new object(actionItem.attributes.obj)));
+                        break;
+                    case 5:
+                        newActionList = newActionList.concat(new action(5, new object(actionItem.attributes.obj)));
+                        break;
+                    case 6:
+                        newActionList = newActionList.concat(new action(6, null, new winddir(actionItem.attributes.winddir)));
+                        break;
+                    case 7:
+                        newActionList = newActionList.concat(new action(7, null, null, new reldir(actionItem.attributes.reldir)));
+                        break;
+                    case 8:
+                        newActionList = newActionList.concat(new action(8, null, null, null, new speed(actionItem.attributes.speed)));
+                        break;
+                    case 9:
+                        newActionList = newActionList.concat(new action(9, null, null, null, new speed(actionItem.attributes.speed)));
+                        break;
+                    case 10:
+                        newActionList = newActionList.concat(new action(10));
+                        break;
+                    case 11:
+                        newActionList = newActionList.concat(new action(11));
+                        break;
+                    case 12:
+                        newActionList = newActionList.concat(new action(12, null, null, null, null, new label(actionItem.attributes.label)));
+                        break;
+                    case 13:
+                        newActionList = newActionList.concat(new action(13, null, null, null, null, new label(actionItem.attributes.label)));
+                        break;
+                    case 14:
+                        newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label)));
+                        break;
+
+                }
+
+            });
+            let newActionNode = new actionNode(this.stage, this.layer, newActionList, nodeJson.actionblock.position);
+            return newActionNode;
+        } else {
+            //TODO throw exception, json incorrect!
+        }
+    }
+
+    //Draw an arrow from the false/true-circle to the newly created node
+    drawArrowFromJson(destNode, trueCondition) {
+        let newArrow = new arrow(this, destNode, trueCondition, this.stage, this.layer);
+    }
+
     //circle to which connections can be made by dragging arrows on it
     createInputCircle() {
         this.inputCircle = new Konva.Circle({
-            y: 0,
-            x: this.rect.width() / 2,
+            y: this.position.y,
+            x: this.position.x + this.rect.width() / 2,
             radius: circle_radius,
             fill: 'white',
             stroke: 'black',
         });
         this.inputCircleHitbox = new Konva.Circle({
-            y: 0,
-            x: this.rect.width() / 2,
+            y: this.position.y,
+            x: this.position.x + this.rect.width() / 2,
             radius: hitboxCircleRadius,
             fill: 'white',
             stroke: 'black',
@@ -439,8 +576,8 @@ export default class conditionNode {
     //create text for in the condition
     createTextObject(conditionText) {
         this.conditionTextObj = new Konva.Text({
-            x: spawnX,
-            y: spawnY,
+            x: this.position.x,
+            y: this.position.y,
             text: conditionText,
             fontSize: 12,
             fill: '#FFF',
@@ -456,8 +593,8 @@ export default class conditionNode {
     createRect() {
         if (this.conditionText != null) {
             this.rect = new Konva.Rect({
-                x: 0,
-                y: 0,
+                x: this.position["x"],
+                y: this.position["y"],
                 width: this.conditionTextObj.width(),
                 height: this.conditionTextObj.height(),
                 fill: 'blue',
@@ -467,8 +604,8 @@ export default class conditionNode {
             });
         } else {
             this.rect = new Konva.Rect({
-                x: 0,
-                y: 0,
+                x: this.position.x,
+                y: this.position.y,
                 width: blockWidth,
                 height: blockHeight,
                 fill: 'blue',
@@ -483,8 +620,8 @@ export default class conditionNode {
     //create a circle from which the false connection is made to another node
     createFalseCircle() {
         this.falseCircle = new Konva.Circle({
-            y: this.rect.height(),
-            x: 0,
+            y: this.position.y + this.rect.height(),
+            x: this.position.x,
             radius: circle_radius,
             fill: 'red',
             stroke: 'black',
@@ -495,8 +632,8 @@ export default class conditionNode {
     //create a circle from which the true connection is made to another node
     createTrueCircle() {
         this.trueCircle = new Konva.Circle({
-            y: this.rect.height(),
-            x: this.rect.width(),
+            y: this.position.y + this.rect.height(),
+            x: this.position.x + this.rect.width(),
             radius: circle_radius,
             fill: 'green',
             stroke: 'black',
@@ -511,8 +648,8 @@ export default class conditionNode {
         let node = this;
         let dragCircle = new Konva.Circle({
             draggable: true,
-            y: circle.y(),
-            x: circle.x(),
+            y: this.position.y + circle.y(),
+            x: this.position.x + circle.x(),
             radius: hitboxCircleRadius,
             fill: 'black',
             opacity: 0
@@ -566,11 +703,21 @@ export default class conditionNode {
             var intersect = node.layer.getIntersection(touchPos);
             console.log(intersect);
             console.log(node.stage.inputDict[intersect]);
-            if (node.stage.inputDict.has(intersect)) {
-                if (node.stage.inputDict.get(intersect).inputArrow != null) {
-                    node.stage.inputDict.get(intersect).inputArrow.delete();
+            //If arrow is dropped on another element
+            if (intersect != null) {
+                //If the other element is an inputnode
+                if (node.stage.inputDict.has(intersect)) {
+                    //If the inputnode already had an arrow, remove that one
+                    if (node.stage.inputDict.get(intersect).inputArrow != null) {
+                        node.stage.inputDict.get(intersect).inputArrow.delete();
+                    }
+                    //Create new arrw between the two nodes
+                    new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
                 }
-                new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
+            } else {
+                //If not dropped on other element, make a popup to create either a new condition or action
+                //TODO make popup to select 'new condition/new action'
+
             }
             this.moveTo(g);
             this.x(this.originalX);
@@ -741,6 +888,14 @@ export default class conditionNode {
 
     set conditionTextObj(value) {
         this._conditionTextObj = value;
+    }
+
+    get position() {
+        return this._position;
+    }
+
+    set position(value) {
+        this._position = value;
     }
 
 }

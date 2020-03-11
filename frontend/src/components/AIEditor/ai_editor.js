@@ -5,6 +5,13 @@ import condition from "./condition.js";
 import conditionNode from "./conditionNode.js";
 import startNode from "./startNode.js";
 import Konva from "konva"
+import distance from "./distance";
+import object from "./object";
+import label from "./label";
+import health from "./health";
+import winddir from "./winddir";
+import reldir from "./reldir";
+import speed from "./speed";
 
 
 class aiCanvas {
@@ -15,7 +22,7 @@ class aiCanvas {
     hitboxCircleRadius = 20;
 
     stageWidth = window.innerWidth;
-    stageHeight = window.innerHeight/1.5;
+    stageHeight = window.innerHeight / 1.5;
 
     _stage;
     _layer;
@@ -58,7 +65,7 @@ class aiCanvas {
     }
 
     createStage(container) {
-        console.log({container})
+        console.log({container});
         this.stage = new Konva.Stage({
             container: container,
             width: this.stageWidth,
@@ -157,13 +164,140 @@ class aiCanvas {
         });
     }
 
+//-----------------------------------------------------------
+
+    //Turn the tree into a json file
     treeToJson() {
         console.log(this.startNode);
         return this.startNode.trueArrow.dest.jsonify();
     }
 
-//-----------------------------------------------------------
+    //Turn a json file into a tree
+    jsonToTree(jsonFile) {
+        //Parse JSON to JS format
+        let nodeJson = JSON.parse(jsonFile);
 
+        //Create first child
+        let nodeChild = this.createChildNodeFromJson(nodeJson);
+
+        //Draw arrows to child
+        this.startNode.drawArrowFromJson(nodeChild, true);
+
+    }
+
+    //UNFORTUNATELY DUPLICATE CODE FROM CONDITIONNODE STARTING HERE --
+    //Create a new node to which this will point.
+    createChildNodeFromJson(nodeJson) {
+        //If the new childNode is a condition
+        let newChildNode;
+        if (nodeJson.condition != null) {
+            switch (nodeJson.condition.type_id) {
+                case 1:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(1,
+                        new distance(nodeJson.condition.attributes.distance),
+                        new object(nodeJson.condition.attributes.obj)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                case 2:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(2,
+                        null,
+                        new object(nodeJson.condition.attributes.obj)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+
+                case 3:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(3,
+                        null,
+                        new object(nodeJson.condition.attributes.obj)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                case 4:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(4,
+                        null,
+                        new object(nodeJson.condition.attributes.obj)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                case 5:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(5),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                case 6:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(6,
+                        null, null, new label(nodeJson.condition.label)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                case 7:
+                    newChildNode = new conditionNode(this.stage, this.layer, new condition(6,
+                        null, null, null, new health(nodeJson.condition.health)),
+                        nodeJson.condition.position);
+                    return newChildNode;
+                default:
+                //TODO throw exception, incorrect type_id in JSON
+            }
+        } else if (nodeJson.actionblock != null) {
+            //Otherwise if new childNode is an action
+            let newActionList;
+            nodeJson.actionblock.actionlist.forEach(actionItem => {
+                switch (actionItem.type_id) {
+                    case 1:
+                        newActionList = newActionList.concat(new action(1, new object(actionItem.attributes.obj)));
+                        break;
+                    case 2:
+                        newActionList = newActionList.concat(new action(2));
+                        break;
+                    case 3:
+                        newActionList = newActionList.concat(new action(3, new object(actionItem.attributes.obj)));
+                        break;
+                    case 4:
+                        newActionList = newActionList.concat(new action(4, new object(actionItem.attributes.obj)));
+                        break;
+                    case 5:
+                        newActionList = newActionList.concat(new action(5, new object(actionItem.attributes.obj)));
+                        break;
+                    case 6:
+                        newActionList = newActionList.concat(new action(6, null, new winddir(actionItem.attributes.winddir)));
+                        break;
+                    case 7:
+                        newActionList = newActionList.concat(new action(7, null, null, new reldir(actionItem.attributes.reldir)));
+                        break;
+                    case 8:
+                        newActionList = newActionList.concat(new action(8, null, null, null, new speed(actionItem.attributes.speed)));
+                        break;
+                    case 9:
+                        newActionList = newActionList.concat(new action(9, null, null, null, new speed(actionItem.attributes.speed)));
+                        break;
+                    case 10:
+                        newActionList = newActionList.concat(new action(10));
+                        break;
+                    case 11:
+                        newActionList = newActionList.concat(new action(11));
+                        break;
+                    case 12:
+                        newActionList = newActionList.concat(new action(12, null, null, null, null, new label(actionItem.attributes.label)));
+                        break;
+                    case 13:
+                        newActionList = newActionList.concat(new action(13, null, null, null, null, new label(actionItem.attributes.label)));
+                        break;
+                    case 14:
+                        newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label)));
+                        break;
+
+                }
+
+            });
+            let newActionNode = new actionNode(this.stage, this.layer, newActionList, nodeJson.actionblock.position);
+            return newActionNode;
+        } else {
+            //TODO throw exception, json incorrect!
+        }
+    }
+
+    //Draw an arrow from the false/true-circle to the newly created node
+    drawArrowFromJson(destNode, trueCondition) {
+        let newArrow = new arrow(this, destNode, trueCondition, this.stage, this.layer);
+    }
+
+    //DUPLICATE CODE FROM CONDITIONNODE ending HERE --
 
 //BELOW THIS LINE ARE ONLY BUTTON-INTERACTION-FUNCTION DEMOS, MOST LIKELY TO BE REPLACED BY REACT
     addCondition() {
