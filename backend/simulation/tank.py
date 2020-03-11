@@ -1,4 +1,5 @@
 from .objects import Object
+from .actions import is_movement_action, is_aim_action
 from .utils import distance
 
 import math
@@ -93,16 +94,35 @@ class Tank:
         else:
             self.turret_rotation += max(min(difference, TURRET_TURN_SPEED), -TURRET_TURN_SPEED)
 
+    # Collect the actions that the ai would execute within the current game state
     def collectActions(self, state):
         self.actions = self.ai.evaluate(self, state)
 
+    # Execute the movement actions that have been captured before by collectActions()
     def executeActions(self, state):
         if self.destroyed:
             return
-
+          
+        executed_move = False
+        executed_aim = False
+    
         for action in self.actions:
+            # Track whether a movement action has already been executed, if so cancel it.
+            if is_movement_action(action.action_id):
+                if executed_move:
+                    continue
+                executed_move = True
+
+            # Track whether an aim action has already been executed, if so cancel it.
+            if is_aim_action(action.action_id):
+                if executed_aim:
+                    continue
+                executed_aim = True
+
+            # Execute the action.
             action.execute(self, state)
 
+    # Check for wall collisions.
     def check_collision(self, state, dx=0.0, dy=0.0):
         x, y = self.get_pos()
         x += dx
