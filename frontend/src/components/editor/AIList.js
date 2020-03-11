@@ -1,4 +1,4 @@
-import RoamBotAPI from '../../RoamBotAPI'
+import RoamBotAPI from "../../RoamBotAPI.js"
 
 import React, { Component } from "react";
 
@@ -20,7 +20,7 @@ const AIItem = (props) => {
         data.ai = ai.pk
         data.gamemode = "DM"
 
-        let call = RoamBotAPI.playBotMatch(data)
+        let call = RoamBotAPI.postBotMatch(data)
 
         call.then((response) => {
             if (response.ok) {

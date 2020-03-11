@@ -153,7 +153,7 @@ class RoamBotAPI {
          * Play a match against a bot.
          * @param gamemode Gamemode to play.
          * @param bot Bot's pk to play against.
-         * @param ai Ai's pk to play with.
+         * @param ai AI's primary key to play with.
          */
         let data = {gamemode, bot, ai}
         let response = this.callApi('matches/botmatches/', 'POST', data)

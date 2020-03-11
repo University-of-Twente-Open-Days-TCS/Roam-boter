@@ -81,7 +81,8 @@ class App extends Component {
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
                                 <hr/>
-                                <Button onClick={this.goFull}>Go Fullscreen</Button>
+                                <Button variant="contained" onClick={this.goFull}>Go Fullscreen</Button>
+                                <span className='spacing'></span>
                                 <Button variant="contained" onClick={this.handleSubmitLogout}>Logout</Button>
                             </Layout>
                         </div>
