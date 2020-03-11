@@ -24,7 +24,7 @@ export default function AIMenuList() {
         {
             text: "Edit existing AI",
             icon: <Create/>,
-            url: "/ListAIs"
+            url: "/AIList"
         },
         {
             text: "View match history",

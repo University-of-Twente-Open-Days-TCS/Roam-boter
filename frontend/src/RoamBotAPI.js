@@ -1,7 +1,3 @@
-const API_HOST = "http://localhost:8000"
-
-let _csrfToken = null
-
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -19,15 +15,106 @@ function getCookie(name) {
 }
 
 
-    async function getCsrfToken() {
-    
+class RoamBotAPI {
+    /*
+     * API endpoint for RoamBot-er
+     */
+
+    API_HOST = "http://localhost:8000"
+
+    constructor() {
+        this._csrfToken = null
+    }
+
+    async callApi(url, method, data) {
+        /**
+         * url: url to call API
+         * method: http method to use
+         * data: optional data to include. Currenlty only supports JSON
+         */
+        let headers = {}
+        headers['Content-Type'] = 'application/json'
+
+        if(method === "POST" || method === "PUT" || method === "DELETE"){
+            // Set csrf token
+            let csrfToken = await this._getCsrfToken()    
+            headers['X-CSRFToken'] = csrfToken
+        }
+
+        let options = {}
+        options.method = method
+        options.credentials = 'include'
+        options.headers = headers
+
+
+        if (data !== null) {
+            // Add data to the body of the request
+            options.body = JSON.stringify(data)
+        }
+
+        let response = await fetch(`${this.API_HOST}/`+url, options)
+        return response
+    }
+
+    testAPI() {
+        /**
+         * Returns a promise that if resolves if successful
+         */
+        let response = this.callApi('test/', 'POST')
+        return response
+    }
+
+    loginUser(teamCode) {
+        /**
+         * Calls the api to login a session.
+         */
+        let body = {
+            'team_code' : teamCode
+        }
+        let response = this.callApi('dashboard/enter/', 'POST', body)
+        return response
+    }
+
+    logoutUser() {
+        /**
+         * Calls te api to logout a session.
+         */
+        let response = this.callApi('dashboard/enter/', 'DELETE')
+        return response
+    }
+
+    teamDetail() {
+        /**
+         * Calls the team detail. If a user is in a team this returns team information.
+         */
+        let response = this.callApi('dashboard/team/detail/', 'GET')
+        return response
+    }
+
+    aiList() {
+        /**
+         * Gets a list from ai's associated with this request.
+         */
+        let response = this.callApi('ai/', 'GET')
+        return response
+    }
+
+    aiDetail(pk) {
+        /**
+         * Gets specific ai.
+         */
+        let response = this.callApi('ai/'+pk+'/', 'GET')
+        return response
+    }
+
+    async _getCsrfToken() {
         /** Returns the csrftoken cookie. If the cookie is not present it will ping the server to set the cookie. **/
-    
-        if (_csrfToken === null) {
+        if (this._csrfToken === null) {
             let csrfCookie = getCookie('csrftoken')
+
             if (csrfCookie === null){
                 // Cookie is not set. Ping the server to set the cookie.
-                const response = await fetch(`${API_HOST}/csrf/`, {
+                const response = await fetch(`${this.API_HOST}/csrf/`, {
                     credentials: 'include'
                 })
                 let data = await response.json()
@@ -38,23 +125,13 @@ function getCookie(name) {
                     throw "No csrf Cookie"
                 }
             }
-            _csrfToken = csrfCookie
+            this._csrfToken = csrfCookie
         }
-        return _csrfToken
+        return this._csrfToken
     }
-
-
-class RoamBotAPI {
-    /*
-     * This class handles interaction with the backend API
-     */
-
-    constructor() {
-        // get csrf token
-        this._csrfToken = null
-    }
-
 
 }
 
-export {getCsrfToken, API_HOST}
+
+let roamBotAPI = new RoamBotAPI()
+export default roamBotAPI 

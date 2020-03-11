@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { render } from "@testing-library/react";
 
-import { getCsrfToken, API_HOST } from '../RoamBotAPI.js'
+import RoamBotAPI from '../RoamBotAPI.js'
 import {NavLink} from "react-router-dom";
 
 
@@ -15,24 +15,11 @@ class MatchHistory extends Component {
     }
 
     async componentDidMount() {
-        let data = this.getMatchHistory().then((data) => {
-            let new_state = {matches: data}
-            console.log(new_state)
-            this.setState(new_state)
-        }).catch((e) =>
-            console.log(e)
-        )
+        //TODO: Get match history
     }
 
     async getMatchHistory() {
-        let csrfToken = await getCsrfToken()
-        const response = await fetch(`${API_HOST}/matches/botmatches/`,
-        {
-            'method' : 'GET',
-            'credentials': 'include'
-        })
-        let data = await response.json()
-        return data
+       
     }
 
     render() {
