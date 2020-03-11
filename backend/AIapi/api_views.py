@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from roamboter.api.permissions import InTeamPermission
-from roamboter.api.mixins import RetrieveTeamObjectMixin
+from roamboter.api.mixins import RetrieveTeamObjectMixin, DestroyTeamObjectMixin, UpdateTeamObjectMixin
 
 from .serializers import AISerializer
 from .models import AI
@@ -42,7 +42,7 @@ class AIList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AIDetail(RetrieveTeamObjectMixin, generics.GenericAPIView):
+class AIDetail(RetrieveTeamObjectMixin, DestroyTeamObjectMixin, UpdateTeamObjectMixin, generics.GenericAPIView):
 
     permission_classes = [InTeamPermission]
 
@@ -56,21 +56,21 @@ class AIDetail(RetrieveTeamObjectMixin, generics.GenericAPIView):
         """
         return self.retrieve(request, *args, **kwargs)
 
-    def put(self, request, pk):
+    def put(self, request, *args, **kwargs):
         """
         Update an existing AI
         """
-        ai = self.get_object(pk, request.session['team_id'])
-        serializer = AISerializer(ai, request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+        return self.update(request, *args, **kwargs)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def patch(self, request, *args, **kwargs):
+        """
+        Partially update an existing AI
+        """
+        return self.partial_update(request, *args, **kwargs)
 
-    def delete(self, request, pk):
-        ai = self.get_object(pk, request.session['team_id'])
-        ai.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+    def delete(self, request, *args, **kwargs):
+        """
+        Delete Existing AI
+        """
+        return self.destroy(request, *args, **kwargs)
 

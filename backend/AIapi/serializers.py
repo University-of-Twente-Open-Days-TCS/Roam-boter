@@ -38,7 +38,7 @@ class AISerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         # only allow for the name and ai to be updated.   
-        if validated_data['ai'] is not None:
+        if 'ai' in validated_data:
             # convert to string and update instance
             json_string = json.dumps(validated_data['ai'])
             instance.ai = json_string
