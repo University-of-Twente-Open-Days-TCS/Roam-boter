@@ -2,6 +2,8 @@ from PIL import Image
 from .objects import Object, ColorValues
 from .level import Level
 
+import os
+
 
 class LevelLoader:
     current_loaded_levels = dict()
@@ -20,7 +22,10 @@ class LevelLoader:
 
     @staticmethod
     def retrieve_from_disk(path):
-        im = Image.open(path)
+        this_dir = os.path.dirname(os.path.realpath(__file__))
+        level_file = os.path.join(this_dir, "levels/" + path + ".png")
+
+        im = Image.open(level_file)
         width, height = im.size
 
         # convert pixels to a 2d array of objects.

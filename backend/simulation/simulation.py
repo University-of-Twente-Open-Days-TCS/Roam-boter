@@ -16,7 +16,7 @@ import os
 
 import time
 
-MAX_GAME_LENGTH = 1800
+MAX_GAME_LENGTH = 500
 
 
 class SimulationState:
@@ -24,21 +24,24 @@ class SimulationState:
     tanks = []
     bullets = []
     frames_passed = 0
+    scores = []
 
     def __init__(self, level, players):
         self.level = level
         self.tanks = [Tank(x) for x in players]
+        self.scores = [0 for _ in self.tanks]
 
 
 class Simulation:
 
-    def __init__(self, level, players):
+    def __init__(self, level, players, game_mode):
         self.ended = False
         self.state = SimulationState(level, players)
         self.set_starting_position()
         self.winner = None
         self.playback = PlayBack(level)
         self.playback.add_frame(self.state)
+        self.game_mode = game_mode
 
     # Put all tanks on their starting positions.
     def set_starting_position(self):
@@ -48,9 +51,12 @@ class Simulation:
             tank.team_id = i
             tank.set_pos(tank.spawn[0], tank.spawn[1])
             if spawns[i][1] < self.state.level.get_height() / 2:
+
                 tank.set_rotation(180)
+                tank.spawn_rotation = 180
             else:
                 tank.set_rotation(0)
+                tank.spawn_rotation = 0
 
     # Collect all spawns on the map.
     def get_spawns(self):
@@ -76,10 +82,12 @@ class Simulation:
     # Step through one frame of the simulation
     def step(self):
         # Check if the simulation has ended
-        if self.state.frames_passed > MAX_GAME_LENGTH or len(self.get_tanks()) <= 1:
-            self.ended = True
-            self.playback.winner = self.get_winner()
+        if self.check_game_end_condition():
             return
+
+        # Execute gamemode specific stuff like king of the hill scores and bladiebla
+        self.handle_game_mode()
+
 
         # Collect all actions that the tanks are going to execute according to their AI's
         for tank in self.get_tanks():
@@ -97,7 +105,7 @@ class Simulation:
         # Check if tanks don't have any HP left.
         for tank in self.get_tanks():
             if tank.get_health() <= 0:
-                self.state.tanks.remove(tank)
+                tank.destroy(self.game_mode)
 
         DRAW_WORLD(self.state)
         # Draw the world if VISUAL_DEBUG is True.
@@ -109,39 +117,81 @@ class Simulation:
 
     # Return the playback object containing the entire replay.
     def get_playback(self):
+        self.playback.winner = self.get_winner()
         return self.playback
 
     # Retrieve the winning AI object.
     def get_winner(self):
-        if len(self.get_tanks()) == 1:
-            return self.get_tanks()[0].ai
-        else:
-            return None
+        heighest_score = 0
+        winner = -1
+
+        for i, s in enumerate(self.state.scores):
+            if s == heighest_score:
+                winner = -1
+
+            if s > heighest_score:
+                heighest_score = s
+                winner = i
+        return winner
+
+
+
+
+    def check_game_end_condition(self):
+
+        # Check if time limit has been exceeded.
+        if self.state.frames_passed > MAX_GAME_LENGTH:
+            self.ended = True
+            return True
+
+        # Check if there are still tanks alive.
+        if self.game_mode == "death_match" or self.game_mode == "team_death_match":
+            multiple_teams_alive = False
+            for t in self.get_tanks():
+                if multiple_teams_alive:
+                    break
+
+                if t.destroyed:
+                    continue
+
+                for t2 in self.get_tanks():
+                    if t.get_team() == t2.get_team() or t2.destroyed:
+                        continue
+                    multiple_teams_alive = True
+                    break
+            if not multiple_teams_alive:
+                return True
+
+    def handle_game_mode(self):
+        if self.game_mode == "KingOfTheHill":
+
+            on_hill = []
+
+            for t in self.get_tanks():
+                print("tank: ", t.get_team(), t.get_pos(), t.destroyed)
+                if not t.destroyed and t.on_hill(self.state):
+                    on_hill.append(t)  
+
+            if len(on_hill) == 1:
+                print(on_hill[0].get_team())
+                self.state.scores[on_hill[0].get_team()] += 1
+
+
+        # if self.state.frames_passed > MAX_GAME_LENGTH or len(self.get_tanks()) <= 1:
+        #     self.ended = True
+        #     self.playback.winner = self.get_winner()
+        #     return
 
 
 # Run the simulation with an array of ais to be executed.
 # Params: [AINode]
 # Returns: PlayBack
-def simulate(ais):
+def simulate(ais, game_mode="KingOfTheHill", level="level1"):
     level_loader = LevelLoader()
 
-    this_dir = os.path.dirname(os.path.realpath(__file__))
-    level_file = os.path.join(this_dir, "levels/level1.png")
-
-    sim = Simulation(level_loader.load_level(level_file), ais)
+    sim = Simulation(level_loader.load_level(level), ais, game_mode)
     while not sim.has_ended():
         sim.step()
-
-    # Get index of winning ai
-    if sim.get_winner() is not None:
-        ai = sim.get_winner()
-        sim.winner = -1
-        for i, x in enumerate(ais):
-            if x == ai:
-                sim.winner = i
-                break
-    else:
-        sim.winner = -1
 
     return sim.get_playback()
 
@@ -154,6 +204,7 @@ def test_simulation():
     ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 10}), true_node, false_node)
     playback = simulate([ai, ai])
     print(playback.to_json())
+
     # cProfile.run("simulate([ai, ai])")
     # PlayBackEncoder.encode(a.get_playback())
 
