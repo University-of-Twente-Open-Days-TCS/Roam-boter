@@ -23,7 +23,7 @@ export default function Layout(props) {
         <div>
             <div id="mySidenav" className={open ? "sidenav open" : "sidenav closed"}>
                 <HashRouter>
-                <a href="javascript:void(0)" className="closebtn" onClick={handleDrawerClose}>&times;</a>
+                <a className="closebtn" onClick={handleDrawerClose}>&times;</a>
                 <AIMenuList />
                 <hr/>
                 <PlayMenuList/>
