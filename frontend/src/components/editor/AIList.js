@@ -3,6 +3,7 @@ import RoamBotAPI from "../../RoamBotAPI.js"
 import React, { Component } from "react";
 
 import { Button } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 import './AIEditor.css'
 
 const AIItem = (props) => {
@@ -48,10 +49,9 @@ const AIItem = (props) => {
     
     return (
         <li>
-            <div className='ai-name'>{props.ai.name}</div> 
-            <Button onClick={playVsBot} variant="outlined" color="primary" size="small">Play vs Bot</Button>
+            <Typography variant="button">{props.ai.name}</Typography><span className='spacing'></span>
+            <Button onClick={playVsBot} variant="outlined" color="primary" size="small">Play vs Bot</Button><span className='spacing'></span>
             <Button className='delete-button' onClick={deleteAI} variant="outlined" color="secondary" size="small">Delete</Button>
-
         </li>
     )
 }
