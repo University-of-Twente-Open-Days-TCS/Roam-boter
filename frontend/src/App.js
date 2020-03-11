@@ -8,13 +8,13 @@ import {
     Route,
 } from "react-router-dom";
 import Home from "./components/Home";
-import AIEditor from "./components/AIEditor";
+import AIEditor from "./components/editor/AIEditor.js";
 import Layout from "./layout/Layout";
-import MatchHistory from "./components/MatchHistory";
-import AIList from "./components/AIList";
+import MatchHistory from "./components/matches/MatchHistory";
+import AIList from "./components/editor/AIList";
 import PlayvsBot from "./components/PlayvsBot";
 import PlayvsPlayer from "./components/PlayvsPlayer";
-import MatchReplay from "./components/MatchReplay";
+import MatchReplay from "./components/matches/MatchReplay";
 import Login from "./login/Login";
 
 

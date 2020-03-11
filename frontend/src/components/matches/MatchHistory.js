@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { render } from "@testing-library/react";
 
-import RoamBotAPI from '../RoamBotAPI.js'
+import RoamBotAPI from "../../RoamBotAPI"
 import {NavLink} from "react-router-dom";
 
 

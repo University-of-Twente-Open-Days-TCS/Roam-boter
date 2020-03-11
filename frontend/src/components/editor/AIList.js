@@ -1,4 +1,4 @@
-import RoamBotAPI from '../RoamBotAPI.js'
+import RoamBotAPI from '../../RoamBotAPI'
 import React, { Component } from "react";
 
 const AIItem = (props) => {
