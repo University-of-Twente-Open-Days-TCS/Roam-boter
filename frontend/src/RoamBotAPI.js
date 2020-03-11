@@ -100,15 +100,31 @@ class RoamBotAPI {
     }
 
     postAI({name, ai}) {
+        /**
+         * Save AI to the server
+         * @param name Name of the ai
+         * @param ai JSON representation of AI nodes
+         */
         let data = {name, ai}
         let response = this.callApi('ai/', 'POST', data)
+        return response
+    }
+
+    deleteAI(pk) {
+        /**
+         * Delete AI from the server
+         * @param pk Primary Key of the AI that needs to be deleted.
+         */
+        let response = this.callApi('ai/'+pk, 'DELETE')
         return response
     }
     
 
     getAiDetail(pk) {
         /**
-         * Gets specific ai.
+         * Gets a specific an AI.
+         * @param pk Primary key of the AI to get. 
+         * Note that the api will give a 403 response if you do not own the AI object.
          */
         let response = this.callApi('ai/'+pk+'/', 'GET')
         return response
