@@ -64,9 +64,12 @@ class AIEditorKonva extends Component {
     resize() {
         /** Resizes the Konva Canvas */
         let konvaContainer = document.getElementById('konva-container')
-        let width = konvaContainer.offsetWidth
-        let height = konvaContainer.offsetHeight
-        this.canvas.resizeStage(width, height)
+        
+        if (konvaContainer !== null){
+            let width = konvaContainer.offsetWidth
+            let height = konvaContainer.offsetHeight
+            this.canvas.resizeStage(width, height)
+        }
     }
 
 
