@@ -41,6 +41,7 @@ class Level:
         return False
 
     def cache_or_prepare_nearest_objects(self):
+
         nearest_objects = None
         pickle_path = os.path.join(self.get_caching_directory(), "nearest_objects_" + self.path + ".p")
         try:
@@ -55,7 +56,11 @@ class Level:
 
     def get_caching_directory(self):
         this_dir = os.path.dirname(os.path.realpath(__file__))
-        return os.path.join(this_dir, "caching")
+        caching_dir = os.path.join(this_dir, "caching")
+
+        if not os.path.exists(caching_dir):
+            os.makedirs(caching_dir)
+        return caching_dir
 
     def prepare_nearest_objects(self):
         # for y, for x, for object collect nearest of obj from x, y
