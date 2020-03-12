@@ -1,22 +1,24 @@
-#AIEditor {
-    display: flex;
-    /*background-color: lightblue;*/
-}
-
-#buttons {
-    /*background-color: lightcoral;*/
-    margin: 10px;
-}
-
-#buttons input {
+div#AIEditor {
     display: block;
-    width: 100px;
-    height: 60px;
-    white-space: normal;
-    margin-bottom: 10px;
+    height: 100%;
+    width: 100%;
 }
 
-#container {
-    display: inline;
-    width: 500px;
+div#konva-container {
+    
+    background-color: azure;
+}
+
+
+
+div#ai-editor-menu {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    overflow: hidden;
+}
+
+div#ai-editor-menu button {
+    margin: 0.5rem;
 }

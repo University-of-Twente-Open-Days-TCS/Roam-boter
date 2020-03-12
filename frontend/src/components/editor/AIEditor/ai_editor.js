@@ -11,9 +11,6 @@ class aiCanvas {
     circle_radius = 10;
     hitboxCircleRadius = 20;
 
-    stageWidth = window.innerWidth;
-    stageHeight = window.innerHeight/1.5;
-
     _stage;
     _layer;
 
@@ -24,6 +21,9 @@ class aiCanvas {
     _startNode;
 
     constructor(container) {
+        // Set stagewidth according to container
+        this.stageWidth = 500
+        this.stageHeight = 1000
         //Create the stage
         this.createStage(container);
 
@@ -54,6 +54,7 @@ class aiCanvas {
     }
 
     createStage(container) {
+        
         this.stage = new Konva.Stage({
             container: container,
             width: this.stageWidth,

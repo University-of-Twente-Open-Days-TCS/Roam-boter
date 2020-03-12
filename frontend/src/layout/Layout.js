@@ -59,8 +59,10 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(1, 1),
     },
     content: {
+        /* Content Max height */
+        height: '100vh',
         flexGrow: 1,
-        padding: theme.spacing(3),
+        padding: theme.spacing(1),
     },
 }));
 

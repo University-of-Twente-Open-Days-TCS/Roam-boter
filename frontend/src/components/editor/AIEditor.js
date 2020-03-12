@@ -2,67 +2,34 @@ import React, {Component} from "react";
 
 import RoamBotAPI from "../../RoamBotAPI"
 
-import aiCanvas from "./AIEditor/ai_editor";
+import Grid from '@material-ui/core/Grid'
 
-import "../../css/AIEditor.css";
+import AIEditorKonva from './AIEditorKonva'
+import AIEditorMenu from "./AIEditorMenu";
+
+import '../../css/AIEditor.css'
+
 
 class AIEditor extends Component {
 
 
     componentDidMount() {
-        const canvas = new aiCanvas('container')
-
-        //Add condition
-        document.getElementById('addCondition').addEventListener(
-            'click',
-            function () {
-                canvas.addCondition()
-            },
-            false
-        );
-
-        //Add action
-        document.getElementById('addActionNode').addEventListener(
-            'click',
-            function () {
-                canvas.addActionNode()
-            },
-            false
-        );
-        //Add condition
-        document.getElementById('saveAI').addEventListener(
-            'click',
-            () => {
-                // Save AI
-                let ai = canvas.treeToJson()
-                let data = {}
-                data.name = "saved-ai"
-                data.ai = ai
-                // call API
-                let response = RoamBotAPI.postAI(data)
-                response.then((res) => {
-                    //TODO: Proper error handling
-                    if(res.ok) {
-                        alert("AI Saved")
-                    }else {
-                        console.error(res)
-                        alert("An error occurred, see console.")
-                    }
-                })
-            },
-            false
-        );
+        return
     }
 
     render() {
         return (
             <div id="AIEditor">
-                <div id="buttons">
-                    <input type="button" id="addCondition" value="Add Condition"/>
-                    <input type="button" id="addActionNode" value="Add ActionNode"/>
-                    <input type="button" id="saveAI" value="Save"/>
-                </div>
-                <div id="container"></div>
+                <Grid container>
+
+                    <Grid item xs={9}>
+                        <AIEditorKonva />
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <AIEditorMenu />
+                    </Grid>
+                </Grid>
             </div>
         );
     }
