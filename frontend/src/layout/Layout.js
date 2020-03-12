@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import clsx from 'clsx';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Divider from '@material-ui/core/Divider';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -65,7 +65,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function Layout(props) {
     const classes = useStyles();
-    const theme = useTheme();
     const [open, setOpen] = useState(false);
 
     const handleToggleDrawer = () => {

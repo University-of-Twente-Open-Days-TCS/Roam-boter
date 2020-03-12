@@ -83,7 +83,7 @@ class App extends Component {
                                 <hr/>
                                 <Button variant="outlined" onClick={this.goFull}>Go Fullscreen</Button>
                                 <span className='spacing'></span>
-                                <Button variant="outlined" color="" onClick={this.handleSubmitLogout}>Logout</Button>
+                                <Button variant="outlined" onClick={this.handleSubmitLogout}>Logout</Button>
                             </Layout>
                         </div>
                     </Fullscreen>
