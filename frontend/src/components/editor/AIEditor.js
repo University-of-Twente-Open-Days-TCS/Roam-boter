@@ -55,6 +55,7 @@ class AIEditor extends Component {
             }
         })
         this.handleDialogueClose()
+
     }
 
     componentDidMount() {

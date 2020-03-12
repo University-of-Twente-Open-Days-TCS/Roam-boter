@@ -18,7 +18,7 @@ export default class dropdown {
         this.items = items;
         this.f = f;
         let thisDropdown = this;
-        this.group = new Konva.Group();
+        this.group = new Konva.Group({x: 10, y: 10});
 
         this.topBoxGroup = new Konva.Group();
 
@@ -31,68 +31,76 @@ export default class dropdown {
             strokeWidth: 1,
         });
 
-        this.topBoxGroup.add(this.topBoxRect);
-
-        this.topBoxGroup.add(this.topBoxText);
-
         this.group.add(this.topBoxGroup);
 
-        this.list = this.generateList();
-
-        this.topBoxGroup.on("click", () => {
-            this.group.add(this.list);
-            thisDropdown.stage.draw()
-        });
-
-        window.addEventListener('click', () => {
-            // hide menu
-            this.list.remove();
-        });
+        this.list = this.generateTable();
+        this.group.add(this.list);
     }
 
-    generateList() {
+    //generates the table of options
+    generateTable() {
         let thisDropdown = this;
         let list = new Konva.Group();
         let textObjects = this.items.map((item) => {
             return new Konva.Text({text: item.toString(), padding: 10})
         });
 
-        let min = this.topBoxText.width();
-        let max = Math.max(min, Math.max(...(textObjects.map((obj) => {
+        //find the maximum height and width of all text objects in order to make all blocks equally big
+        let min = this.blockHeight;
+        let maxWidth = Math.max(min, Math.max(...(textObjects.map((obj) => {
             return obj.width()
         })))) + 20;
 
+        let maxHeight = Math.max(min, Math.max(...(textObjects.map((obj) => {
+            return obj.height()
+        })))) + 10;
+
+        let dim = 3;
         let i;
+        let j;
+        for (i = 0; i < dim; i++) {
+            //store the height of the table in order to determine the size of the total popup
+            if (j != null) {
+                var jheight = (j + 1);
+            }
+            j = 0;
+            while (typeof textObjects[i + j * dim] !== 'undefined') {
+                let g = new Konva.Group();
+                let rect = this.createBlock(maxHeight, maxWidth, i, j);
+                let txt = textObjects[i + j * dim];
+                let obj = this.items[i + j * dim];
+                g.on("click tap", () => {
+                    this.topBoxText.text(txt.text());
+                    thisDropdown.layer.draw();
+                    this.f(obj);
+                });
 
-        for (i = 0; i < textObjects.length; i++) {
-            let g = new Konva.Group();
-            let rect = new Konva.Rect({
-                y: this.blockHeight * (i + 1),
-                height: this.blockHeight,
-                width: max,
-                fill: "white",
-                stroke: 'black',
-                strokeWidth: 1,
-            });
-
-            let txt = textObjects[i];
-            let obj = this.items[i];
-            g.on("click", () => {
-                this.topBoxText.text(txt.text());
-                thisDropdown.layer.draw();
-                this.f(obj);
-            });
-
-            textObjects[i].y(this.blockHeight * (i + 1));
-            g.add(rect);
-            g.add(textObjects[i]);
-            list.add(g);
+                txt.y(maxHeight * (j));
+                txt.x(i * maxWidth);
+                g.add(rect);
+                g.add(textObjects[i + j * dim]);
+                list.add(g);
+                j++;
+            }
         }
-        this.topBoxRect.width(max);
-
+        this.width = maxWidth * dim;
+        this.height = maxHeight * jheight;
         return list;
     }
 
+    //creates the conva block in the menu
+    createBlock(maxHeight, maxWidth, i, j) {
+        return new Konva.Rect({
+            y: maxHeight * (j),
+            x: i * maxWidth,
+            height: maxHeight,
+            width: maxWidth,
+            fill: "white",
+            stroke: 'black',
+            strokeWidth: 1,
+        });
+
+    }
 
     //Getters&setters
     get stage() {

@@ -3,22 +3,22 @@
     "ai": 
         {
             "condition": {
-                "type-id": 1,
-                "child-true": {
+                "type_id": 1,
+                "child_true": {
                     "actionblock": {
                         "actionlist": [
                             {
-                                "type-id": 1,
+                                "type_id": 1,
                                 "attributes": {
                                     "obj": 10 
                                 }
                             },
                             {
-                                "type-id": 10,
+                                "type_id": 10,
                                 "attributes": {}
                             },
                             {
-                                "type-id": 5,
+                                "type_id": 5,
                                 "attributes": {
                                     "obj": 2 
                                 }
@@ -30,11 +30,11 @@
                         }
                     }
                 },
-                "child-false": {
+                "child_false": {
                     "actionblock": {
                         "actionlist": [
                             {
-                                "type-id": 10,
+                                "type_id": 10,
                                 "attributes": {}
                             }
                         ],
