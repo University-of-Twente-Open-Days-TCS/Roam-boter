@@ -69,7 +69,6 @@ class ReplayCanvas {
             drawImage(tankSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
             drawImage(turretSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation - elem.turret_rotation);
 
-            console.log(elem.health,  ((100 - elem.health) * (255 / 100)));
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.fillStyle = "rgb(" + ((100 - elem.health) * (255 / 100)) + ", " + (elem.health * (255 / 100)) + ", 0)"
             ctx.fillRect(elem.pos[0] * cellsize_x - 20, elem.pos[1] * cellsize_y - 20, elem.health / 100 * 40, 5);
@@ -82,6 +81,18 @@ class ReplayCanvas {
         this.game_data.frames[frame].bullets.forEach(function (elem, index) {
             ctx.fillStyle = "#000000";
             ctx.fillRect(elem.pos[0] * cellsize_x - 2, elem.pos[1] * cellsize_y - 2, 4, 4);
+        });
+
+        ctx.fillStyle = "#000000";
+        ctx.font = "15px Arial";
+        ctx.textAlign = "left";
+        console.log(width / (8 / 7));
+        ctx.fillText("Scores", width / (8 / 7), height / (8));
+
+
+        this.game_data.frames[frame].scores.forEach(function (score, index) {
+            ctx.font = "10px Arial";
+            ctx.fillText("Team " + index + ": " + score, width / (8 / 7), height / 8 + (10 * index + 10));
         });
 
     }
