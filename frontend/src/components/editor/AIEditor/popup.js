@@ -32,7 +32,6 @@ export default class popup {
     }
 
     createRect() {
-        let thisStage = this.stage;
 
         this.rect = new Konva.Rect({
             width: this.dDown.width + 20,
@@ -60,7 +59,7 @@ export default class popup {
         });
         this.group.add(exitRect);
 
-        exitRect.on("click", () => {
+        exitRect.on("click tap", () => {
             this.closePopup();
         });
     }

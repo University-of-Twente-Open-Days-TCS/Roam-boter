@@ -183,12 +183,12 @@ class RoamBotAPI {
                 const response = await fetch(`${this.API_HOST}/csrf/`, {
                     credentials: 'include'
                 })
-                let data = await response.json()
+                await response.json()
                 // Get the newly set cookie.
                 csrfCookie = getCookie('csrftoken')
                 if (csrfCookie === null){
                     // Something went wrong.
-                    throw "No csrf Cookie"
+                    throw Error("No csrf Cookie")
                 }
             }
             this._csrfToken = csrfCookie

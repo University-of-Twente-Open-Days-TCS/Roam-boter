@@ -134,7 +134,7 @@ export default class conditionNode {
         });
 
         //Popup to edit the condition
-        this.group.on("click", () => {
+        this.group.on("click tap", () => {
 
             //TODO could just make this by calling editCondition with object null (no condition yet) probs
             this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateConditionList(), this.editCondition.bind(this)).group);
@@ -223,6 +223,8 @@ export default class conditionNode {
                 break;
             case 7:
                 wantedList = healthList;
+                break;
+            default:
                 break;
         }
         //If there is still an attribute missing, will ask for it via the popup

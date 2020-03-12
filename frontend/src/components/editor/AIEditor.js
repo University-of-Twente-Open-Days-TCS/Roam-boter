@@ -9,10 +9,6 @@ import "../../css/AIEditor.css";
 class AIEditor extends Component {
     constructor(props) {
         super(props);
-        this.setState({
-            ai: {},
-            handleSaveAI: this.props.handleSaveAI
-        })
     }
 
     componentDidMount() {

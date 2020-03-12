@@ -27,7 +27,6 @@ class Level:
     def health_pack_ready(self, state, pos):
         x, y = pos
         pos = math.floor(x), math.floor(y)
-        print(self.health_packs, pos)
         if pos in self.health_packs:
             if self.health_packs[pos] <= state.frames_passed:
                 return True

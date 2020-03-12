@@ -28,18 +28,15 @@ def filter_objects(tank, state, obj):
             paths.append([b.get_pos()])
 
     else:
-        print("all paths to health packs:")
         for p in state.level.get_paths_to_object(tank, obj):
             # Only show paths to ready health packs.
 
             if obj == Object.HEAL:
-                print(p)
 
                 if state.level.health_pack_ready(state, p[-1]):
                     paths.append(p)
             else:
                 paths.append(p)
-        print("test")
     return paths
 
 

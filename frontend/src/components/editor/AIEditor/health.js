@@ -15,6 +15,8 @@ export default class health {
                 return "60%";
             case 80:
                 return "80%";
+            default:
+                return null;
         }
     }
     //TODO jsonify()
