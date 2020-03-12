@@ -7,13 +7,29 @@ import os
 
 class Level:
 
-
     def __init__(self, path, objects):
         self.objects = objects
         self.path = path
         self.nearest_objects = self.cache_or_prepare_nearest_objects()
         self.nearest_paths = self.cache_or_prepare_all_paths()
+        self.health_packs = self.collect_health_packs()
 
+    def collect_health_packs(self):
+        packs = dict()
+        for y, row in enumerate(self.objects):
+            for x, obj in enumerate(row):
+                if obj == Object.HEAL:
+                    packs[(x, y)] = 0
+        return packs
+
+    def health_pack_ready(self, state, pos):
+        x, y = pos
+        pos = math.floor(x), math.floor(y)
+        print(self.health_packs, pos)
+        if pos in self.health_packs:
+            if self.health_packs[pos] <= state.frames_passed:
+                return True
+        return False
 
     def cache_or_prepare_nearest_objects(self):
         nearest_objects = None
