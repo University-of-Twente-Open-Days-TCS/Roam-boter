@@ -50,7 +50,7 @@ class PlayBackEncoder(JSONEncoder):
         elif isinstance(obj, Frame):
             return obj.__dict__
         elif isinstance(obj, Tank):
-            return {'pos': obj.get_pos(), 'rotation': obj.get_rotation(), 'turret_rotation': obj.get_turret_rotation()}
+            return {'pos': obj.get_pos(), 'rotation': obj.get_rotation(), 'turret_rotation': obj.get_turret_rotation(), 'health': obj.get_health()}
         elif isinstance(obj, Bullet):
             return {'pos': obj.get_pos()}
         elif isinstance(obj, Object):
@@ -60,4 +60,3 @@ class PlayBackEncoder(JSONEncoder):
         else:
             print(obj)
             #return json.JSONEncoder.default(self, object)
-
