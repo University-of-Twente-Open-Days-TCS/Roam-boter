@@ -20,29 +20,29 @@ export default class popup {
 
     createGroup() {
         let thisStage = this.stage;
-        this.group = new Konva.Group({
-            x: thisStage.width() * 0.2,
-            y: thisStage.height() * 0.2,
-        });
+        this.dDown = new dropdown(this.stage, this.layer, this.list, this.closePopup.bind(this));
+        this.group = new Konva.Group();
+
         this.createRect();
-        this.createClose();
-        let dDown = new dropdown(this.stage, this.layer, this.list, this.closePopup.bind(this));
-        this.group.add(dDown.group);
+        //this.createClose();
+        this.group.add(this.dDown.group);
         //dropdown = new dropdown();
+        this.group.x(thisStage.width() / 2 - (this.rect.width() / 2));
+        this.group.y(thisStage.height() / 2 - (this.rect.height() / 2));
     }
 
     createRect() {
         let thisStage = this.stage;
 
-        var rect = new Konva.Rect({
-            width: thisStage.width() * 0.6,
-            height: thisStage.height() * 0.6,
+        this.rect = new Konva.Rect({
+            width: this.dDown.width + 20,
+            height: this.dDown.height + 20,
             fill: 'blue',
             stroke: 'black',
             strokeWidth: 2,
             cornerRadius: 10,
         });
-        this.group.add(rect);
+        this.group.add(this.rect);
     }
 
     createClose() {
@@ -60,7 +60,7 @@ export default class popup {
         });
         this.group.add(exitRect);
 
-        exitRect.on("click", () => {
+        exitRect.on("click tap", () => {
             this.closePopup();
         });
     }

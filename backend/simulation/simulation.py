@@ -184,7 +184,7 @@ class Simulation:
 # Run the simulation with an array of ais to be executed.
 # Params: [AINode]
 # Returns: PlayBack
-def simulate(ais, game_mode="DeathMatch", level="level1"):
+def simulate(ais, game_mode="DM", level="level1"):
     level_loader = LevelLoader()
 
     sim = Simulation(level_loader.load_level(level), ais, game_mode)
