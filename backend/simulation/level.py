@@ -5,6 +5,8 @@ import math
 
 import os
 
+HEALTH_PACK_COOLDOWN = 9999999
+
 class Level:
 
     def __init__(self, path, objects):
@@ -29,6 +31,14 @@ class Level:
         if pos in self.health_packs:
             if self.health_packs[pos] <= state.frames_passed:
                 return True
+        return False
+
+    def pickup_health_pack(self, state, pos):
+        x, y = pos
+        pos = math.floor(x), math.floor(y)
+        if self.health_pack_ready(state, pos):
+            self.health_packs[pos] = state.frames_passed + HEALTH_PACK_COOLDOWN
+            return True
         return False
 
     def cache_or_prepare_nearest_objects(self):
@@ -122,34 +132,36 @@ class Level:
             node = queue.pop(0)
             p, a, b = node
             pos = a, b
-            if self.get_object(a, b) == obj:
-                goal.append(node)
-
-            collision = False
-            if first_node:
-                if self.get_object(a, b) == Object.WALL:
-                    first_node = False
-                    continue
-            else:
-                for wa in range(a - 1, a + 2):
-                    for wb in range(b - 1, b + 2):
-                        try:
-                            if self.get_object(wa, wb) == Object.WALL:
-                                collision = True
-                                break
-                        except Exception:
-                            collision = True
-                            break
-                if collision:
-                    continue
-
-            first_node = False
 
             if pos not in visited:
-
                 visited[pos] = node
 
-                if a + 1 < len(self.objects):
+                # Append goal
+                if self.get_object(a, b) == obj:
+                    goal.append(node)
+
+                # Check for possible collisions:
+                collision = False
+                if first_node:
+                    if self.get_object(a, b) == Object.WALL:
+                        first_node = False
+                        continue
+                else:
+                    for wa in range(a - 1, a + 2):
+                        for wb in range(b - 1, b + 2):
+                            try:
+                                if self.get_object(wa, wb) == Object.WALL:
+                                    collision = True
+                                    break
+                            except Exception:
+                                collision = True
+                                break
+                    if collision:
+                        continue
+
+                first_node = False
+
+                if a + 1 < len(self.objects[0]):
                     queue.append((pos, a + 1, b))
                 if a - 1 >= 0:
                     queue.append((pos, a - 1, b))

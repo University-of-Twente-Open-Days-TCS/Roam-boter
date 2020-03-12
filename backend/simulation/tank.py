@@ -252,6 +252,10 @@ class Tank:
     def get_team(self):
         return self.team_id
 
+    def handle_health_packs(self, state):
+        if state.level.pickup_health_pack(state, self.get_pos()):
+            self.health = 100
+
 
 
 
