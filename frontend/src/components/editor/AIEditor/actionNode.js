@@ -12,8 +12,7 @@ import speed from "./speed.js";
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
-var spawnX = 0;
-var spawnY = 0;
+const spawnPoint = {x: 0, y: 0};
 
 
 const objectList = [
@@ -69,20 +68,18 @@ export default class actionNode {
     _group;
     _rect;
     _inputCircle;
+    _position;
 
 
-    constructor(stage, layer, actionList) {
+    constructor(stage, layer, actionList = [], position = spawnPoint) {
         this.group = new Konva.Group({
             draggable: true
         });
         this.stage = stage;
         this.layer = layer;
+        this.position = position;
+        this.actionList = actionList;
 
-        if (actionList != null) {
-            this.actionList = actionList;
-        } else {
-            this.actionList = [];
-        }
         this.actionNodeText = this.createActionNodeText();
         this.createTextObject();
         this.createRect();
@@ -114,6 +111,8 @@ export default class actionNode {
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
+
+        this.setassetsizes();
 
         this.stage.draw();
 
@@ -259,13 +258,8 @@ export default class actionNode {
 
     setassetsizes() {
         //Adjust rect size
-        if (this.actionNodeTextObj.text != null) {
-            this.rect.width(this.actionNodeTextObj.width());
-            this.rect.height(this.actionNodeTextObj.height());
-        } else {
-            this.rect.width(blockWidth);
-            this.rect.height(blockHeight);
-        }
+        this.rect.width(Math.max(this.actionNodeTextObj.width(), blockWidth));
+        this.rect.height(Math.max(this.actionNodeTextObj.height(), blockHeight));
 
         //adjust inputcircle
         this.inputCircle.y(this.rect.y());
@@ -283,8 +277,8 @@ export default class actionNode {
             this.actionNodeText = "";
         }
         this.actionNodeTextObj = new Konva.Text({
-            x: spawnX,
-            y: spawnY,
+            x: this.position.x,
+            y: this.position.y,
             text: this.actionNodeText,
             fontSize: 12,
             fill: '#FFF',
@@ -296,7 +290,7 @@ export default class actionNode {
 
     }
 
-    intifyPosition = ({x, y}) => ({"x" : parseInt(x), "y" : parseInt(y)})
+    intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)})
 
     jsonify() {
         let node = this.rect;
@@ -312,27 +306,27 @@ export default class actionNode {
                 //Do Nothing
                 case 0:
                     tree.actionlist.push({
-                        "type-id": 0, "attributes": {}
+                        "type_id": 0, "attributes": {}
                     });
                     break;
                 // Finds shortest path to reach given object.
                 case 1:
                     tree.actionlist.push({
-                        "type-id": 1, "attributes": {"obj": item.object.id}
+                        "type_id": 1, "attributes": {"obj": item.object.id}
                     });
 
                     break;
                 //Follows a pre-defined path clockwise or anticlockwise along the map
                 case 2:
                     tree.actionlist.push({
-                        "type-id": 2, "attributes": {}
+                        "type_id": 2, "attributes": {}
                     });
                     break;
 
                 // Patrols in a possible eight-figure around a location.
                 case 3:
                     tree.actionlist.push({
-                        "type-id": 3, "attributes": {"obj": item.object.id}
+                        "type_id": 3, "attributes": {"obj": item.object.id}
                     });
                     break;
 
@@ -340,7 +334,7 @@ export default class actionNode {
                 //Keeps moving in a straight away from object, if wall is hit keeps increasing either x or y-value to increase distance
                 case 4:
                     tree.actionlist.push({
-                        "type-id": 4, "attributes": {"obj": item.object.id}
+                        "type_id": 4, "attributes": {"obj": item.object.id}
                     });
                     break;
 
@@ -348,7 +342,7 @@ export default class actionNode {
                 //Aims at an object. It aims according to the predicted position and bullet travel time
                 case 5:
                     tree.actionlist.push({
-                        "type-id": 5, "attributes": {"obj": item.object.id}
+                        "type_id": 5, "attributes": {"obj": item.object.id}
                     });
                     break;
 
@@ -356,7 +350,7 @@ export default class actionNode {
                 //Aims at a certain direction based on either the tank or map
                 case 6:
                     tree.actionlist.push({
-                        "type-id": 6, "attributes": {"winddir": item.winddir.id}
+                        "type_id": 6, "attributes": {"winddir": item.winddir.id}
                     });
                     break;
 
@@ -364,33 +358,33 @@ export default class actionNode {
                 //Aims at a certain direction based on either the tank or map
                 case 7:
                     tree.actionlist.push({
-                        "type-id": 7, "attributes": {"reldir": item.reldir.id}
+                        "type_id": 7, "attributes": {"reldir": item.reldir.id}
                     });
                     break;
 
                 //Aim to left with Speed
                 case 8:
                     tree.actionlist.push({
-                        "type-id": 8, "attributes": {"speed": item.speed.id}
+                        "type_id": 8, "attributes": {"speed": item.speed.id}
                     });
                     break;
 
                 //Aim to right with Speed
                 case 9:
                     tree.actionlist.push({
-                        "type-id": 9, "attributes": {"speed": item.speed.id}
+                        "type_id": 9, "attributes": {"speed": item.speed.id}
                     });
                     break;
 
                 //Fires a bullet
                 case 10:
                     tree.actionlist.push({
-                        "type-id": 10, "attributes": {}
+                        "type_id": 10, "attributes": {}
                     });
                     break;
                 case 11:
                     tree.actionlist.push({
-                        "type-id": 11, "attributes": {}
+                        "type_id": 11, "attributes": {}
                     });
 
                     break;
@@ -401,17 +395,17 @@ export default class actionNode {
 
 
         });
-        tree.position = this.intifyPosition(node.getAbsolutePosition())
-        let result = {}
-        result.actionblock = tree
+        tree.position = this.intifyPosition(node.getAbsolutePosition());
+        let result = {};
+        result.actionblock = tree;
         return result;
     }
 
 
     createRect() {
         this.rect = new Konva.Rect({
-            x: 0,
-            y: 0,
+            x: this.position.x,
+            y: this.position.y,
             width: blockWidth,
             height: blockHeight,
             fill: 'green',
@@ -425,8 +419,8 @@ export default class actionNode {
     //circle to which connections can be made by dragging arrows on it
     createInputCircle() {
         this.inputCircle = new Konva.Circle({
-            y: 0,
-            x: this.rect.width() / 2,
+            y: this.position.y,
+            x: this.position.x + this.rect.width() / 2,
             radius: circle_radius,
             fill: 'white',
             stroke: 'black',
@@ -518,5 +512,13 @@ export default class actionNode {
 
     set inputCircle(value) {
         this._inputCircle = value;
+    }
+
+    get position() {
+        return this._position;
+    }
+
+    set position(value) {
+        this._position = value;
     }
 }
