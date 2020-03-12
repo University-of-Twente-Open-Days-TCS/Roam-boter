@@ -1,6 +1,7 @@
 import RoamBotAPI from "../../RoamBotAPI.js"
 
 import React, { Component } from "react";
+import {useState} from 'react';
 
 import { Button } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
@@ -12,25 +13,34 @@ const AIItem = (props) => {
      */
     let ai = props.ai
 
+    const [simulating, setSimulating] = useState(false)
+
     const playVsBot = () => {
         /**
          * Runs an simulation.
          */
-        let data = {}
-        data.bot = 1
-        data.ai = ai.pk
-        data.gamemode = "DM"
+        if (!simulating) {
+            let data = {}
+            data.bot = 1
+            data.ai = ai.pk
+            data.gamemode = "DM"
+    
+            let call = RoamBotAPI.postBotMatch(data)
+            setSimulating(true)
+    
+            call.then((response) => {
 
-        let call = RoamBotAPI.postBotMatch(data)
+                setSimulating(false)
 
-        call.then((response) => {
-            if (response.ok) {
-                alert("Simulation successful")
-            }else {
-                console.log(response)
-                alert("An error occurred. See console")
-            }
-        })
+                if (response.ok) {
+                    alert("Simulation successful")
+                }else {
+                    console.log(response)
+                    alert("An error occurred. See console")
+                }
+            })
+        }
+        
     }
 
     const deleteAI = () => {
@@ -46,11 +56,14 @@ const AIItem = (props) => {
         }
     }
 
-    
     return (
         <li>
             <Typography variant="button">{props.ai.name}</Typography><span className='spacing'></span>
-            <Button onClick={playVsBot} variant="outlined" color="primary" size="small">Play vs Bot</Button><span className='spacing'></span>
+
+            <Button onClick={playVsBot} variant="outlined" color="primary" size="small" disabled={simulating}>
+                {simulating ? "Simulating" : "Play vs Bot"}
+            </Button><span className='spacing'></span>
+
             <Button className='delete-button' onClick={deleteAI} variant="outlined" color="secondary" size="small">Delete</Button>
         </li>
     )
