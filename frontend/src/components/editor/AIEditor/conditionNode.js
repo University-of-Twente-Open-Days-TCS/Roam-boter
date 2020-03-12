@@ -131,13 +131,10 @@ export default class conditionNode {
         let node = this;
         this.group.on("dragmove", function () {
             node.updateArrows(node.stage);
-            console.log("dragmove");
         });
 
         this.group.on("dragend", function () {
             var touchPos = node.stage.getPointerPosition();
-            console.log("dragend");
-            console.log(node.stage.staticlayer.getIntersection(touchPos));
             if (node.stage.staticlayer.getIntersection(touchPos) != null) {
                 node.remove();
             }
@@ -578,8 +575,6 @@ export default class conditionNode {
         dragCircle.on("dragend", function () {
             var touchPos = node.stage.getPointerPosition();
             var intersect = node.layer.getIntersection(touchPos);
-            console.log(intersect);
-            console.log(node.stage.inputDict[intersect]);
             //If arrow is dropped on another element
             if (intersect != null) {
                 //If the other element is an inputnode

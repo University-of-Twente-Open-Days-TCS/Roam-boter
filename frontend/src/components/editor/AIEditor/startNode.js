@@ -119,8 +119,6 @@ export default class startNode {
         this.dragCircle.on("dragend", function () {
             var touchPos = node.stage.getPointerPosition();
             var intersect = node.layer.getIntersection(touchPos);
-            console.log(intersect);
-            console.log(node.stage.inputDict[intersect]);
             if (node.stage.inputDict.has(intersect)) {
                 if (node.stage.inputDict.get(intersect).inputArrow != null) {
                     node.stage.inputDict.get(intersect).inputArrow.delete();

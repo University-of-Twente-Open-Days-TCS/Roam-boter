@@ -94,8 +94,6 @@ export default class actionNode {
         let thisActionNode = this;
         this.group.on("dragend", () => {
             var touchPos = stage.getPointerPosition();
-            console.log("dragend");
-            console.log(this.stage.staticlayer.getIntersection(touchPos));
             if (this.stage.staticlayer.getIntersection(touchPos) != null) {
                 thisActionNode.remove();
                 layer.draw();
@@ -122,17 +120,14 @@ export default class actionNode {
         let actionNodeString = "";
         let i = 0;
         if (this.actionList != null) {
-            console.log(this.actionList);
             let actionListLength = this.actionList.length;
             this.actionList.forEach(element => {
-                console.log(element.toString());
                 actionNodeString = actionNodeString.concat(element.toString());
                 if (i + 1 < actionListLength) {
                     actionNodeString = actionNodeString.concat("\n");
                 }
                 i = i + 1;
             });
-            console.log(actionNodeString);
             return actionNodeString
         } else {
             return null;
