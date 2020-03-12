@@ -191,10 +191,9 @@ class aiCanvas {
 
     //Create a new node to which this will point.
     treeify(nodeJson) {
+
         //If the new childNode is a condition
         let newOwnNode;
-        let newTrueChild;
-        let newFalseChild;
         if (nodeJson.condition != null) {
             switch (nodeJson.condition.type_id) {
                 case 1:
@@ -204,7 +203,7 @@ class aiCanvas {
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
 
-                    this.createChildren(newOwnNode);
+                    this.createChildren(newOwnNode, nodeJson.condition);
 
                     return newOwnNode;
                 case 2:
@@ -213,7 +212,7 @@ class aiCanvas {
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
 
-                    this.createChildren(newOwnNode);
+                    this.createChildren(newOwnNode, nodeJson.condition);
 
                     return newOwnNode;
                 case 3:
@@ -222,7 +221,7 @@ class aiCanvas {
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
 
-                    this.createChildren(newOwnNode);
+                    this.createChildren(newOwnNode, nodeJson.condition);
 
                     return newOwnNode;
                 case 4:
@@ -231,14 +230,14 @@ class aiCanvas {
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
 
-                    this.createChildren(newOwnNode);
+                    this.createChildren(newOwnNode, nodeJson.condition);
 
                     return newOwnNode;
                 case 5:
                     newOwnNode = new conditionNode(this.stage, this.layer, new condition(5),
                         nodeJson.condition.position);
 
-                    this.createChildren(newOwnNode);
+                    this.createChildren(newOwnNode, nodeJson.condition);
 
                     return newOwnNode;
                 case 6:
@@ -246,7 +245,7 @@ class aiCanvas {
                         null, null, new label(nodeJson.condition.label)),
                         nodeJson.condition.position);
 
-                    this.createChildren(newOwnNode);
+                    this.createChildren(newOwnNode, nodeJson.condition);
 
                     return newOwnNode;
                 case 7:
@@ -254,7 +253,7 @@ class aiCanvas {
                         null, null, null, new health(nodeJson.condition.health)),
                         nodeJson.condition.position);
 
-                    this.createChildren(newOwnNode);
+                    this.createChildren(newOwnNode, nodeJson.condition);
 
                     return newOwnNode;
                 default:
@@ -324,10 +323,10 @@ class aiCanvas {
     }
 
     //Create childNodes, draw them on canvas and draw arrows to them
-    createChildren(ownNode) {
+    createChildren(ownNode, conditionJson) {
         //create children
-        let newTrueChild = this.treeify(nodeJson.condition.child_true);
-        let newFalseChild = this.treeify(nodeJson.condition.child_false);
+        let newTrueChild = this.treeify(conditionJson.child_true);
+        let newFalseChild = this.treeify(conditionJson.child_false);
 
         //Draw them on canvas
         this.layer.add(newTrueChild.group);
