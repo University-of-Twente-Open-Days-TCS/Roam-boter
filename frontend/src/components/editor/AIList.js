@@ -56,6 +56,7 @@ const AIItem = (props) => {
         }
     }
 
+
     return (
         <li>
             <Typography variant="button">{props.ai.name}</Typography><span className='spacing'></span>
