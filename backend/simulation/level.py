@@ -12,7 +12,7 @@ class Level:
         self.objects = objects
         self.path = path
         self.nearest_objects = self.cache_or_prepare_nearest_objects()
-        self.nearest_paths = self.cache_or_prepare_nearest_paths()
+        self.nearest_paths = self.cache_or_prepare_all_paths()
 
 
     def cache_or_prepare_nearest_objects(self):
@@ -73,23 +73,23 @@ class Level:
             for x in range(len(self.objects[0])):
                 yield self.get_object(x, y), x, y
 
-    def cache_or_prepare_nearest_paths(self):
+    def cache_or_prepare_all_paths(self):
         nearest_paths = None
         pickle_path = os.path.join(self.get_caching_directory(), "nearest_paths_" + self.path + ".p")
         try:
             with open(pickle_path, 'rb') as f:
                 nearest_paths = pickle.load(f)
         except FileNotFoundError:
-            nearest_paths = self.prepare_nearest_paths()
+            nearest_paths = self.prepare_all_paths()
             with open(pickle_path, 'wb') as f:
                 pickle.dump(nearest_paths, f)
 
         return nearest_paths
 
-    def prepare_nearest_paths(self):
-        return [[{obj: self.find_nearest_path(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)] for y, row in enumerate(self.objects)]
+    def prepare_all_paths(self):
+        return [[{obj: self.find_all_paths(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)] for y, row in enumerate(self.objects)]
 
-    def find_nearest_path(self, obj, x, y):
+    def find_all_paths(self, obj, x, y):
         if x == 0:
             print(y)
         # A tank can always walk straight towards the nearest wall
@@ -98,7 +98,7 @@ class Level:
 
         queue = [(None, x, y)]
         visited = dict()
-        goal = None
+        goal = []
 
         first_node = True
 
@@ -107,9 +107,7 @@ class Level:
             p, a, b = node
             pos = a, b
             if self.get_object(a, b) == obj:
-                goal = node
-
-                break
+                goal.append(node)
 
             collision = False
             if first_node:
@@ -145,40 +143,44 @@ class Level:
                     queue.append((pos, a, b - 1))
 
         # backtrack the path
-        path = []
-        while goal is not None:
-            parent, x, y = goal
-            path.append((x + 0.5, y + 0.5))
-
-            if parent is None:
-                break
-
-            goal = visited[parent]
-        path = list(reversed(path))
+        paths = [self.backtrack_path(n, visited) for n in goal]
 
         # decrease path based on line of sight smoothing
+        return [self.smooth_path(p) for p in paths]
+
+    def backtrack_path(self, node, visited):
+        parent, x, y = node
+        if parent is not None:
+            return self.backtrack_path(visited[parent], visited) + [(x + 0.5, y + 0.5)]
+        else:
+            return [(x + 0.5, y + 0.5)]
+
+    def smooth_path(self, path):
         i = 0
-        while i < len(path) - 2:
+        while i <len(path) - 2:
             while i < len(path) - 2 and self.line_of_sight(path[i], path[i + 2]):
                 del path[i + 1]
             i += 1
 
-        # Remove the first element from the path.
+        # we want to remove the first element since this is the starting element, except for the case where
+        # the start and end of the path are the same
+        # This only happens when the goal location is the same as the starting location.
         if len(path) > 1:
             return path[1:]
         else:
             return path
 
-    def get_path_to_object(self, tank, obj):
+
+    def get_paths_to_object(self, tank, obj):
         x, y = tank.get_pos()
         x, y = math.floor(x), math.floor(y)
-        path = []
+        paths = []
 
         if 0 < x < self.get_width() - 1:
             if 0 < y < self.get_height() - 1:
-                path = self.nearest_paths[y][x][obj]
+                paths = self.nearest_paths[y][x][obj]
 
-        return path
+        return paths
 
     def line_of_sight(self, pos1, pos2):
         # x1, y1 = pos1

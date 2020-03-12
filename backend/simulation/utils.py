@@ -28,9 +28,8 @@ def filter_objects(tank, state, obj):
             paths.append([b.get_pos()])
 
     else:
-        p = state.level.get_path_to_object(tank, obj)
-        if len(p) > 0:
-            paths.append(state.level.get_path_to_object(tank, obj))
+        for p in state.level.get_paths_to_object(tank, obj):
+            paths.append(p)
     return paths
 
 
