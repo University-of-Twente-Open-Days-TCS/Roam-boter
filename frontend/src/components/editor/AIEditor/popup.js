@@ -60,7 +60,7 @@ export default class popup {
         });
         this.group.add(exitRect);
 
-        exitRect.on("click", () => {
+        exitRect.on("click tap", () => {
             this.closePopup();
         });
     }
