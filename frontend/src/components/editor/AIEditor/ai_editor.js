@@ -2,13 +2,17 @@ import actionNode from "./actionNode.js";
 import conditionNode from "./conditionNode.js";
 import startNode from "./startNode.js";
 import Konva from "konva"
-import distance from "./distance";
-import object from "./object";
-import label from "./label";
-import health from "./health";
-import winddir from "./winddir";
-import reldir from "./reldir";
-import speed from "./speed";
+import distance from "./distance.js";
+import object from "./object.js";
+import label from "./label.js";
+import health from "./health.js";
+import winddir from "./winddir.js";
+import reldir from "./reldir.js";
+import speed from "./speed.js";
+import condition from "./condition.js";
+import action from "./action.js";
+import arrow from "./arrow.js";
+
 
 
 class aiCanvas {
