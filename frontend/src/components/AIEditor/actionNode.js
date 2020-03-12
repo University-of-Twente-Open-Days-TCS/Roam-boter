@@ -117,6 +117,8 @@ export default class actionNode {
             this.stage.draw();
         });
 
+        this.setassetsizes();
+
         this.stage.draw();
 
     }

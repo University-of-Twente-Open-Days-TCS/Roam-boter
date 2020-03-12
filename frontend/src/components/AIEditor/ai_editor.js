@@ -53,6 +53,7 @@ class aiCanvas {
         this.stage.add(this.stage.templayer);
         this.layer.draw();
 
+        this.jsonToTree(this.treeJson);
 
         //add trashcan
         this.addTrashcan(this.stage);
@@ -61,6 +62,7 @@ class aiCanvas {
 
         //Make canvas draggable
         this.makeDraggable();
+
 
     }
 
@@ -74,7 +76,7 @@ class aiCanvas {
             x: 0,
             y: 0,
         });
-        console.log("post stage")
+        console.log("post stage");
 
         this.stage.scale = 1;
     }
@@ -168,75 +170,99 @@ class aiCanvas {
 
     //Turn the tree into a json file
     treeToJson() {
-        console.log(this.startNode);
         return this.startNode.trueArrow.dest.jsonify();
     }
 
     //Turn a json file into a tree
     jsonToTree(jsonFile) {
         //Parse JSON to JS format
-        let nodeJson = JSON.parse(jsonFile);
+        let parsedJson = JSON.parse(jsonFile);
 
-        //Create first child
-        let nodeChild = this.createChildNodeFromJson(nodeJson);
+        //Create first child from the startnode (and therefore iteratively all their successors)
+        let nodeChild = this.treeify(parsedJson);
+
+        //Add child to canvas
+        this.layer.add(nodeChild.group);
 
         //Draw arrows to child
-        this.startNode.drawArrowFromJson(nodeChild, true);
+        this.drawArrowFromJson(this.startNode, nodeChild, true);
 
     }
 
-    //UNFORTUNATELY DUPLICATE CODE FROM CONDITIONNODE STARTING HERE --
     //Create a new node to which this will point.
-    createChildNodeFromJson(nodeJson) {
+    treeify(nodeJson) {
         //If the new childNode is a condition
-        let newChildNode;
+        let newOwnNode;
+        let newTrueChild;
+        let newFalseChild;
         if (nodeJson.condition != null) {
             switch (nodeJson.condition.type_id) {
                 case 1:
-                    newChildNode = new conditionNode(this.stage, this.layer, new condition(1,
+                    //Create own node
+                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(1,
                         new distance(nodeJson.condition.attributes.distance),
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
-                    return newChildNode;
-                case 2:
-                    newChildNode = new conditionNode(this.stage, this.layer, new condition(2,
-                        null,
-                        new object(nodeJson.condition.attributes.obj)),
-                        nodeJson.condition.position);
-                    return newChildNode;
 
+                    this.createChildren(newOwnNode);
+
+                    return newOwnNode;
+                case 2:
+                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(2,
+                        null,
+                        new object(nodeJson.condition.attributes.obj)),
+                        nodeJson.condition.position);
+
+                    this.createChildren(newOwnNode);
+
+                    return newOwnNode;
                 case 3:
-                    newChildNode = new conditionNode(this.stage, this.layer, new condition(3,
+                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(3,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
-                    return newChildNode;
+
+                    this.createChildren(newOwnNode);
+
+                    return newOwnNode;
                 case 4:
-                    newChildNode = new conditionNode(this.stage, this.layer, new condition(4,
+                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(4,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
-                    return newChildNode;
+
+                    this.createChildren(newOwnNode);
+
+                    return newOwnNode;
                 case 5:
-                    newChildNode = new conditionNode(this.stage, this.layer, new condition(5),
+                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(5),
                         nodeJson.condition.position);
-                    return newChildNode;
+
+                    this.createChildren(newOwnNode);
+
+                    return newOwnNode;
                 case 6:
-                    newChildNode = new conditionNode(this.stage, this.layer, new condition(6,
+                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(6,
                         null, null, new label(nodeJson.condition.label)),
                         nodeJson.condition.position);
-                    return newChildNode;
+
+                    this.createChildren(newOwnNode);
+
+                    return newOwnNode;
                 case 7:
-                    newChildNode = new conditionNode(this.stage, this.layer, new condition(6,
+                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(6,
                         null, null, null, new health(nodeJson.condition.health)),
                         nodeJson.condition.position);
-                    return newChildNode;
+
+                    this.createChildren(newOwnNode);
+
+                    return newOwnNode;
                 default:
                 //TODO throw exception, incorrect type_id in JSON
             }
         } else if (nodeJson.actionblock != null) {
             //Otherwise if new childNode is an action
-            let newActionList;
+            let newActionList = [];
             nodeJson.actionblock.actionlist.forEach(actionItem => {
                 switch (actionItem.type_id) {
                     case 1:
@@ -293,13 +319,26 @@ class aiCanvas {
     }
 
     //Draw an arrow from the false/true-circle to the newly created node
-    drawArrowFromJson(destNode, trueCondition) {
-        let newArrow = new arrow(this, destNode, trueCondition, this.stage, this.layer);
+    drawArrowFromJson(startNode, destNode, trueCondition) {
+        let newArrow = new arrow(startNode, destNode, trueCondition, this.stage, this.layer);
     }
 
-    //DUPLICATE CODE FROM CONDITIONNODE ending HERE --
+    //Create childNodes, draw them on canvas and draw arrows to them
+    createChildren(ownNode) {
+        //create children
+        let newTrueChild = this.treeify(nodeJson.condition.child_true);
+        let newFalseChild = this.treeify(nodeJson.condition.child_false);
 
-//BELOW THIS LINE ARE ONLY BUTTON-INTERACTION-FUNCTION DEMOS, MOST LIKELY TO BE REPLACED BY REACT
+        //Draw them on canvas
+        this.layer.add(newTrueChild.group);
+        this.layer.add(newFalseChild.group);
+
+        //Draw arrows to children
+        this.drawArrowFromJson(ownNode, newTrueChild, true);
+        this.drawArrowFromJson(ownNode, newFalseChild, false);
+    }
+
+
     addCondition() {
         let newCondition = new conditionNode(this.stage, this.layer);
         this.layer.add(newCondition.group);
@@ -307,7 +346,7 @@ class aiCanvas {
         this.stage.draw();
     }
 
-    addActionNode(stage, layer) {
+    addActionNode() {
         let newActionNode = new actionNode(this.stage, this.layer);
         this.layer.add(newActionNode.group);
         newActionNode.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
@@ -342,36 +381,5 @@ class aiCanvas {
 
 
 }
-
-// let aiContainer = new aiCanvas('container');
-//
-// //Buttons
-//
-// //Add condition
-// document.getElementById('addCondition').addEventListener(
-//     'click',
-//     function () {
-//         aiContainer.addCondition()
-//     },
-//     false
-// );
-//
-// //Add action
-// document.getElementById('addActionNode').addEventListener(
-//     'click',
-//     function () {
-//         aiContainer.addActionNode()
-//     },
-//     false
-// );
-// //Add condition
-// document.getElementById('printJson').addEventListener(
-//     'click',
-//     function () {
-//         console.log("textTreeToJson")
-//         console.log(JSON.stringify(aiContainer.treeToJson()));
-//     },
-//     false
-// );
 
 export default aiCanvas
