@@ -20,10 +20,10 @@ class RoamBotAPI {
      * API endpoint for RoamBot-er
      */
 
-    API_HOST = "http://localhost:8000"
 
     constructor() {
         this._csrfToken = null
+        this.API_HOST = 'http://'+window.location.hostname + ":8000"
     }
 
     async callApi(url, method, data) {
@@ -157,6 +157,15 @@ class RoamBotAPI {
          */
         let data = {gamemode, bot, ai}
         let response = this.callApi('matches/botmatches/', 'POST', data)
+        return response
+    }
+
+    deleteBotMatch(pk) {
+        /**
+         * Deletes a bot match.
+         * @param pk Primary Key of the bot match to delete.
+         */
+        let response = this.callApi('matches/botmatches/'+pk, 'DELETE')
         return response
     }
 
