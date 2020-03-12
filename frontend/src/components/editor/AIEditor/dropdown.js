@@ -69,7 +69,7 @@ export default class dropdown {
                 let rect = this.createBlock(maxHeight, maxWidth, i, j);
                 let txt = textObjects[i + j * dim];
                 let obj = this.items[i + j * dim];
-                g.on("click", () => {
+                g.on("click tap", () => {
                     this.topBoxText.text(txt.text());
                     thisDropdown.layer.draw();
                     this.f(obj);
