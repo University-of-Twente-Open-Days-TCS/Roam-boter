@@ -20,10 +20,10 @@ class RoamBotAPI {
      * API endpoint for RoamBot-er
      */
 
-    API_HOST = "http://localhost:8000"
 
     constructor() {
         this._csrfToken = null
+        this.API_HOST = 'http://'+window.location.hostname + ":8000"
     }
 
     async callApi(url, method, data) {
