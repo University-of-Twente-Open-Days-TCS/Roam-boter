@@ -1,0 +1,8 @@
+span.spacing {
+    display: inline-block;
+    width: 1rem;
+}
+
+ul {
+    list-style-type: none;
+}

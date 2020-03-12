@@ -4,10 +4,11 @@ import ListItem from "@material-ui/core/ListItem";
 import React from "react";
 import List from "@material-ui/core/List";
 import {Adb, Person} from "@material-ui/icons";
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 
-export default function AIMenuList({handleClick}) {
+export default function AIMenuList(text) {
+    
     const items = [
         {
             text: "Play versus Bot",
@@ -23,10 +24,18 @@ export default function AIMenuList({handleClick}) {
     ];
 
     return (
-        items.map(({text, icon, url}, i) =>
-            <NavLink to={url} key={i}>
-                <button onClick={handleClick}>{text}</button>
-            </NavLink>
-        )
+
+        <List>
+            {
+                items.map(({text, icon, url}, i) =>
+                    <NavLink to={url} key={i}>
+                        <ListItem button key={i}>
+                            <ListItemIcon>{icon}</ListItemIcon>
+                            <ListItemText primary={text}/>
+                        </ListItem>
+                    </NavLink>
+                )
+            }
+        </List>
     );
 }
