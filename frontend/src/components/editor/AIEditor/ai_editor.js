@@ -52,7 +52,7 @@ class aiCanvas {
         this.stage.add(this.layer);
         this.stage.add(this.stage.templayer);
         this.layer.draw();
-        
+
         //add trashcan
         this.addTrashcan(this.stage);
         this.layer.draw();

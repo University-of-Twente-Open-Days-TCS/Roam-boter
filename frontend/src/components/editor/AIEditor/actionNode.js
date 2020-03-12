@@ -71,20 +71,15 @@ export default class actionNode {
     _position;
 
 
-    constructor(stage, layer, actionList, position = spawnPoint) {
+    constructor(stage, layer, actionList = [], position = spawnPoint) {
         this.group = new Konva.Group({
             draggable: true
         });
         this.stage = stage;
         this.layer = layer;
         this.position = position;
+        this.actionList = actionList;
 
-
-        if (actionList != null) {
-            this.actionList = actionList;
-        } else {
-            this.actionList = [];
-        }
         this.actionNodeText = this.createActionNodeText();
         this.createTextObject();
         this.createRect();
@@ -263,13 +258,8 @@ export default class actionNode {
 
     setassetsizes() {
         //Adjust rect size
-        if (this.actionNodeTextObj.text != null) {
-            this.rect.width(this.actionNodeTextObj.width());
-            this.rect.height(this.actionNodeTextObj.height());
-        } else {
-            this.rect.width(blockWidth);
-            this.rect.height(blockHeight);
-        }
+        this.rect.width(Math.max(this.actionNodeTextObj.width(), blockWidth));
+        this.rect.height(Math.max(this.actionNodeTextObj.height(), blockHeight));
 
         //adjust inputcircle
         this.inputCircle.y(this.rect.y());
