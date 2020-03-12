@@ -1,17 +1,18 @@
 import React, {useState} from 'react';
 import clsx from 'clsx';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Divider from '@material-ui/core/Divider';
 import CssBaseline from '@material-ui/core/CssBaseline';
-
 import IconButton from '@material-ui/core/IconButton';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import ClearIcon from '@material-ui/icons/Clear'
 
+
 import { HashRouter } from "react-router-dom";
 
+import FullscreenMenuItem from './menu/FullscreenMenuItem'
 import AIMenuList from "./menu/AIMenuList";
 import PlayMenuList from "./menu/PlayMenuList";
 
@@ -64,6 +65,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Layout(props) {
+    
     const classes = useStyles();
     const [open, setOpen] = useState(false);
 
@@ -101,6 +103,8 @@ export default function Layout(props) {
                     <AIMenuList/>
                     <Divider/>
                     <PlayMenuList/>
+                    <FullscreenMenuItem {...props} />
+                    
                 </Drawer>
 
                 {/** MAIN CONTENT */}

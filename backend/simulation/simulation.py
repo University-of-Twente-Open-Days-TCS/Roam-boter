@@ -98,9 +98,14 @@ class Simulation:
         for tank in self.get_tanks():
             tank.executeActions(self.state)
 
+        # Handle the possibility for a tank to be standing on a health pack.
+        for tank in self.get_tanks():
+            tank.handle_health_packs(self.state)
+
         # Update bullet locations.
         for bullet in self.get_bullets():
             bullet.update(self.state)
+
 
         # Check if tanks don't have any HP left.
         for tank in self.get_tanks():
@@ -193,13 +198,20 @@ def simulate(ais, game_mode="DM", level="level1"):
 
     return sim.get_playback()
 
+# Prepares caches for list of level names
+def prepare_caches(levels):
+    level_loader = LevelLoader()
+    for l in levels:
+        level_loader.load_level(l)
+
 
 def test_simulation():
+    prepare_caches(["level0", "level1", "level2"])
 
     false_node = ActionNode([Action(10, {})])
-    true_node = ActionNode([Action(1, {'obj': 10}), Action(10, {}), Action(5, {'obj': 2})])
+    true_node = ActionNode([Action(1, {'obj': 8}), Action(10, {}), Action(5, {'obj': 2})])
 
-    ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 10}), true_node, false_node)
+    ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 1}), true_node, false_node)
     playback = simulate([ai, ai])
     print(playback.to_json())
 
@@ -209,3 +221,5 @@ def test_simulation():
 
 if __name__ == "__main__":
     test_simulation()
+
+

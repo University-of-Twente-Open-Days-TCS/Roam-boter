@@ -14,6 +14,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 
 class AIEditor extends Component {
+  
     constructor() {
         super();
         this.state = {
