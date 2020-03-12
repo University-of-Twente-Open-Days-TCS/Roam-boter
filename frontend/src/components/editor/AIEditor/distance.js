@@ -1,5 +1,3 @@
-import Konva from "konva"
-
 
 export default class distance {
     _id;

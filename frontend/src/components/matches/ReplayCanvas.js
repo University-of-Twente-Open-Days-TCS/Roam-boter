@@ -86,7 +86,6 @@ class ReplayCanvas {
         ctx.fillStyle = "#000000";
         ctx.font = "15px Arial";
         ctx.textAlign = "left";
-        console.log(width / (8 / 7));
         ctx.fillText("Scores", width / (8 / 7), height / (8));
 
 
