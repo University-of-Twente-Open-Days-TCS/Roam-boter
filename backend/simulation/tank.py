@@ -102,10 +102,10 @@ class Tank:
     def executeActions(self, state):
         if self.destroyed:
             return
-          
+
         executed_move = False
         executed_aim = False
-    
+
         for action in self.actions:
             # Track whether a movement action has already been executed, if so cancel it.
             if is_movement_action(action.action_id):
@@ -252,6 +252,5 @@ class Tank:
     def get_team(self):
         return self.team_id
 
-
-
-
+    def get_health(self):
+        return self.health
