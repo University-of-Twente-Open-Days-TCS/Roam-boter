@@ -1,15 +1,15 @@
 {
     "condition": {
-        "type-id": 12,
-        "child-true": {
+        "type_id": 12,
+        "child_true": {
             "actionblock": {
                 "actionlist": [
                     {
-                        "type-id": 1,
+                        "type_id": 1,
                         "attributes": {}
                     },
                     {
-                        "type-id": 4,
+                        "type_id": 4,
                         "attributes": {
                             "key": "value",
                             "key2": 2
@@ -22,11 +22,11 @@
                 }
             }
         },
-        "child-false": {
+        "child_false": {
             "actionblock": {
                 "actionlist": [
                     {
-                        "type-id": 1,
+                        "type_id": 1,
                         "attributes": {}
                     }
                 ],

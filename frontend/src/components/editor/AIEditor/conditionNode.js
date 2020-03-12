@@ -235,6 +235,8 @@ export default class conditionNode {
             case 7:
                 wantedList = healthList;
                 break;
+            default:
+                break;
         }
         //If there is still an attribute missing, will ask for it via the popup
         if (wantedList != null) {

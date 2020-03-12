@@ -1,10 +1,15 @@
 import React from "react";
 
-const Home = () => {
+import Button from '@material-ui/core/Button'
+
+const Home = (props) => {
+
+    let logoutHandler = props.handleSubmitLogout
+
     return (
         <div>
             <h1>Home</h1>
-            <p>This is the home page.</p>
+            <Button color="secondary" variant="contained" onClick={logoutHandler}>Logout</Button>
         </div>
     )
 }

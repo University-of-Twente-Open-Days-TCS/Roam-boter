@@ -32,7 +32,6 @@ export default class popup {
     }
 
     createRect() {
-        let thisStage = this.stage;
 
         this.rect = new Konva.Rect({
             width: this.dDown.width + 20,

@@ -34,7 +34,7 @@ class ReplayCanvas {
     drawFrame(frame) {
         if(frame >= this.game_data.frames.length){
             // Don't draw a new frame if out of range
-            return 
+            return
         }
 
         var ctx = this.ctx2d;
@@ -68,6 +68,10 @@ class ReplayCanvas {
         this.game_data.frames[frame].tanks.forEach(function (elem, index) {
             drawImage(tankSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
             drawImage(turretSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation - elem.turret_rotation);
+
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.fillStyle = "rgb(" + ((100 - elem.health) * (255 / 100)) + ", " + (elem.health * (255 / 100)) + ", 0)"
+            ctx.fillRect(elem.pos[0] * cellsize_x - 20, elem.pos[1] * cellsize_y - 20, elem.health / 100 * 40, 5);
             //ctx.drawImage(tankSprite, elem.pos[0] * 20 - 32, elem.pos[1] * 20 - 32, 64, 64);
             //ctx.fillRect((elem.pos[0] * 20 - 10), elem.pos[1] * 20 - 10, 20, 20);
         });
@@ -77,6 +81,17 @@ class ReplayCanvas {
         this.game_data.frames[frame].bullets.forEach(function (elem, index) {
             ctx.fillStyle = "#000000";
             ctx.fillRect(elem.pos[0] * cellsize_x - 2, elem.pos[1] * cellsize_y - 2, 4, 4);
+        });
+
+        ctx.fillStyle = "#000000";
+        ctx.font = "15px Arial";
+        ctx.textAlign = "left";
+        ctx.fillText("Scores", width / (8 / 7), height / (8));
+
+
+        this.game_data.frames[frame].scores.forEach(function (score, index) {
+            ctx.font = "10px Arial";
+            ctx.fillText("Team " + index + ": " + score, width / (8 / 7), height / 8 + (10 * index + 10));
         });
 
     }

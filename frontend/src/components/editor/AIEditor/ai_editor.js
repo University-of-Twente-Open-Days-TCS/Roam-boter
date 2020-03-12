@@ -1,7 +1,4 @@
-import action from "./action.js";
 import actionNode from "./actionNode.js";
-import arrow from "./arrow.js";
-import condition from "./condition.js";
 import conditionNode from "./conditionNode.js";
 import startNode from "./startNode.js";
 import Konva from "konva"
@@ -37,7 +34,6 @@ class aiCanvas {
         //Create the stage
         this.createStage(container);
 
-        console.log("new constructor method!");
         // then create layer
         this.layer = new Konva.Layer();
         this.stage.templayer = new Konva.Layer();
@@ -65,7 +61,6 @@ class aiCanvas {
     }
 
     createStage(container) {
-        console.log({container});
         this.stage = new Konva.Stage({
             container: container,
             width: this.stageWidth,
@@ -74,7 +69,6 @@ class aiCanvas {
             x: 0,
             y: 0,
         });
-        console.log("post stage");
 
         this.stage.scale = 1;
     }
@@ -112,7 +106,6 @@ class aiCanvas {
 // so it triggers touchmove correctly
         Konva.hitOnDragEnabled = true;
         var lastDist = 0;
-        var startScale = 1;
 
         function getDistance(p1, p2) {
             return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
