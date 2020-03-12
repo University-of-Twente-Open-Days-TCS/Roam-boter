@@ -27,7 +27,6 @@ class aiCanvas {
         //Create the stage
         this.createStage(container);
 
-        console.log("new constructor method!");
         // then create layer
         this.layer = new Konva.Layer();
         this.stage.templayer = new Konva.Layer();
@@ -55,7 +54,6 @@ class aiCanvas {
     }
 
     createStage(container) {
-        console.log({container})
         this.stage = new Konva.Stage({
             container: container,
             width: this.stageWidth,
@@ -64,7 +62,6 @@ class aiCanvas {
             x: 0,
             y: 0,
         });
-        console.log("post stage")
 
         this.stage.scale = 1;
     }
@@ -154,7 +151,6 @@ class aiCanvas {
     }
 
     treeToJson() {
-        console.log(this.startNode);
         return this.startNode.trueArrow.dest.jsonify();
     }
 

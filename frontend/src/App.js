@@ -27,6 +27,9 @@ class App extends Component {
             AIs: [],
             loggedIn: false,
         };
+
+        // Bind handlers
+        this.handleSubmitLogout = this.handleSubmitLogout.bind(this)
     }
 
     componentDidMount() {
@@ -63,6 +66,8 @@ class App extends Component {
 
 
     render() {
+        let fullscreenButton = this.state.isFull ? null : <Button variant="outlined" onClick={this.goFull}>Go Fullscreen</Button>
+
         return (
             (this.state.loggedIn) ? (
                 <div>
@@ -72,18 +77,17 @@ class App extends Component {
                     >
                         <div className="full-screenable-node">
                             <Layout>
-                                <Route exact path="/" component={Home}/>
-                                <Route path="/AIEditor"
-                                       render={(props) => <AIEditor {...props} handleSaveAI={this.handleSaveAI}/>}/>
+                                <Route exact path="/" 
+                                    render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
+                                />
+                                <Route path="/AIEditor" component={AIEditor} />
                                 <Route path="/AIList" component={AIList}/>
                                 <Route path="/MatchHistory" component={MatchHistory}/>
                                 <Route path="/PlayvsBot" component={PlayvsBot}/>
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
                                 <hr/>
-                                <Button variant="outlined" onClick={this.goFull}>Go Fullscreen</Button>
-                                <span className='spacing'></span>
-                                <Button variant="outlined" onClick={this.handleSubmitLogout}>Logout</Button>
+                                {fullscreenButton}
                             </Layout>
                         </div>
                     </Fullscreen>
