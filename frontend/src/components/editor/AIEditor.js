@@ -7,9 +7,7 @@ import aiCanvas from "./AIEditor/ai_editor";
 import "../../css/AIEditor.css";
 
 class AIEditor extends Component {
-    constructor(props) {
-        super(props);
-    }
+
 
     componentDidMount() {
         const canvas = new aiCanvas('container')
