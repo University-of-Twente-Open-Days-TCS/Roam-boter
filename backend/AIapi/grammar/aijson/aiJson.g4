@@ -33,8 +33,8 @@ type_id     : TYPE_ID SC INTEGER ;
 ROOT        : APH 'root' APH ;
 CONDITION   : APH 'condition' APH ;
 
-CHILDTRUE   : APH 'child-true' APH ;
-CHILDFALSE  : APH 'child-false' APH ;
+CHILDTRUE   : APH 'child_true' APH ;
+CHILDFALSE  : APH 'child_false' APH ;
 
 ACTIONBLOCK : APH 'actionblock' APH ;
 ACTIONLIST  : APH 'actionlist' APH ;
@@ -45,7 +45,7 @@ POSITION    : APH 'position' APH ;
 X           : APH 'x' APH ;
 Y           : APH 'y' APH ;
 
-TYPE_ID     : APH 'type-id' APH ;
+TYPE_ID     : APH 'type_id' APH ;
 
 APHSTRING   : APH STRING APH ;
 
