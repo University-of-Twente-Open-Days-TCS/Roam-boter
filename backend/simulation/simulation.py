@@ -193,7 +193,7 @@ def simulate(ais, game_mode="DM", level="level1"):
 
     return sim.get_playback()
 
-
+# Prepares caches for list of level names
 def prepare_caches(levels):
     level_loader = LevelLoader()
     for l in levels:
