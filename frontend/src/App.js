@@ -30,6 +30,7 @@ class App extends Component {
 
         // Bind handlers
         this.handleSubmitLogout = this.handleSubmitLogout.bind(this)
+        this.toggleFull = this.toggleFull.bind(this)
     }
 
     componentDidMount() {
@@ -60,13 +61,18 @@ class App extends Component {
             })
     }
 
-    goFull = () => {
-        this.setState({isFull: true});
+    toggleFull = () => {
+        this.state.isFull ? this.setState({isFull: false}) : this.setState({isFull: true})
     };
 
 
     render() {
-        let fullscreenButton = this.state.isFull ? null : <Button variant="outlined" onClick={this.goFull}>Go Fullscreen</Button>
+
+        // Props to send to layout component. Neccesary for fullscreen option.
+        let layoutProps = {
+            toggleFull: this.toggleFull,
+            isFull: this.state.isFull
+        }
 
         return (
             (this.state.loggedIn) ? (
@@ -76,7 +82,7 @@ class App extends Component {
                         onChange={isFull => this.setState({isFull})}
                     >
                         <div className="full-screenable-node">
-                            <Layout>
+                            <Layout {...layoutProps}>
                                 <Route exact path="/" 
                                     render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
                                 />
@@ -87,7 +93,6 @@ class App extends Component {
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
                                 <hr/>
-                                {fullscreenButton}
                             </Layout>
                         </div>
                     </Fullscreen>
