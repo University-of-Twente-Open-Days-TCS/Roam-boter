@@ -9,6 +9,9 @@ import health from "./health";
 import winddir from "./winddir";
 import reldir from "./reldir";
 import speed from "./speed";
+import arrow from "./arrow";
+import action from "./action";
+import condition from "./condition";
 
 
 class aiCanvas {
