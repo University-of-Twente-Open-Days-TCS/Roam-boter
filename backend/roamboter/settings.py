@@ -120,10 +120,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # CORS SETTINGS
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = ['http://localhost:3000',] #change to app.example.com
+CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ORIGIN_WHITELIST = ['http://localhost:3000',] #change to app.example.com
 
 # CSRF TRUSTED DOMAINS
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000',] #change to app.example.com
+CSRF_TRUSTED_ORIGINS = ['*',] #change to app.example.com
 
 # URLS used for logging in and logging out workshop owners.
 LOGIN_URL = "/dashboard/login"

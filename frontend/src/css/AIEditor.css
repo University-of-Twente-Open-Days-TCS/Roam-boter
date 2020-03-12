@@ -1,0 +1,22 @@
+#AIEditor {
+    display: flex;
+    /*background-color: lightblue;*/
+}
+
+#buttons {
+    /*background-color: lightcoral;*/
+    margin: 10px;
+}
+
+#buttons input {
+    display: block;
+    width: 100px;
+    height: 60px;
+    white-space: normal;
+    margin-bottom: 10px;
+}
+
+#container {
+    display: inline;
+    width: 500px;
+}

@@ -94,7 +94,12 @@ export default function Layout(props) {
         setOpen(false);
     };
 
+    const handleClick = () => {
+        setOpen(false);
+    }
+
     return (
+
         <div className={classes.root}>
             <CssBaseline/>
             <AppBar

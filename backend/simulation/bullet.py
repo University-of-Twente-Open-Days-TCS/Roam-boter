@@ -18,6 +18,7 @@ class Bullet:
         self.y = tank.y
         self.speed = tank.bullet_speed
         self.owner = tank
+        self.team_id = tank.team_id
 
         pass
 

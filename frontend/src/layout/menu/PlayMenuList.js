@@ -8,6 +8,7 @@ import { NavLink } from "react-router-dom";
 
 
 export default function AIMenuList(text) {
+    
     const items = [
         {
             text: "Play versus Bot",
@@ -23,6 +24,7 @@ export default function AIMenuList(text) {
     ];
 
     return (
+
         <List>
             {
                 items.map(({text, icon, url}, i) =>

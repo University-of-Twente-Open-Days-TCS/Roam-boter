@@ -24,7 +24,7 @@ export default function AIMenuList(text) {
         {
             text: "Edit existing AI",
             icon: <Create/>,
-            url: "/ListAIs"
+            url: "/AIList"
         },
         {
             text: "View match history",
@@ -34,6 +34,7 @@ export default function AIMenuList(text) {
     ];
 
     return (
+
         <List>
             {
                 items.map(({text, icon, url}, i) =>

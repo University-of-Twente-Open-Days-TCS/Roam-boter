@@ -37,3 +37,17 @@ Create a super user:
    Follow the instructions to create credentials for the superuser.
 
 
+### Migrations
+Follow the following commands to ready the django database for errors.
+
+1. `sudo docker-compose build`
+2. `sudo docker-compose up`
+
+Go in the shell of your django docker container 
+
+3. `sudo docker exec -it roambot-er_web_1 /bin/bash`
+4. `./manage.py makemigrations <app-names>`
+
+   Fill in all apps to make sure all migrations happen.
+
+5. `./manage.py migrate`
