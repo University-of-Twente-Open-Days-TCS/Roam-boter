@@ -1,15 +1,13 @@
 div#AIEditor {
     display: block;
+
     height: 100%;
     width: 100%;
 }
 
-div#konva-container {
-    
-    background-color: azure;
+div#AIEditor .ai-editor-grid {
+    height: 100%;
 }
-
-
 
 div#ai-editor-menu {
     display: flex;

@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 
 import Box from '@material-ui/core/Box'
+import aiCanvas from './AIEditor/ai_editor'
 
 class AIEditorKonva extends Component {
-    constructor(props) {
-        super(props)
-    }
+
 
     componentDidMount() {
         // const canvas = new aiCanvas('konva-container')
@@ -50,8 +49,26 @@ class AIEditorKonva extends Component {
         //     },
         //     false
         // );
-        return
+
+        const canvas = new aiCanvas('konva-container')
+        this.canvas = canvas
+        
+        /** Bind resize function and resize */
+        this.resize = this.resize.bind(this)
+        this.resize()
+
+        /** Listen to resize events */
+        window.addEventListener('resize', this.resize)
     }
+
+    resize() {
+        /** Resizes the Konva Canvas */
+        let konvaContainer = document.getElementById('konva-container')
+        let width = konvaContainer.offsetWidth
+        let height = konvaContainer.offsetHeight
+        this.canvas.resizeStage(width, height)
+    }
+
 
     render() {
         return (

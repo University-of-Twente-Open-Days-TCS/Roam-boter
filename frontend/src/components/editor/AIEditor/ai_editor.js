@@ -81,6 +81,15 @@ class aiCanvas {
         this.stage.scale = 1;
     }
 
+    resizeStage(width, height) {
+        /** Resize stage and redraw stage */
+        this.stage.size({
+            width: width,
+            height: height
+        })
+        this.stage.batchDraw()   
+    }
+
 
     //TODO quickfix this.stagewidth, and make it use correct state without giving it as a parameter
     //make trashcan
