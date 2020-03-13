@@ -1,10 +1,11 @@
 import React from "react";
+import ContentBox from "./layout/ContentBox";
 
 const PlayvsBot = () => {
     return (
-        <div>
+        <ContentBox>
             <h1>Play vs Bots</h1>
-        </div>
+        </ContentBox>
     );
 }
 

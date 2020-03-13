@@ -3,6 +3,8 @@ import React, {Component} from "react";
 import RoamBotAPI from "../../RoamBotAPI"
 import ReplayCanvas from "./ReplayCanvas";
 
+import ContentBox from '../layout/ContentBox'
+
 
 class MatchReplay extends Component {
 
@@ -36,10 +38,10 @@ class MatchReplay extends Component {
 
     render() {
         return (
-            <div>
+            <ContentBox>
                 <h1>Match Replay</h1>
                 <canvas ref="canvas" width={610} height={410}/>
-            </div>
+            </ContentBox>
         )
     }
 }

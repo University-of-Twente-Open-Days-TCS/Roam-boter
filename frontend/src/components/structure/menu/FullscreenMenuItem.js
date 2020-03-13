@@ -6,7 +6,6 @@ import ListItem from "@material-ui/core/ListItem";
 
 import FullscreenIcon from '@material-ui/icons/Fullscreen'
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit'
-import { NavLink } from 'react-router-dom';
 
 const FullscreenMenuItem = (props) => {
     

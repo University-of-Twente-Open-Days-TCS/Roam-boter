@@ -7,6 +7,8 @@ import { Button } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
 import {HashRouter, NavLink} from "react-router-dom";
 
+import ContentBox from "../layout/ContentBox.js";
+
 const AIItem = (props) => {
     /**
      * Props includes ai and refreshFunction
@@ -103,12 +105,12 @@ class AIList extends Component {
 
         const aiItems = this.state.ais.map((ai, i) => <AIItem key={ai.pk} ai={ai} refreshList={this.refreshList}></AIItem>)
         return (
-            <div>
+            <ContentBox>
                 <h1>AI List</h1>
                 <ul>
                     {aiItems}
                 </ul>
-            </div>
+            </ContentBox>
         )
     }
 }

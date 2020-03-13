@@ -21,9 +21,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Layout(props) {
+export default function Structure(props) {
     
     const classes = useStyles()
+
+    let {toggleFull, isFull} = props
 
     return (
 
@@ -31,7 +33,7 @@ export default function Layout(props) {
             <CssBaseline/>
             
             <HashRouter>                
-                <DrawerMenu />
+                <DrawerMenu toggleFull={toggleFull} isFull={isFull}/>
 
                 <main className={classes.content}>
                     { props.children }
