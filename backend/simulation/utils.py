@@ -76,7 +76,7 @@ def move_to_position(state, tank, goal):
 
     goal_angle = angle_tank_towards_position(state, tank, (ndx, ndy))
     angle_difference = ((goal_angle % 360) - (tank.get_rotation() % 360)) % 360
-    if angle_difference < 80 or angle_difference > 280:
+    if angle_difference < 90 or angle_difference > 270:
         tank.move_forward(state, distance * 0.99)
 
 

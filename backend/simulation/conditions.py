@@ -23,6 +23,7 @@ def distance_to_nearest_object_greater_than(tank, state, obj, distance):
     # Collect the closest tank and compare to distance.
     paths = filter_objects(tank, state, obj)
     nearest_dist = float('inf')
+    distance = (distance + 1) * 5
 
     for p in paths:
         # p[-1] is last element of path, this indicates the actual position of the object.
