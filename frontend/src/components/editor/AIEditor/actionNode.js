@@ -70,6 +70,12 @@ export default class actionNode {
     _inputCircle;
     _position;
 
+    movementActions = [1, 2, 3, 4];
+    containsMovement = false;
+    aimActions = [5, 6, 7, 8, 9];
+    containsAim = false;
+    fireActions = [10, 11];
+    containsFire = false;
 
     constructor(stage, layer, actionList = [], position = spawnPoint) {
         this.group = new Konva.Group({
@@ -79,6 +85,15 @@ export default class actionNode {
         this.layer = layer;
         this.position = position;
         this.actionList = actionList;
+        this.actionList.forEach(action => {
+            if (this.movementActions.includes(action)) {
+                this.containsMovement = true;
+            } else if (this.aimActions.includes(action)) {
+                this.containsAim = true;
+            } else if (this.fireActions.includes(action)) {
+                this.containsFire = true;
+            }
+        });
 
         this.actionNodeText = this.createActionNodeText();
         this.createTextObject();
@@ -105,7 +120,7 @@ export default class actionNode {
         this.group.on("click tap", () => {
 
             //TODO could just make this by calling editAction with object null (no action yet) probs
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateActionsList(), this.editAction.bind(this)).group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generatePossibleActionsList(), this.editAction.bind(this)).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -139,7 +154,15 @@ export default class actionNode {
     editAction(attribute) {
         switch (attribute.constructor) {
             case (action):
-                this.actionList = this.actionList.concat(attribute);
+                this.actionList.push(attribute);
+                if (this.movementActions.includes(attribute.id)) {
+                    this.containsMovement = true;
+                } else if (this.aimActions.includes(attribute.id)) {
+                    this.containsAim = true;
+                } else if (this.fireActions.includes(attribute.id)) {
+                    this.containsFire = true;
+                }
+
                 break;
             case(object):
                 this.actionList[this.actionList.length - 1].object = attribute;
@@ -232,22 +255,38 @@ export default class actionNode {
     }
 
 
-    generateActionsList() {
-        let allActionsList = [
+    generatePossibleActionsList() {
+
+
+        //Items which you may always choose from
+        let possibleActionsList = [
+            //Infinite amount of Do Nothing
             new action(0),
-            new action(1),
-            new action(2),
-            new action(3),
-            new action(4),
-            new action(5),
-            new action(6),
-            new action(7),
-            new action(8),
-            new action(9),
-            new action(10),
-            new action(11)
+
+            //Infinite labels TODO enable when labels get enabled
+            // new action(12),
+            // new action(13),
+            // new action(14)
         ];
-        return allActionsList;
+
+        if (!this.containsMovement) {
+            this.movementActions.forEach(movement => {
+                possibleActionsList.push(new action(movement));
+            })
+        }
+        if (!this.containsAim) {
+            this.aimActions.forEach(aim => {
+                possibleActionsList.push(new action(aim));
+            })
+        }
+        if (!this.containsFire) {
+            this.fireActions.forEach(fire => {
+                possibleActionsList.push(new action(fire));
+            })
+        }
+
+
+        return possibleActionsList;
 
     }
 

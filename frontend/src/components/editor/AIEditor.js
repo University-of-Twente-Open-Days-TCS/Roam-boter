@@ -49,13 +49,18 @@ class AIEditor extends Component {
         this.handleAddCondition = this.handleAddCondition.bind(this)
         this.handleAddAction = this.handleAddAction.bind(this)
         this.handleSave = this.handleSave.bind(this)
+
+        this.state = {
+            id: null
+        }
     }
+
 
     componentDidMount() {
         /** Konva Canvas */
         const canvas = new AICanvas('konva-container')
         this.canvas = canvas
-        
+
         /** add resize listeners */
         window.addEventListener('resize', this.resize)
         window.addEventListener('load', this.resize)
@@ -66,6 +71,7 @@ class AIEditor extends Component {
         const id = this.props.match.params.id;
         if (id) {
             this.fetchData(id)
+                .then(() => this.setState({id: id}))
                 .catch((error) => {
                     console.error(error)
                 })
@@ -105,8 +111,8 @@ class AIEditor extends Component {
         data.name = "saved-ai"
         data.ai = ai
 
-        // call API
-        let response = RoamBotAPI.postAI(data)
+        const response = (this.state.id) ? (RoamBotAPI.putAI(this.state.id, data)) : (RoamBotAPI.postAI(data))
+
         response.then((res) => {
             if (res.ok) {
                 alert("AI Saved")
@@ -115,6 +121,7 @@ class AIEditor extends Component {
                 alert("An error occurred, see console.")
             }
         })
+
     }
 
     fetchData = async (id) => {

@@ -29,13 +29,13 @@ def filter_objects(tank, state, obj):
 
     else:
         for p in state.level.get_paths_to_object(tank, obj):
+
             # Only show paths to ready health packs.
-
             if obj == Object.HEAL:
-
                 if state.level.health_pack_ready(state, p[-1]):
                     paths.append(p)
-            else:
+            elif Object.isSpawn(obj):
+                
                 paths.append(p)
     return paths
 
@@ -75,7 +75,7 @@ def move_to_position(state, tank, goal):
 
     goal_angle = angle_tank_towards_position(state, tank, (ndx, ndy))
     angle_difference = ((goal_angle % 360) - (tank.get_rotation() % 360)) % 360
-    if angle_difference < 90 or angle_difference > 270:
+    if angle_difference < 80 or angle_difference > 280:
         tank.move_forward(state, distance * 0.99)
 
 
@@ -170,5 +170,5 @@ def vector_angle(pos1, pos2):
     x1, y1 = pos1
     x2, y2 = pos2
 
-    inproduct = ((x1 * x2 + y1 * y2) / (math.sqrt(distance_squared((0, 0), pos1)), math.sqrt(distance_squared((0, 0), pos2))))
+    inproduct = ((x1 * x2 + y1 * y2) / (math.sqrt(distance_squared((0, 0), pos1)) * math.sqrt(distance_squared((0, 0), pos2))))
     return math.degrees(math.acos(inproduct)) % 360
