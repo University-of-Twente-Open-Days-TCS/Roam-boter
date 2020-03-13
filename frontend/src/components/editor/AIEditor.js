@@ -48,12 +48,10 @@ class AIEditor extends Component {
     }
 
     handleAddCondition() {
-        // Add a Condition.
         this.canvas.addCondition()
     }
 
     handleAddAction() {
-        // Add an Action
         this.canvas.addActionNode()
     }
 
