@@ -5,7 +5,7 @@ from .utils import distance
 import math
 import numpy
 
-TANK_TURN_SPEED = 2
+TANK_TURN_SPEED = 2.5
 TURRET_TURN_SPEED = 3
 
 

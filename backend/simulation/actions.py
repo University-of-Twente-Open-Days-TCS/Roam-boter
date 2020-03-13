@@ -64,13 +64,13 @@ def aim_to_nearest_object(tank, state, obj):
 
 def aim_reldir(tank, state, reldir):
     reldir = RelDir(reldir)
-    angle = reldir.get_angle()
+    angle = reldir.angle()
     tank.rotate_turret_towards(angle)
 
 
 def aim_winddir(tank, state, winddir):
     winddir = WindDir(winddir)
-    angle = winddir.get_angle()
+    angle = winddir.angle()
     tank.rotate_turret_towards(angle - tank.get_rotation())
 
 

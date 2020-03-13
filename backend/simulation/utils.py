@@ -27,15 +27,16 @@ def filter_objects(tank, state, obj):
         for b in filter_bullets(tank, obj, tank.visible_bullets(state)):
             paths.append([b.get_pos()])
 
+    elif obj.isSpawn():
+        for s in state.level.get_path_to_object(tank, Object.SPAWN):
+            paths.append(s)
     else:
         for p in state.level.get_paths_to_object(tank, obj):
-
             # Only show paths to ready health packs.
             if obj == Object.HEAL:
                 if state.level.health_pack_ready(state, p[-1]):
                     paths.append(p)
-            elif Object.isSpawn(obj):
-                
+            else:
                 paths.append(p)
     return paths
 

@@ -21,7 +21,7 @@
     "model": "AIapi.ai",
     "pk": 1,
     "fields": {
-      "ai": "{\"condition\": {\"type_id\": 1, \"child_true\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 8, \"attributes\": {\"speed\": 1}}], \"position\": {\"x\": 1077, \"y\": 343}}}, \"child_false\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 1, \"attributes\": {\"obj\": 10}}], \"position\": {\"x\": 769, \"y\": 336}}}, \"attributes\": {\"distance\": 3, \"obj\": 10}, \"position\": {\"x\": 875, \"y\": 145}}}",
+      "ai": "{\"condition\": {\"type_id\": 1, \"child_true\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 1, \"attributes\": {\"obj\": 10}}], \"position\": {\"x\": 769, \"y\": 336}}}, \"child_false\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 8, \"attributes\": {\"speed\": 1}}], \"position\": {\"x\": 1077, \"y\": 343}}}, \"attributes\": {\"distance\": 3, \"obj\": 10}, \"position\": {\"x\": 875, \"y\": 145}}}",
       "team": 2,
       "name": "Easy Bot"
     }
