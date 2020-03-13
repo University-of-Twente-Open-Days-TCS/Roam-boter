@@ -14,7 +14,6 @@ import action from "./action.js";
 import arrow from "./arrow.js";
 
 
-
 class aiCanvas {
 
     blockHeight = 40;
@@ -53,6 +52,7 @@ class aiCanvas {
         this.stage.add(this.stage.templayer);
         this.layer.draw();
 
+
         //add trashcan
         this.addTrashcan(this.stage);
         this.layer.draw();
@@ -65,7 +65,7 @@ class aiCanvas {
     }
 
     createStage(container) {
-        
+
         this.stage = new Konva.Stage({
             container: container,
             width: this.stageWidth,
@@ -83,31 +83,54 @@ class aiCanvas {
         this.stage.size({
             width: width,
             height: height
-        })
-        this.stage.batchDraw()   
+        });
+        this.stage.batchDraw()
     }
 
+    //TODO fix
 
-    //TODO quickfix this.stagewidth, and make it use correct state without giving it as a parameter
     //make trashcan
     addTrashcan(stage) {
-        var imageObj = new Image();
-        //TODO: FIX NORMAL IMAGE
-        imageObj.src = 'https://cdn0.iconfinder.com/data/icons/shopping-359/512/Bin_bin_delete_trashcan_garbage_dust-512.png';
-        imageObj.onload = function () {
-            let trashcan = new Konva.Image({
-                x: this.stageWidth - 60,
-                y: 100,
-                image: imageObj,
-                width: 60,
-                height: 60
-            });
+        let thiseditor = this;
+        this.trashcan = new Konva.Image({
+            x: 0,
+            y: 0,
+            width: 80,
+            height: 80
+        });
 
-            stage.staticlayer.add(trashcan);
+        var closedTrashcan = new Image();
+        closedTrashcan.onload = function () {
+            thiseditor.trashcan.image(closedTrashcan);
+        };
+        closedTrashcan.src = 'trashcan/closed.svg';
+
+
+        stage.staticlayer.on('mouseout', function () {
+            var openTrashcan = new Image();
+            openTrashcan.onload = function () {
+                thiseditor.trashcan.image(openTrashcan);
+            };
+            openTrashcan.src = 'trashcan/open.svg';
             stage.staticlayer.draw();
-        }
+
+        });
+
+        stage.staticlayer.on('mouseenter', function () {
+            var closedTrashcan = new Image();
+            closedTrashcan.onload = function () {
+                thiseditor.trashcan.image(closedTrashcan);
+            };
+            closedTrashcan.src = 'trashcan/closed.svg';
+            stage.staticlayer.draw();
+
+        });
+
+        stage.staticlayer.add(this.trashcan);
+        stage.staticlayer.draw();
 
     }
+
 
     makeDraggable() {
 
