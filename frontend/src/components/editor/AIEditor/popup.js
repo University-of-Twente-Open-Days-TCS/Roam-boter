@@ -1,6 +1,7 @@
 import Konva from "konva"
 import dropdown from "./dropdown.js";
 
+
 export default class popup {
 
     _stage;
@@ -10,20 +11,25 @@ export default class popup {
     _group;
 
 
-    constructor(stage, layer, list, f) {
+    constructor(stage, layer, list, f, text) {
         this.stage = stage;
         this.layer = layer;
         this.list = list;
         this.f = f;
+        this.textHeight = 30;
+        this.text = text.replace(/\n/g, "");
         this.createGroup();
+
     }
 
     createGroup() {
         let thisStage = this.stage;
+        this.stage.on("click tap", {});
         this.dDown = new dropdown(this.stage, this.layer, this.list, this.closePopup.bind(this));
-        this.group = new Konva.Group();
-
+        this.group = new Konva.Group({draggable: true});
+        this.createText();
         this.createRect();
+        this.group.add(this.textGroup);
         //this.createClose();
         this.group.add(this.dDown.group);
         //dropdown = new dropdown();
@@ -31,12 +37,46 @@ export default class popup {
         this.group.y(thisStage.height() / 2 - (this.rect.height() / 2));
     }
 
+    createText() {
+        let boldWords = ["_object_", "_distance_", "_amount_", "_label_", "_speed_", "_reldir_", "_winddir_"];
+        let words = this.text.split(" ");
+        let textGroup = new Konva.Group();
+        let currentX = 0;
+        let currentText = new Konva.Text({fill: "#FFF", padding: 5, text: ""});
+        let size = currentText.fontSize() * 1.3;
+        currentText.fontSize(size);
+        textGroup.add(currentText);
+        words.forEach((word) => {
+            if (boldWords.includes(word)) {
+                currentX += currentText.width();
+                let boldText = new Konva.Text({
+                    fill: "#FFF",
+                    padding: 5,
+                    text: word.substring(1, word.length - 1),
+                    fontStyle: "italic bold",
+                    x: currentX,
+                    fontSize: size
+                });
+                textGroup.add(boldText);
+                currentX += boldText.width();
+                currentText = new Konva.Text({fill: "#FFF", padding: 5, text: "", x: currentX, fontSize: size});
+                textGroup.add(currentText);
+            } else {
+                currentText.text(currentText.text() + word + " ")
+            }
+        });
+        this.textWidth = currentX + currentText.width();
+        this.textGroup = textGroup;
+
+
+    }
+
     createRect() {
         let thisStage = this.stage;
 
         this.rect = new Konva.Rect({
-            width: this.dDown.width + 20,
-            height: this.dDown.height + 20,
+            width: Math.max(this.dDown.width, this.textWidth) + 20,
+            height: this.dDown.height + 20 + this.textHeight,
             fill: 'blue',
             stroke: 'black',
             strokeWidth: 2,
@@ -118,3 +158,4 @@ export default class popup {
     }
 
 }
+

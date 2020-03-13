@@ -137,7 +137,7 @@ export default class conditionNode {
         this.group.on("click tap", () => {
 
             //TODO could just make this by calling editCondition with object null (no condition yet) probs
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateConditionList(), this.editCondition.bind(this)).group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateConditionList(), this.editCondition.bind(this), "select a condition").group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -227,7 +227,7 @@ export default class conditionNode {
         }
         //If there is still an attribute missing, will ask for it via the popup
         if (wantedList != null) {
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editCondition.bind(this)).group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editCondition.bind(this), this.condition.toString()).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         }

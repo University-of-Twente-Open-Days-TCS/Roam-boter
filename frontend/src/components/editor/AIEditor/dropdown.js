@@ -18,7 +18,7 @@ export default class dropdown {
         this.items = items;
         this.f = f;
         let thisDropdown = this;
-        this.group = new Konva.Group({x: 10, y: 10});
+        this.group = new Konva.Group({x: 10, y: 30});
 
         this.topBoxGroup = new Konva.Group();
 

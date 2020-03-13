@@ -62,7 +62,7 @@ export default class condition {
                 }
             case 2:
                 if (this.object == null) {
-                    return "If <b>object</b>_ \n is visible";
+                    return "If _object_ \n is visible";
                 } else {
                     return "If " + this.object + " \n is  visible";
                 }
