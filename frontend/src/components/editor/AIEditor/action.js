@@ -53,6 +53,8 @@ export default class action {
                 return (this.label != null);
             case 14:
                 return (this.label != null);
+            default:
+                return null;
 
         }
     }
@@ -125,6 +127,8 @@ export default class action {
             case 11:
                 return "Self-destruct!";
             //TODO encorporate labels
+            default:
+                return null
 
 
         }

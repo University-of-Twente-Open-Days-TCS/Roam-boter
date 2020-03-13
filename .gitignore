@@ -136,3 +136,6 @@ dmypy.json
 #pycharm idea files
 .idea/
 
+
+#simulation cache
+backend/simulation/caching/*

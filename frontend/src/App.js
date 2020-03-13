@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import './css/App.css';
 import RoamBotAPI from './RoamBotAPI.js';
 import Fullscreen from "react-full-screen";
-import Button from "@material-ui/core/Button";
 
 import {
     Route,
@@ -27,6 +26,10 @@ class App extends Component {
             AIs: [],
             loggedIn: false,
         };
+
+        // Bind handlers
+        this.handleSubmitLogout = this.handleSubmitLogout.bind(this)
+        this.toggleFull = this.toggleFull.bind(this)
     }
 
     componentDidMount() {
@@ -57,12 +60,19 @@ class App extends Component {
             })
     }
 
-    goFull = () => {
-        this.setState({isFull: true});
+    toggleFull = () => {
+        this.state.isFull ? this.setState({isFull: false}) : this.setState({isFull: true})
     };
 
 
     render() {
+
+        // Props to send to layout component. Neccesary for fullscreen option.
+        let layoutProps = {
+            toggleFull: this.toggleFull,
+            isFull: this.state.isFull
+        }
+
         return (
             (this.state.loggedIn) ? (
                 <div>
@@ -71,19 +81,17 @@ class App extends Component {
                         onChange={isFull => this.setState({isFull})}
                     >
                         <div className="full-screenable-node">
-                            <Layout>
-                                <Route exact path="/" component={Home}/>
-                                <Route path="/AIEditor"
-                                       render={(props) => <AIEditor {...props} handleSaveAI={this.handleSaveAI}/>}/>
+                            <Layout {...layoutProps}>
+                                <Route exact path="/" 
+                                    render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
+                                />
+                                <Route path="/AIEditor" component={AIEditor} />
                                 <Route path="/AIList" component={AIList}/>
                                 <Route path="/MatchHistory" component={MatchHistory}/>
                                 <Route path="/PlayvsBot" component={PlayvsBot}/>
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
                                 <hr/>
-                                <Button variant="outlined" onClick={this.goFull}>Go Fullscreen</Button>
-                                <span className='spacing'></span>
-                                <Button variant="outlined" color="" onClick={this.handleSubmitLogout}>Logout</Button>
                             </Layout>
                         </div>
                     </Fullscreen>

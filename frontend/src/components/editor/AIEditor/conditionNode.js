@@ -5,15 +5,19 @@ import object from "./object.js";
 import distance from "./distance.js";
 import label from "./label.js";
 import health from "./health.js";
+import action from "./action.js"
+import winddir from "./winddir.js";
+import reldir from "./reldir.js";
+import speed from "./speed.js"
 import Konva from "konva"
+import actionNode from "./actionNode";
 
 //TODO place all these variables somewhere nicer
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
 const hitboxCircleRadius = 20;
-var spawnX = 0;
-var spawnY = 0;
+const spawnPoint = {x: 0, y: 0};
 
 
 const objectList = [
@@ -90,9 +94,13 @@ export default class conditionNode {
     //
     _conditionTextObj;
 
-    //Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
+    //The position of the conditionNode
+    _position;
+
+
+//Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
     // and if (all) its appropriate parameter(s) is given this will be included.
-    constructor(stage, layer, condition) {
+    constructor(stage, layer, condition, position = spawnPoint) {
         this.group = new Konva.Group({
             draggable: true
         });
@@ -100,6 +108,8 @@ export default class conditionNode {
         this.condition = condition;
         this.stage = stage;
         this.layer = layer;
+        this.position = position;
+
 
         if (this.condition != null) {
             this.conditionText = this.condition.toString();
@@ -121,13 +131,10 @@ export default class conditionNode {
         let node = this;
         this.group.on("dragmove", function () {
             node.updateArrows(node.stage);
-            console.log("dragmove");
         });
 
         this.group.on("dragend", function () {
             var touchPos = node.stage.getPointerPosition();
-            console.log("dragend");
-            console.log(node.stage.staticlayer.getIntersection(touchPos));
             if (node.stage.staticlayer.getIntersection(touchPos) != null) {
                 node.remove();
             }
@@ -141,6 +148,7 @@ export default class conditionNode {
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
+
 
         this.stage.draw();
 
@@ -223,6 +231,8 @@ export default class conditionNode {
                 break;
             case 7:
                 wantedList = healthList;
+                break;
+            default:
                 break;
         }
         //If there is still an attribute missing, will ask for it via the popup
@@ -308,7 +318,7 @@ export default class conditionNode {
         return conditionList
     }
 
-    intifyPosition = ({x, y}) => ({"x" : parseInt(x), "y" : parseInt(y)})
+    intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
     jsonify() {
         let node = this.rect;
@@ -319,9 +329,9 @@ export default class conditionNode {
             //distance to nearest object greater than distance
             case 1:
                 tree.condition = {
-                    "type-id": 1,
-                    "child-true": this.trueChild().jsonify(),
-                    "child-false": this.falseChild().jsonify(),
+                    "type_id": 1,
+                    "child_true": this.trueChild().jsonify(),
+                    "child_false": this.falseChild().jsonify(),
                     "attributes": {
                         "distance": this.condition.distance.id,
                         "obj": this.condition.object.id
@@ -334,9 +344,9 @@ export default class conditionNode {
             //object visible
             case 2:
                 tree.condition = {
-                    "type-id": 2,
-                    "child-true": this.trueChild().jsonify(),
-                    "child-false": this.falseChild().jsonify(),
+                    "type_id": 2,
+                    "child_true": this.trueChild().jsonify(),
+                    "child_false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
                     "position": this.intifyPosition(node.getAbsolutePosition())
                 };
@@ -346,9 +356,9 @@ export default class conditionNode {
             //aimed at object
             case 3:
                 tree.condition = {
-                    "type-id": 3,
-                    "child-true": this.trueChild().jsonify(),
-                    "child-false": this.falseChild().jsonify(),
+                    "type_id": 3,
+                    "child_true": this.trueChild().jsonify(),
+                    "child_false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
                     "position": this.intifyPosition(node.getAbsolutePosition())
                 };
@@ -359,9 +369,9 @@ export default class conditionNode {
             // if object exists
             case 4:
                 tree.condition = {
-                    "type-id": 4,
-                    "child-true": this.trueChild().jsonify(),
-                    "child-false": this.falseChild().jsonify(),
+                    "type_id": 4,
+                    "child_true": this.trueChild().jsonify(),
+                    "child_false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
                     "position": this.intifyPosition(node.getAbsolutePosition())
                 };
@@ -371,9 +381,9 @@ export default class conditionNode {
             //bullet ready
             case 5:
                 tree.condition = {
-                    "type-id": 5,
-                    "child-true": this.trueChild().jsonify(),
-                    "child-false": this.falseChild().jsonify(),
+                    "type_id": 5,
+                    "child_true": this.trueChild().jsonify(),
+                    "child_false": this.falseChild().jsonify(),
                     "attributes": {},
                     "position": this.intifyPosition(node.getAbsolutePosition())
 
@@ -384,9 +394,9 @@ export default class conditionNode {
             //if label set
             case 6:
                 tree.condition = {
-                    "type-id": 6,
-                    "child-true": this.trueChild().jsonify(),
-                    "child-false": this.falseChild().jsonify(),
+                    "type_id": 6,
+                    "child_true": this.trueChild().jsonify(),
+                    "child_false": this.falseChild().jsonify(),
                     "attributes": {"label": this.condition.label.id},
                     "position": this.intifyPosition(node.getAbsolutePosition())
                 };
@@ -396,9 +406,9 @@ export default class conditionNode {
             //health greater than amount
             case 7:
                 tree.condition = {
-                    "type-id": 7,
-                    "child-true": this.trueChild().jsonify(),
-                    "child-false": this.falseChild().jsonify(),
+                    "type_id": 7,
+                    "child_true": this.trueChild().jsonify(),
+                    "child_false": this.falseChild().jsonify(),
                     "attributes": {"health": this.condition.health.id},
                     "position": this.intifyPosition(node.getAbsolutePosition())
                 };
@@ -412,18 +422,19 @@ export default class conditionNode {
         }
     }
 
+
     //circle to which connections can be made by dragging arrows on it
     createInputCircle() {
         this.inputCircle = new Konva.Circle({
-            y: 0,
-            x: this.rect.width() / 2,
+            y: this.position.y,
+            x: this.position.x + this.rect.width() / 2,
             radius: circle_radius,
             fill: 'white',
             stroke: 'black',
         });
         this.inputCircleHitbox = new Konva.Circle({
-            y: 0,
-            x: this.rect.width() / 2,
+            y: this.position.y,
+            x: this.position.x + this.rect.width() / 2,
             radius: hitboxCircleRadius,
             fill: 'white',
             stroke: 'black',
@@ -439,8 +450,8 @@ export default class conditionNode {
     //create text for in the condition
     createTextObject(conditionText) {
         this.conditionTextObj = new Konva.Text({
-            x: spawnX,
-            y: spawnY,
+            x: this.position.x,
+            y: this.position.y,
             text: conditionText,
             fontSize: 12,
             fill: '#FFF',
@@ -456,8 +467,8 @@ export default class conditionNode {
     createRect() {
         if (this.conditionText != null) {
             this.rect = new Konva.Rect({
-                x: 0,
-                y: 0,
+                x: this.position["x"],
+                y: this.position["y"],
                 width: this.conditionTextObj.width(),
                 height: this.conditionTextObj.height(),
                 fill: 'blue',
@@ -467,8 +478,8 @@ export default class conditionNode {
             });
         } else {
             this.rect = new Konva.Rect({
-                x: 0,
-                y: 0,
+                x: this.position.x,
+                y: this.position.y,
                 width: blockWidth,
                 height: blockHeight,
                 fill: 'blue',
@@ -483,8 +494,8 @@ export default class conditionNode {
     //create a circle from which the false connection is made to another node
     createFalseCircle() {
         this.falseCircle = new Konva.Circle({
-            y: this.rect.height(),
-            x: 0,
+            y: this.position.y + this.rect.height(),
+            x: this.position.x,
             radius: circle_radius,
             fill: 'red',
             stroke: 'black',
@@ -495,8 +506,8 @@ export default class conditionNode {
     //create a circle from which the true connection is made to another node
     createTrueCircle() {
         this.trueCircle = new Konva.Circle({
-            y: this.rect.height(),
-            x: this.rect.width(),
+            y: this.position.y + this.rect.height(),
+            x: this.position.x + this.rect.width(),
             radius: circle_radius,
             fill: 'green',
             stroke: 'black',
@@ -511,8 +522,8 @@ export default class conditionNode {
         let node = this;
         let dragCircle = new Konva.Circle({
             draggable: true,
-            y: circle.y(),
-            x: circle.x(),
+            y: this.position.y + circle.y(),
+            x: this.position.x + circle.x(),
             radius: hitboxCircleRadius,
             fill: 'black',
             opacity: 0
@@ -564,13 +575,21 @@ export default class conditionNode {
         dragCircle.on("dragend", function () {
             var touchPos = node.stage.getPointerPosition();
             var intersect = node.layer.getIntersection(touchPos);
-            console.log(intersect);
-            console.log(node.stage.inputDict[intersect]);
-            if (node.stage.inputDict.has(intersect)) {
-                if (node.stage.inputDict.get(intersect).inputArrow != null) {
-                    node.stage.inputDict.get(intersect).inputArrow.delete();
+            //If arrow is dropped on another element
+            if (intersect != null) {
+                //If the other element is an inputnode
+                if (node.stage.inputDict.has(intersect)) {
+                    //If the inputnode already had an arrow, remove that one
+                    if (node.stage.inputDict.get(intersect).inputArrow != null) {
+                        node.stage.inputDict.get(intersect).inputArrow.delete();
+                    }
+                    //Create new arrw between the two nodes
+                    new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
                 }
-                new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
+            } else {
+                //If not dropped on other element, make a popup to create either a new condition or action
+                //TODO make popup to select 'new condition/new action'
+
             }
             this.moveTo(g);
             this.x(this.originalX);
@@ -741,6 +760,14 @@ export default class conditionNode {
 
     set conditionTextObj(value) {
         this._conditionTextObj = value;
+    }
+
+    get position() {
+        return this._position;
+    }
+
+    set position(value) {
+        this._position = value;
     }
 
 }

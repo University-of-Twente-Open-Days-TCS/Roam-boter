@@ -102,10 +102,10 @@ class Tank:
     def executeActions(self, state):
         if self.destroyed:
             return
-          
+
         executed_move = False
         executed_aim = False
-    
+
         for action in self.actions:
             # Track whether a movement action has already been executed, if so cancel it.
             if is_movement_action(action.action_id):
@@ -243,7 +243,6 @@ class Tank:
 
     def on_hill(self, state):
         p = state.level.get_path_to_object(self, Object.HILL)
-        print("path: ", p)
         if p is not None and len(p) > 0:
             d = distance(self.get_pos(), p[-1])
             print(d)
@@ -252,6 +251,9 @@ class Tank:
     def get_team(self):
         return self.team_id
 
+    def handle_health_packs(self, state):
+        if state.level.pickup_health_pack(state, self.get_pos()):
+            self.health = 100
 
-
-
+    def get_health(self):
+        return self.health

@@ -72,7 +72,6 @@ export default class popup {
     }
 
     createRect() {
-        let thisStage = this.stage;
 
         this.rect = new Konva.Rect({
             width: Math.max(this.dDown.width, this.textWidth) + 20,
