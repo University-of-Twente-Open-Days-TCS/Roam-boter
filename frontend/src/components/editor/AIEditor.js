@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 
+import { withStyles } from '@material-ui/styles'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 
@@ -10,7 +11,32 @@ import AICanvas from './AIEditor/ai_editor.js'
 
 import {withRouter} from "react-router-dom"
 
-import '../../css/AIEditor.css'
+
+//Component Styling
+const styles = theme => ({
+    AIEditor: {
+        display: 'block',
+
+        height: '100%',
+        width: '100%'
+    },
+    AIEditorGrid: {
+        height: '100%'
+    },
+    AIEditorKonvaGridItem: {
+        height: '100%',
+
+        overflow: 'hidden'
+    },
+    AIEditorMenuGridItem: {
+        height: '100%',
+
+        backgroundColor: 'white',
+        borderLeft: '1px solid rgba(0, 0, 0, 0.12)'
+    }
+})
+
+
 
 
 class AIEditor extends Component {
@@ -51,6 +77,10 @@ class AIEditor extends Component {
                 })
         }
 
+    }
+
+    componentDidUpdate() {
+        this.resize()
     }
 
 
@@ -102,6 +132,8 @@ class AIEditor extends Component {
     }
 
     render() {
+        // Get classes
+        const { classes } = this.props
 
         let menuProps = {
             addConditionHandler: this.handleAddCondition,
@@ -109,16 +141,15 @@ class AIEditor extends Component {
             saveHandler: this.handleSave
         }
 
-
         return (
-            <div id="AIEditor">
-                <Grid container className="ai-editor-grid">
+            <div id="AIEditor" className={classes.AIEditor}>
+                <Grid container className={classes.AIEditorGrid}>
 
-                    <Grid item xs={9}>
+                    <Grid item xs={8} sm={9} className={classes.AIEditorKonvaGridItem}>
                         <Box id="konva-container" width={1} height={1}></Box>
                     </Grid>
 
-                    <Grid item xs={3}>
+                    <Grid item xs={4} sm={3} className={classes.AIEditorMenuGridItem}>
                         <AIEditorMenu {...menuProps} />
                     </Grid>
                 </Grid>
@@ -127,5 +158,9 @@ class AIEditor extends Component {
     }
 }
 
-
-export default withRouter(AIEditor)
+/**
+ * The component is exported with two hooks.
+ * withRouter to allow accessing of url parameters in props
+ * withStyles to allow for material-ui's makeStyles to work
+ */
+export default withRouter(withStyles(styles)(AIEditor))
