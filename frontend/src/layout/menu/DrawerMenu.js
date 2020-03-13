@@ -82,6 +82,7 @@ export default function DrawerMenu(props) {
             <AIMenuList/>
             <Divider/>
             <PlayMenuList/>
+            <Divider/>
             <FullscreenMenuItem {...props} />
 
         </Drawer>

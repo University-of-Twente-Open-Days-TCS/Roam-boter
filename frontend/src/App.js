@@ -118,20 +118,18 @@ class App extends Component {
         return (
             (this.state.loggedIn) ? 
                 (<div>
-                    <div>
-                        <Layout {...layoutProps}>
-                            <Route exact path="/" 
-                                render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
-                            />
+                    <Layout {...layoutProps}>
+                        <Route exact path="/" 
+                            render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
+                        />
 
-                            <Route path="/AIEditor/:id?" component={AIEditor} />
-                            <Route path="/AIList" component={AIList}/>
-                            <Route path="/MatchHistory" component={MatchHistory}/>
-                            <Route path="/PlayvsBot" component={PlayvsBot}/>
-                            <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
-                            <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
-                        </Layout>
-                    </div>
+                        <Route path="/AIEditor/:id?" component={AIEditor} />
+                        <Route path="/AIList" component={AIList}/>
+                        <Route path="/MatchHistory" component={MatchHistory}/>
+                        <Route path="/PlayvsBot" component={PlayvsBot}/>
+                        <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
+                        <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
+                    </Layout>
                 </div>) 
                     : 
                 (<Login handleSubmit={this.handleSubmitLogin.bind(this)} attemptFailed={this.state.loginAttemptFailed}/>)
