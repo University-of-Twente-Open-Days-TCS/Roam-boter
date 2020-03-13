@@ -16,7 +16,6 @@ const useStyles = makeStyles(theme => ({
         margin: '0.5rem 0',
 
         fontSize: '0.6rem',
-        
         [theme.breakpoints.up('md')]: {
             fontSize: '1rem'
         }
@@ -35,8 +34,8 @@ const AIEditorMenu = (props) => {
     return (
         <div>
             <div className={classes.AIMenu}>
-                <Button variant="contained" color="primary" onClick={addConditionHandler} className={classes.Button}>Add Condition</Button>
-                <Button variant="contained" color="primary" onClick={addActionHandler} className={classes.Button}>Add Action</Button>
+                <Button variant="contained" color="primary" onClick={addConditionHandler} className={classes.Button}>Condition</Button>
+                <Button variant="contained" color="primary" onClick={addActionHandler} className={classes.Button}>Action</Button>
                 <Button variant="contained" color="primary" onClick={saveHandler} className={classes.Button}>Save</Button>
             </div>
         </div>
