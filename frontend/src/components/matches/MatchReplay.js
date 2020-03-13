@@ -8,7 +8,6 @@ class MatchReplay extends Component {
 
     constructor(props) {
         super(props);
-        
         this.frame = 0
     }
 

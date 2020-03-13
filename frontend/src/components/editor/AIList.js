@@ -5,7 +5,6 @@ import {useState} from 'react';
 
 import { Button } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
-import '../../css/AIEditor.css'
 import {HashRouter, NavLink} from "react-router-dom";
 
 const AIItem = (props) => {
