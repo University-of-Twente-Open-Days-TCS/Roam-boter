@@ -31,7 +31,7 @@ type_id     : TYPE_ID SC INTEGER ;
 
 
 ROOT        : APH 'root' APH ;
-CONDITION   : APH 'condition' APH ;
+CONDITION   : APH 'condition'  APH ;
 
 CHILDTRUE   : APH 'child_true' APH ;
 CHILDFALSE  : APH 'child_false' APH ;
