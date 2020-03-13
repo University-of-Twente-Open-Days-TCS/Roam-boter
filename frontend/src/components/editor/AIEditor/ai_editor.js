@@ -35,9 +35,6 @@ class aiCanvas {
     _startNode;
 
     constructor(container) {
-        // Set stagewidth according to container
-        this.stageWidth = 500
-        this.stageHeight = 1000
         //Create the stage
         this.createStage(container);
 
