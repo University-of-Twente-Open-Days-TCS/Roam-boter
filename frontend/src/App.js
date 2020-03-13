@@ -92,7 +92,6 @@ class App extends Component {
                                 <Route path="/PlayvsBot" component={PlayvsBot}/>
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
-                                <hr/>
                             </Layout>
                         </div>
                     </Fullscreen>

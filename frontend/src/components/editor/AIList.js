@@ -5,7 +5,7 @@ import {useState} from 'react';
 
 import { Button } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
-import './AIEditor.css'
+import '../../css/AIEditor.css'
 
 const AIItem = (props) => {
     /**

@@ -1,140 +1,106 @@
 import React, {Component} from "react";
 
-import RoamBotAPI from "../../RoamBotAPI"
+import Grid from '@material-ui/core/Grid'
+import Box from '@material-ui/core/Box'
 
-import aiCanvas from "./AIEditor/ai_editor";
+import RoamBotAPI from '../../RoamBotAPI'
 
-import "../../css/AIEditor.css";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import TextField from "@material-ui/core/TextField";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
+import AIEditorMenu from "./AIEditorMenu";
+import AICanvas from './AIEditor/ai_editor.js'
+
+import '../../css/AIEditor.css'
+
 
 class AIEditor extends Component {
-  
-    constructor() {
-        super();
-        this.state = {
-            ai: {},
-            openDialogue: false,
-            canvas: null,
-            formValue: ""
-        };
+
+    constructor(props) {
+        super(props)
+
+        /** Bind functions and resize */
+        this.resize = this.resize.bind(this)
+        this.handleAddCondition = this.handleAddCondition.bind(this)
+        this.handleAddAction = this.handleAddAction.bind(this)
+        this.handleSave = this.handleSave.bind(this)
     }
 
-    handleDialogueOpen = () => {
-        this.setState({openDialogue: true})
+    componentDidMount() {
+        /** Konva Canvas */
+        const canvas = new AICanvas('konva-container')
+        this.canvas = canvas
+        
+        /** Listen to resize events */
+        window.addEventListener('resize', this.resize)
+        // Resize
+        this.resize()
+
     }
 
-    handleDialogueClose = () => {
-        this.setState({openDialogue: false})
+
+    resize() {
+        /** Resizes the Konva Canvas */
+        let konvaContainer = document.getElementById('konva-container')
+        
+        if (konvaContainer !== null){
+            let width = konvaContainer.offsetWidth
+            let height = konvaContainer.offsetHeight
+            this.canvas.resizeStage(width, height)
+        }
     }
 
-    handleSaveButton() {
-        // Show dialogue to enter name
-        this.handleDialogueOpen()
+    handleAddCondition() {
+        this.canvas.addCondition()
     }
 
-    saveAI = () => {
-        // Save AI
-        let ai = this.state.canvas.treeToJson()
+    handleAddAction() {
+        this.canvas.addActionNode()
+    }
+
+    handleSave() {
+        // Save an AI
+        let canvas = this.canvas
+        let ai = canvas.treeToJson()
         let data = {}
-        data.name = this.state.formValue
+        data.name = "saved-ai"
         data.ai = ai
+
         // call API
         let response = RoamBotAPI.postAI(data)
         response.then((res) => {
-            //TODO: Proper error handling
-            if (res.ok) {
+            if(res.ok) {
                 alert("AI Saved")
-            } else {
+            }else {
                 console.error(res)
                 alert("An error occurred, see console.")
             }
         })
-        this.handleDialogueClose()
-
     }
 
-    componentDidMount() {
-        const canvas = new aiCanvas('container');
-
-        this.setState({canvas: canvas})
-
-        //Add condition
-        document.getElementById('addCondition').addEventListener(
-            'click',
-            function () {
-                canvas.addCondition()
-            },
-            false
-        );
-
-        //Add action
-        document.getElementById('addActionNode').addEventListener(
-            'click',
-            function () {
-                canvas.addActionNode()
-            },
-            false
-        );
-        //Add condition
-        document.getElementById('saveAI').addEventListener(
-            'click',
-            () => {
-                this.handleSaveButton()
-            },
-            false
-        );
-    }
-
-    _handleTextFieldChange = e => {
-        this.setState({
-            formValue: e.target.value
-        });
-    }
-
+   
     render() {
+
+        let menuProps = {
+            addConditionHandler: this.handleAddCondition,
+            addActionHandler: this.handleAddAction,
+            saveHandler: this.handleSave
+        }
+
+
         return (
             <div id="AIEditor">
-                <div id="buttons">
-                    <input type="button" id="addCondition" value="Add Condition"/>
-                    <input type="button" id="addActionNode" value="Add ActionNode"/>
-                    <input type="button" id="saveAI" value="Save"/>
-                </div>
-                <div id="container"></div>
-                <Dialog open={this.state.openDialogue} onClose={this.handleDialogueClose} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Enter AI name</DialogTitle>
-                    <DialogContent>
-                        {/*<DialogContentText>*/}
-                        {/*    Please enter*/}
-                        {/*</DialogContentText>*/}
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Name"
-                            type="email"
-                            fullWidth
-                            value={this.state.formValue}
-                            onChange={this._handleTextFieldChange}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleDialogueClose} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.saveAI} color="primary">
-                            Save
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                <Grid container className="ai-editor-grid">
+
+                    <Grid item xs={9}>
+                        <Box id="konva-container" width={1} height={1}></Box>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <AIEditorMenu {...menuProps} />
+                    </Grid>
+                </Grid>
             </div>
-        );
+        )
     }
 }
+
 
 export default AIEditor
