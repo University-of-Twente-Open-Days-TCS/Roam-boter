@@ -27,7 +27,7 @@ class Tank:
     shoot_ready = 0
     reload_time = 60
 
-    bullet_speed = 0.5
+    bullet_speed = 1
     speed = 0.1
 
     width = 1
