@@ -206,7 +206,6 @@ def prepare_caches(levels):
 
 
 def test_simulation():
-    prepare_caches(["level0", "level1", "level2"])
 
     false_node = ActionNode([Action(10, {})])
     true_node = ActionNode([Action(1, {'obj': 8}), Action(10, {}), Action(5, {'obj': 2})])

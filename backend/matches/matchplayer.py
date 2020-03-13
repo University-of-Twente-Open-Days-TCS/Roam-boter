@@ -32,7 +32,7 @@ class SimulationPlayer(object):
         else:
             botmatch.winner = None
 
-        botmatch.simulation = playback.to_json()
+        botmatch.simulation = playback.to_json(botmatch.team_id, -1)
         botmatch.simulation_state = "DONE"
         botmatch.save()
 

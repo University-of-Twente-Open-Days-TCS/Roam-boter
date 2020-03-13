@@ -1,11 +1,14 @@
 from django.core.exceptions import ValidationError
 
-from random import randint
+from random import randint, choice
 
 from .models import *
 
+import os
+
 import logging
 logger = logging.getLogger("debugLogger")
+
 
 
 def generate_teamcodes(amount):
@@ -19,9 +22,14 @@ def generate_teamcodes(amount):
     team_codes = list(Team.objects.filter(workshop=workshop).values('team_code'))
     team_codes = list(map(lambda x: x['team_code'], team_codes))
 
+    team_names = []
+
+    with open(os.path.dirname(os.path.realpath(__file__)) + "/team_names.txt") as f:
+        team_names = f.readlines()
 
     for i in range(amount):
 
+        name = choice(team_names)[:20]
         generated_code = False
 
         while not generated_code:
@@ -32,7 +40,7 @@ def generate_teamcodes(amount):
                 #Valid team code
                 team_codes.append(candidate_team_code)
 
-                new_team = Team(team_code=candidate_team_code, workshop=workshop)
+                new_team = Team(team_code=candidate_team_code, workshop=workshop, team_name=name)
                 new_team.save()
                 # End loop
                 generated_code = True
