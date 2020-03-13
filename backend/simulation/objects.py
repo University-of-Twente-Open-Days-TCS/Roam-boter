@@ -23,6 +23,9 @@ class Object(IntEnum):
     def isBullet(self):
         return self == Object.BULLET or self == Object.FRIENDLY_BULLET or self == Object.ENEMY_BULLET
 
+    def isSpawn(self):
+        return self == Object.SPAWN or self == Object.ENEMY_SPAWN or self == Object.FRIENDLY_SPAWN
+
 
 class RelDir(IntEnum):
     FORWARD = 0

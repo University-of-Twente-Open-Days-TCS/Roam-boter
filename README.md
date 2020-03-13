@@ -51,3 +51,9 @@ Go in the shell of your django docker container
    Fill in all apps to make sure all migrations happen.
 
 5. `./manage.py migrate`
+
+
+### Insert bots
+Follow the following command to load bots into the database.
+
+1. ./manage.py loaddata roamboter/fixtures/bots.json
