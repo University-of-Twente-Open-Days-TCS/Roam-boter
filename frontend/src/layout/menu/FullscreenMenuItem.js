@@ -10,6 +10,7 @@ import FullscreenExitIcon from '@material-ui/icons/FullscreenExit'
 const FullscreenMenuItem = (props) => {
     
     let isFull = props.isFull
+    console.log(isFull)
     let toggleFull = props.toggleFull
 
 
