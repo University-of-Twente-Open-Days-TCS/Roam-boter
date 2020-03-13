@@ -25,7 +25,8 @@ class PlayBack:
 
     def add_frame(self, state):
         self.frames.append(Frame(state))
-
+       
+    # use -1 for bots
     def to_json(self, player0_id, player1_id):
         self.player0_id = player0_id
         self.player1_id = player1_id
