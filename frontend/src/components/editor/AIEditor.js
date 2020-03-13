@@ -28,11 +28,10 @@ class AIEditor extends Component {
         const canvas = new AICanvas('konva-container')
         this.canvas = canvas
         
-        /** Listen to resize events */
+        /** add resize listeners */
         window.addEventListener('resize', this.resize)
-        // Resize
-        this.resize()
-
+        window.addEventListener('load', this.resize)
+        window.addEventListener('orientationchange', this.resize)
     }
 
 
@@ -42,6 +41,7 @@ class AIEditor extends Component {
         
         if (konvaContainer !== null){
             let width = konvaContainer.offsetWidth
+            console.log(width)
             let height = konvaContainer.offsetHeight
             this.canvas.resizeStage(width, height)
         }
