@@ -92,7 +92,8 @@ class App extends Component {
                                 <Route exact path="/" 
                                     render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
                                 />
-                                <Route path="/AIEditor" component={AIEditor} />
+
+                                <Route path="/AIEditor/:id?" component={AIEditor} />
                                 <Route path="/AIList" component={AIList}/>
                                 <Route path="/MatchHistory" component={MatchHistory}/>
                                 <Route path="/PlayvsBot" component={PlayvsBot}/>
