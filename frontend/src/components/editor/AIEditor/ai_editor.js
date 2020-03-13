@@ -35,6 +35,9 @@ class aiCanvas {
     _startNode;
 
     constructor(container) {
+        // Set stagewidth according to container
+        this.stageWidth = 500
+        this.stageHeight = 1000
         //Create the stage
         this.createStage(container);
 
@@ -65,6 +68,7 @@ class aiCanvas {
     }
 
     createStage(container) {
+        
         this.stage = new Konva.Stage({
             container: container,
             width: this.stageWidth,
@@ -75,6 +79,15 @@ class aiCanvas {
         });
 
         this.stage.scale = 1;
+    }
+
+    resizeStage(width, height) {
+        /** Resize stage and redraw stage */
+        this.stage.size({
+            width: width,
+            height: height
+        })
+        this.stage.batchDraw()   
     }
 
 

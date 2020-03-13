@@ -25,6 +25,7 @@ class App extends Component {
             isFull: false,
             AIs: [],
             loggedIn: false,
+            loginAttemptFailed: false
         };
 
         // Bind handlers
@@ -48,7 +49,7 @@ class App extends Component {
         let response = RoamBotAPI.loginUser(teamCode)
         response
             .then((response) => {
-                response.ok ? this.setState({loggedIn: true}) : this.setState({loggedIn: false})
+                response.ok ? this.setState({loggedIn: true, loginAttemptFailed: false}) : this.setState({loggedIn: false, loginAttemptFailed: true})
             })
     }
 
@@ -91,11 +92,10 @@ class App extends Component {
                                 <Route path="/PlayvsBot" component={PlayvsBot}/>
                                 <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
-                                <hr/>
                             </Layout>
                         </div>
                     </Fullscreen>
-                </div>) : (<Login handleSubmit={this.handleSubmitLogin.bind(this)}/>)
+                </div>) : (<Login handleSubmit={this.handleSubmitLogin.bind(this)} attemptFailed={this.state.loginAttemptFailed}/>)
         );
     }
 }
