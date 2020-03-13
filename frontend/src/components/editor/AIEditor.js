@@ -8,6 +8,8 @@ import RoamBotAPI from '../../RoamBotAPI'
 import AIEditorMenu from "./AIEditorMenu";
 import AICanvas from './AIEditor/ai_editor.js'
 
+import {withRouter} from "react-router-dom"
+
 import '../../css/AIEditor.css'
 
 
@@ -23,15 +25,27 @@ class AIEditor extends Component {
         this.handleSave = this.handleSave.bind(this)
     }
 
+
+
     componentDidMount() {
         /** Konva Canvas */
         const canvas = new AICanvas('konva-container')
         this.canvas = canvas
         
-        /** Listen to resize events */
+        /** add resize listeners */
         window.addEventListener('resize', this.resize)
-        // Resize
+        window.addEventListener('load', this.resize)
+        window.addEventListener('orientationchange', this.resize)
         this.resize()
+
+        /** Add tree to the canvas if there's a parameter in the URL */
+        const id = this.props.match.params.id;
+        if (id) {
+            this.fetchData(id)
+                .catch((error) => {
+                    console.error(error)
+                })
+        }
 
     }
 
@@ -39,8 +53,8 @@ class AIEditor extends Component {
     resize() {
         /** Resizes the Konva Canvas */
         let konvaContainer = document.getElementById('konva-container')
-        
-        if (konvaContainer !== null){
+
+        if (konvaContainer !== null) {
             let width = konvaContainer.offsetWidth
             let height = konvaContainer.offsetHeight
             this.canvas.resizeStage(width, height)
@@ -66,16 +80,22 @@ class AIEditor extends Component {
         // call API
         let response = RoamBotAPI.postAI(data)
         response.then((res) => {
-            if(res.ok) {
+            if (res.ok) {
                 alert("AI Saved")
-            }else {
+            } else {
                 console.error(res)
                 alert("An error occurred, see console.")
             }
         })
     }
 
-   
+    fetchData = async (id) => {
+        // gets AI
+        let response = await RoamBotAPI.getAiDetail(id)
+        let json = await response.json()
+        this.canvas.jsonToTree(JSON.parse(json.ai))
+    }
+
     render() {
 
         let menuProps = {
@@ -103,4 +123,4 @@ class AIEditor extends Component {
 }
 
 
-export default AIEditor
+export default withRouter(AIEditor)
