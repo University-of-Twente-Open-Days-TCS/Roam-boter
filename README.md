@@ -56,4 +56,4 @@ Go in the shell of your django docker container
 ### Insert bots
 Follow the following command to load bots into the database.
 
-1. ./manage.py loaddata bots.json
+1. ./manage.py loaddata roamboter/fixtures/bots.json
