@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import './css/App.css';
 import RoamBotAPI from './RoamBotAPI.js';
-import Fullscreen from "react-full-screen";
 
 import {
     Route,
@@ -34,6 +33,12 @@ class App extends Component {
     }
 
     componentDidMount() {
+        // Fullscreen listener
+        document.onfullscreenchange = (event) => {
+            console.log(event)
+        }
+
+       
         // Check whether the session is logged in
         RoamBotAPI.getTeamDetail()
             .then((response) => {
@@ -43,7 +48,9 @@ class App extends Component {
                     this.setState({loggedIn: false})
                 }
             })
+
     }
+
     
     handleSubmitLogin = (teamCode) => {
         let response = RoamBotAPI.loginUser(teamCode)
@@ -62,8 +69,10 @@ class App extends Component {
     }
 
     toggleFull = () => {
-        this.state.isFull ? this.setState({isFull: false}) : this.setState({isFull: true})
-    };
+        // Toggles fullscreen
+    }
+
+
 
 
     render() {
@@ -75,18 +84,16 @@ class App extends Component {
         }
 
         return (
-            (this.state.loggedIn) ? (
-                <div>
-                    <Fullscreen
-                        enabled={this.state.isFull}
-                        onChange={isFull => this.setState({isFull})}
-                    >
-                        <div className="full-screenable-node">
+            (this.state.loggedIn) ? 
+                (<div>
+
+                        <div>
                             <Layout {...layoutProps}>
                                 <Route exact path="/" 
                                     render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
                                 />
-                                <Route path="/AIEditor" component={AIEditor} />
+
+                                <Route path="/AIEditor/:id?" component={AIEditor} />
                                 <Route path="/AIList" component={AIList}/>
                                 <Route path="/MatchHistory" component={MatchHistory}/>
                                 <Route path="/PlayvsBot" component={PlayvsBot}/>
@@ -94,8 +101,9 @@ class App extends Component {
                                 <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
                             </Layout>
                         </div>
-                    </Fullscreen>
-                </div>) : (<Login handleSubmit={this.handleSubmitLogin.bind(this)} attemptFailed={this.state.loginAttemptFailed}/>)
+                </div>) 
+                    : 
+                (<Login handleSubmit={this.handleSubmitLogin.bind(this)} attemptFailed={this.state.loginAttemptFailed}/>)
         );
     }
 }

@@ -13,9 +13,9 @@ const AIEditorMenu = (props) => {
     return (
         <div>
             <div id="ai-editor-menu">
-                <Button variant="outlined" onClick={addConditionHandler}>Add Condition</Button>
-                <Button variant="outlined" onClick={addActionHandler}>Add Action</Button>
-                <Button variant="outlined" onClick={saveHandler}>Save</Button>
+                <Button variant="contained" color="primary" onClick={addConditionHandler}>Add Condition</Button>
+                <Button variant="contained" color="primary" onClick={addActionHandler}>Add Action</Button>
+                <Button variant="contained" color="primary" onClick={saveHandler}>Save</Button>
             </div>
         </div>
     )

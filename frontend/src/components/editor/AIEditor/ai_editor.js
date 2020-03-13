@@ -35,9 +35,6 @@ class aiCanvas {
     _startNode;
 
     constructor(container) {
-        // Set stagewidth according to container
-        this.stageWidth = 500
-        this.stageHeight = 1000
         //Create the stage
         this.createStage(container);
 
@@ -182,12 +179,12 @@ class aiCanvas {
     }
 
     //Turn a json file into a tree
-    jsonToTree(jsonFile) {
+    jsonToTree(json) {
         //Parse JSON to JS format
-        let parsedJson = JSON.parse(jsonFile);
+        // let parsedJson = JSON.parse(jsonFile);
 
         //Create first child from the startnode (and therefore iteratively all their successors)
-        let nodeChild = this.treeify(parsedJson);
+        let nodeChild = this.treeify(json);
 
         //Add child to canvas
         this.layer.add(nodeChild.group);
