@@ -51,12 +51,12 @@ const Login = ({handleSubmit, attemptFailed}) => {
             >
 
                 <Grid item sm={9} md={3}>
-                    <Typography variant="h3" className={classes.title} >RoamB<Icon className={clsx("fa", "fa-robot", classes.titleIcon)}></Icon>t-er</Typography>
                     <form className={classes.loginForm} noValidate autoComplete="off" onSubmit={(event) => {
                         event.preventDefault()
                         handleSubmit(teamCode)
                     }
                     }>
+                        <Typography variant="h3" className={classes.title} >RoamB<Icon className={clsx("fa", "fa-robot", classes.titleIcon)}></Icon>t-er</Typography>
                         <TextField className={classes.formInput}
                                    id="outlined-basic"
                                    label="Team code"
