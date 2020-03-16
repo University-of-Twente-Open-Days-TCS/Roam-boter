@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles(theme => ({
     content: {
         display: 'block',
+        position: 'relative',
         height: '100%',
         width: '100%',
         padding: theme.spacing(3)
