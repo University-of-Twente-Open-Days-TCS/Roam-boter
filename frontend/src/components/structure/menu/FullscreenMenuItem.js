@@ -7,6 +7,7 @@ import ListItem from "@material-ui/core/ListItem";
 import FullscreenIcon from '@material-ui/icons/Fullscreen'
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit'
 
+
 const FullscreenMenuItem = (props) => {
     
     let isFull = props.isFull

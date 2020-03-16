@@ -1,15 +1,26 @@
 import React, {Component} from "react";
 
+import { withStyles } from '@material-ui/core/styles'
+
 import RoamBotAPI from "../../RoamBotAPI"
 import ReplayCanvas from "./ReplayCanvas";
 
+
 import ContentBox from '../layout/ContentBox'
+
+const styles = theme => ({
+    canvasContainer: {
+        width: '100%'
+    }
+})
 
 
 class MatchReplay extends Component {
 
     constructor(props) {
-        super(props);
+        super(props)
+        this.canvas = React.createRef()
+        this.canvasContainer = React.createRef()
         this.frame = 0
     }
 
@@ -21,7 +32,8 @@ class MatchReplay extends Component {
         let data = await response.json();
 
         let game_data = JSON.parse(data.simulation);
-        let canvas = this.refs.canvas
+
+        let canvas = this.canvas.current
         let replayCanvas = new ReplayCanvas(canvas, game_data)
 
         
@@ -29,6 +41,7 @@ class MatchReplay extends Component {
             replayCanvas.drawFrame(this.frame)
             this.frame = this.frame + 1
         }, 16);
+
     }
 
     componentWillUnmount() {
@@ -37,13 +50,17 @@ class MatchReplay extends Component {
     }
 
     render() {
+        let { classes } = this.props
+        console.log(this.canvasContainer.current)
+
         return (
             <ContentBox>
-                <h1>Match Replay</h1>
-                <canvas ref="canvas" width={610} height={410}/>
+                <div ref={this.canvasContainer} className={classes.canvasContainer}>
+                    <canvas ref={this.canvas} width={610} height={410}/>
+                </div>
             </ContentBox>
         )
     }
 }
 
-export default MatchReplay;
+export default withStyles(styles)(MatchReplay);

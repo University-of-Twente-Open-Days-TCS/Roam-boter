@@ -1,13 +1,26 @@
 import React, {useState} from "react"
 
+import clsx from 'clsx';
+
 import { makeStyles } from '@material-ui/core/styles'
 
+import Typography from '@material-ui/core/Typography'
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import Icon from '@material-ui/core/Icon'
 
+import '@fortawesome/fontawesome-free/css/all.css'
 
 const useStyles = makeStyles(theme => ({
+    title: {
+        textAlign: 'center'
+    },
+    titleIcon: {
+        display: 'inline',
+        position: 'relative',
+        top: '-4px',
+    },
     loginForm: {
         display: 'flex',
         flexDirection: 'column',
@@ -19,6 +32,7 @@ const useStyles = makeStyles(theme => ({
         margin: '1rem',
         width: '100%'
     }
+    
 }))
 
 const Login = ({handleSubmit, attemptFailed}) => {
@@ -42,6 +56,7 @@ const Login = ({handleSubmit, attemptFailed}) => {
                         handleSubmit(teamCode)
                     }
                     }>
+                        <Typography variant="h3" className={classes.title} >RoamB<Icon className={clsx("fa", "fa-robot", classes.titleIcon)}></Icon>t-er</Typography>
                         <TextField className={classes.formInput}
                                    id="outlined-basic"
                                    label="Team code"
