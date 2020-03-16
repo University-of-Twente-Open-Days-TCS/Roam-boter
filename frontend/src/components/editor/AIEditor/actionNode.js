@@ -121,8 +121,6 @@ export default class actionNode {
 
         //Popup to add an action to the actionList within the node
         this.group.on("click tap", () => {
-
-            //TODO could just make this by calling editAction with object null (no action yet) probs
             this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generatePossibleActionsList(), this.editAction.bind(this)).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
