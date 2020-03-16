@@ -28,7 +28,7 @@ class MatchReplay extends Component {
         this.state = {
             frame: 0,
             framesLength: 0,
-            playing: false
+            playing: true
         }
         //bind callbackFunctions
         this.handleSlideChange = this.handleSlideChange.bind(this)
