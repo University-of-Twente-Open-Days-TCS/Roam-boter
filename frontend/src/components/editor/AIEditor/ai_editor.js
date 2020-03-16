@@ -31,6 +31,9 @@ class aiCanvas {
     spawnX = 0;
     spawnY = 0;
 
+    _trashcan;
+
+
     _startNode;
 
     constructor(container) {
@@ -87,47 +90,46 @@ class aiCanvas {
         this.stage.batchDraw()
     }
 
-    //TODO fix
-
     //make trashcan
     addTrashcan(stage) {
-        let thiseditor = this;
-        this.trashcan = new Konva.Image({
+        let thisCanvas = this;
+        this.stage.trashcan = new Konva.Image({
             x: 0,
             y: 0,
             width: 80,
             height: 80
         });
 
-        var closedTrashcan = new Image();
-        closedTrashcan.onload = function () {
-            thiseditor.trashcan.image(closedTrashcan);
-        };
+        //load image of closed trashcan
+        let closedTrashcan = new Image();
         closedTrashcan.src = 'trashcan/closed.svg';
+        closedTrashcan.onload = function () {
+            thisCanvas.stage.trashcan.image(closedTrashcan);
+            stage.staticlayer.add(thisCanvas.stage.trashcan);
+            stage.staticlayer.draw();
+        };
 
-
-        stage.staticlayer.on('mouseout', function () {
-            var openTrashcan = new Image();
-            openTrashcan.onload = function () {
-                thiseditor.trashcan.image(openTrashcan);
-            };
+        //If trashcan is hovered over, open it
+        this.stage.trashcan.on('mouseenter touchstart', () => {
+            let openTrashcan = new Image();
             openTrashcan.src = 'trashcan/open.svg';
-            stage.staticlayer.draw();
+            openTrashcan.onload = function () {
+                thisCanvas.stage.trashcan.image(openTrashcan);
+                stage.staticlayer.draw();
 
-        });
-
-        stage.staticlayer.on('mouseenter', function () {
-            var closedTrashcan = new Image();
-            closedTrashcan.onload = function () {
-                thiseditor.trashcan.image(closedTrashcan);
             };
-            closedTrashcan.src = 'trashcan/closed.svg';
-            stage.staticlayer.draw();
-
         });
 
-        stage.staticlayer.add(this.trashcan);
-        stage.staticlayer.draw();
+        //If trashcan is no longer hovered over, close it
+        this.stage.trashcan.on('mouseleave touchend', () => {
+            let closedTrashcan = new Image();
+            closedTrashcan.src = 'trashcan/closed.svg';
+            closedTrashcan.onload = function () {
+                thisCanvas.stage.trashcan.image(closedTrashcan);
+                stage.staticlayer.draw();
+
+            };
+        });
 
     }
 
@@ -404,6 +406,14 @@ class aiCanvas {
 
     set startNode(value) {
         this._startNode = value;
+    }
+
+    get trashcan() {
+        return this._trashcan;
+    }
+
+    set trashcan(value) {
+        this._trashcan = value;
     }
 
 
