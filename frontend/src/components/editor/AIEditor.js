@@ -10,6 +10,8 @@ import AIEditorMenu from "./AIEditorMenu";
 import AICanvas from './AIEditor/ai_editor.js'
 
 import {withRouter} from "react-router-dom"
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from '@material-ui/lab/Alert';
 
 
 //Component Styling
@@ -36,7 +38,9 @@ const styles = theme => ({
     }
 })
 
-
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 
 class AIEditor extends Component {
@@ -51,7 +55,9 @@ class AIEditor extends Component {
         this.handleSave = this.handleSave.bind(this)
 
         this.state = {
-            id: null
+            id: null,
+            alertOpen: false,
+            errorMessage: ""
         }
     }
 
@@ -106,22 +112,36 @@ class AIEditor extends Component {
     handleSave() {
         // Save an AI
         let canvas = this.canvas
-        let ai = canvas.treeToJson()
-        let data = {}
-        data.name = "saved-ai"
-        data.ai = ai
+        try{
+            let ai = canvas.treeToJson()
+            let data = {}
+            data.name = "saved-ai"
+            data.ai = ai
 
-        const response = (this.state.id) ? (RoamBotAPI.putAI(this.state.id, data)) : (RoamBotAPI.postAI(data))
+            const response = (this.state.id) ? (RoamBotAPI.putAI(this.state.id, data)) : (RoamBotAPI.postAI(data))
 
-        response.then((res) => {
-            if (res.ok) {
-                alert("AI Saved")
-            } else {
-                console.error(res)
-                alert("An error occurred, see console.")
-            }
+            response.then((res) => {
+                if (res.ok) {
+                    alert("AI Saved")
+                } else {
+                    console.error(res)
+                    alert("An error occurred, see console.")
+                }
+            })
+        } catch (error) {
+            this.setState({
+                errorMessage: error.message,
+                alertOpen: true
+            })
+        }
+
+
+    }
+
+    handleSnackbarClose = () => {
+        this.setState({
+            alertOpen: false
         })
-
     }
 
     fetchData = async (id) => {
@@ -153,6 +173,11 @@ class AIEditor extends Component {
                         <AIEditorMenu {...menuProps} />
                     </Grid>
                 </Grid>
+                <Snackbar open={this.state.alertOpen} autoHideDuration={6000} onClose={this.handleSnackbarClose}>
+                    <Alert onClose={this.handleSnackbarClose} severity="error">
+                        {this.state.errorMessage}
+                    </Alert>
+                </Snackbar>
             </div>
         )
     }
