@@ -1,3 +1,4 @@
+import AIValidationError from "../Errors/AIValidationError.js";
 
 export default class condition {
 

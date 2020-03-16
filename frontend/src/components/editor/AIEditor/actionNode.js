@@ -5,7 +5,7 @@ import reldir from "./reldir.js";
 import winddir from "./winddir.js";
 import label from "./label.js";
 import Konva from "konva"
-
+import AIValidationError from "../Errors/AIValidationError.js";
 import speed from "./speed.js";
 
 //TODO place all these variables somewhere nicer
@@ -360,6 +360,12 @@ export default class actionNode {
         //Iterate over all actions and add its json to the actionblock
         this.actionList.forEach(item => {
 
+            //Throw error if action is incomplete
+
+            if (!item.isValid()) {
+                throw new AIValidationError("An action is missing one or more attributes!");
+            }
+
             //case Action:
             switch (item.id) {
 
@@ -446,11 +452,10 @@ export default class actionNode {
                     tree.actionlist.push({
                         "type_id": 11, "attributes": {}
                     });
-
                     break;
 
                 default:
-                //Raise error, wrong ID TODO:
+                    throw new AIValidationError("Tried to parse non-defined Action");
             }
 
 

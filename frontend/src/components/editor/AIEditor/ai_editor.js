@@ -12,6 +12,7 @@ import speed from "./speed.js";
 import condition from "./condition.js";
 import action from "./action.js";
 import arrow from "./arrow.js";
+import AIValidationError from "../Errors/AIValidationError.js";
 
 
 class aiCanvas {
@@ -198,7 +199,11 @@ class aiCanvas {
 
     //Turn the tree into a json file
     treeToJson() {
-        return this.startNode.trueArrow.dest.jsonify();
+        if (this.startNode.trueArrow != null) {
+            return this.startNode.trueArrow.dest.jsonify();
+        } else {
+            throw new AIValidationError("The startnode is not connected!");
+        }
     }
 
     //Turn a json file into a tree
@@ -407,7 +412,6 @@ class aiCanvas {
     set startNode(value) {
         this._startNode = value;
     }
-
 
 
 }

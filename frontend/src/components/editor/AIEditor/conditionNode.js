@@ -5,7 +5,9 @@ import object from "./object.js";
 import distance from "./distance.js";
 import label from "./label.js";
 import health from "./health.js";
-import Konva from "konva"
+import Konva from "konva";
+import AIValidationError from "../Errors/AIValidationError.js";
+
 
 //TODO place all these variables somewhere nicer
 const blockHeight = 40;
@@ -320,11 +322,23 @@ export default class conditionNode {
 
 
     trueChild() {
-        return this.trueArrow.dest;
+        try {
+            return this.trueArrow.dest;
+        } catch (err) {
+            if (err instanceof TypeError) {
+                throw new AIValidationError("A condition is missing a 'true'-arrow!");
+            }
+        }
     }
 
     falseChild() {
-        return this.falseArrow.dest;
+        try {
+            return this.falseArrow.dest;
+        } catch (err) {
+            if (err instanceof TypeError) {
+                throw new AIValidationError("A condition is missing a 'false'-arrow!");
+            }
+        }
     }
 
     generateConditionList() {
@@ -345,6 +359,20 @@ export default class conditionNode {
     jsonify() {
         let node = this.rect;
         let tree = {};
+
+        try {
+            //Throw error if Condition is missing an attribute, caught a few lines later
+            if (!this.condition.isValid()) {
+                throw new AIValidationError;
+            }
+        } catch (err) {
+            //Catch the error where the Condition does not even exist
+            if (err instanceof TypeError) {
+                throw new AIValidationError("A condition is not yet defined!");
+            } else {
+                throw new AIValidationError("A condition misses one or more attributes!");
+            }
+        }
 
         //case Condition:
         switch (this.condition.id) {
@@ -685,7 +713,6 @@ export default class conditionNode {
     set conditionText(value) {
         this._conditionText = value;
     }
-
 
     get stage() {
         return this._stage;
