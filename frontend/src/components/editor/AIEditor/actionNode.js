@@ -4,6 +4,7 @@ import object from "./object.js";
 import reldir from "./reldir.js";
 import winddir from "./winddir.js";
 import label from "./label.js";
+import seconds from "./seconds.js";
 import Konva from "konva"
 
 import speed from "./speed.js";
@@ -60,6 +61,13 @@ const labelList = [
     new label(6),
     new label(7),
     new label(8),
+];
+
+const secondsList = [
+    new seconds(1),
+    new seconds(3),
+    new seconds(5),
+    new seconds(7),
 ];
 
 export default class actionNode {
@@ -180,6 +188,9 @@ export default class actionNode {
             case(label):
                 this.actionList[this.actionList.length - 1].label = attribute;
                 break;
+            case(seconds):
+                this.actionList[this.actionList.length - 1].seconds = attribute;
+                break;
             default:
                 //Empty by design, should not arrive here
                 break;
@@ -241,7 +252,11 @@ export default class actionNode {
                 wantedList = labelList;
                 break;
             case 14:
-                wantedList = labelList;
+                if (this.actionList[this.actionList.length - 1].label == null) {
+                    wantedList = labelList;
+                } else {
+                    wantedList = secondsList;
+                }
                 break;
             default:
             //Empty by design, should not come here
@@ -440,7 +455,7 @@ export default class actionNode {
                 //set label for X seconds
                 case 14:
                     tree.actionlist.push({
-                        "type_id": 14, "attributes": {"label": item.label.id}
+                        "type_id": 14, "attributes": {"label": item.label.id, "seconds": item.seconds.id}
                     });
                     break;
 
