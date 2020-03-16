@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
+        flexShrink: '0',
         padding: theme.spacing(1, 1),
     },
 }))
