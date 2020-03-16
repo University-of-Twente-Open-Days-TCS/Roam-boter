@@ -83,7 +83,8 @@ export default function DrawerMenu(props) {
             <Divider/>
             <PlayMenuList/>
             <Divider/>
-            <FullscreenMenuItem {...props} />
+            
+            <FullscreenMenuItem toggleFull={props.toggleFull} isFull={props.isFull} />
 
         </Drawer>
     )

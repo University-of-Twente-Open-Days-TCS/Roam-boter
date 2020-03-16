@@ -5,6 +5,7 @@ import {NavLink} from "react-router-dom";
 
 import RoamBotAPI from "../../RoamBotAPI"
 
+import ContentBox from '../layout/ContentBox';
 
 
 const MatchItem = (props) => {
@@ -58,7 +59,7 @@ class MatchHistory extends Component {
 
     render() {
         return(
-        <div>
+        <ContentBox>
             <h1>Match History</h1>
             <ul>{
                 this.state.matches.map((match, i) => {
@@ -69,7 +70,7 @@ class MatchHistory extends Component {
                 }
             </ul>
           
-        </div>
+        </ContentBox>
         )
     }
 }

@@ -9,13 +9,15 @@ import {
 
 import Home from "./components/Home";
 import AIEditor from "./components/editor/AIEditor.js";
-import Layout from "./layout/Layout";
 import MatchHistory from "./components/matches/MatchHistory";
 import AIList from "./components/editor/AIList";
 import PlayvsBot from "./components/PlayvsBot";
 import PlayvsPlayer from "./components/PlayvsPlayer";
 import MatchReplay from "./components/matches/MatchReplay";
-import Login from "./login/Login";
+import Login from "./components/login/Login";
+
+import Structure from "./components/structure/Structure";
+
 
 
 class App extends Component {
@@ -118,7 +120,7 @@ class App extends Component {
         return (
             (this.state.loggedIn) ? 
                 (<div>
-                    <Layout {...layoutProps}>
+                    <Structure {...layoutProps}>
                         <Route exact path="/" 
                             render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
                         />
@@ -129,7 +131,7 @@ class App extends Component {
                         <Route path="/PlayvsBot" component={PlayvsBot}/>
                         <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                         <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
-                    </Layout>
+                    </Structure>
                 </div>) 
                     : 
                 (<Login handleSubmit={this.handleSubmitLogin.bind(this)} attemptFailed={this.state.loginAttemptFailed}/>)
