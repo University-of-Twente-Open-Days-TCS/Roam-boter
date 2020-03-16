@@ -5,12 +5,7 @@ import object from "./object.js";
 import distance from "./distance.js";
 import label from "./label.js";
 import health from "./health.js";
-import action from "./action.js"
-import winddir from "./winddir.js";
-import reldir from "./reldir.js";
-import speed from "./speed.js"
 import Konva from "konva"
-import actionNode from "./actionNode";
 
 //TODO place all these variables somewhere nicer
 const blockHeight = 40;

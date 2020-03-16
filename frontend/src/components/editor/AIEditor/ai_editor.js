@@ -336,12 +336,14 @@ class aiCanvas {
                     case 14:
                         newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label)));
                         break;
+                    default:
+                    //TODO raise error, actionID incorrect
 
                 }
 
             });
-            let newActionNode = new actionNode(this.stage, this.layer, newActionList, nodeJson.actionblock.position);
-            return newActionNode;
+
+            return new actionNode(this.stage, this.layer, newActionList, nodeJson.actionblock.position);
         } else {
             //TODO throw exception, json incorrect!
         }
@@ -349,7 +351,7 @@ class aiCanvas {
 
     //Draw an arrow from the false/true-circle to the newly created node
     drawArrowFromJson(startNode, destNode, trueCondition) {
-        let newArrow = new arrow(startNode, destNode, trueCondition, this.stage, this.layer);
+        new arrow(startNode, destNode, trueCondition, this.stage, this.layer);
     }
 
     //Create childNodes, draw them on canvas and draw arrows to them
