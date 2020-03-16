@@ -1,13 +1,5 @@
 [
   {
-    "model": "dashboard.workshop",
-    "pk": 1,
-    "fields": {
-      "creation_date": "2020-03-13T10:06:33.730Z",
-      "workshop_open": true
-    }
-  },
-  {
     "model": "AIapi.ai",
     "pk": 1,
     "fields": {
