@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Slider from '@material-ui/core/Slider'
 import IconButton from '@material-ui/core/IconButton'
-import Icon from '@material-ui/core/Icon'
 
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
