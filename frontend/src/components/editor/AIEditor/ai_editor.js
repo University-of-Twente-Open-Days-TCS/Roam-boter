@@ -31,8 +31,6 @@ class aiCanvas {
     spawnX = 0;
     spawnY = 0;
 
-    _trashcan;
-
 
     _startNode;
 
@@ -410,13 +408,6 @@ class aiCanvas {
         this._startNode = value;
     }
 
-    get trashcan() {
-        return this._trashcan;
-    }
-
-    set trashcan(value) {
-        this._trashcan = value;
-    }
 
 
 }
