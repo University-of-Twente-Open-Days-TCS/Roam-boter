@@ -52,6 +52,13 @@ Go in the shell of your django docker container
 
 5. `./manage.py migrate`
 
+### Generating cache
+For every level a cache needs to be generated to do this run the prepare\_caches.py script with the level names.
+
+For example the following command will generate cache for level1 and level2:
+
+`./prepare_caches.py level1 level2`
+
 
 ### Insert bots
 Follow the following command to load bots into the database.
