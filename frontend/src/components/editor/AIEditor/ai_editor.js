@@ -199,9 +199,9 @@ class aiCanvas {
 
     //Turn the tree into a json file
     treeToJson() {
-        if (this.startNode.trueArrow != null) {
+        try {
             return this.startNode.trueArrow.dest.jsonify();
-        } else {
+        } catch (err) {
             throw new AIValidationError("The startnode is not connected!");
         }
     }
