@@ -1,28 +1,10 @@
 [
   {
-    "model": "dashboard.workshop",
-    "pk": 1,
-    "fields": {
-      "creation_date": "2020-03-13T10:06:33.730Z",
-      "workshop_open": true
-    }
-  },
-  {
-    "model": "dashboard.team",
-    "pk": 2,
-    "fields": {
-      "team_code": -1,
-      "team_name": "The Bots",
-      "active": true,
-      "workshop": 1
-    }
-  },
-  {
     "model": "AIapi.ai",
     "pk": 1,
     "fields": {
       "ai": "{\"condition\": {\"type_id\": 1, \"child_true\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 1, \"attributes\": {\"obj\": 10}}], \"position\": {\"x\": 769, \"y\": 336}}}, \"child_false\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 8, \"attributes\": {\"speed\": 1}}], \"position\": {\"x\": 1077, \"y\": 343}}}, \"attributes\": {\"distance\": 3, \"obj\": 10}, \"position\": {\"x\": 875, \"y\": 145}}}",
-      "team": 2,
+      "team": null,
       "name": "Easy Bot"
     }
   },
@@ -31,7 +13,7 @@
     "pk": 5,
     "fields": {
       "ai": "{\"condition\": {\"type_id\": 2, \"child_true\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 1, \"attributes\": {\"obj\": 2}}, {\"type_id\": 5, \"attributes\": {\"obj\": 2}}, {\"type_id\": 10, \"attributes\": {}}], \"position\": {\"x\": 450, \"y\": 298}}}, \"child_false\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 1, \"attributes\": {\"obj\": 10}}, {\"type_id\": 7, \"attributes\": {\"reldir\": 0}}], \"position\": {\"x\": 78, \"y\": 302}}}, \"attributes\": {\"obj\": 2}, \"position\": {\"x\": 260, \"y\": 148}}}",
-      "team": 2,
+      "team": null,
       "name": "Medium Bot"
     }
   },
@@ -40,7 +22,7 @@
     "pk": 6,
     "fields": {
       "ai": "{\"condition\": {\"type_id\": 2, \"child_true\": {\"condition\": {\"type_id\": 1, \"child_true\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 1, \"attributes\": {\"obj\": 2}}, {\"type_id\": 5, \"attributes\": {\"obj\": 2}}, {\"type_id\": 10, \"attributes\": {}}], \"position\": {\"x\": 805, \"y\": 537}}}, \"child_false\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 11, \"attributes\": {}}], \"position\": {\"x\": 521, \"y\": 512}}}, \"attributes\": {\"distance\": 1, \"obj\": 2}, \"position\": {\"x\": 615, \"y\": 379}}}, \"child_false\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 1, \"attributes\": {\"obj\": 10}}, {\"type_id\": 7, \"attributes\": {\"reldir\": 0}}], \"position\": {\"x\": 385, \"y\": 342}}}, \"attributes\": {\"obj\": 2}, \"position\": {\"x\": 543, \"y\": 198}}}",
-      "team": 2,
+      "team": null,
       "name": "Suicide Bot"
     }
   },
@@ -49,7 +31,7 @@
     "pk": 8,
     "fields": {
       "ai": "{\"condition\": {\"type_id\": 5, \"child_true\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 5, \"attributes\": {\"obj\": 2}}, {\"type_id\": 10, \"attributes\": {}}], \"position\": {\"x\": 831, \"y\": 426}}}, \"child_false\": {\"condition\": {\"type_id\": 2, \"child_true\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 4, \"attributes\": {\"obj\": 4}}, {\"type_id\": 5, \"attributes\": {\"obj\": 2}}], \"position\": {\"x\": 697, \"y\": 574}}}, \"child_false\": {\"condition\": {\"type_id\": 2, \"child_true\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 5, \"attributes\": {\"obj\": 2}}], \"position\": {\"x\": 589, \"y\": 713}}}, \"child_false\": {\"actionblock\": {\"actionlist\": [{\"type_id\": 1, \"attributes\": {\"obj\": 10}}, {\"type_id\": 7, \"attributes\": {\"reldir\": 0}}], \"position\": {\"x\": 338, \"y\": 722}}}, \"attributes\": {\"obj\": 2}, \"position\": {\"x\": 470, \"y\": 608}}}, \"attributes\": {\"obj\": 4}, \"position\": {\"x\": 591, \"y\": 451}}}, \"attributes\": {}, \"position\": {\"x\": 726, \"y\": 324}}}",
-      "team": 2,
+      "team": null,
       "name": "Good bot"
     }
   },

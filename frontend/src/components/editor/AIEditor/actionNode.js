@@ -113,16 +113,42 @@ export default class actionNode {
             this.actionNodeTextObj.moveToTop();
         }
         this.createInputCircle();
-        let node = this;
-        this.group.on("dragmove", function () {
-            node.updateArrows(stage)
-        });
-        let thisActionNode = this;
-        this.group.on("dragend", () => {
-            var touchPos = stage.getPointerPosition();
+
+        //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
+        this.group.on("dragmove", () => {
+            this.updateArrows(this.stage);
+            let touchPos = this.stage.getPointerPosition();
+
+            //If while moving the node is hovered over trashcan, open trashcan
             if (this.stage.staticlayer.getIntersection(touchPos) != null) {
-                thisActionNode.remove();
-                layer.draw();
+                this.stage.trashcan.fire('touchstart', {
+                    type: 'touchstart',
+                    target: this.stage.trashcan
+                });
+            } else {
+
+                //If node is no longer hovered over trashcan, close trashcan
+                this.stage.trashcan.fire('touchend', {
+                    type: 'touchend',
+                    target: this.stage.trashcan
+
+                });
+            }
+        });
+
+        this.group.on("dragend", () => {
+            let touchPos = this.stage.getPointerPosition();
+
+            //If node is released above trashcan, remove it and close trashcan
+            if (this.stage.staticlayer.getIntersection(touchPos) != null) {
+                this.remove();
+                this.layer.draw();
+                this.stage.trashcan.fire('touchend', {
+                    type: 'touchend',
+                    target: this.stage.trashcan
+
+                });
+                this.stage.staticlayer.draw();
             }
         });
 
