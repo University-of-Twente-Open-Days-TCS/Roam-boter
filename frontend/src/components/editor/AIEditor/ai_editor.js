@@ -12,7 +12,7 @@ import speed from "./speed.js";
 import condition from "./condition.js";
 import action from "./action.js";
 import arrow from "./arrow.js";
-
+import seconds from "./seconds.js";
 
 
 class aiCanvas {
@@ -309,10 +309,10 @@ class aiCanvas {
                         newActionList = newActionList.concat(new action(13, null, null, null, null, new label(actionItem.attributes.label)));
                         break;
                     case 14:
-                        newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label)));
+                        newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label), new seconds(actionItem.attributes.seconds)));
                         break;
                     default:
-                        //TODO throw error, incorrect json action ID
+                    //TODO throw error, incorrect json action ID
                 }
 
             });
