@@ -50,15 +50,18 @@ const speedList = [
 ];
 
 
-//LABELS DO NOT YET EXIST
 const labelList = [
     new label(0),
     new label(1),
     new label(2),
     new label(3),
     new label(4),
-
+    new label(5),
+    new label(6),
+    new label(7),
+    new label(8),
 ];
+
 export default class actionNode {
 
 
@@ -262,11 +265,6 @@ export default class actionNode {
         let possibleActionsList = [
             //Infinite amount of Do Nothing
             new action(0),
-
-            //Infinite labels TODO enable when labels get enabled
-            // new action(12),
-            // new action(13),
-            // new action(14)
         ];
 
         if (!this.containsMovement) {
@@ -284,6 +282,11 @@ export default class actionNode {
                 possibleActionsList.push(new action(fire));
             })
         }
+
+        possibleActionsList.push(//Infinite labels
+            new action(12),
+            new action(13),
+            new action(14));
 
 
         return possibleActionsList;
@@ -410,17 +413,37 @@ export default class actionNode {
                     });
                     break;
 
-                //Fires a bullet
+                //Shoot
                 case 10:
                     tree.actionlist.push({
                         "type_id": 10, "attributes": {}
                     });
                     break;
+
+                //Self-destruct
                 case 11:
                     tree.actionlist.push({
                         "type_id": 11, "attributes": {}
                     });
+                    break;
 
+                //set label
+                case 12:
+                    tree.actionlist.push({
+                        "type_id": 12, "attributes": {"label": item.label.id}
+                    });
+                    break;
+                //unset label
+                case 13:
+                    tree.actionlist.push({
+                        "type_id": 13, "attributes": {"label": item.label.id}
+                    });
+                    break;
+                //set label for X seconds
+                case 14:
+                    tree.actionlist.push({
+                        "type_id": 14, "attributes": {"label": item.label.id}
+                    });
                     break;
 
                 default:

@@ -49,14 +49,16 @@ const healthList = [
 
 ];
 
-//LABELS DO NOT YET EXIST
 const labelList = [
     new label(0),
     new label(1),
     new label(2),
     new label(3),
     new label(4),
-
+    new label(5),
+    new label(6),
+    new label(7),
+    new label(8)
 ];
 
 

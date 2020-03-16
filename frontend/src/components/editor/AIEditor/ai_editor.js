@@ -65,7 +65,7 @@ class aiCanvas {
     }
 
     createStage(container) {
-        
+
         this.stage = new Konva.Stage({
             container: container,
             width: this.stageWidth,
@@ -84,7 +84,7 @@ class aiCanvas {
             width: width,
             height: height
         })
-        this.stage.batchDraw()   
+        this.stage.batchDraw()
     }
 
 
@@ -311,7 +311,8 @@ class aiCanvas {
                     case 14:
                         newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label)));
                         break;
-
+                    default:
+                        //TODO throw error, incorrect json action ID
                 }
 
             });

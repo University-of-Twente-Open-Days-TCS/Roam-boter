@@ -1,4 +1,3 @@
-
 export default class condition {
 
     //The attributes of a condition
@@ -81,9 +80,9 @@ export default class condition {
                 return "Bullet ready";
             case 6:
                 if (this.label == null) {
-                    return "If _label_ set";
+                    return "If label <label> set";
                 } else {
-                    return "If " + this.label + " set";
+                    return "If label " + this.label + " set";
                 }
             case 7:
                 if (this.health == null) {

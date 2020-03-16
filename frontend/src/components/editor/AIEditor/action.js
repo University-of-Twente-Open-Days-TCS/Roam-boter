@@ -1,4 +1,3 @@
-
 //Action (NOT A NODE), has zero or more attributes, by default null. DOES NOT WORK WITH LABELS YET
 
 export default class action {
@@ -46,7 +45,6 @@ export default class action {
                 return true;
             case 11:
                 return true;
-            //TODO this only works for 1 label, may need to encorporate multiple
             case 12:
                 return (this.label != null);
             case 13:
@@ -126,11 +124,27 @@ export default class action {
                 return "Shoot!";
             case 11:
                 return "Self-destruct!";
+            case 12:
+                if (this.label != null) {
+                    return "Set label \n" + this.label;
+                } else {
+                    return "Set label \n <label>";
+                }
+            case 13:
+                if (this.label != null) {
+                    return "Unset label \n" + this.label;
+                } else {
+                    return "Unset label \n <label>";
+                }
+            case 14:
+                if (this.label != null) {
+                    return "Set label " + this.label + "\n for X seconds";
+                } else {
+                    return "Set label \n <label> \n for X seconds";
+                }
             //TODO encorporate labels
             default:
                 return null
-
-
         }
     }
 
