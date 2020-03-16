@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="32px" height="32px"
+	 viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+<title></title>
+<desc></desc>
+<g id="icon-26-trash-can">
+	<path id="trash-can" fill="#333333" d="M21,7.375h4v1H8v-1h4v-1c0-1.112,0.894-2,1.998-2h5.004c1.102,0,1.998,0.896,1.998,2V7.375
+		L21,7.375z M8,9.375v18.999c0,1.658,1.334,3.002,3,3.002h11c1.656,0,3-1.344,3-3.002V9.375H8L8,9.375z M12,12.375v16h1v-16H12
+		L12,12.375z M16,12.375v16h1v-16H16L16,12.375z M20,12.375v16h1v-16H20L20,12.375z M14.003,5.375c-0.554,0-1.003,0.444-1.003,1v1h7
+		v-1c0-0.552-0.438-1-1.003-1H14.003L14.003,5.375z"/>
+</g>
+<rect x="12" y="12.375" fill="#FFFFFF" width="1" height="16"/>
+<rect x="16" y="12.375" fill="#FFFFFF" width="1" height="16"/>
+<rect x="20" y="12.375" fill="#FFFFFF" width="1" height="16"/>
+</svg>

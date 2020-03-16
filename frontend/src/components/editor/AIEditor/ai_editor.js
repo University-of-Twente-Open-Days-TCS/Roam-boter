@@ -14,7 +14,6 @@ import action from "./action.js";
 import arrow from "./arrow.js";
 
 
-
 class aiCanvas {
 
     blockHeight = 40;
@@ -31,6 +30,7 @@ class aiCanvas {
     //coordinates where every new element spawns
     spawnX = 0;
     spawnY = 0;
+
 
     _startNode;
 
@@ -53,6 +53,7 @@ class aiCanvas {
         this.stage.add(this.stage.templayer);
         this.layer.draw();
 
+
         //add trashcan
         this.addTrashcan(this.stage);
         this.layer.draw();
@@ -65,7 +66,7 @@ class aiCanvas {
     }
 
     createStage(container) {
-        
+
         this.stage = new Konva.Stage({
             container: container,
             width: this.stageWidth,
@@ -83,31 +84,53 @@ class aiCanvas {
         this.stage.size({
             width: width,
             height: height
-        })
-        this.stage.batchDraw()   
+        });
+        this.stage.batchDraw()
     }
 
-
-    //TODO quickfix this.stagewidth, and make it use correct state without giving it as a parameter
     //make trashcan
     addTrashcan(stage) {
-        var imageObj = new Image();
-        //TODO: FIX NORMAL IMAGE
-        imageObj.src = 'https://cdn0.iconfinder.com/data/icons/shopping-359/512/Bin_bin_delete_trashcan_garbage_dust-512.png';
-        imageObj.onload = function () {
-            let trashcan = new Konva.Image({
-                x: this.stageWidth - 60,
-                y: 100,
-                image: imageObj,
-                width: 60,
-                height: 60
-            });
+        let thisCanvas = this;
+        this.stage.trashcan = new Konva.Image({
+            x: 0,
+            y: 0,
+            width: 80,
+            height: 80
+        });
 
-            stage.staticlayer.add(trashcan);
+        //load image of closed trashcan
+        let closedTrashcan = new Image();
+        closedTrashcan.src = 'trashcan/closed.svg';
+        closedTrashcan.onload = function () {
+            thisCanvas.stage.trashcan.image(closedTrashcan);
+            stage.staticlayer.add(thisCanvas.stage.trashcan);
             stage.staticlayer.draw();
-        }
+        };
+
+        //If trashcan is hovered over, open it
+        this.stage.trashcan.on('mouseenter touchstart', () => {
+            let openTrashcan = new Image();
+            openTrashcan.src = 'trashcan/open.svg';
+            openTrashcan.onload = function () {
+                thisCanvas.stage.trashcan.image(openTrashcan);
+                stage.staticlayer.draw();
+
+            };
+        });
+
+        //If trashcan is no longer hovered over, close it
+        this.stage.trashcan.on('mouseleave touchend', () => {
+            let closedTrashcan = new Image();
+            closedTrashcan.src = 'trashcan/closed.svg';
+            closedTrashcan.onload = function () {
+                thisCanvas.stage.trashcan.image(closedTrashcan);
+                stage.staticlayer.draw();
+
+            };
+        });
 
     }
+
 
     makeDraggable() {
 
@@ -311,12 +334,14 @@ class aiCanvas {
                     case 14:
                         newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label)));
                         break;
+                    default:
+                    //TODO raise error, actionID incorrect
 
                 }
 
             });
-            let newActionNode = new actionNode(this.stage, this.layer, newActionList, nodeJson.actionblock.position);
-            return newActionNode;
+
+            return new actionNode(this.stage, this.layer, newActionList, nodeJson.actionblock.position);
         } else {
             //TODO throw exception, json incorrect!
         }
@@ -324,7 +349,7 @@ class aiCanvas {
 
     //Draw an arrow from the false/true-circle to the newly created node
     drawArrowFromJson(startNode, destNode, trueCondition) {
-        let newArrow = new arrow(startNode, destNode, trueCondition, this.stage, this.layer);
+        new arrow(startNode, destNode, trueCondition, this.stage, this.layer);
     }
 
     //Create childNodes, draw them on canvas and draw arrows to them
@@ -382,6 +407,7 @@ class aiCanvas {
     set startNode(value) {
         this._startNode = value;
     }
+
 
 
 }
