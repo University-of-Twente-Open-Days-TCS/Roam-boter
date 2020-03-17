@@ -948,7 +948,7 @@ S2.define('select2/results',[
       $selected.first().trigger('mouseenter');
     } else {
       // If there are no selected options, highlight the first option
-      // in the dropdown
+        // in the selector
       $options.first().trigger('mouseenter');
     }
 
@@ -1134,7 +1134,7 @@ S2.define('select2/results',[
     });
 
     container.on('open', function () {
-      // When the dropdown is open, aria-expended="true"
+        // When the selector is open, aria-expended="true"
       self.$results.attr('aria-expanded', 'true');
       self.$results.attr('aria-hidden', 'false');
 
@@ -1143,7 +1143,7 @@ S2.define('select2/results',[
     });
 
     container.on('close', function () {
-      // When the dropdown is closed, aria-expended="false"
+        // When the selector is closed, aria-expended="false"
       self.$results.attr('aria-expanded', 'false');
       self.$results.attr('aria-hidden', 'true');
       self.$results.removeAttr('aria-activedescendant');
@@ -1464,7 +1464,7 @@ S2.define('select2/selection/base',[
     });
 
     container.on('open', function () {
-      // When the dropdown is open, aria-expanded="true"
+        // When the selector is open, aria-expanded="true"
       self.$selection.attr('aria-expanded', 'true');
       self.$selection.attr('aria-owns', resultsId);
 
@@ -1472,7 +1472,7 @@ S2.define('select2/selection/base',[
     });
 
     container.on('close', function () {
-      // When the dropdown is closed, aria-expanded="false"
+        // When the selector is closed, aria-expanded="false"
       self.$selection.attr('aria-expanded', 'false');
       self.$selection.removeAttr('aria-activedescendant');
       self.$selection.removeAttr('aria-owns');
@@ -3972,7 +3972,7 @@ S2.define('select2/dropdown',[
 
   Dropdown.prototype.render = function () {
     var $dropdown = $(
-      '<span class="select2-dropdown">' +
+        '<span class="select2-selector">' +
         '<span class="select2-results"></span>' +
       '</span>'
     );
@@ -3993,7 +3993,7 @@ S2.define('select2/dropdown',[
   };
 
   Dropdown.prototype.destroy = function () {
-    // Remove the dropdown from the DOM
+      // Remove the selector from the DOM
     this.$dropdown.remove();
   };
 
@@ -4010,7 +4010,7 @@ S2.define('select2/dropdown/search',[
     var $rendered = decorated.call(this);
 
     var $search = $(
-      '<span class="select2-search select2-search--dropdown">' +
+        '<span class="select2-search select2-search--selector">' +
         '<input class="select2-search__field" type="search" tabindex="-1"' +
         ' autocomplete="off" autocorrect="off" autocapitalize="none"' +
         ' spellcheck="false" role="textbox" />' +
@@ -4359,30 +4359,30 @@ S2.define('select2/dropdown/attachBody',[
   };
 
   AttachBody.prototype._positionDropdown = function () {
-    var $window = $(window);
+      var $window = $(window);
 
-    var isCurrentlyAbove = this.$dropdown.hasClass('select2-dropdown--above');
-    var isCurrentlyBelow = this.$dropdown.hasClass('select2-dropdown--below');
+      var isCurrentlyAbove = this.$dropdown.hasClass('select2-selector--above');
+      var isCurrentlyBelow = this.$dropdown.hasClass('select2-selector--below');
 
-    var newDirection = null;
+      var newDirection = null;
 
-    var offset = this.$container.offset();
+      var offset = this.$container.offset();
 
-    offset.bottom = offset.top + this.$container.outerHeight(false);
+      offset.bottom = offset.top + this.$container.outerHeight(false);
 
-    var container = {
-      height: this.$container.outerHeight(false)
-    };
+      var container = {
+          height: this.$container.outerHeight(false)
+      };
 
-    container.top = offset.top;
-    container.bottom = offset.top + container.height;
+      container.top = offset.top;
+      container.bottom = offset.top + container.height;
 
-    var dropdown = {
-      height: this.$dropdown.outerHeight(false)
-    };
+      var dropdown = {
+          height: this.$dropdown.outerHeight(false)
+      };
 
-    var viewport = {
-      top: $window.scrollTop(),
+      var viewport = {
+          top: $window.scrollTop(),
       bottom: $window.scrollTop() + $window.height()
     };
 
@@ -4424,12 +4424,12 @@ S2.define('select2/dropdown/attachBody',[
     }
 
     if (newDirection != null) {
-      this.$dropdown
-        .removeClass('select2-dropdown--below select2-dropdown--above')
-        .addClass('select2-dropdown--' + newDirection);
-      this.$container
-        .removeClass('select2-container--below select2-container--above')
-        .addClass('select2-container--' + newDirection);
+        this.$dropdown
+            .removeClass('select2-selector--below select2-selector--above')
+            .addClass('select2-selector--' + newDirection);
+        this.$container
+            .removeClass('select2-container--below select2-container--above')
+            .addClass('select2-container--' + newDirection);
     }
 
     this.$dropdownContainer.css(css);
@@ -4641,35 +4641,35 @@ S2.define('select2/defaults',[
   './results',
 
   './selection/single',
-  './selection/multiple',
-  './selection/placeholder',
-  './selection/allowClear',
-  './selection/search',
-  './selection/eventRelay',
+    './selection/multiple',
+    './selection/placeholder',
+    './selection/allowClear',
+    './selection/search',
+    './selection/eventRelay',
 
-  './utils',
-  './translation',
-  './diacritics',
+    './utils',
+    './translation',
+    './diacritics',
 
-  './data/select',
-  './data/array',
-  './data/ajax',
-  './data/tags',
-  './data/tokenizer',
-  './data/minimumInputLength',
-  './data/maximumInputLength',
-  './data/maximumSelectionLength',
+    './data/select',
+    './data/array',
+    './data/ajax',
+    './data/tags',
+    './data/tokenizer',
+    './data/minimumInputLength',
+    './data/maximumInputLength',
+    './data/maximumSelectionLength',
 
-  './dropdown',
-  './dropdown/search',
-  './dropdown/hidePlaceholder',
-  './dropdown/infiniteScroll',
-  './dropdown/attachBody',
-  './dropdown/minimumResultsForSearch',
-  './dropdown/selectOnClose',
-  './dropdown/closeOnSelect',
+    './selector',
+    './selector/search',
+    './selector/hidePlaceholder',
+    './selector/infiniteScroll',
+    './selector/attachBody',
+    './selector/minimumResultsForSearch',
+    './selector/selectOnClose',
+    './selector/closeOnSelect',
 
-  './i18n/en'
+    './i18n/en'
 ], function ($, require,
 
              ResultsList,
@@ -5778,10 +5778,10 @@ S2.define('select2/core',[
 
   Select2.prototype.render = function () {
     var $container = $(
-      '<span class="select2 select2-container">' +
+        '<span class="select2 select2-container">' +
         '<span class="selection"></span>' +
-        '<span class="dropdown-wrapper" aria-hidden="true"></span>' +
-      '</span>'
+        '<span class="selector-wrapper" aria-hidden="true"></span>' +
+        '</span>'
     );
 
     $container.attr('dir', this.options.get('dir'));
@@ -6207,12 +6207,12 @@ S2.define('select2/dropdown/attachContainer',[
 
   AttachContainer.prototype.position =
     function (decorated, $dropdown, $container) {
-    var $dropdownContainer = $container.find('.dropdown-wrapper');
-    $dropdownContainer.append($dropdown);
+        var $dropdownContainer = $container.find('.selector-wrapper');
+        $dropdownContainer.append($dropdown);
 
-    $dropdown.addClass('select2-dropdown--below');
-    $container.addClass('select2-container--below');
-  };
+        $dropdown.addClass('select2-selector--below');
+        $container.addClass('select2-container--below');
+    };
 
   return AttachContainer;
 });

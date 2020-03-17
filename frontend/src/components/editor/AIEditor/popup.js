@@ -1,5 +1,5 @@
 import Konva from "konva"
-import dropdown from "./dropdown.js";
+import selector from "./selector.js";
 
 
 export default class popup {
@@ -11,34 +11,38 @@ export default class popup {
     _group;
 
 
-    constructor(stage, layer, list, f, text) {
+    constructor(stage, layer, options, f, text) {
+        this.queue = [];
         this.stage = stage;
         this.layer = layer;
-        this.list = list;
         this.f = f;
+        this.selector = null;
+        this.textGroup = null;
         this.textHeight = 30;
         this.text = text.replace(/\n/g, "");
         this.createGroup();
-
+        this.getOption({
+            options: options, f: (selection) => {
+                f(selection);
+                this.closePopup()
+            }
+        });
+        this.stage.draggable(false);
     }
 
     createGroup() {
         let thisStage = this.stage;
-        this.stage.on("click tap", {});
-        this.dDown = new dropdown(this.stage, this.layer, this.list, this.closePopup.bind(this));
-        this.group = new Konva.Group({draggable: true});
-        this.createText();
+        this.group = new Konva.Group();
         this.createRect();
-        this.group.add(this.textGroup);
-        //this.createClose();
-        this.group.add(this.dDown.group);
-        //dropdown = new dropdown();
-        this.group.x(thisStage.width() / 2 - (this.rect.width() / 2));
-        this.group.y(thisStage.height() / 2 - (this.rect.height() / 2));
+        this.createText();
     }
 
     createText() {
-        let boldWords = ["_object_", "_distance_", "_amount_", "_label_", "_speed_", "_reldir_", "_winddir_"];
+        if (this.textGroup !== null) {
+            this.textGroup.destroy();
+        }
+
+        let boldWords = ["<object>", "<distance>", "<amount>", "<label>", "<speed>", "<reldir>", "<winddir>"];
         let words = this.text.split(" ");
         let textGroup = new Konva.Group();
         let currentX = 0;
@@ -67,15 +71,56 @@ export default class popup {
         });
         this.textWidth = currentX + currentText.width();
         this.textGroup = textGroup;
+        this.group.add(this.textGroup);
+    }
 
+    //input in form of {options: [option], f: (option) => {}}
+    getOption(input) {
+        let options = input.options;
+        let f = input.f;
+        if (this.selector !== null) {
+            this.selector.group.destroy();
+        }
+        this.selector = new selector(this.stage, this.layer, options, (selection) => {
+            console.log(selection);
+            if (typeof selection.getRemainingOptions !== "undefined") {
+                this.getNextOption(selection, f);
+            } else {
+                f(selection);
+            }
+        });
+        this.group.add(this.selector.group);
+        this.updatePopupGroup();
+        this.layer.draw();
+    }
 
+    updatePopupGroup() {
+        this.rect.width(Math.max(this.selector.width, this.textWidth) + 20);
+        this.rect.height(this.selector.height + 20 + this.textHeight);
+        this.group.x(this.stage.width() / 2 - (this.rect.width() / 2));
+        this.group.y(this.stage.height() / 2 - (this.rect.height() / 2));
+    }
+
+    getNextOption(selection, f) {
+        let nextOption = selection.getRemainingOptions().pop();
+        if (typeof nextOption !== "undefined") {
+            this.text = selection.toString().replace(/\n/g, "");
+            ;
+            this.createText();
+            this.getOption({
+                options: nextOption.options, f: (s) => {
+                    nextOption.f(s);
+                    this.getNextOption(selection, f)
+                }
+            });
+        } else {
+            f(selection);
+        }
     }
 
     createRect() {
 
         this.rect = new Konva.Rect({
-            width: Math.max(this.dDown.width, this.textWidth) + 20,
-            height: this.dDown.height + 20 + this.textHeight,
             fill: 'blue',
             stroke: 'black',
             strokeWidth: 2,
@@ -84,31 +129,13 @@ export default class popup {
         this.group.add(this.rect);
     }
 
-    createClose() {
-        let thisStage = this.stage;
-
-        var exitRect = new Konva.Rect({
-            x: thisStage.width() * 0.6 - 50,
-            y: 10,
-            width: 40,
-            height: 40,
-            fill: 'black',
-            stroke: 'black',
-            strokeWidth: 2,
-            cornerRadius: 10,
-        });
-        this.group.add(exitRect);
-
-        exitRect.on("click tap", () => {
-            this.closePopup();
-        });
-    }
 
 
     //Close popup, if an attribute has been given
     closePopup(attribute) {
         this.layer.moveToBottom();
         this.group.destroy();
+        this.stage.draggable(true);
         this.stage.draw();
         if (attribute != null) {
             this.f(attribute);
