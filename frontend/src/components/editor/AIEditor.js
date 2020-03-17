@@ -130,7 +130,7 @@ class AIEditor extends Component {
         try{
             let ai = canvas.treeToJson()
             let data = {}
-            data.name = "saved-ai"
+            data.name = this.state.aiName
             data.ai = ai
 
             const response = (this.state.id) ? (RoamBotAPI.putAI(this.state.id, data)) : (RoamBotAPI.postAI(data))
