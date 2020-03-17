@@ -35,6 +35,8 @@ class Tank:
 
     team_id = 0
 
+    scout_target = None
+
     path = None
 
     def __init__(self, ai):
