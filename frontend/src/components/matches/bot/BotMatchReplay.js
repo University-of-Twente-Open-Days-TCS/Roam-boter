@@ -2,11 +2,11 @@ import React, {Component} from "react";
 
 import { withStyles } from '@material-ui/core/styles'
 
-import RoamBotAPI from "../../RoamBotAPI"
-import ReplayCanvas from "./ReplayCanvas";
+import RoamBotAPI from "../../../RoamBotAPI"
+import ReplayCanvas from "../ReplayCanvas";
 
-import ContentBox from '../layout/ContentBox'
-import ReplayControls from './ReplayControls'
+import ContentBox from '../../layout/ContentBox'
+import ReplayControls from '../ReplayControls'
 
 const styles = theme => ({
     wrapper: {
@@ -20,7 +20,7 @@ const styles = theme => ({
 })
 
 
-class MatchReplay extends Component {
+class BotMatchReplay extends Component {
 
     constructor(props) {
         super(props)
@@ -141,4 +141,4 @@ class MatchReplay extends Component {
     }
 }
 
-export default withStyles(styles)(MatchReplay);
+export default withStyles(styles)(BotMatchReplay);
