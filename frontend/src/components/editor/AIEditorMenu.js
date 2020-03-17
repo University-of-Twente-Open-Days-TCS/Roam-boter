@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
 
         fontSize: '0.5rem',
         [theme.breakpoints.up('md')]: {
+            width: '70%',
             fontSize: '1rem'
         }
     }
