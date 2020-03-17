@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-import { withStyles } from '@material-ui/styles'
+import {withStyles} from '@material-ui/styles'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 
@@ -10,6 +10,13 @@ import AIEditorMenu from "./AIEditorMenu";
 import AICanvas from './AIEditor/ai_editor.js'
 
 import {withRouter} from "react-router-dom"
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import TextField from "@material-ui/core/TextField";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
 
@@ -59,6 +66,8 @@ class AIEditor extends Component {
 
         this.state = {
             id: null,
+            dialogOpen: false,
+            aiName: "",
             alertOpen: false,
             errorMessage: ""
         }
@@ -85,7 +94,6 @@ class AIEditor extends Component {
                     console.error(error)
                 })
         }
-
     }
 
     componentDidUpdate() {
@@ -113,12 +121,19 @@ class AIEditor extends Component {
     }
 
     handleSave() {
+        this.setState({
+            dialogOpen: true
+        })
+    }
+
+    saveAI = () => {
         // Save an AI
         let canvas = this.canvas
+
         try{
             let ai = canvas.treeToJson()
             let data = {}
-            data.name = "saved-ai"
+            data.name = this.state.aiName
             data.ai = ai
 
             const response = (this.state.id) ? (RoamBotAPI.putAI(this.state.id, data)) : (RoamBotAPI.postAI(data))
@@ -137,8 +152,8 @@ class AIEditor extends Component {
                 alertOpen: true
             })
         }
-
-
+      
+        this.setState({dialogOpen: false})
     }
 
     handleSnackbarClose = () => {
@@ -154,9 +169,19 @@ class AIEditor extends Component {
         this.canvas.jsonToTree(JSON.parse(json.ai))
     }
 
+    handleCloseDialog = () => {
+        this.setState({
+            dialogOpen: false
+        })
+    }
+
+    handleChangeName = (e) => {
+        this.setState({aiName: e.target.value})
+    }
+
     render() {
         // Get classes
-        const { classes } = this.props
+        const {classes} = this.props
 
         let menuProps = {
             addConditionHandler: this.handleAddCondition,
@@ -176,6 +201,31 @@ class AIEditor extends Component {
                         <AIEditorMenu {...menuProps} />
                     </Grid>
                 </Grid>
+                <Dialog open={this.state.dialogOpen} onClose={this.handleCloseDialog}
+                        aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Enter AI name</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="AI name"
+                            type="text"
+                            fullWidth
+                            value={this.state.aiName}
+                            onChange={this.handleChangeName}
+                            required={true}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleCloseDialog} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={this.saveAI} color="primary" disabled={!this.state.aiName}>
+                            Save
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                 <Snackbar open={this.state.alertOpen} autoHideDuration={6000} onClose={this.handleSnackbarClose}>
                     <Alert onClose={this.handleSnackbarClose} severity="error">
                         {this.state.errorMessage}
