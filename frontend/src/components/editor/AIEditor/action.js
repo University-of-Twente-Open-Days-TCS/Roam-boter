@@ -97,7 +97,6 @@ export default class action {
                 return true;
             case 11:
                 return true;
-            //TODO this only works for 1 label, may need to encorporate multiple
             case 12:
                 return (this.label != null);
             case 13:
@@ -105,8 +104,7 @@ export default class action {
             case 14:
                 return (this.label != null);
             default:
-                return null;
-
+                return false;
         }
     }
 
