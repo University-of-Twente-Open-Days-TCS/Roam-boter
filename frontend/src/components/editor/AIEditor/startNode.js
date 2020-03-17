@@ -1,10 +1,10 @@
 import arrow from "./arrow.js";
 import Konva from "konva"
+
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
 const hitboxCircleRadius = 20;
-
 
 
 export default class startNode {
@@ -146,6 +146,12 @@ export default class startNode {
         }
     }
 
+    getRectMiddlePos() {
+        let x = this.rect.x() + this.rect.width() / 2;
+        let y = this.rect.y() + this.rect.height() / 2;
+        return {x: x, y: y};
+    }
+
     get trueArrow() {
         return this._trueArrow;
     }
@@ -169,7 +175,8 @@ export default class startNode {
     set layer(value) {
         this._layer = value;
     }
-        get rect() {
+
+    get rect() {
         return this._rect;
     }
 
