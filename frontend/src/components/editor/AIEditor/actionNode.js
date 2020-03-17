@@ -102,7 +102,7 @@ export default class actionNode {
         //Popup to add an action to the actionList within the node
         this.group.on("click tap", () => {
 
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateActionsList(), this.addAction.bind(this), "select an action").group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generatePossibleActionsList(), this.addAction.bind(this), "select an action").group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -142,8 +142,12 @@ export default class actionNode {
         this.inputCircle.moveToTop();
     }
 
-    generateActionsList() {
-        let allActionsList = [
+    generatePossibleActionsList() {
+
+
+        //Items which you may always choose from
+        let possibleActionsList = [
+            //Infinite amount of Do Nothing
             new action(0),
 
             //Infinite labels TODO enable when labels get enabled
