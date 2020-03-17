@@ -7,6 +7,8 @@ import label from "./label.js";
 import Konva from "konva"
 import AIValidationError from "../Errors/AIValidationError.js";
 import speed from "./speed.js";
+import ErrorCircle from "../Errors/ErrorCircle.js";
+
 
 //TODO place all these variables somewhere nicer
 const blockHeight = 40;
@@ -363,7 +365,7 @@ export default class actionNode {
             //Throw error if action is incomplete
 
             if (!item.isValid()) {
-                this.spawnErrorCircle(this.getRectMiddlePos());
+                new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
                 throw new AIValidationError("An action is missing one or more attributes!");
             }
 
@@ -456,7 +458,7 @@ export default class actionNode {
                     break;
 
                 default:
-                    this.spawnErrorCircle(this.getRectMiddlePos());
+                    new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
                     throw new AIValidationError("Tried to parse non-defined Action");
             }
 
@@ -514,39 +516,6 @@ export default class actionNode {
         }
         this.group.destroy();
         this.layer.draw();
-    }
-
-    spawnErrorCircle(position) {
-        let errorRing = new Konva.Ring({
-            x: position.x,
-            y: position.y,
-            innerRadius: 40,
-            outerRadius: 70,
-            fill: 'red'
-        });
-
-        this.group.add(errorRing);
-        errorRing.moveToTop();
-
-        let ringThickness = 20;
-        let period = 2000; // in ms
-
-        let thisLayer = this.layer;
-        let anim = new Konva.Animation(function (frame) {
-            if (frame.time < 2000) {
-                errorRing.innerRadius(
-                    (frame.time * 30) / period
-                );
-                errorRing.outerRadius(
-                    (frame.time * 20) / period + ringThickness / 2
-                );
-            } else {
-                anim.stop();
-                errorRing.destroy();
-                thisLayer.draw();
-            }
-        }, thisLayer);
-        anim.start();
     }
 
 

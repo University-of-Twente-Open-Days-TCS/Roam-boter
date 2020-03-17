@@ -13,24 +13,16 @@ import condition from "./condition.js";
 import action from "./action.js";
 import arrow from "./arrow.js";
 import AIValidationError from "../Errors/AIValidationError.js";
+import ErrorCircle from "../Errors/ErrorCircle.js";
 
 
 class aiCanvas {
-
-    blockHeight = 40;
-    blockWidth = 100;
-    circle_radius = 10;
-    hitboxCircleRadius = 20;
 
     stageWidth = window.innerWidth;
     stageHeight = window.innerHeight / 1.5;
 
     _stage;
     _layer;
-
-    //coordinates where every new element spawns
-    spawnX = 0;
-    spawnY = 0;
 
 
     _startNode;
@@ -200,7 +192,7 @@ class aiCanvas {
     //Turn the tree into a json file
     treeToJson() {
         if (!this.startNode.trueArrow) {
-            this.spawnErrorCircle(this.startNode.trueCircle.position(), this.startNode);
+            new ErrorCircle(this.startNode.trueCircle.position(), this.startNode, this.layer);
             throw new AIValidationError("The startnode is not connected!");
         } else {
             return this.startNode.trueArrow.dest.jsonify();
@@ -388,39 +380,6 @@ class aiCanvas {
         newActionNode.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
         this.stage.draw();
 
-    }
-
-    spawnErrorCircle(position, node) {
-        let errorRing = new Konva.Ring({
-            x: position.x,
-            y: position.y,
-            innerRadius: 40,
-            outerRadius: 70,
-            fill: 'red'
-        });
-
-        node.group.add(errorRing);
-        errorRing.moveToTop();
-
-        let ringThickness = 20;
-        let period = 2000; // in ms
-
-        let thisLayer = this.layer;
-        let anim = new Konva.Animation(function (frame) {
-            if (frame.time < 2000) {
-                errorRing.innerRadius(
-                    (frame.time * 30) / period
-                );
-                errorRing.outerRadius(
-                    (frame.time * 20) / period + ringThickness / 2
-                );
-            } else {
-                anim.stop();
-                errorRing.destroy();
-                thisLayer.draw();
-            }
-        }, thisLayer);
-        anim.start();
     }
 
     //getters&setters

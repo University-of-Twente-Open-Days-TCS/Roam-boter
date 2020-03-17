@@ -7,6 +7,7 @@ import label from "./label.js";
 import health from "./health.js";
 import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
+import ErrorCircle from "../Errors/ErrorCircle.js";
 
 
 //TODO place all these variables somewhere nicer
@@ -326,7 +327,7 @@ export default class conditionNode {
             return this.trueArrow.dest;
         } catch (err) {
             if (err instanceof TypeError) {
-                this.spawnErrorCircle({x: this.trueCircle.x(), y: this.trueCircle.y()});
+                new ErrorCircle({x: this.trueCircle.x(), y: this.trueCircle.y()}, this, this.layer);
                 throw new AIValidationError("A condition is missing a 'true'-arrow!");
             }
         }
@@ -337,7 +338,7 @@ export default class conditionNode {
             return this.falseArrow.dest;
         } catch (err) {
             if (err instanceof TypeError) {
-                this.spawnErrorCircle({x: this.falseCircle.x(), y: this.falseCircle.y()});
+                new ErrorCircle({x: this.falseCircle.x(), y: this.falseCircle.y()}, this, this.layer);
                 throw new AIValidationError("A condition is missing a 'false'-arrow!");
             }
         }
@@ -363,12 +364,12 @@ export default class conditionNode {
         let tree = {};
 
         if (!this.condition) {
-            this.spawnErrorCircle(this.getRectMiddlePos());
+            new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
             throw new AIValidationError("A condition is not yet defined!");
         }
 
         if (!this.condition.isValid()) {
-            this.spawnErrorCircle(this.getRectMiddlePos());
+            new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
             throw new AIValidationError("A condition misses one or more attributes!");
         }
 
@@ -465,7 +466,7 @@ export default class conditionNode {
                 return tree;
 
             default:
-                this.spawnErrorCircle(this.getRectMiddlePos());
+                new ErrorCircle(this.getRectMiddlePos());
                 throw new AIValidationError("The condition has an unknown ID!");
 
         }
@@ -679,39 +680,6 @@ export default class conditionNode {
         this.group.destroy();
         this.layer.draw();
     }
-
-    spawnErrorCircle(position) {
-        let errorRing = new Konva.Ring({
-            x: position.x,
-            y: position.y,
-            innerRadius: 40,
-            outerRadius: 70,
-            fill: 'red'
-        });
-
-        this.group.add(errorRing);
-        errorRing.moveToTop();
-
-        let ringThickness = 20;
-        let period = 2000; // in ms
-        let thisLayer = this.layer;
-        let anim = new Konva.Animation(function (frame) {
-            if (frame.time < 2000) {
-                errorRing.innerRadius(
-                    (frame.time * 30) / period
-                );
-                errorRing.outerRadius(
-                    (frame.time * 20) / period + ringThickness / 2
-                );
-            } else {
-                anim.stop();
-                errorRing.destroy();
-                thisLayer.draw();
-            }
-        }, thisLayer);
-        anim.start();
-    }
-
 
     getRectMiddlePos() {
         let x = this.rect.x() + this.rect.width() / 2;
