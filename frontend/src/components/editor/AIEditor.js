@@ -17,6 +17,8 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from '@material-ui/lab/Alert';
 
 
 //Component Styling
@@ -43,6 +45,10 @@ const styles = theme => ({
     }
 })
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 
 class AIEditor extends Component {
 
@@ -58,7 +64,9 @@ class AIEditor extends Component {
         this.state = {
             id: null,
             dialogOpen: false,
-            aiName: ""
+            aiName: "",
+            alertOpen: false,
+            errorMessage: ""
         }
     }
 
@@ -118,22 +126,37 @@ class AIEditor extends Component {
     saveAI = () => {
         // Save an AI
         let canvas = this.canvas
-        let ai = canvas.treeToJson()
-        let data = {}
-        data.name = this.state.aiName
-        data.ai = ai
 
-        const response = (this.state.id) ? (RoamBotAPI.putAI(this.state.id, data)) : (RoamBotAPI.postAI(data))
+        try{
+            let ai = canvas.treeToJson()
+            let data = {}
+            data.name = this.state.aiName
+            data.ai = ai
 
-        response.then((res) => {
-            if (res.ok) {
-                alert("AI Saved")
-            } else {
-                console.error(res)
-                alert("An error occurred, see console.")
-            }
-        })
+            const response = (this.state.id) ? (RoamBotAPI.putAI(this.state.id, data)) : (RoamBotAPI.postAI(data))
+
+            response.then((res) => {
+                if (res.ok) {
+                    alert("AI Saved")
+                } else {
+                    console.error(res)
+                    alert("An error occurred, see console.")
+                }
+            })
+        } catch (error) {
+            this.setState({
+                errorMessage: error.message,
+                alertOpen: true
+            })
+        }
+      
         this.setState({dialogOpen: false})
+    }
+
+    handleSnackbarClose = () => {
+        this.setState({
+            alertOpen: false
+        })
     }
 
     fetchData = async (id) => {
@@ -200,6 +223,11 @@ class AIEditor extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Snackbar open={this.state.alertOpen} autoHideDuration={6000} onClose={this.handleSnackbarClose}>
+                    <Alert onClose={this.handleSnackbarClose} severity="error">
+                        {this.state.errorMessage}
+                    </Alert>
+                </Snackbar>
             </div>
         )
     }
