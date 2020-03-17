@@ -61,6 +61,7 @@ const Login = ({handleSubmit, attemptFailed}) => {
                                    id="outlined-basic"
                                    label="Team code"
                                    variant="outlined"
+                                   type="number"
                                    value={teamCode} onChange={e => setTeamCode(e.target.value)}
                                    helperText={attemptFailed ? "This team code doesn't exist" : ""}
                                    error={attemptFailed} />

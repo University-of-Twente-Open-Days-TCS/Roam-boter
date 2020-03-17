@@ -28,7 +28,7 @@ class MatchReplay extends Component {
         this.state = {
             frame: 0,
             framesLength: 0,
-            playing: false
+            playing: true
         }
         //bind callbackFunctions
         this.handleSlideChange = this.handleSlideChange.bind(this)
@@ -103,7 +103,7 @@ class MatchReplay extends Component {
 
     handlePlayButtonChange(event) {
         if(!this.state.playing){
-            if(this.state.frame == this.state.framesLength - 1){
+            if(this.state.frame === this.state.framesLength - 1){
                 // reset to start position
                 this.setState({frame: 0})   
             }

@@ -20,7 +20,10 @@ const styles = theme => ({
         display: 'block',
 
         height: '100%',
-        width: '100%'
+        width: '100%',
+        backgroundImage: 'url("/ai_editor_images/Seamless-Circuit-Board-Pattern.svg")',
+        backgroundRepeat: 'repeat',
+        backgroundSize: '4000px',
     },
     AIEditorGrid: {
         height: '100%'
