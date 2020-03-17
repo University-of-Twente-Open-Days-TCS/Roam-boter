@@ -200,7 +200,7 @@ class aiCanvas {
     //Turn the tree into a json file
     treeToJson() {
         if (!this.startNode.trueArrow) {
-            this.spawnErrorCircle(this.startNode.trueCircle.getAbsolutePosition());
+            this.spawnErrorCircle(this.startNode.trueCircle.position(), this.startNode);
             throw new AIValidationError("The startnode is not connected!");
         } else {
             return this.startNode.trueArrow.dest.jsonify();
@@ -390,7 +390,7 @@ class aiCanvas {
 
     }
 
-    spawnErrorCircle(position) {
+    spawnErrorCircle(position, node) {
         let errorRing = new Konva.Ring({
             x: position.x,
             y: position.y,
@@ -399,7 +399,7 @@ class aiCanvas {
             fill: 'red'
         });
 
-        this.layer.add(errorRing);
+        node.group.add(errorRing);
         errorRing.moveToTop();
 
         let ringThickness = 20;

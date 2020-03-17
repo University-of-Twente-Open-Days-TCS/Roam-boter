@@ -525,7 +525,7 @@ export default class actionNode {
             fill: 'red'
         });
 
-        this.layer.add(errorRing);
+        this.group.add(errorRing);
         errorRing.moveToTop();
 
         let ringThickness = 20;
@@ -551,8 +551,8 @@ export default class actionNode {
 
 
     getRectMiddlePos() {
-        let x = this.rect.getAbsolutePosition().x + this.rect.width() / 2;
-        let y = this.rect.getAbsolutePosition().y + this.rect.height() / 2;
+        let x = this.rect.x() + this.rect.width() / 2;
+        let y = this.rect.y() + this.rect.height() / 2;
         return {x: x, y: y};
     }
 

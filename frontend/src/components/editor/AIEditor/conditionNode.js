@@ -326,7 +326,7 @@ export default class conditionNode {
             return this.trueArrow.dest;
         } catch (err) {
             if (err instanceof TypeError) {
-                this.spawnErrorCircle(this.trueCircle.getAbsolutePosition());
+                this.spawnErrorCircle({x: this.trueCircle.x(), y: this.trueCircle.y()});
                 throw new AIValidationError("A condition is missing a 'true'-arrow!");
             }
         }
@@ -337,7 +337,7 @@ export default class conditionNode {
             return this.falseArrow.dest;
         } catch (err) {
             if (err instanceof TypeError) {
-                this.spawnErrorCircle(this.falseDragCircle.getAbsolutePosition());
+                this.spawnErrorCircle({x: this.falseCircle.x(), y: this.falseCircle.y()});
                 throw new AIValidationError("A condition is missing a 'false'-arrow!");
             }
         }
@@ -689,12 +689,11 @@ export default class conditionNode {
             fill: 'red'
         });
 
-        this.layer.add(errorRing);
+        this.group.add(errorRing);
         errorRing.moveToTop();
 
         let ringThickness = 20;
         let period = 2000; // in ms
-
         let thisLayer = this.layer;
         let anim = new Konva.Animation(function (frame) {
             if (frame.time < 2000) {
@@ -715,8 +714,8 @@ export default class conditionNode {
 
 
     getRectMiddlePos() {
-        let x = this.rect.getAbsolutePosition().x + this.rect.width() / 2;
-        let y = this.rect.getAbsolutePosition().y + this.rect.height() / 2;
+        let x = this.rect.x() + this.rect.width() / 2;
+        let y = this.rect.y() + this.rect.height() / 2;
         return {x: x, y: y};
     }
 
