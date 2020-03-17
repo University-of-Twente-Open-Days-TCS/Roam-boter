@@ -1,15 +1,19 @@
 import React from "react";
+
+import { Typography, Button } from '@material-ui/core'
+
+import { ButtonList, ButtonListTextLink } from './layout/ButtonList'
 import ContentBox from "./layout/ContentBox";
 
-import { NavLink } from "react-router-dom";
-
-import Button from '@material-ui/core/Button'
 
 const PlayvsBot = () => {
     return (
         <ContentBox>
-            <h1>Play vs Bots</h1>
-            <NavLink to='/BotMatchHistory'><Button variant="outlined">Replays</Button></NavLink>
+            <Typography variant="h4" align="center">Play versus Bots</Typography>
+            <ButtonList>
+                <ButtonListTextLink url="/todo">New Match</ButtonListTextLink>
+                <ButtonListTextLink url="/BotMatchHistory">Replays</ButtonListTextLink>
+            </ButtonList>
         </ContentBox>
     );
 }
