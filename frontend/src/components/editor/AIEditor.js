@@ -65,8 +65,9 @@ class AIEditor extends Component {
             id: null,
             dialogOpen: false,
             aiName: "",
-            alertOpen: false,
-            errorMessage: ""
+            errorAlertOpen: false,
+            errorMessage: "",
+            successAlertOpen: false
         }
     }
 
@@ -137,7 +138,7 @@ class AIEditor extends Component {
 
             response.then((res) => {
                 if (res.ok) {
-                    alert("AI Saved")
+                    this.setState({successAlertOpen: true})
                 } else {
                     console.error(res)
                     alert("An error occurred, see console.")
@@ -146,16 +147,22 @@ class AIEditor extends Component {
         } catch (error) {
             this.setState({
                 errorMessage: error.message,
-                alertOpen: true
+                errorAlertOpen: true
             })
         }
       
         this.setState({dialogOpen: false})
     }
 
-    handleSnackbarClose = () => {
+    handleErrorSnackbarClose = () => {
         this.setState({
-            alertOpen: false
+            errorAlertOpen: false
+        })
+    }
+
+    handleSuccessSnackbarClose = () => {
+        this.setState({
+            successAlertOpen: false
         })
     }
 
@@ -223,9 +230,14 @@ class AIEditor extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-                <Snackbar open={this.state.alertOpen} autoHideDuration={6000} onClose={this.handleSnackbarClose}>
-                    <Alert onClose={this.handleSnackbarClose} severity="error">
+                <Snackbar open={this.state.errorAlertOpen} autoHideDuration={6000} onClose={this.handleErrorSnackbarClose}>
+                    <Alert onClose={this.handleErrorSnackbarClose} severity="error">
                         {this.state.errorMessage}
+                    </Alert>
+                </Snackbar>
+                <Snackbar open={this.state.successAlertOpen} autoHideDuration={6000} onClose={this.handleSuccessSnackbarClose}>
+                    <Alert onClose={this.handleSuccessSnackbarClose} severity="success">
+                        AI saved!
                     </Alert>
                 </Snackbar>
             </div>
