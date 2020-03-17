@@ -148,11 +148,11 @@ class AIEditor extends Component {
             <div id="AIEditor" className={classes.AIEditor}>
                 <Grid container className={classes.AIEditorGrid}>
 
-                    <Grid item xs={8} sm={9} className={classes.AIEditorKonvaGridItem}>
+                    <Grid item xs={9} sm={9} className={classes.AIEditorKonvaGridItem}>
                         <Box id="konva-container" width={1} height={1}></Box>
                     </Grid>
 
-                    <Grid item xs={4} sm={3} className={classes.AIEditorMenuGridItem}>
+                    <Grid item xs={3} sm={3} className={classes.AIEditorMenuGridItem}>
                         <AIEditorMenu {...menuProps} />
                     </Grid>
                 </Grid>

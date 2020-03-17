@@ -8,14 +8,14 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-
-        padding: '0.5rem'
+        padding: '0.25rem'
     },
+
     Button: {
-        width: '70%',
+        width: '80%',
         margin: '0.5rem 0',
 
-        fontSize: '0.6rem',
+        fontSize: '0.5rem',
         [theme.breakpoints.up('md')]: {
             fontSize: '1rem'
         }
