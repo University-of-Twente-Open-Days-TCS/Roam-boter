@@ -363,6 +363,7 @@ export default class actionNode {
             //Throw error if action is incomplete
 
             if (!item.isValid()) {
+                this.spawnErrorCircle(this.getRectMiddlePos());
                 throw new AIValidationError("An action is missing one or more attributes!");
             }
 
@@ -455,6 +456,7 @@ export default class actionNode {
                     break;
 
                 default:
+                    this.spawnErrorCircle(this.getRectMiddlePos());
                     throw new AIValidationError("Tried to parse non-defined Action");
             }
 
@@ -512,6 +514,46 @@ export default class actionNode {
         }
         this.group.destroy();
         this.layer.draw();
+    }
+
+    spawnErrorCircle(position) {
+        let errorRing = new Konva.Ring({
+            x: position.x,
+            y: position.y,
+            innerRadius: 40,
+            outerRadius: 70,
+            fill: 'red'
+        });
+
+        this.layer.add(errorRing);
+        errorRing.moveToTop();
+
+        let ringThickness = 20;
+        let period = 2000; // in ms
+
+        let thisLayer = this.layer;
+        let anim = new Konva.Animation(function (frame) {
+            if (frame.time < 2000) {
+                errorRing.innerRadius(
+                    (frame.time * 30) / period
+                );
+                errorRing.outerRadius(
+                    (frame.time * 20) / period + ringThickness / 2
+                );
+            } else {
+                anim.stop();
+                errorRing.destroy();
+                thisLayer.draw();
+            }
+        }, thisLayer);
+        anim.start();
+    }
+
+
+    getRectMiddlePos() {
+        let x = this.rect.getAbsolutePosition().x + this.rect.width() / 2;
+        let y = this.rect.getAbsolutePosition().y + this.rect.height() / 2;
+        return {x: x, y: y};
     }
 
     get actionList() {

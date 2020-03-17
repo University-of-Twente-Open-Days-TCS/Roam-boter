@@ -267,7 +267,7 @@ export default class conditionNode {
         }
     }
 
-
+    //TODO fix with Math.max instead of if-statements
     //sets the size of the node and its input/false/true-nodes around
     setAssetSizes() {
         if (this.conditionTextObj.text != null) {
@@ -326,6 +326,7 @@ export default class conditionNode {
             return this.trueArrow.dest;
         } catch (err) {
             if (err instanceof TypeError) {
+                this.spawnErrorCircle(this.trueCircle.getAbsolutePosition());
                 throw new AIValidationError("A condition is missing a 'true'-arrow!");
             }
         }
@@ -336,6 +337,7 @@ export default class conditionNode {
             return this.falseArrow.dest;
         } catch (err) {
             if (err instanceof TypeError) {
+                this.spawnErrorCircle(this.falseDragCircle.getAbsolutePosition());
                 throw new AIValidationError("A condition is missing a 'false'-arrow!");
             }
         }
@@ -360,18 +362,14 @@ export default class conditionNode {
         let node = this.rect;
         let tree = {};
 
-        try {
-            //Throw error if Condition is missing an attribute, caught a few lines later
-            if (!this.condition.isValid()) {
-                throw new AIValidationError;
-            }
-        } catch (err) {
-            //Catch the error where the Condition does not even exist
-            if (err instanceof TypeError) {
-                throw new AIValidationError("A condition is not yet defined!");
-            } else {
-                throw new AIValidationError("A condition misses one or more attributes!");
-            }
+        if (!this.condition) {
+            this.spawnErrorCircle(this.getRectMiddlePos());
+            throw new AIValidationError("A condition is not yet defined!");
+        }
+
+        if (!this.condition.isValid()) {
+            this.spawnErrorCircle(this.getRectMiddlePos());
+            throw new AIValidationError("A condition misses one or more attributes!");
         }
 
         //case Condition:
@@ -467,7 +465,8 @@ export default class conditionNode {
                 return tree;
 
             default:
-            //Raise error, wrong ID
+                this.spawnErrorCircle(this.getRectMiddlePos());
+                throw new AIValidationError("The condition has an unknown ID!");
 
         }
     }
@@ -512,7 +511,7 @@ export default class conditionNode {
         this.group.add(this.conditionTextObj);
     }
 
-
+    //TODO fix using Math.max instead of if-statement
     //base rectangle which contains the condition text
     createRect() {
         if (this.conditionText != null) {
@@ -679,6 +678,46 @@ export default class conditionNode {
         }
         this.group.destroy();
         this.layer.draw();
+    }
+
+    spawnErrorCircle(position) {
+        let errorRing = new Konva.Ring({
+            x: position.x,
+            y: position.y,
+            innerRadius: 40,
+            outerRadius: 70,
+            fill: 'red'
+        });
+
+        this.layer.add(errorRing);
+        errorRing.moveToTop();
+
+        let ringThickness = 20;
+        let period = 2000; // in ms
+
+        let thisLayer = this.layer;
+        let anim = new Konva.Animation(function (frame) {
+            if (frame.time < 2000) {
+                errorRing.innerRadius(
+                    (frame.time * 30) / period
+                );
+                errorRing.outerRadius(
+                    (frame.time * 20) / period + ringThickness / 2
+                );
+            } else {
+                anim.stop();
+                errorRing.destroy();
+                thisLayer.draw();
+            }
+        }, thisLayer);
+        anim.start();
+    }
+
+
+    getRectMiddlePos() {
+        let x = this.rect.getAbsolutePosition().x + this.rect.width() / 2;
+        let y = this.rect.getAbsolutePosition().y + this.rect.height() / 2;
+        return {x: x, y: y};
     }
 
     //Getters and setters for arrows and conditiontext

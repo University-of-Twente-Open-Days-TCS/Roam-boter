@@ -1,5 +1,4 @@
 //Action (NOT A NODE), has zero or more attributes, by default null. DOES NOT WORK WITH LABELS YET
-import AIValidationError from "../Errors/AIValidationError.js";
 
 export default class action {
     _id;

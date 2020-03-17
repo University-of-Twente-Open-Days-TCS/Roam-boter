@@ -199,11 +199,13 @@ class aiCanvas {
 
     //Turn the tree into a json file
     treeToJson() {
-        try {
-            return this.startNode.trueArrow.dest.jsonify();
-        } catch (err) {
+        if (!this.startNode.trueArrow) {
+            this.spawnErrorCircle(this.startNode.trueCircle.getAbsolutePosition());
             throw new AIValidationError("The startnode is not connected!");
+        } else {
+            return this.startNode.trueArrow.dest.jsonify();
         }
+
     }
 
     //Turn a json file into a tree
@@ -386,6 +388,39 @@ class aiCanvas {
         newActionNode.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
         this.stage.draw();
 
+    }
+
+    spawnErrorCircle(position) {
+        let errorRing = new Konva.Ring({
+            x: position.x,
+            y: position.y,
+            innerRadius: 40,
+            outerRadius: 70,
+            fill: 'red'
+        });
+
+        this.layer.add(errorRing);
+        errorRing.moveToTop();
+
+        let ringThickness = 20;
+        let period = 2000; // in ms
+
+        let thisLayer = this.layer;
+        let anim = new Konva.Animation(function (frame) {
+            if (frame.time < 2000) {
+                errorRing.innerRadius(
+                    (frame.time * 30) / period
+                );
+                errorRing.outerRadius(
+                    (frame.time * 20) / period + ringThickness / 2
+                );
+            } else {
+                anim.stop();
+                errorRing.destroy();
+                thisLayer.draw();
+            }
+        }, thisLayer);
+        anim.start();
     }
 
     //getters&setters
