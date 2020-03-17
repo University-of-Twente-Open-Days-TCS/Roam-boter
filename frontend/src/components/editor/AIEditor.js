@@ -188,13 +188,14 @@ class AIEditor extends Component {
                             fullWidth
                             value={this.state.aiName}
                             onChange={this.handleChangeName}
+                            required={true}
                         />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleCloseDialog} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={this.saveAI} color="primary">
+                        <Button onClick={this.saveAI} color="primary" disabled={!this.state.aiName}>
                             Save
                         </Button>
                     </DialogActions>
