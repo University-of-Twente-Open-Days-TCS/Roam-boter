@@ -37,15 +37,24 @@ def move_to_nearest_object(tank, state, obj):
 
 
 def scout(tank, state):
-    while tank.scout_target is None or distance(tank.get_pos(), tank.scout_target[-1]) < 1:
-        targets = []
-        for obj in ALL_OBJECTS:
-            targets += state.level.get_paths_to_object(tank, obj)
-        tank.scout_target = random.choice(targets)
+    paths = filter_objects(tank, state, Object.SCOUT_NODE)
+    while tank.scout_target is None or distance(tank.get_pos(), tank.scout_target[0]) < 1:
 
-    while distance(tank.scout_target[0], tank.get_pos()) < 0.5:
-        tank.scout_target = tank.scout_target[1:]
-    move_to_position(state, tank, tank.scout_target[0])
+        if tank.scout_target is None:
+            goal = closest_object_in_paths(tank, paths)
+            tank.scout_target = (goal[-1], state.level.scout_nodes.index(goal[-1]))
+            print(tank.scout_target)
+        else:
+            print("selecting next goal")
+            print(tank.scout_target)
+            current_goal, current_index = tank.scout_target
+            next_index = (current_index + tank.next_scout_increment) % len(paths)
+            tank.scout_target = (state.level.scout_nodes[next_index], next_index)
+            print(tank.scout_target)
+    for p in paths:
+        if p[-1] == tank.scout_target[0]:
+            tank.path = p
+            move_to_position(state, tank, p[0])
 
 
 

@@ -28,8 +28,27 @@ class LevelLoader:
         im = Image.open(level_file)
         width, height = im.size
 
-        # convert pixels to a 2d array of objects.
-        return Level(path, [[ColorValues[im.getpixel((x, y))] for x in range(width)] for y in range(height)])
+        level = Level(path, [[LevelLoader.color_to_object(im.getpixel((x, y))) for x in range(width)] for y in range(height)])
+        scout_nodes = []
+        for obj, x, y in level.iterate():
+            if obj == Object.SCOUT_NODE:
+                scout_nodes.append((x + 0.5, y + 0.5, im.getpixel((x, y))[2]))
+
+        indexed_scout_nodes = [None] * len(scout_nodes)
+        for x, y, index in scout_nodes:
+            indexed_scout_nodes[index] = (x, y)
+
+        level.set_scout_nodes(indexed_scout_nodes)
+
+        return level
+
+    @staticmethod
+    def color_to_object(color_values):
+        r, g, b = color_values
+        if r == 100 and g == 100:
+            return Object.SCOUT_NODE
+        return ColorValues[color_values]
+
 
 
 

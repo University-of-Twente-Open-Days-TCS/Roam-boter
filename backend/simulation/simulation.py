@@ -46,7 +46,10 @@ class Simulation:
     # Put all tanks on their starting positions.
     def set_starting_position(self):
         spawns = self.get_spawns()
+
         for i, tank in enumerate(self.get_tanks()):
+            tank.next_scout_increment = -1 + (i % 2) * 2
+
             tank.spawn = spawns[i]
             tank.team_id = i
             tank.set_pos(tank.spawn[0], tank.spawn[1])
@@ -207,12 +210,15 @@ def prepare_caches(levels):
 
 def test_simulation():
 
-    false_node = ActionNode([Action(10, {})])
-    true_node = ActionNode([Action(1, {'obj': 8}), Action(10, {}), Action(5, {'obj': 2})])
+    # false_node = ActionNode([Action(10, {})])
+    # true_node = ActionNode([Action(1, {'obj': 8}), Action(10, {}), Action(5, {'obj': 2})])
+    #
+    # ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 1}), true_node, false_node)
 
-    ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 1}), true_node, false_node)
-    playback = simulate([ai, ai])
-    print(playback.to_json())
+    ai1 = ActionNode([Action(2, {})])
+    ai2 = ActionNode([Action(0, {})])
+    playback = simulate([ai1, ai2])
+    print(playback.to_json(0, 1))
 
     # cProfile.run("simulate([ai, ai])")
     # PlayBackEncoder.encode(a.get_playback())
