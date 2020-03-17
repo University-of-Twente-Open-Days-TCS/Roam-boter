@@ -3,8 +3,9 @@ import Button from '@material-ui/core/Button'
 import React, { Component } from "react";
 import {NavLink} from "react-router-dom";
 
-import RoamBotAPI from "../../RoamBotAPI"
+import RoamBotAPI from "../../../RoamBotAPI"
 
+import ContentBox from '../../layout/ContentBox';
 
 
 const MatchItem = (props) => {
@@ -29,7 +30,7 @@ const MatchItem = (props) => {
 
     return (
         <li>
-            <NavLink to={'/MatchReplay/'+props.match.pk}>
+            <NavLink to={'/BotMatchReplay/'+props.match.pk}>
                 <Button variant="outlined" color="primary" size="small">{timeString}</Button>
             </NavLink><span className='spacing'></span>
             <Button variant="outlined" color="secondary" size="small" onClick={deleteMatch}>Delete</Button>
@@ -37,7 +38,7 @@ const MatchItem = (props) => {
     )
 }
 
-class MatchHistory extends Component {
+class BotMatchHistory extends Component {
 
     constructor(props) {
         super(props)
@@ -58,7 +59,7 @@ class MatchHistory extends Component {
 
     render() {
         return(
-        <div>
+        <ContentBox>
             <h1>Match History</h1>
             <ul>{
                 this.state.matches.map((match, i) => {
@@ -69,9 +70,9 @@ class MatchHistory extends Component {
                 }
             </ul>
           
-        </div>
+        </ContentBox>
         )
     }
 }
 
-export default MatchHistory;
+export default BotMatchHistory;

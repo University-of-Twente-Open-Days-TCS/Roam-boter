@@ -7,12 +7,19 @@ import ListItem from "@material-ui/core/ListItem";
 import FullscreenIcon from '@material-ui/icons/Fullscreen'
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit'
 
+
 const FullscreenMenuItem = (props) => {
     
     let isFull = props.isFull
     let toggleFull = props.toggleFull
 
+    let body = document.querySelector('body')
+    let fullscreenCapability = (body.requestFullscreen || body.mozRequestFullscreen || body.webkitRequestFullscreen || body.msRequestFullscreen )
 
+    if (!fullscreenCapability) {
+        return null
+    }
+    
     return isFull ?  
         (
             <ListItem button onClick={toggleFull}>

@@ -5,12 +5,7 @@ import object from "./object.js";
 import distance from "./distance.js";
 import label from "./label.js";
 import health from "./health.js";
-import action from "./action.js"
-import winddir from "./winddir.js";
-import reldir from "./reldir.js";
-import speed from "./speed.js"
 import Konva from "konva"
-import actionNode from "./actionNode";
 
 //TODO place all these variables somewhere nicer
 const blockHeight = 40;
@@ -128,15 +123,42 @@ export default class conditionNode {
         this.trueDragCircle = this.createDragCircle(this.trueCircle, true);
         this.falseDragCircle = this.createDragCircle(this.falseCircle, false);
         this.createInputCircle();
-        let node = this;
-        this.group.on("dragmove", function () {
-            node.updateArrows(node.stage);
+        //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
+        this.group.on("dragmove", () => {
+            this.updateArrows(this.stage);
+            let touchPos = this.stage.getPointerPosition();
+
+            //If while moving the node is hovered over trashcan, open trashcan
+            if (this.stage.staticlayer.getIntersection(touchPos) != null) {
+                this.stage.trashcan.fire('touchstart', {
+                    type: 'touchstart',
+                    target: this.stage.trashcan
+                });
+            } else {
+
+                //If node is no longer hovered over trashcan, close trashcan
+                this.stage.trashcan.fire('touchend', {
+                    type: 'touchend',
+                    target: this.stage.trashcan
+
+                });
+            }
         });
 
-        this.group.on("dragend", function () {
-            var touchPos = node.stage.getPointerPosition();
-            if (node.stage.staticlayer.getIntersection(touchPos) != null) {
-                node.remove();
+        this.group.on("dragend", () => {
+            let touchPos = this.stage.getPointerPosition();
+
+            //If node is released above trashcan, remove it and close trashcan
+            if (this.stage.staticlayer.getIntersection(touchPos) != null) {
+                this.remove();
+                this.stage.trashcan.fire('touchend', {
+                    type: 'touchend',
+                    target: this.stage.trashcan
+
+                });
+                this.layer.draw();
+                this.stage.staticlayer.draw();
+
             }
         });
 

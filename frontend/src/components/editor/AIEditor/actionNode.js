@@ -27,6 +27,12 @@ export default class actionNode {
     _inputCircle;
     _position;
 
+    movementActions = [1, 2, 3, 4];
+    containsMovement = false;
+    aimActions = [5, 6, 7, 8, 9];
+    containsAim = false;
+    fireActions = [10, 11];
+    containsFire = false;
 
     constructor(stage, layer, actionList = [], position = spawnPoint) {
         this.group = new Konva.Group({
@@ -36,6 +42,15 @@ export default class actionNode {
         this.layer = layer;
         this.position = position;
         this.actionList = actionList;
+        this.actionList.forEach(action => {
+            if (this.movementActions.includes(action)) {
+                this.containsMovement = true;
+            } else if (this.aimActions.includes(action)) {
+                this.containsAim = true;
+            } else if (this.fireActions.includes(action)) {
+                this.containsFire = true;
+            }
+        });
 
         this.actionNodeText = this.createActionNodeText();
         this.createTextObject();
@@ -44,16 +59,42 @@ export default class actionNode {
             this.actionNodeTextObj.moveToTop();
         }
         this.createInputCircle();
-        let node = this;
-        this.group.on("dragmove", function () {
-            node.updateArrows(stage)
-        });
-        let thisActionNode = this;
-        this.group.on("dragend", () => {
-            var touchPos = stage.getPointerPosition();
+
+        //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
+        this.group.on("dragmove", () => {
+            this.updateArrows(this.stage);
+            let touchPos = this.stage.getPointerPosition();
+
+            //If while moving the node is hovered over trashcan, open trashcan
             if (this.stage.staticlayer.getIntersection(touchPos) != null) {
-                thisActionNode.remove();
-                layer.draw();
+                this.stage.trashcan.fire('touchstart', {
+                    type: 'touchstart',
+                    target: this.stage.trashcan
+                });
+            } else {
+
+                //If node is no longer hovered over trashcan, close trashcan
+                this.stage.trashcan.fire('touchend', {
+                    type: 'touchend',
+                    target: this.stage.trashcan
+
+                });
+            }
+        });
+
+        this.group.on("dragend", () => {
+            let touchPos = this.stage.getPointerPosition();
+
+            //If node is released above trashcan, remove it and close trashcan
+            if (this.stage.staticlayer.getIntersection(touchPos) != null) {
+                this.remove();
+                this.layer.draw();
+                this.stage.trashcan.fire('touchend', {
+                    type: 'touchend',
+                    target: this.stage.trashcan
+
+                });
+                this.stage.staticlayer.draw();
             }
         });
 
@@ -61,7 +102,6 @@ export default class actionNode {
         //Popup to add an action to the actionList within the node
         this.group.on("click tap", () => {
 
-            //TODO could just make this by calling editAction with object null (no action yet) probs
             this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateActionsList(), this.addAction.bind(this), "select an action").group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
@@ -105,19 +145,31 @@ export default class actionNode {
     generateActionsList() {
         let allActionsList = [
             new action(0),
-            new action(1),
-            new action(2),
-            new action(3),
-            new action(4),
-            new action(5),
-            new action(6),
-            new action(7),
-            new action(8),
-            new action(9),
-            new action(10),
-            new action(11)
+
+            //Infinite labels TODO enable when labels get enabled
+            // new action(12),
+            // new action(13),
+            // new action(14)
         ];
-        return allActionsList;
+
+        if (!this.containsMovement) {
+            this.movementActions.forEach(movement => {
+                possibleActionsList.push(new action(movement));
+            })
+        }
+        if (!this.containsAim) {
+            this.aimActions.forEach(aim => {
+                possibleActionsList.push(new action(aim));
+            })
+        }
+        if (!this.containsFire) {
+            this.fireActions.forEach(fire => {
+                possibleActionsList.push(new action(fire));
+            })
+        }
+
+
+        return possibleActionsList;
 
     }
 

@@ -1,10 +1,16 @@
 import React from "react";
+import ContentBox from "./layout/ContentBox";
+
+import { NavLink } from "react-router-dom";
+
+import Button from '@material-ui/core/Button'
 
 const PlayvsBot = () => {
     return (
-        <div>
+        <ContentBox>
             <h1>Play vs Bots</h1>
-        </div>
+            <NavLink to='/BotMatchHistory'><Button variant="outlined">Replays</Button></NavLink>
+        </ContentBox>
     );
 }
 

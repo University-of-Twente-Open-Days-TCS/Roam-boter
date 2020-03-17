@@ -5,7 +5,9 @@ import {useState} from 'react';
 
 import { Button } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
-import '../../css/AIEditor.css'
+import {HashRouter, NavLink} from "react-router-dom";
+
+import ContentBox from "../layout/ContentBox.js";
 
 const AIItem = (props) => {
     /**
@@ -56,7 +58,6 @@ const AIItem = (props) => {
         }
     }
 
-
     return (
         <li>
             <Typography variant="button">{props.ai.name}</Typography><span className='spacing'></span>
@@ -64,7 +65,13 @@ const AIItem = (props) => {
             <Button onClick={playVsBot} variant="outlined" color="primary" size="small" disabled={simulating}>
                 {simulating ? "Simulating" : "Play vs Bot"}
             </Button><span className='spacing'></span>
+            <HashRouter>
+                <NavLink to={"/AIEditor/" + props.ai.pk}>
+                    <Button className='edit-button' variant="outlined" color="primary" size="small">Edit</Button>
+                </NavLink>
+            </HashRouter>
 
+            <span className='spacing'></span>
             <Button className='delete-button' onClick={deleteAI} variant="outlined" color="secondary" size="small">Delete</Button>
         </li>
     )
@@ -98,12 +105,12 @@ class AIList extends Component {
 
         const aiItems = this.state.ais.map((ai, i) => <AIItem key={ai.pk} ai={ai} refreshList={this.refreshList}></AIItem>)
         return (
-            <div>
+            <ContentBox>
                 <h1>AI List</h1>
                 <ul>
                     {aiItems}
                 </ul>
-            </div>
+            </ContentBox>
         )
     }
 }

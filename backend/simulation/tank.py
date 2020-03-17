@@ -5,7 +5,7 @@ from .utils import distance
 import math
 import numpy
 
-TANK_TURN_SPEED = 2
+TANK_TURN_SPEED = 2.5
 TURRET_TURN_SPEED = 3
 
 
@@ -27,13 +27,15 @@ class Tank:
     shoot_ready = 0
     reload_time = 60
 
-    bullet_speed = 0.5
+    bullet_speed = 1
     speed = 0.1
 
     width = 1
     height = 1
 
     team_id = 0
+
+    scout_target = None
 
     path = None
 

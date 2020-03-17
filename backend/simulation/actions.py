@@ -1,7 +1,8 @@
-from .objects import Object, RelDir, WindDir
+from .objects import Object, RelDir, WindDir, ALL_OBJECTS
 from .bullet import Bullet
 
 from .utils import *
+import random
 
 
 """Actions are described here."""
@@ -36,7 +37,16 @@ def move_to_nearest_object(tank, state, obj):
 
 
 def scout(tank, state):
-    raise NotImplementedError("Scouting is not possible yet")
+    while tank.scout_target is None or distance(tank.get_pos(), tank.scout_target[-1]) < 1:
+        targets = []
+        for obj in ALL_OBJECTS:
+            targets += state.level.get_paths_to_object(tank, obj)
+        tank.scout_target = random.choice(targets)
+
+    while distance(tank.scout_target[0], tank.get_pos()) < 0.5:
+        tank.scout_target = tank.scout_target[1:]
+    move_to_position(state, tank, tank.scout_target[0])
+
 
 
 def patrol(tank, state):
@@ -64,13 +74,13 @@ def aim_to_nearest_object(tank, state, obj):
 
 def aim_reldir(tank, state, reldir):
     reldir = RelDir(reldir)
-    angle = reldir.get_angle()
+    angle = reldir.angle()
     tank.rotate_turret_towards(angle)
 
 
 def aim_winddir(tank, state, winddir):
     winddir = WindDir(winddir)
-    angle = winddir.get_angle()
+    angle = winddir.angle()
     tank.rotate_turret_towards(angle - tank.get_rotation())
 
 

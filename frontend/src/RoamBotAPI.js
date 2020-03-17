@@ -110,6 +110,18 @@ class RoamBotAPI {
         return response
     }
 
+    putAI(pk, {name, ai}) {
+        /**
+         * Update and save AI to the server
+         * @param pk Primary Key of the ai
+         * @param name Name of the ai
+         * @param ai JSON representation of AI nodes
+         */
+        let data = {name, ai}
+        let response = this.callApi('ai/' + pk + '/', 'PUT', data)
+        return response
+    }
+
     deleteAI(pk) {
         /**
          * Delete AI from the server

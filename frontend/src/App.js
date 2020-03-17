@@ -1,20 +1,22 @@
 import React, {Component} from 'react';
-import './css/App.css';
+
 import RoamBotAPI from './RoamBotAPI.js';
-import Fullscreen from "react-full-screen";
 
 import {
     Route,
 } from "react-router-dom";
+
+
 import Home from "./components/Home";
 import AIEditor from "./components/editor/AIEditor.js";
-import Layout from "./layout/Layout";
-import MatchHistory from "./components/matches/MatchHistory";
 import AIList from "./components/editor/AIList";
 import PlayvsBot from "./components/PlayvsBot";
 import PlayvsPlayer from "./components/PlayvsPlayer";
-import MatchReplay from "./components/matches/MatchReplay";
-import Login from "./login/Login";
+import Login from "./components/login/Login";
+import Structure from "./components/structure/Structure";
+import BotMatchHistory from './components/matches/bot/BotMatchHistory.js';
+import BotMatchReplay from './components/matches/bot/BotMatchReplay.js';
+
 
 
 class App extends Component {
@@ -22,7 +24,6 @@ class App extends Component {
         super(props);
 
         this.state = {
-            isFull: false,
             AIs: [],
             loggedIn: false,
             loginAttemptFailed: false
@@ -34,6 +35,8 @@ class App extends Component {
     }
 
     componentDidMount() {
+        document.addEventListener('fullscreenchange', () => this.forceUpdate())
+       
         // Check whether the session is logged in
         RoamBotAPI.getTeamDetail()
             .then((response) => {
@@ -43,7 +46,9 @@ class App extends Component {
                     this.setState({loggedIn: false})
                 }
             })
+
     }
+
     
     handleSubmitLogin = (teamCode) => {
         let response = RoamBotAPI.loginUser(teamCode)
@@ -62,40 +67,73 @@ class App extends Component {
     }
 
     toggleFull = () => {
-        this.state.isFull ? this.setState({isFull: false}) : this.setState({isFull: true})
-    };
+        let fullscreenElement = document.fullscreenElement
+
+        if (fullscreenElement) {
+            //exit fullscreen
+            document.exitFullscreen()
+                .then(() => {
+                    this.forceUpdate()
+                })
+
+        }else {
+            //enter fullscreen
+            let body = document.querySelector('body')
+            if (body.requestFullscreen) {
+                let promise = body.requestFullscreen();
+                if(promise) {
+                    promise.then(() => this.forceUpdate())
+                }
+            } else if (body.mozRequestFullScreen) { /* Firefox */
+                let promise = body.mozRequestFullScreen();
+                if(promise) {
+                    promise.then(() => this.forceUpdate())
+                }
+            } else if (body.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                let promise = body.webkitRequestFullscreen();
+                if(promise) {
+                    promise.then(() => this.forceUpdate())
+                }
+            } else if (body.msRequestFullscreen) { /* IE/Edge */
+                let promise = body.msRequestFullscreen();
+                if(promise) {
+                    promise.then(() => this.forceUpdate())
+                }
+            }
+        }
+    }
+
+
 
 
     render() {
 
         // Props to send to layout component. Neccesary for fullscreen option.
+        let fullscreen = document.fullscreenElement
+
         let layoutProps = {
             toggleFull: this.toggleFull,
-            isFull: this.state.isFull
+            isFull: fullscreen
         }
 
         return (
-            (this.state.loggedIn) ? (
-                <div>
-                    <Fullscreen
-                        enabled={this.state.isFull}
-                        onChange={isFull => this.setState({isFull})}
-                    >
-                        <div className="full-screenable-node">
-                            <Layout {...layoutProps}>
-                                <Route exact path="/" 
-                                    render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
-                                />
-                                <Route path="/AIEditor" component={AIEditor} />
-                                <Route path="/AIList" component={AIList}/>
-                                <Route path="/MatchHistory" component={MatchHistory}/>
-                                <Route path="/PlayvsBot" component={PlayvsBot}/>
-                                <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
-                                <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
-                            </Layout>
-                        </div>
-                    </Fullscreen>
-                </div>) : (<Login handleSubmit={this.handleSubmitLogin.bind(this)} attemptFailed={this.state.loginAttemptFailed}/>)
+            (this.state.loggedIn) ? 
+                (<div>
+                    <Structure {...layoutProps}>
+                        <Route exact path="/" 
+                            render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
+                        />
+
+                        <Route path="/AIEditor/:id?" component={AIEditor} />
+                        <Route path="/AIList" component={AIList}/>
+                        <Route path="/BotMatchHistory" component={BotMatchHistory}/>
+                        <Route path="/PlayvsBot" component={PlayvsBot}/>
+                        <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
+                        <Route path="/BotMatchReplay/:matchId" component={BotMatchReplay}/>
+                    </Structure>
+                </div>) 
+                    : 
+                (<Login handleSubmit={this.handleSubmitLogin.bind(this)} attemptFailed={this.state.loginAttemptFailed}/>)
         );
     }
 }
