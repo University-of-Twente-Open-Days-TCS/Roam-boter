@@ -121,7 +121,6 @@ class BotMatchReplay extends Component {
         let frame = this.state.frame
         let frames = this.state.framesLength
         let progress = parseInt((frame / frames) * 10000)
-        console.log(progress)
 
         let props = {
             playing: this.state.playing,
