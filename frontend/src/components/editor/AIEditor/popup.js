@@ -105,7 +105,6 @@ export default class popup {
         let nextOption = selection.getRemainingOptions().pop();
         if (typeof nextOption !== "undefined") {
             this.text = selection.toString().replace(/\n/g, "");
-            ;
             this.createText();
             this.getOption({
                 options: nextOption.options, f: (s) => {

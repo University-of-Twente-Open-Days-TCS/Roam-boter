@@ -34,7 +34,7 @@ export default class actionNode {
     fireActions = [10, 11];
     containsFire = false;
 
-    constructor(stage, layer, actionList = [], position = spawnPoint) {
+    constructor(stage, layer, canvas, actionList = [], position = spawnPoint) {
         this.group = new Konva.Group({
             draggable: true
         });

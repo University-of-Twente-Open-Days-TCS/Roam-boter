@@ -95,7 +95,8 @@ export default class conditionNode {
 
 //Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
     // and if (all) its appropriate parameter(s) is given this will be included.
-    constructor(stage, layer, condition, position = spawnPoint) {
+    constructor(stage, layer, canvas, condition, position = spawnPoint) {
+        this.canvas = canvas;
         this.group = new Konva.Group({
             draggable: true
         });
@@ -533,8 +534,23 @@ export default class conditionNode {
                 }
             } else {
                 //If not dropped on other element, make a popup to create either a new condition or action
-                //TODO make popup to select 'new condition/new action'
-
+                node.stage.staticlayer.add(new popup(node.stage, node.stage.staticlayer, ["action", "condition"], (selection) => {
+                    let newNode = null;
+                    switch (selection) {
+                        case "action":
+                            newNode = node.canvas.addActionNode();
+                            break;
+                        case "condition":
+                            newNode = node.canvas.addCondition();
+                            break;
+                    }
+                    new arrow(node, newNode, condition, node.stage, node.layer);
+                    if (newNode !== null) {
+                        newNode.group.absolutePosition(touchPos);
+                        newNode.updateArrows();
+                    }
+                }, "select a new condition or action").group);
+                node.stage.staticlayer.draw();
             }
             this.moveTo(g);
             this.x(this.originalX);
