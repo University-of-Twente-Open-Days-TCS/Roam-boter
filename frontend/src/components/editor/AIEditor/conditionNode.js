@@ -5,7 +5,10 @@ import object from "./object.js";
 import distance from "./distance.js";
 import label from "./label.js";
 import health from "./health.js";
-import Konva from "konva"
+import Konva from "konva";
+import AIValidationError from "../Errors/AIValidationError.js";
+import ErrorCircle from "../Errors/ErrorCircle.js";
+
 
 //TODO place all these variables somewhere nicer
 const blockHeight = 40;
@@ -244,11 +247,25 @@ export default class conditionNode {
 
 
     trueChild() {
-        return this.trueArrow.dest;
+        try {
+            return this.trueArrow.dest;
+        } catch (err) {
+            if (err instanceof TypeError) {
+                new ErrorCircle({x: this.trueCircle.x(), y: this.trueCircle.y()}, this, this.layer);
+                throw new AIValidationError("A condition is missing a 'true'-arrow!");
+            }
+        }
     }
 
     falseChild() {
-        return this.falseArrow.dest;
+        try {
+            return this.falseArrow.dest;
+        } catch (err) {
+            if (err instanceof TypeError) {
+                new ErrorCircle({x: this.falseCircle.x(), y: this.falseCircle.y()}, this, this.layer);
+                throw new AIValidationError("A condition is missing a 'false'-arrow!");
+            }
+        }
     }
 
     generateConditionList() {
@@ -269,6 +286,16 @@ export default class conditionNode {
     jsonify() {
         let node = this.rect;
         let tree = {};
+
+        if (!this.condition) {
+            new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
+            throw new AIValidationError("A condition is not yet defined!");
+        }
+
+        if (!this.condition.isValid()) {
+            new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
+            throw new AIValidationError("A condition misses one or more attributes!");
+        }
 
         //case Condition:
         switch (this.condition.id) {
@@ -363,7 +390,8 @@ export default class conditionNode {
                 return tree;
 
             default:
-            //Raise error, wrong ID
+                new ErrorCircle(this.getRectMiddlePos());
+                throw new AIValidationError("The condition has an unknown ID!");
 
         }
     }
@@ -408,7 +436,7 @@ export default class conditionNode {
         this.group.add(this.conditionTextObj);
     }
 
-
+    //TODO fix using Math.max instead of if-statement
     //base rectangle which contains the condition text
     createRect() {
         if (this.conditionText != null) {
@@ -592,6 +620,12 @@ export default class conditionNode {
         this.layer.draw();
     }
 
+    getRectMiddlePos() {
+        let x = this.rect.x() + this.rect.width() / 2;
+        let y = this.rect.y() + this.rect.height() / 2;
+        return {x: x, y: y};
+    }
+
     //Getters and setters for arrows and conditiontext
     get inputArrow() {
         return this._inputArrow;
@@ -624,7 +658,6 @@ export default class conditionNode {
     set conditionText(value) {
         this._conditionText = value;
     }
-
 
     get stage() {
         return this._stage;

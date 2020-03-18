@@ -12,24 +12,17 @@ import speed from "./speed.js";
 import condition from "./condition.js";
 import action from "./action.js";
 import arrow from "./arrow.js";
+import AIValidationError from "../Errors/AIValidationError.js";
+import ErrorCircle from "../Errors/ErrorCircle.js";
 
 
 class aiCanvas {
-
-    blockHeight = 40;
-    blockWidth = 100;
-    circle_radius = 10;
-    hitboxCircleRadius = 20;
 
     stageWidth = window.innerWidth;
     stageHeight = window.innerHeight / 1.5;
 
     _stage;
     _layer;
-
-    //coordinates where every new element spawns
-    spawnX = 0;
-    spawnY = 0;
 
 
     _startNode;
@@ -198,7 +191,13 @@ class aiCanvas {
 
     //Turn the tree into a json file
     treeToJson() {
-        return this.startNode.trueArrow.dest.jsonify();
+        if (!this.startNode.trueArrow) {
+            new ErrorCircle(this.startNode.trueCircle.position(), this.startNode, this.layer);
+            throw new AIValidationError("The startnode is not connected!");
+        } else {
+            return this.startNode.trueArrow.dest.jsonify();
+        }
+
     }
 
     //Turn a json file into a tree
@@ -408,7 +407,6 @@ class aiCanvas {
     set startNode(value) {
         this._startNode = value;
     }
-
 
 
 }
