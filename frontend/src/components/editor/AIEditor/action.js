@@ -54,8 +54,7 @@ export default class action {
             case 14:
                 return (this.label != null && this.seconds != null);
             default:
-                return null;
-
+                return false;
         }
     }
 

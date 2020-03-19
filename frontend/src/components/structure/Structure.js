@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         /* Content Max height */
+        backgroundColor: 'white',
         height: '100vh',
         flexGrow: 1,
     },

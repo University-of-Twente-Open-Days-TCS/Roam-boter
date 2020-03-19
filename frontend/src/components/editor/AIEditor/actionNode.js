@@ -6,8 +6,10 @@ import winddir from "./winddir.js";
 import label from "./label.js";
 import seconds from "./seconds.js";
 import Konva from "konva"
-
+import AIValidationError from "../Errors/AIValidationError.js";
 import speed from "./speed.js";
+import ErrorCircle from "../Errors/ErrorCircle.js";
+
 
 //TODO place all these variables somewhere nicer
 const blockHeight = 40;
@@ -376,6 +378,13 @@ export default class actionNode {
         //Iterate over all actions and add its json to the actionblock
         this.actionList.forEach(item => {
 
+            //Throw error if action is incomplete
+
+            if (!item.isValid()) {
+                new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
+                throw new AIValidationError("An action is missing one or more attributes!");
+            }
+
             //case Action:
             switch (item.id) {
 
@@ -486,7 +495,8 @@ export default class actionNode {
                     break;
 
                 default:
-                //Raise error, wrong ID TODO:
+                    new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
+                    throw new AIValidationError("Tried to parse non-defined Action");
             }
 
 
@@ -543,6 +553,13 @@ export default class actionNode {
         }
         this.group.destroy();
         this.layer.draw();
+    }
+
+
+    getRectMiddlePos() {
+        let x = this.rect.x() + this.rect.width() / 2;
+        let y = this.rect.y() + this.rect.height() / 2;
+        return {x: x, y: y};
     }
 
     get actionList() {

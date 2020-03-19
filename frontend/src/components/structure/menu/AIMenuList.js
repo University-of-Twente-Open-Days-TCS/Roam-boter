@@ -5,7 +5,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 
-import {Add, Create, History, Home} from "@material-ui/icons";
+import {Home, Memory} from "@material-ui/icons";
 
 import {
     NavLink
@@ -22,25 +22,15 @@ export default function AIMenuList(text) {
             url: "/"
         },
         {
-            text: "Create new AI",
-            icon: <Add/>,
-            url: "/AIEditor"
-        },
-        {
             text: "Edit existing AI",
-            icon: <Create/>,
+            icon: <Memory/>,
             url: "/AIList"
         },
-        {
-            text: "View match history",
-            icon: <History/>,
-            url: "/MatchHistory"
-        }
     ];
 
     return (
 
-        <List>
+        <List disablePadding={true}>
             {
                 items.map(({text, icon, url}, i) =>
                     <NavLink to={url} key={i}>

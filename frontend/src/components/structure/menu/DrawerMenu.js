@@ -45,8 +45,11 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        padding: theme.spacing(1, 1),
+        flexShrink: '0',
     },
+    hamburgerButton: {
+        padding: theme.spacing(2)
+    }
 }))
 
 export default function DrawerMenu(props) {
@@ -74,7 +77,7 @@ export default function DrawerMenu(props) {
             }}
         >
             <div className={classes.toolbar}>
-                <IconButton onClick={handleToggleDrawer}>
+                <IconButton classes={{root: classes.hamburgerButton}} onClick={handleToggleDrawer}>
                     {open ? <ClearIcon/> : <MenuIcon/> }
                 </IconButton>
             </div>

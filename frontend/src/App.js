@@ -9,14 +9,13 @@ import {
 
 import Home from "./components/Home";
 import AIEditor from "./components/editor/AIEditor.js";
-import MatchHistory from "./components/matches/MatchHistory";
 import AIList from "./components/editor/AIList";
 import PlayvsBot from "./components/PlayvsBot";
 import PlayvsPlayer from "./components/PlayvsPlayer";
-import MatchReplay from "./components/matches/MatchReplay";
 import Login from "./components/login/Login";
-
 import Structure from "./components/structure/Structure";
+import BotMatchHistory from './components/matches/bot/BotMatchHistory.js';
+import BotMatchReplay from './components/matches/bot/BotMatchReplay.js';
 
 
 
@@ -127,10 +126,10 @@ class App extends Component {
 
                         <Route path="/AIEditor/:id?" component={AIEditor} />
                         <Route path="/AIList" component={AIList}/>
-                        <Route path="/MatchHistory" component={MatchHistory}/>
+                        <Route path="/BotMatchHistory" component={BotMatchHistory}/>
                         <Route path="/PlayvsBot" component={PlayvsBot}/>
                         <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
-                        <Route path="/MatchReplay/:matchId" component={MatchReplay}/>
+                        <Route path="/BotMatchReplay/:matchId" component={BotMatchReplay}/>
                     </Structure>
                 </div>) 
                     : 
