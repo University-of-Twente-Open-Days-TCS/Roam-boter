@@ -4,6 +4,7 @@ import object from "./object.js";
 import reldir from "./reldir.js";
 import winddir from "./winddir.js";
 import label from "./label.js";
+import seconds from "./seconds.js";
 import Konva from "konva"
 import AIValidationError from "../Errors/AIValidationError.js";
 import speed from "./speed.js";
@@ -52,15 +53,25 @@ const speedList = [
 ];
 
 
-//LABELS DO NOT YET EXIST
 const labelList = [
     new label(0),
     new label(1),
     new label(2),
     new label(3),
     new label(4),
-
+    new label(5),
+    new label(6),
+    new label(7),
+    new label(8),
 ];
+
+const secondsList = [
+    new seconds(1),
+    new seconds(3),
+    new seconds(5),
+    new seconds(7),
+];
+
 export default class actionNode {
 
 
@@ -146,8 +157,6 @@ export default class actionNode {
 
         //Popup to add an action to the actionList within the node
         this.group.on("click tap", () => {
-
-            //TODO could just make this by calling editAction with object null (no action yet) probs
             this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generatePossibleActionsList(), this.editAction.bind(this)).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
@@ -206,6 +215,9 @@ export default class actionNode {
                 break;
             case(label):
                 this.actionList[this.actionList.length - 1].label = attribute;
+                break;
+            case(seconds):
+                this.actionList[this.actionList.length - 1].seconds = attribute;
                 break;
             default:
                 //Empty by design, should not arrive here
@@ -268,7 +280,11 @@ export default class actionNode {
                 wantedList = labelList;
                 break;
             case 14:
-                wantedList = labelList;
+                if (this.actionList[this.actionList.length - 1].label == null) {
+                    wantedList = labelList;
+                } else {
+                    wantedList = secondsList;
+                }
                 break;
             default:
             //Empty by design, should not come here
@@ -290,11 +306,6 @@ export default class actionNode {
         let possibleActionsList = [
             //Infinite amount of Do Nothing
             new action(0),
-
-            //Infinite labels TODO enable when labels get enabled
-            // new action(12),
-            // new action(13),
-            // new action(14)
         ];
 
         if (!this.containsMovement) {
@@ -312,6 +323,11 @@ export default class actionNode {
                 possibleActionsList.push(new action(fire));
             })
         }
+
+        possibleActionsList.push(//Infinite labels
+            new action(12),
+            new action(13),
+            new action(14));
 
 
         return possibleActionsList;
@@ -445,15 +461,36 @@ export default class actionNode {
                     });
                     break;
 
-                //Fires a bullet
+                //Shoot
                 case 10:
                     tree.actionlist.push({
                         "type_id": 10, "attributes": {}
                     });
                     break;
+
+                //Self-destruct
                 case 11:
                     tree.actionlist.push({
                         "type_id": 11, "attributes": {}
+                    });
+                    break;
+
+                //set label
+                case 12:
+                    tree.actionlist.push({
+                        "type_id": 12, "attributes": {"label": item.label.id}
+                    });
+                    break;
+                //unset label
+                case 13:
+                    tree.actionlist.push({
+                        "type_id": 13, "attributes": {"label": item.label.id}
+                    });
+                    break;
+                //set label for X seconds
+                case 14:
+                    tree.actionlist.push({
+                        "type_id": 14, "attributes": {"label": item.label.id, "seconds": item.seconds.id}
                     });
                     break;
 

@@ -47,14 +47,16 @@ const healthList = [
 
 ];
 
-//LABELS DO NOT YET EXIST
 const labelList = [
     new label(0),
     new label(1),
     new label(2),
     new label(3),
     new label(4),
-
+    new label(5),
+    new label(6),
+    new label(7),
+    new label(8)
 ];
 
 
@@ -167,8 +169,6 @@ export default class conditionNode {
 
         //Popup to edit the condition
         this.group.on("click tap", () => {
-
-            //TODO could just make this by calling editCondition with object null (no condition yet) probs
             this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateConditionList(), this.editCondition.bind(this)).group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();

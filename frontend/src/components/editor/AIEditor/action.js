@@ -7,15 +7,17 @@ export default class action {
     _reldir;
     _label;
     _speed;
+    _seconds;
 
 
-    constructor(id, object = null, winddir = null, reldir = null, speed = null, label = null) {
+    constructor(id, object = null, winddir = null, reldir = null, speed = null, label = null, seconds = null) {
         this.id = id;
         this.object = object;
         this.winddir = winddir;
         this.reldir = reldir;
         this.label = label;
         this.speed = speed;
+        this.seconds = seconds;
     }
 
     //Returns whether the current action has all its necessary attributes
@@ -50,7 +52,7 @@ export default class action {
             case 13:
                 return (this.label != null);
             case 14:
-                return (this.label != null);
+                return (this.label != null && this.seconds != null);
             default:
                 return false;
         }
@@ -123,11 +125,26 @@ export default class action {
                 return "Shoot!";
             case 11:
                 return "Self-destruct!";
-            //TODO encorporate labels
+            case 12:
+                if (this.label != null) {
+                    return "Set label " + this.label;
+                } else {
+                    return "Set label  <label>";
+                }
+            case 13:
+                if (this.label != null) {
+                    return "Unset label " + this.label;
+                } else {
+                    return "Unset label  <label>";
+                }
+            case 14:
+                if (this.label != null && this.seconds != null) {
+                    return "Set label " + this.label + "\n for " + this.seconds;
+                } else {
+                    return "Set label \n <label> \n for <seconds>";
+                }
             default:
                 return null
-
-
         }
     }
 
@@ -177,6 +194,14 @@ export default class action {
 
     set speed(value) {
         this._speed = value;
+    }
+
+    get seconds() {
+        return this._seconds;
+    }
+
+    set seconds(value) {
+        this._seconds = value;
     }
 
 }
