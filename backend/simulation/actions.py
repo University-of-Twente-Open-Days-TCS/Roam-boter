@@ -43,14 +43,10 @@ def scout(tank, state):
         if tank.scout_target is None:
             goal = closest_object_in_paths(tank, paths)
             tank.scout_target = (goal[-1], state.level.scout_nodes.index(goal[-1]))
-            print(tank.scout_target)
         else:
-            print("selecting next goal")
-            print(tank.scout_target)
             current_goal, current_index = tank.scout_target
             next_index = (current_index + tank.next_scout_increment) % len(paths)
             tank.scout_target = (state.level.scout_nodes[next_index], next_index)
-            print(tank.scout_target)
     for p in paths:
         if p[-1] == tank.scout_target[0]:
             tank.path = p

@@ -174,12 +174,10 @@ class Simulation:
             on_hill = []
 
             for t in self.get_tanks():
-                print("tank: ", t.get_team(), t.get_pos(), t.destroyed)
                 if not t.destroyed and t.on_hill(self.state):
                     on_hill.append(t)  
 
             if len(on_hill) == 1:
-                print(on_hill[0].get_team())
                 self.state.scores[on_hill[0].get_team()] += 1
 
 

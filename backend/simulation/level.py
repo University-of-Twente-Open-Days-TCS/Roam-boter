@@ -16,7 +16,6 @@ class Level:
         self.nearest_paths = self.cache_or_prepare_all_paths()
         self.health_packs = self.collect_health_packs()
         self.scout_nodes = []
-        print(self.nearest_paths)
 
     def set_scout_nodes(self, scout_nodes):
         self.scout_nodes = scout_nodes
