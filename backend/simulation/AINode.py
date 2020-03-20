@@ -16,9 +16,9 @@ class ActionNode(AINode):
     def __init__(self, actions):
         self.actions = actions
 
+    # returns actions plus an empty list since the path to these actions is empty.
     def evaluate(self, tank, state):
-        return self.actions
-
+        return self.actions, []
 
 
 class ConditionNode(AINode):
@@ -29,9 +29,12 @@ class ConditionNode(AINode):
         self.true_child = true_child
         self.false_child = false_child
 
+    # Returns the actions picked and the path to those actions
     def evaluate(self, tank, state):
         # Test the condition and evaluate correct child
         if self.condition.evaluate(tank, state):
-            return self.true_child.evaluate(tank, state)
+            actions, path = self.true_child.evaluate(tank, state)
+            return actions, path + [True]
 
-        return self.false_child.evaluate(tank, state)
+        actions, path = self.false_child.evaluate(tank, state)
+        return actions, path + [False]

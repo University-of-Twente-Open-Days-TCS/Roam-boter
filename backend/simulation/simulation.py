@@ -40,6 +40,11 @@ class Simulation:
         self.set_starting_position()
         self.winner = None
         self.playback = PlayBack(level)
+
+        # Fill the ai_path of the first frame.
+        for tank in self.get_tanks():
+            tank.collectActions(self.state)
+
         self.playback.add_frame(self.state)
         self.game_mode = game_mode
 
@@ -208,11 +213,11 @@ def prepare_caches(levels):
 def test_simulation():
 
     false_node = ActionNode([Action(10, {})])
-    true_node = ActionNode([Action(1, {'obj': 8}), Action(10, {}), Action(5, {'obj': 2})])
+    true_node = ActionNode([Action(1, {'obj': 10}), Action(10, {}), Action(5, {'obj': 2})])
 
     ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 1}), true_node, false_node)
     playback = simulate([ai, ai])
-    print(playback.to_json())
+    print(playback.to_json(0, 1))
 
     # cProfile.run("simulate([ai, ai])")
     # PlayBackEncoder.encode(a.get_playback())

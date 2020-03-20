@@ -42,6 +42,7 @@ class Tank:
     def __init__(self, ai):
         self.ai = ai
         self.actions = []
+        self.ai_path = []
 
     def set_spawn(self, x, y):
         self.spawn = (x, y)
@@ -98,7 +99,7 @@ class Tank:
 
     # Collect the actions that the ai would execute within the current game state
     def collectActions(self, state):
-        self.actions = self.ai.evaluate(self, state)
+        self.actions, self.ai_path = self.ai.evaluate(self, state)
 
     # Execute the movement actions that have been captured before by collectActions()
     def executeActions(self, state):
