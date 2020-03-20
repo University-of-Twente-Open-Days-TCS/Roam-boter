@@ -4,12 +4,12 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from AIapi.models import AI
 from dashboard.models import Team
 
-# Create your models here.
 """
 NOTE:
 Currently an AI does not get copied when a match gets played.
 In the future the AI should be a copy, because a Team can alter an AI at a later time step.
 """
+
 class Bot(models.Model):
     """
     A predefined bot. Can be played against. Got a single consistent AI.
@@ -31,6 +31,24 @@ class Bot(models.Model):
     description = models.TextField(blank=True)
 
 
+class Simulation(models.Model):
+    """
+    Represents a match simulation
+    """
+
+    class SimulationState(models.TextChoices):
+        """
+        Possible Simulation States
+        """
+        IDLE = 'IDLE', 'Idle'
+        PENDING = 'PEND', 'Pending'
+        BUSY = 'BUSY', 'Busy'
+        DONE = 'DONE', 'Done'
+
+    simulation = models.TextField(blank=True)
+    state = models.CharField(max_length=4, choices=SimulationState.choices, default="IDLE")
+
+
 class Match(models.Model):
     """
     Represents a played match.
@@ -47,20 +65,10 @@ class Match(models.Model):
         KING_OF_THE_HILL = 'KH', 'King of the hill'
         CAPTURE_THE_FLAG = 'CF', 'Capture the flag'
 
-    class SimulationState(models.TextChoices):
-        """
-        Possible Simulation States
-        """
-        IDLE = 'IDLE', 'Idle'
-        PENDING = 'PEND', 'Pending'
-        BUSY = 'BUSY', 'Busy'
-        DONE = 'DONE', 'Done'
-
-    winner = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name="winner")
+    simulation = models.ForeignKey(Simulation, on_delete=models.CASCADE)
+    winner = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name="winner+")
     date = models.DateTimeField(auto_now_add=True)
     gamemode = models.CharField(max_length=2, choices=GameModes.choices, blank=False)
-    simulation = models.TextField(blank=True)
-    simulation_state = models.CharField(max_length=4, choices=SimulationState.choices, default="IDLE")
 
     class Meta:
         abstract = True
@@ -71,8 +79,21 @@ class BotMatch(Match):
     A Match played between a SINGLE team and a bot.
     If the winner of a bot match is null, then the bot has won the match.
     """
-    #TODO: SUPPORT MULTIPLE AI's
+
     bot = models.ForeignKey(Bot, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     ai = models.ForeignKey(AI, on_delete=models.CASCADE)
+
+
+class TeamMatch(Match):
+    """
+    A Match played between two teams.
+    """
+
+    initiator = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="initiator")
+    initiator_ai = models.ForeignKey(AI, on_delete=models.SET_NULL, null=True, related_name="initiator_ai")
+    opponent = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="opponent")
+    opponent_ai = models.ForeignKey(AI, on_delete=models.SET_NULL, null=True, related_name="opponent_ai")
+
+
 

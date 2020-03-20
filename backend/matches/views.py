@@ -11,7 +11,7 @@ from dashboard.models import Team
 
 
 from .models import Bot, BotMatch
-from .serializers import BotSerializer, BotMatchSerializer, BotMatchDetailedSerializer
+from .serializers import BotSerializer, BotMatchSerializer
 from .matchplayer import SIMULATION_PLAYER
 
 class BotListAPI(generics.ListAPIView):
@@ -77,7 +77,7 @@ class BotMatchHistoryRetrieveAPI(RetrieveTeamObjectMixin, DestroyTeamObjectMixin
     permission_classes = [InTeamPermission]
 
     queryset = BotMatch.objects.all()
-    serializer_class = BotMatchDetailedSerializer
+    serializer_class = BotMatchSerializer
 
     def get(self, request, *args, **kwargs):
         """

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Bot, BotMatch, Match
+from .models import Bot, Simulation, BotMatch, Match
 from AIapi.models import AI
 
 
@@ -16,6 +16,16 @@ class BotSerializer(serializers.ModelSerializer):
         fields = ['pk', 'name', 'difficulty', 'description']
         read_only_fields = ['pk', 'name', 'difficulty', 'description']
 
+class SimulationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Simulation model.
+    """
+
+    class Meta:
+
+        model = Simulation
+        fields = ['pk', 'simulation', 'simulation_state']
+
 
 class BotMatchSerializer(serializers.Serializer):
     """
@@ -29,10 +39,9 @@ class BotMatchSerializer(serializers.Serializer):
     winner = serializers.PrimaryKeyRelatedField(read_only=True)
     date = serializers.DateTimeField(read_only=True)
     team = serializers.PrimaryKeyRelatedField(read_only=True)
-    simulation_state = serializers.ChoiceField(choices=Match.SimulationState.choices, read_only=True)
+    simulation = serializers.PrimaryKeyRelatedField(read_only=True)
 
     #non read-only fields
-    #TODO: validate that ai is in fact from the team.
     gamemode = serializers.ChoiceField(choices=Match.GameModes.choices)
     bot = serializers.PrimaryKeyRelatedField(queryset=Bot.objects.all())
     ai = serializers.PrimaryKeyRelatedField(queryset=AI.objects.all())
@@ -50,16 +59,7 @@ class BotMatchSerializer(serializers.Serializer):
         bot = validated_data['bot']
         ai = validated_data['ai']
 
-        botmatch = BotMatch(team=team, **validated_data)
+        simulation = Simulation.objects.create() #create simulation object
+        botmatch = BotMatch(team=team, simulation=simulation, **validated_data)
         botmatch.save()
         return botmatch
-
-class BotMatchDetailedSerializer(BotMatchSerializer):
-    """
-    Serializer for BotMatches.
-    Inherits from `BotMatchSerializer` and adds extra field to include simulation.
-    """
-
-    simulation = serializers.JSONField(read_only=True)
-
-

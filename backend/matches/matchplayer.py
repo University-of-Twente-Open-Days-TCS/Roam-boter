@@ -12,7 +12,7 @@ class SimulationPlayer(object):
         """
         Expects a pending BotMatch instance and runs the simulation.
         """
-        if botmatch.simulation_state == "DONE":
+        if botmatch.simulation.state == "DONE":
             raise Exception("Simulation already has run")
 
         bot = botmatch.bot
@@ -25,6 +25,7 @@ class SimulationPlayer(object):
 
         # send team ai as first player
         playback = simulate([team_ai_eval_tree, bot_ai_eval_tree])
+        # set winner
         winner = playback.winner
 
         if winner == 0:
@@ -32,9 +33,13 @@ class SimulationPlayer(object):
         else:
             botmatch.winner = None
 
-        botmatch.simulation = playback.to_json(botmatch.team_id, -1)
-        botmatch.simulation_state = "DONE"
+        botmatch.simulation.simulation = playback.to_json(botmatch.team_id, -1)
+        botmatch.simulation.state = "DONE"
         botmatch.save()
 
 
+
+
+
+# Setup simulation player object
 SIMULATION_PLAYER = SimulationPlayer()
