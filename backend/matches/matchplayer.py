@@ -11,6 +11,7 @@ logger = logging.getLogger("debugLogger")
 
 num_workers = 4
 
+
 class SimulationPlayer(object):
     initialised_workers = False
     queue = Queue()
