@@ -40,10 +40,10 @@ class Simulation(models.Model):
         """
         Possible Simulation States
         """
-        IDLE = 'IDLE', 'Idle'
-        PENDING = 'PEND', 'Pending'
-        BUSY = 'BUSY', 'Busy'
-        DONE = 'DONE', 'Done'
+        IDLE = 'IDLE', 'Idle'           # not in the simulation queue
+        PENDING = 'PEND', 'Pending'     # in the simulation queue
+        BUSY = 'BUSY', 'Busy'           # is being simulated
+        DONE = 'DONE', 'Done'           # has been simulated
 
     simulation = models.TextField(blank=True)
     state = models.CharField(max_length=4, choices=SimulationState.choices, default="IDLE")
@@ -94,6 +94,5 @@ class TeamMatch(Match):
     initiator_ai = models.ForeignKey(AI, on_delete=models.SET_NULL, null=True, related_name="initiator_ai")
     opponent = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="opponent")
     opponent_ai = models.ForeignKey(AI, on_delete=models.SET_NULL, null=True, related_name="opponent_ai")
-
 
 

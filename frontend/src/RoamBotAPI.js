@@ -142,6 +142,15 @@ class RoamBotAPI {
         return response
     }
 
+    getSimulation(pk) {
+        /**
+         * Gets a simulation.
+         * @param pk Primary key of the Simulation to get
+         */
+        let response = this.callApi('matches/simulation/'+pk+'/', 'GET')
+        return response
+    }
+
     getBotMatchHistoryList() {
         /**
          * Gets the match history of a team

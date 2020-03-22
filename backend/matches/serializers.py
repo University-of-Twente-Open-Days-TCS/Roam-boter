@@ -16,7 +16,7 @@ class BotSerializer(serializers.ModelSerializer):
         fields = ['pk', 'name', 'difficulty', 'description']
         read_only_fields = ['pk', 'name', 'difficulty', 'description']
 
-class SimulationSerializer(serializers.ModelSerializer):
+class SimulationOverviewSerializer(serializers.ModelSerializer):
     """
     Serializer for Simulation model.
     """
@@ -25,14 +25,18 @@ class SimulationSerializer(serializers.ModelSerializer):
 
         model = Simulation
         fields = ['pk', 'state']
+        read_only_fields = ['pk', 'state']
 
-class SimulationDetailSerializer(SimulationSerializer):
+class SimulationSerializer(serializers.ModelSerializer):
     """
     Detailed serializer also included simulation playback data.
     """
 
-    simulation = serializers.JSONField()
+    class Meta:
 
+        model = Simulation
+        fields = ['pk', 'state', 'simulation']
+        read_only_fields = ['pk', 'state', 'simulation']
 
 class BotMatchSerializer(serializers.Serializer):
     """
@@ -46,7 +50,7 @@ class BotMatchSerializer(serializers.Serializer):
     winner = serializers.PrimaryKeyRelatedField(read_only=True)
     date = serializers.DateTimeField(read_only=True)
     team = serializers.PrimaryKeyRelatedField(read_only=True)
-    simulation = SimulationSerializer(read_only=True)
+    simulation = SimulationOverviewSerializer(read_only=True)
 
     #non read-only fields
     gamemode = serializers.ChoiceField(choices=Match.GameModes.choices)

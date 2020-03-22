@@ -10,8 +10,8 @@ from roamboter.api.mixins import RetrieveTeamObjectMixin, DestroyTeamObjectMixin
 from dashboard.models import Team
 
 
-from .models import Bot, BotMatch
-from .serializers import BotSerializer, BotMatchSerializer
+from .models import Bot, Simulation, BotMatch
+from .serializers import BotSerializer, BotMatchSerializer, SimulationSerializer
 from .matchplayer import SIMULATION_PLAYER
 
 class BotListAPI(generics.ListAPIView):
@@ -27,6 +27,14 @@ class BotDetailAPI(generics.RetrieveAPIView):
     """
     queryset = Bot.objects.all()
     serializer_class = BotSerializer
+
+class SimulationRetrieveAPI(generics.RetrieveAPIView):
+    """
+    API that retrieves an simulation.
+    A simulation is anonymous so anyone can access.
+    """
+    queryset = Simulation.objects.all()
+    serializer_class = SimulationSerializer
 
 
 class BotMatchHistoryListAPI(APIView):

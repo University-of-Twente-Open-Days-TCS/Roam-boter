@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger("debugLogger")
 
 
-class SimulationPlayer(object):
+class SimulationPlayer:
 
     def run_botmatch(self, botmatch):
         """
@@ -35,6 +35,7 @@ class SimulationPlayer(object):
 
         botmatch.simulation.simulation = playback.to_json(botmatch.team_id, -1)
         botmatch.simulation.state = "DONE"
+        botmatch.simulation.save()
         botmatch.save()
 
 
