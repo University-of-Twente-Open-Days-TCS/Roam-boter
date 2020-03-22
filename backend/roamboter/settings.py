@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'fontawesome_5',
+    'workers',
 
     # Our App
     'roamboter',
