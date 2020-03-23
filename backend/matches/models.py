@@ -79,10 +79,11 @@ class BotMatch(Match):
     A Match played between a SINGLE team and a bot.
     If the winner of a bot match is null, then the bot has won the match.
     """
+    #TODO: COPY AI
 
-    bot = models.ForeignKey(Bot, on_delete=models.CASCADE)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    ai = models.ForeignKey(AI, on_delete=models.CASCADE)
+    bot = models.ForeignKey(Bot, on_delete=models.CASCADE)      # bot to play against
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)    # team that plays
+    ai = models.ForeignKey(AI, on_delete=models.CASCADE)        # ai of the team
 
 
 class TeamMatch(Match):

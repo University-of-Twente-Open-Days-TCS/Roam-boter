@@ -26,6 +26,8 @@ services:
             - "5050:80"
         expose:
             - "5050"
+        logging:
+            driver: "none"
  
     redis: 
         restart: always
