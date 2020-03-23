@@ -31,13 +31,13 @@ class TeamDetailAPI(APIView):
         serializer = TeamSerializer(team)
         return Response(serializer.data)
 
-    def patch(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         """
-        Partial update
+        Update active champion.
         """
         team = self._get_team(request)
 
-        serializer = TeamSerializer(team, data=request.data, partial=True)
+        serializer = TeamSerializer(team, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
