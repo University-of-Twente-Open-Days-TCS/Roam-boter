@@ -98,8 +98,21 @@ export default class popup {
     updatePopupGroup() {
         this.rect.width(Math.max(this.selector.width, this.textWidth) + 20);
         this.rect.height(this.selector.height + 20 + this.textHeight);
-        this.group.x(this.stage.width() / 2 - (this.rect.width() / 2));
-        this.group.y(this.stage.height() / 2 - (this.rect.height() / 2));
+        this.group.offset({x: this.rect.width() / 2, y: this.rect.height() / 2});
+        this.group.x(this.stage.width() / 2);
+        this.group.y(this.stage.height() / 2);
+
+        let ratioX = this.rect.width() / this.stage.width();
+        let ratioY = this.rect.height() / this.stage.height();
+        let maxRatio = Math.max(ratioX, ratioY);
+        let scale = 1;
+        console.log(maxRatio);
+        if (maxRatio > 1) {
+            scale = 1 / maxRatio;
+        }
+        this.group.scale({x: scale, y: scale});
+
+
     }
 
     getNextOption(selection, f) {
