@@ -60,9 +60,6 @@ class WorkerPool:
         from simulation.simulation import simulate
 
         while True:
-            if in_queue.qsize() == 0:
-                print("Idle worker.")
-
             sim = in_queue.get()
 
             try:
@@ -88,7 +85,7 @@ class WorkerPool:
 
         queue_left = self.num_workers * 2 - self.match_queue.qsize()
 
-        print("queue length: ", self.match_queue.qsize(), "result length: ", self.result_queue.qsize())
+        # print("queue length: ", self.match_queue.qsize(), "result length: ", self.result_queue.qsize())
         if queue_left > 0:
 
             unplayed_matches = BotMatch.objects.filter(simulation__state=Simulation.SimulationState.PENDING)[0:queue_left]
@@ -126,5 +123,5 @@ class WorkerPool:
                 bot_match.simulation.save()
 
             bot_match.save()
-            print("match", bot_match.pk, "played", len(bot_matches))
+            # print("match", bot_match.pk, "played", len(bot_matches))
 
