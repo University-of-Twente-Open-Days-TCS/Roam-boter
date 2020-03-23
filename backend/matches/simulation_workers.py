@@ -12,6 +12,10 @@ from multiprocessing import Process
 from multiprocessing import Queue
 from enum import Enum
 
+import traceback
+
+import logging
+logger = logging.getLogger('debugLogger')
 
 class WorkerPool:
 
@@ -70,10 +74,12 @@ class WorkerPool:
                     team_ids.append(team_id)
 
                 playback_object = simulate(eval_trees)
-
                 sim.winner = team_ids[playback_object.winner]
                 sim.playback = simulate(eval_trees).to_json(team_ids)
                 sim.success = True
+
+            except Exception:
+                logger.debug(traceback.format_exc())
 
             # If anything goes wrong with the simulation, still return the object, because success is false by default.
             finally:
@@ -81,10 +87,10 @@ class WorkerPool:
 
     # Collect matches and distribute them over workers.
     def collect_matches(self):
-        # Fill queue of matches to contain 4 items.
-
+        # Fill queue of matches up to a maximum that will be processed at the same time.
         queue_left = self.num_workers * 2 - self.match_queue.qsize()
 
+        # Optional status print every second
         # print("queue length: ", self.match_queue.qsize(), "result length: ", self.result_queue.qsize())
         if queue_left > 0:
 
