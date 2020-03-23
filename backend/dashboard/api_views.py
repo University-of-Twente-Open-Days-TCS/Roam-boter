@@ -1,13 +1,12 @@
 from rest_framework.views import APIView
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework import status
 
 from roamboter.api.permissions import InTeamPermission
 
 from .models import Team
 from .serializers import TeamSerializer, TeamCodeSerializer
-from .forms import EnterTeamForm
 
 import dashboard.workshopmanager as wmanager
 
@@ -19,18 +18,31 @@ class TeamDetailAPI(APIView):
 
     permission_classes = [InTeamPermission]
 
-    def get_team(self, pk):
+    def _get_team(self, request):
+        pk = request.session['team_id']
         return Team.objects.filter(id=pk).first()
 
     def get(self, request):
         """
         Return the details of team associated with this request
         """
-        team_id = request.session['team_id']
-        team = self.get_team(team_id)
+        team = self._get_team(request)
 
         serializer = TeamSerializer(team)
         return Response(serializer.data)
+
+    def put(self, request, *args, **kwargs):
+        """
+        Update active champion.
+        """
+        team = self._get_team(request)
+
+        serializer = TeamSerializer(team, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EnterTeamAPI(APIView):
