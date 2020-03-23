@@ -95,9 +95,11 @@ export default class popup {
         this.layer.draw();
     }
 
+    //updates the popup to be the correct size
     updatePopupGroup() {
         this.rect.width(Math.max(this.selector.width, this.textWidth) + 20);
         this.rect.height(this.selector.height + 20 + this.textHeight);
+        //offset to place the origin of the group at the center.
         this.group.offset({x: this.rect.width() / 2, y: this.rect.height() / 2});
         this.group.x(this.stage.width() / 2);
         this.group.y(this.stage.height() / 2);
@@ -107,6 +109,7 @@ export default class popup {
         let maxRatio = Math.max(ratioX, ratioY);
         let scale = 1;
         console.log(maxRatio);
+        //if the  popup is larger than the stage it will scale down
         if (maxRatio > 1) {
             scale = 1 / maxRatio;
         }
