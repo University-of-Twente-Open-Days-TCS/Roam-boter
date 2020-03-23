@@ -8,6 +8,8 @@ import health from "./health.js";
 import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
+import action from "./action";
+import actionNode from "./actionNode";
 
 
 //TODO place all these variables somewhere nicer
@@ -111,7 +113,6 @@ export default class conditionNode {
         this.layer = layer;
         this.position = position;
 
-
         if (this.condition != null) {
             this.conditionText = this.condition.toString();
             this.createTextObject(this.conditionText);
@@ -174,11 +175,11 @@ export default class conditionNode {
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
-
-
+        this.remainingOptions = [{options: this.generateConditionList(), f: (cndtn) => this.condition = cndtn}];
         this.stage.draw();
 
     }
+
 
     setCondition(cond) {
         this.condition = cond;
@@ -561,17 +562,12 @@ export default class conditionNode {
                     new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
                 }
             } else {
+
+
                 //If not dropped on other element, make a popup to create either a new condition or action
-                node.stage.staticlayer.add(new popup(node.stage, node.stage.staticlayer, ["action", "condition"], (selection) => {
+                node.stage.staticlayer.add(new popup(node.stage, node.stage.staticlayer, [new conditionNode(node.stage, node.layer, node.canvas), new actionNode(node.stage, node.layer, node.canvas)], (selection) => {
                     let newNode = null;
-                    switch (selection) {
-                        case "action":
-                            newNode = node.canvas.addActionNode();
-                            break;
-                        case "condition":
-                            newNode = node.canvas.addCondition();
-                            break;
-                    }
+                    newNode = node.canvas.addNode(selection);
                     new arrow(node, newNode, condition, node.stage, node.layer);
                     if (newNode !== null) {
                         newNode.group.absolutePosition(touchPos);
@@ -589,6 +585,14 @@ export default class conditionNode {
             node.stage.templayer.draw();
         });
         return dragCircle;
+    }
+
+    getRemainingOptions() {
+        return this.remainingOptions;
+    }
+
+    toString() {
+        return "condition"
     }
 
     getTrueDotPosition() {

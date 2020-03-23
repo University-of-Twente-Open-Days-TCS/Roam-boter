@@ -33,6 +33,7 @@ export default class popup {
     createGroup() {
         let thisStage = this.stage;
         this.group = new Konva.Group();
+        this.createClose();
         this.createRect();
         this.createText();
     }
@@ -128,6 +129,20 @@ export default class popup {
         this.group.add(this.rect);
     }
 
+    createClose() {
+
+        var exitRect = new Konva.Rect({
+            width: this.stage.width(),
+            height: this.stage.height(),
+            opacity: 0,
+        });
+        this.layer.add(exitRect);
+        exitRect.setAbsolutePosition({x: 0, y: 0});
+        exitRect.on("click tap", () => {
+            this.closePopup();
+            exitRect.destroy();
+        });
+    }
 
 
     //Close popup, if an attribute has been given

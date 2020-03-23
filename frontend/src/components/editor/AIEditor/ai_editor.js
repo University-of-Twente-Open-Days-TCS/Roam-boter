@@ -366,21 +366,23 @@ class aiCanvas {
         this.drawArrowFromJson(ownNode, newFalseChild, false);
     }
 
+    addNode(node) {
+        console.log("node: ");
+        console.log(node);
+        this.layer.add(node.group);
+        node.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
+        this.stage.draw();
+        return node;
+    }
 
     addCondition() {
         let newCondition = new conditionNode(this.stage, this.layer, this);
-        this.layer.add(newCondition.group);
-        newCondition.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
-        this.stage.draw();
-        return newCondition;
+        return this.addNode(newCondition);
     }
 
     addActionNode() {
         let newActionNode = new actionNode(this.stage, this.layer, this);
-        this.layer.add(newActionNode.group);
-        newActionNode.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
-        this.stage.draw();
-        return newActionNode;
+        return this.addNode(newActionNode);
     }
 
     //getters&setters
