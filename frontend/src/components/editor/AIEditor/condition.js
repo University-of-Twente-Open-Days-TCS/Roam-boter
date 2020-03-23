@@ -63,7 +63,6 @@ export default class condition {
         this.setRemainingOptions();
     }
 
-
     //Edits the condition, resets everything to null and creates a condition with the given parameters
     editCondition(id = null, distance = null, object = null, label = null, health = null) {
         this.id = id;
@@ -187,9 +186,9 @@ export default class condition {
                 return "Bullet ready";
             case 6:
                 if (this.label == null) {
-                    return "If <label> set";
+                    return "If label <label> set";
                 } else {
-                    return "If " + this.label + " set";
+                    return "If label " + this.label + " set";
                 }
             case 7:
                 if (this.health == null) {
