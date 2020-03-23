@@ -46,7 +46,7 @@ class Simulation(models.Model):
         DONE = 'DONE', 'Done'           # has been simulated
 
     simulation = models.TextField(blank=True)
-    state = models.CharField(max_length=4, choices=SimulationState.choices, default="IDLE")
+    state = models.CharField(max_length=4, choices=SimulationState.choices, default=SimulationState.PENDING)
 
 
 class Match(models.Model):
