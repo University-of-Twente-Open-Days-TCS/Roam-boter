@@ -18,8 +18,8 @@ import NewBotMatch from "./components/matches/bot/NewBotMatch";
 import BotMatchHistory from './components/matches/bot/BotMatchHistory.js';
 import BotMatchReplay from './components/matches/bot/BotMatchReplay.js';
 
-import PlayvsPlayer from "./components/matches/player/PlayvsPlayer";
-import NewTeamMatch from "./components/matches/player/NewTeamMatch";
+import PlayvsPlayer from "./components/matches/team/PlayvsPlayer";
+import NewTeamMatch from "./components/matches/team/NewTeamMatch";
 
 
 class App extends Component {
