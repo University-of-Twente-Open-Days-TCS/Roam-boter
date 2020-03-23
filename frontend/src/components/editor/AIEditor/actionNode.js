@@ -18,59 +18,6 @@ const circle_radius = 10;
 const spawnPoint = {x: 0, y: 0};
 
 
-const objectList = [
-    new object(1),
-    new object(2),
-    new object(3),
-    new object(4),
-    new object(5),
-    new object(6),
-    new object(7),
-    new object(8),
-    new object(9),
-    new object(10)
-
-];
-
-const reldirList = [
-    new reldir(0),
-    new reldir(1),
-    new reldir(2),
-    new reldir(3)
-];
-
-const winddirList = [
-    new winddir(0),
-    new winddir(1),
-    new winddir(2),
-    new winddir(3)
-];
-
-const speedList = [
-    new speed(0),
-    new speed(1),
-    new speed(2)
-];
-
-
-const labelList = [
-    new label(0),
-    new label(1),
-    new label(2),
-    new label(3),
-    new label(4),
-    new label(5),
-    new label(6),
-    new label(7),
-    new label(8),
-];
-
-const secondsList = [
-    new seconds(1),
-    new seconds(3),
-    new seconds(5),
-    new seconds(7),
-];
 
 export default class actionNode {
 
@@ -90,7 +37,7 @@ export default class actionNode {
     fireActions = [10, 11];
     containsFire = false;
 
-    constructor(stage, layer, actionList = [], position = spawnPoint) {
+    constructor(stage, layer, canvas, actionList = [], position = spawnPoint) {
         this.group = new Konva.Group({
             draggable: true
         });
@@ -157,7 +104,8 @@ export default class actionNode {
 
         //Popup to add an action to the actionList within the node
         this.group.on("click tap", () => {
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generatePossibleActionsList(), this.editAction.bind(this)).group);
+
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generatePossibleActionsList(), this.addAction.bind(this), "select an action").group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -187,117 +135,15 @@ export default class actionNode {
 
     }
 
-    //Adds an action to the actionlist, or adds an attribute to the last action of the actionList
-    editAction(attribute) {
-        switch (attribute.constructor) {
-            case (action):
-                this.actionList.push(attribute);
-                if (this.movementActions.includes(attribute.id)) {
-                    this.containsMovement = true;
-                } else if (this.aimActions.includes(attribute.id)) {
-                    this.containsAim = true;
-                } else if (this.fireActions.includes(attribute.id)) {
-                    this.containsFire = true;
-                }
-
-                break;
-            case(object):
-                this.actionList[this.actionList.length - 1].object = attribute;
-                break;
-            case(winddir):
-                this.actionList[this.actionList.length - 1].winddir = attribute;
-                break;
-            case(reldir):
-                this.actionList[this.actionList.length - 1].reldir = attribute;
-                break;
-            case(speed):
-                this.actionList[this.actionList.length - 1].speed = attribute;
-                break;
-            case(label):
-                this.actionList[this.actionList.length - 1].label = attribute;
-                break;
-            case(seconds):
-                this.actionList[this.actionList.length - 1].seconds = attribute;
-                break;
-            default:
-                //Empty by design, should not arrive here
-                break;
-        }
-
-
-        //Check if the last added action still misses an attribute
-        if (!this.actionList[this.actionList.length - 1].isValid()) {
-            this.createAdditionalInfoPopup();
-        } else {
-            //Fill the actionNode with the newly added info
-            this.actionNodeText = this.createActionNodeText();
-            this.actionNodeTextObj.text(this.actionNodeText);
-            this.setassetsizes();
-            this.inputCircle.moveToTop();
-        }
-
+    //adds a new action
+    addAction(action) {
+        this.actionList = this.actionList.concat(action);
+        //Fill the actionNode with the newly added info
+        this.actionNodeText = this.createActionNodeText();
+        this.actionNodeTextObj.text(this.actionNodeText);
+        this.setassetsizes();
+        this.inputCircle.moveToTop();
     }
-
-    createAdditionalInfoPopup() {
-        let wantedList;
-        switch (this.actionList[this.actionList.length - 1].id) {
-            case 0:
-                break;
-            case 1:
-                wantedList = objectList;
-                break;
-            case 2:
-                break;
-            case 3:
-                wantedList = objectList;
-                break;
-            case 4:
-                wantedList = objectList;
-                break;
-            case 5:
-                wantedList = objectList;
-                break;
-            case 6:
-                wantedList = winddirList;
-                break;
-            case 7:
-                wantedList = reldirList;
-                break;
-            case 8:
-                wantedList = speedList;
-                break;
-            case 9:
-                wantedList = speedList;
-                break;
-            case 10:
-                break;
-            case 11:
-                break;
-            case 12:
-                wantedList = labelList;
-                break;
-            case 13:
-                wantedList = labelList;
-                break;
-            case 14:
-                if (this.actionList[this.actionList.length - 1].label == null) {
-                    wantedList = labelList;
-                } else {
-                    wantedList = secondsList;
-                }
-                break;
-            default:
-            //Empty by design, should not come here
-        }
-
-        //If there is still an attribute missing, will ask for it via the popup
-        if (wantedList != null) {
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editAction.bind(this)).group);
-            this.stage.staticlayer.moveToTop();
-            this.stage.draw();
-        }
-    }
-
 
     generatePossibleActionsList() {
 
