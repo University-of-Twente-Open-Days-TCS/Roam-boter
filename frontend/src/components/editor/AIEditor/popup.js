@@ -95,8 +95,11 @@ export default class popup {
     }
 
     updatePopupGroup() {
-        this.rect.width(Math.max(this.selector.width, this.textWidth) + 20);
+        let margin = 10;
+        this.rect.width(Math.max(this.selector.width, this.textWidth) + margin * 2);
         this.rect.height(this.selector.height + 20 + this.textHeight);
+        this.selector.group.x(margin);
+        this.selector.group.y(margin + this.textHeight);
         this.group.x(this.stage.width() / 2 - (this.rect.width() / 2));
         this.group.y(this.stage.height() / 2 - (this.rect.height() / 2));
     }

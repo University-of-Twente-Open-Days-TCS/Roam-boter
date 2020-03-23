@@ -1,7 +1,7 @@
-import object from "./object";
-import distance from "./distance";
-import health from "./health";
-import label from "./label";
+import object from "./object.js";
+import distance from "./distance.js";
+import health from "./health.js";
+import label from "./label.js";
 
 const objectList = [
     new object(1),
@@ -32,7 +32,6 @@ const healthList = [
 
 ];
 
-//LABELS DO NOT YET EXIST
 const labelList = [
     new label(0),
     new label(1),
