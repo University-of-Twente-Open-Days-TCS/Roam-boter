@@ -3,6 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from django.db.models import Q
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
+
 
 
 from roamboter.api.permissions import InTeamPermission
@@ -165,7 +168,7 @@ class TeamMatchHistoryRetrieveAPI(APIView):
 
     permission_classes = [InTeamPermission]
 
-    def get(self, request, *args, **kwargs):
+    def _get_object(self, request, **kwargs):
         team_pk = request.session['team_id']
 
         match_pk = kwargs['pk']
@@ -173,11 +176,26 @@ class TeamMatchHistoryRetrieveAPI(APIView):
 
         # make sure match exists
         if match is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            raise Http404("Match does not exist")
 
         # make sure match belongs to this team
         if not match.initiator.pk == team_pk:
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            raise PermissionDenied("Your team did not initiate this match")
 
+        return match
+
+    def get(self, request, *args, **kwargs):
+        """
+        Gets a detailed match
+        """
+        match = self._get_object(request, **kwargs)
         serializer = DetailedTeamMatchSerializer(match)
         return Response(serializer.data)
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Deletes a match
+        """
+        match = self._get_object(request, **kwargs)
+        match.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
