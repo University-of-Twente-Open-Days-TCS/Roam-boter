@@ -7,15 +7,25 @@ import ReplayCanvas from "../ReplayCanvas";
 
 import ContentBox from '../../layout/ContentBox'
 import ReplayControls from '../ReplayControls'
+import AIReplayCanvas from "../AIReplayCanvas";
 
 const styles = theme => ({
     wrapper: {
         margin: 'auto',
-        width: '70%',
+        width: '90%',
+    },
+    canvasWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around'
     },
     canvasContainer: {
-        display: 'block',
-        width: '100%'
+        display: 'inline-block',
+        width: '70%'
+    },
+    editorContainer: {
+        display: 'inline-block',
+        width: '30%'
     }
 })
 
@@ -25,6 +35,7 @@ class BotMatchReplay extends Component {
     constructor(props) {
         super(props)
         this.canvasContainer = React.createRef()
+        this.editorContainer = React.createRef()
         this.state = {
             frame: 0,
             framesLength: 0,
@@ -39,6 +50,7 @@ class BotMatchReplay extends Component {
 
     async componentDidMount() {
         // selects the id of the match from the URL
+        // TODO: do this with the proper method
         const id = this.props.match.url.split('/').slice(-1)[0]
 
         const response = await RoamBotAPI.getBotMatchDetails(id)
@@ -47,8 +59,11 @@ class BotMatchReplay extends Component {
         let gameData = JSON.parse(data.simulation);
 
         let canvasContainer = this.canvasContainer.current
+        let editorContainer = this.editorContainer.current
         let replayCanvas = new ReplayCanvas(canvasContainer, gameData)
+        let editorCanvas = new AIReplayCanvas(editorContainer, gameData)
         this.replayCanvas = replayCanvas
+        this.editorCanvas = editorCanvas
 
         this.setState({framesLength: replayCanvas.getFramesLength()})
 
@@ -58,7 +73,7 @@ class BotMatchReplay extends Component {
         window.addEventListener('load', this.resizeCanvas)
         window.addEventListener('orientationchange', this.resizeCanvas)
         replayCanvas.start()
-
+        editorCanvas.start()
     }
 
     componentDidUpdate() {
@@ -88,12 +103,13 @@ class BotMatchReplay extends Component {
         // Stop interval
         clearInterval(this.interval)
     }
-    
+
 
     resizeCanvas() {
         this.replayCanvas.updateSize()
+        this.editorCanvas.updateSize()
     }
-    
+
     handleSlideChange(event, newValue) {
         let progress = newValue
         let frames = this.state.framesLength
@@ -105,7 +121,7 @@ class BotMatchReplay extends Component {
         if(!this.state.playing){
             if(this.state.frame === this.state.framesLength - 1){
                 // reset to start position
-                this.setState({frame: 0})   
+                this.setState({frame: 0})
             }
             this.setState({playing: true})
         }else {
@@ -132,7 +148,10 @@ class BotMatchReplay extends Component {
         return (
             <ContentBox>
                 <div className={classes.wrapper}>
-                    <div ref={this.canvasContainer} className={classes.canvasContainer}></div>
+                    <div className={classes.canvasWrapper}>
+                        <div ref={this.canvasContainer} className={classes.canvasContainer}></div>
+                        <div ref={this.editorContainer} className={classes.editorContainer} style={{borderStyle: 'solid'}}></div>
+                    </div>
                     <ReplayControls {...props}/>
                 </div>
             </ContentBox>
