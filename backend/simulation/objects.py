@@ -16,6 +16,7 @@ class Object(IntEnum):
     SPAWN = 11
     TANK = 12
     BULLET = 13
+    SCOUT_NODE = 14
 
     def isTank(self):
         return self == Object.TANK or self == Object.FRIENDLY_TANK or self == Object.ENEMY_TANK
@@ -67,7 +68,8 @@ ColorValues = {
     (0, 0, 255): Object.SPAWN,
     (0, 255, 0): Object.HEAL,
     (255, 0, 0): Object.FLAG,
-    (255, 255, 0): Object.HILL
+    (255, 255, 0): Object.HILL,
+    (100, 100, 0): Object.SCOUT_NODE
 }
 
 
@@ -80,4 +82,5 @@ ALL_OBJECTS = [
     Object.TANK,
     Object.BULLET,
     Object.HILL,
+    Object.SCOUT_NODE,
 ]
