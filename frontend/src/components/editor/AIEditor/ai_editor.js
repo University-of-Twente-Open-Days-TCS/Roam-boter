@@ -340,7 +340,7 @@ class aiCanvas {
 
             });
 
-            return new actionNode(this.stage, this.layer, newActionList, nodeJson.actionblock.position);
+            return new actionNode(this.stage, this.layer, this, newActionList, nodeJson.actionblock.position);
         } else {
             //TODO throw exception, json incorrect!
         }
