@@ -1,6 +1,6 @@
 import React from "react";
 
-import Button from '@material-ui/core/Button'
+import { Typography, Button, Grid } from '@material-ui/core'
 
 import ContentBox from './layout/ContentBox'
 
@@ -10,8 +10,10 @@ const Home = (props) => {
 
     return (
         <ContentBox>
-            <h1>Home</h1>
-            <Button color="secondary" variant="contained" onClick={logoutHandler}>Logout</Button>
+            <Typography variant="h4" align="center">Home</Typography>
+            <Grid container justify="center" style={{marginTop: '1rem'}}>
+                <Button color="secondary" variant="contained" onClick={logoutHandler}>Logout</Button>
+            </Grid>
         </ContentBox>
     )
 }

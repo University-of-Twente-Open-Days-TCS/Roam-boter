@@ -33,7 +33,7 @@ export default function AIMenuList(text) {
         <List disablePadding={true}>
             {
                 items.map(({text, icon, url}, i) =>
-                    <NavLink to={url} key={i}>
+                    <NavLink to={url} key={i} replace>
                         <ListItem button key={i}>
 
                             <ListItemIcon>{icon}</ListItemIcon>
