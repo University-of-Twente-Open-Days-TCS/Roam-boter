@@ -97,7 +97,8 @@ export default class popup {
 
     //updates the popup to be the correct size
     updatePopupGroup() {
-        this.rect.width(Math.max(this.selector.width, this.textWidth) + 20);
+        let margin = 10;
+        this.rect.width(Math.max(this.selector.width, this.textWidth) + margin * 2);
         this.rect.height(this.selector.height + 20 + this.textHeight);
         //offset to place the origin of the group at the center.
         this.group.offset({x: this.rect.width() / 2, y: this.rect.height() / 2});
@@ -114,8 +115,6 @@ export default class popup {
             scale = 1 / maxRatio;
         }
         this.group.scale({x: scale, y: scale});
-
-
     }
 
     getNextOption(selection, f) {

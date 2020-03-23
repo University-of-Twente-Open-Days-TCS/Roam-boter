@@ -1,10 +1,10 @@
-//Action (NOT A NODE), has zero or more attributes, by default null. DOES NOT WORK WITH LABELS YET
+//Action (NOT A NODE), has zero or more attributes, by default null.
 
-import object from "./object";
-import reldir from "./reldir";
-import winddir from "./winddir";
-import speed from "./speed";
-import label from "./label";
+import object from "./object.js";
+import reldir from "./reldir.js";
+import winddir from "./winddir.js";
+import speed from "./speed.js";
+import label from "./label.js";
 import seconds from "./seconds.js";
 
 
@@ -43,7 +43,6 @@ const speedList = [
 ];
 
 
-//LABELS DO NOT YET EXIST
 const labelList = [
     new label(0),
     new label(1),
@@ -192,7 +191,6 @@ export default class action {
             case 11:
                 this.remainingOptions = [];
                 break;
-            //TODO this only works for 1 label, may need to encorporate multiple
             case 12:
                 this.remainingOptions = [{
                     options: labelList, f: ((lbl) => {

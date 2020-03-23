@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { makeStyles } from "@material-ui/core/styles"
 import List from "@material-ui/core/List";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -9,14 +8,8 @@ import ListItem from "@material-ui/core/ListItem";
 
 import {Adb, Person} from "@material-ui/icons";
 
-const useStyles = makeStyles(theme => ({
-    padding: {
-        padding: '0 0'  //remove list padding
-    }
-}))
 
 export default function PlayMenuList(text) {
-    let classes = useStyles()
 
     const items = [
         {

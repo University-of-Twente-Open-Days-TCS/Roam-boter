@@ -17,8 +17,7 @@ export default class selector {
         this.layer = layer;
         this.items = items;
         this.f = f;
-        let thisDropdown = this;
-        this.group = new Konva.Group({x: 10, y: 30});
+        this.group = new Konva.Group();
         this.list = this.generateTable();
         this.group.add(this.list);
     }
@@ -44,7 +43,6 @@ export default class selector {
 
     //generates the table of options
     generateTable() {
-        let thisDropdown = this;
         let list = new Konva.Group();
         let textObjects = this.items.map((item) => {
             return new Konva.Text({text: item.toString(), padding: 10})

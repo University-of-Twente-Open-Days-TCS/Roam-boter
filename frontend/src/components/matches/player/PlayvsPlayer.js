@@ -1,6 +1,8 @@
 import React from "react";
 
-import ContentBox from './layout/ContentBox'
+import ContentBox from '../../layout/ContentBox'
+
+
 const PlayvsPlayer = () => {
     return (
         <ContentBox>
