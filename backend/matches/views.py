@@ -1,18 +1,24 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import PermissionDenied
+
+from django.db.models import Q
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
+
 
 
 from roamboter.api.permissions import InTeamPermission
 from roamboter.api.mixins import RetrieveTeamObjectMixin, DestroyTeamObjectMixin
 
+from AIapi.models import AI
 from dashboard.models import Team
 
 
-from .models import Bot, Simulation, BotMatch
-from .serializers import BotSerializer, BotMatchSerializer, SimulationSerializer
+from .models import Bot, Simulation, BotMatch, TeamMatch
+from .serializers import BotSerializer, BotMatchSerializer, TeamMatchSerializer, DetailedTeamMatchSerializer, SimulationSerializer
 from .matchplayer import SIMULATION_PLAYER
+
 
 class BotListAPI(generics.ListAPIView):
     """
@@ -21,12 +27,14 @@ class BotListAPI(generics.ListAPIView):
     queryset = Bot.objects.all()
     serializer_class = BotSerializer
 
+
 class BotDetailAPI(generics.RetrieveAPIView):
     """
     API that retrieves a single bot
     """
     queryset = Bot.objects.all()
     serializer_class = BotSerializer
+
 
 class SimulationRetrieveAPI(generics.RetrieveAPIView):
     """
@@ -41,8 +49,6 @@ class BotMatchHistoryListAPI(APIView):
     """
     Retrieve match history.
     The bot match history related to session's the team_id.
-    The list of botmatches do not include simulations.
-    Use the `BotMatchHistoryRetrieveAPI` to get the simulation.
     """
 
     permission_classes = [InTeamPermission]
@@ -57,7 +63,6 @@ class BotMatchHistoryListAPI(APIView):
         serializer = BotMatchSerializer(botmatches, many=True)
         return Response(serializer.data)
 
-
     def post(self, request):
         """
         Play bot match against a bot
@@ -69,6 +74,7 @@ class BotMatchHistoryListAPI(APIView):
         serializer = BotMatchSerializer(data=request.data, context={'team': team})
 
         if serializer.is_valid():
+
             botmatch = serializer.save()
             SIMULATION_PLAYER.run_botmatch(botmatch)
 
@@ -100,4 +106,96 @@ class BotMatchHistoryRetrieveAPI(RetrieveTeamObjectMixin, DestroyTeamObjectMixin
         return self.destroy(request, *args, **kwargs)
 
 
+class TeamMatchHistoryListAPI(APIView):
+    """
+    Retrieves a list of team matches related to the team
+    """
 
+    permission_classes = [InTeamPermission]
+
+    def get(self, request):
+        """
+        Returns a list of played team matches
+        """
+
+        team_pk = request.session['team_id']
+        team_matches = TeamMatch.objects.filter(initiator_id=team_pk).all()
+        serializer = TeamMatchSerializer(team_matches, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        """
+        Play a team match.
+        opponent team is randomly selected
+        """
+
+        # get relevant context
+        team_pk = request.session['team_id']
+        initiator = Team.objects.get(pk=team_pk)
+
+        try:
+            opponent = self._match_against_opponent(initiator)
+        except Exception:
+            return Response({"error": "Could not find an appropriate opponent, please try again later."}, status=status.HTTP_423_LOCKED)
+
+        context = {'opponent': opponent, 'initiator': initiator}
+
+        serializer = TeamMatchSerializer(data=request.data, context=context)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def _match_against_opponent(self, initiator):
+        """
+        Finds an opponent to play against
+        """
+        potential_opponents = Team.objects.exclude(pk=initiator.id).filter(active_ai__isnull=False)
+        if potential_opponents.exists():
+            # select a random opponent
+            opponent = potential_opponents.order_by("?").first()
+            return opponent
+        else:
+            raise Exception("Could not find appropriate opponent")
+
+
+class TeamMatchHistoryRetrieveAPI(APIView):
+    """
+    Gets a detailed overview of the match including simulation
+    """
+
+    permission_classes = [InTeamPermission]
+
+    def _get_object(self, request, **kwargs):
+        team_pk = request.session['team_id']
+
+        match_pk = kwargs['pk']
+        match = TeamMatch.objects.get(pk=match_pk)
+
+        # make sure match exists
+        if match is None:
+            raise Http404("Match does not exist")
+
+        # make sure match belongs to this team
+        if not match.initiator.pk == team_pk:
+            raise PermissionDenied("Your team did not initiate this match")
+
+        return match
+
+    def get(self, request, *args, **kwargs):
+        """
+        Gets a detailed match
+        """
+        match = self._get_object(request, **kwargs)
+        serializer = DetailedTeamMatchSerializer(match)
+        return Response(serializer.data)
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Deletes a match
+        """
+        match = self._get_object(request, **kwargs)
+        match.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

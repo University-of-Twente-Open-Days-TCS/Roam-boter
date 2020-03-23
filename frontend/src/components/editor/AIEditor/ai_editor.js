@@ -12,9 +12,9 @@ import speed from "./speed.js";
 import condition from "./condition.js";
 import action from "./action.js";
 import arrow from "./arrow.js";
+import seconds from "./seconds.js";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
-
 
 class aiCanvas {
 
@@ -225,7 +225,7 @@ class aiCanvas {
             switch (nodeJson.condition.type_id) {
                 case 1:
                     //Create own node
-                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(1,
+                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(1,
                         new distance(nodeJson.condition.attributes.distance),
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
@@ -234,7 +234,7 @@ class aiCanvas {
 
                     return newOwnNode;
                 case 2:
-                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(2,
+                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(2,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
@@ -243,7 +243,7 @@ class aiCanvas {
 
                     return newOwnNode;
                 case 3:
-                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(3,
+                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(3,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
@@ -252,7 +252,7 @@ class aiCanvas {
 
                     return newOwnNode;
                 case 4:
-                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(4,
+                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(4,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
                         nodeJson.condition.position);
@@ -261,14 +261,14 @@ class aiCanvas {
 
                     return newOwnNode;
                 case 5:
-                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(5),
+                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(5),
                         nodeJson.condition.position);
 
                     this.createChildren(newOwnNode, nodeJson.condition);
 
                     return newOwnNode;
                 case 6:
-                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(6,
+                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(6,
                         null, null, new label(nodeJson.condition.label)),
                         nodeJson.condition.position);
 
@@ -276,7 +276,7 @@ class aiCanvas {
 
                     return newOwnNode;
                 case 7:
-                    newOwnNode = new conditionNode(this.stage, this.layer, new condition(6,
+                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(6,
                         null, null, null, new health(nodeJson.condition.health)),
                         nodeJson.condition.position);
 
@@ -331,16 +331,16 @@ class aiCanvas {
                         newActionList = newActionList.concat(new action(13, null, null, null, null, new label(actionItem.attributes.label)));
                         break;
                     case 14:
-                        newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label)));
+                        newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label), new seconds(actionItem.attributes.seconds)));
                         break;
                     default:
-                    //TODO raise error, actionID incorrect
+                    //TODO throw error, incorrect json action ID
 
                 }
 
             });
 
-            return new actionNode(this.stage, this.layer, newActionList, nodeJson.actionblock.position);
+            return new actionNode(this.stage, this.layer, this, newActionList, nodeJson.actionblock.position);
         } else {
             //TODO throw exception, json incorrect!
         }
@@ -366,20 +366,23 @@ class aiCanvas {
         this.drawArrowFromJson(ownNode, newFalseChild, false);
     }
 
+    addNode(node) {
+        console.log("node: ");
+        console.log(node);
+        this.layer.add(node.group);
+        node.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
+        this.stage.draw();
+        return node;
+    }
 
     addCondition() {
-        let newCondition = new conditionNode(this.stage, this.layer);
-        this.layer.add(newCondition.group);
-        newCondition.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
-        this.stage.draw();
+        let newCondition = new conditionNode(this.stage, this.layer, this);
+        return this.addNode(newCondition);
     }
 
     addActionNode() {
-        let newActionNode = new actionNode(this.stage, this.layer);
-        this.layer.add(newActionNode.group);
-        newActionNode.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
-        this.stage.draw();
-
+        let newActionNode = new actionNode(this.stage, this.layer, this);
+        return this.addNode(newActionNode);
     }
 
     //getters&setters

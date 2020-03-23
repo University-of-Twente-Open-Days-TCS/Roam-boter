@@ -4,6 +4,8 @@ from django.db import models
 
 from django.contrib.sessions.models import Session
 
+from AIapi.models import AI
+
 import logging
 logger = logging.getLogger('debugLogger')
 
@@ -26,6 +28,8 @@ class Team(models.Model):
     # Whether someone has registered themselves to the team
     active = models.BooleanField(default=False)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, verbose_name="Workshop")
+
+    active_ai = models.ForeignKey(AI, on_delete=models.SET_NULL, null=True, related_name="active_ai+")
 
     def __str__(self):
         return "Team: "+str(self.team_name)+"("+str(self.id)+")"
