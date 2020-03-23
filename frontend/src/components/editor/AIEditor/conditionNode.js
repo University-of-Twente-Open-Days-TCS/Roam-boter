@@ -8,6 +8,8 @@ import health from "./health.js";
 import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
+import action from "./action";
+import actionNode from "./actionNode";
 
 
 //TODO place all these variables somewhere nicer
@@ -47,14 +49,16 @@ const healthList = [
 
 ];
 
-//LABELS DO NOT YET EXIST
 const labelList = [
     new label(0),
     new label(1),
     new label(2),
     new label(3),
     new label(4),
-
+    new label(5),
+    new label(6),
+    new label(7),
+    new label(8)
 ];
 
 
@@ -98,7 +102,8 @@ export default class conditionNode {
 
 //Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
     // and if (all) its appropriate parameter(s) is given this will be included.
-    constructor(stage, layer, condition, position = spawnPoint) {
+    constructor(stage, layer, canvas, condition, position = spawnPoint) {
+        this.canvas = canvas;
         this.group = new Konva.Group({
             draggable: true
         });
@@ -107,7 +112,6 @@ export default class conditionNode {
         this.stage = stage;
         this.layer = layer;
         this.position = position;
-
 
         if (this.condition != null) {
             this.conditionText = this.condition.toString();
@@ -167,108 +171,29 @@ export default class conditionNode {
 
         //Popup to edit the condition
         this.group.on("click tap", () => {
-
-            //TODO could just make this by calling editCondition with object null (no condition yet) probs
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateConditionList(), this.editCondition.bind(this)).group);
+            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateConditionList(), this.setCondition.bind(this), "select a condition").group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
-
-
+        this.remainingOptions = [{options: this.generateConditionList(), f: (cndtn) => this.condition = cndtn}];
         this.stage.draw();
 
     }
 
-    //Edits an attibute of the condition or the condition itself.
-    editCondition(attribute) {
-        //check whether attribute is condition, distance, etc, then set it accordingly
-        switch (attribute.constructor) {
-            case (condition):
-                this.condition = attribute;
-                break;
-            case (distance):
-                this.condition.distance = attribute;
-                break;
-            case (object):
-                this.condition.object = attribute;
-                break;
-            case (label):
-                this.condition.label = attribute;
-                break;
-            case (health):
-                this.condition.health = attribute;
-                break;
-            default:
-                //Should never end up here
-                return null;
-        }
 
+    setCondition(cond) {
+        this.condition = cond;
         //Set the new text in the conditionNode and adapt its input/false/truecircles
-        if (this.condition != null) {
-            this.conditionTextObj.text(this.condition.toString());
-            this.conditionTextObj.moveToTop();
-
-
-        }
+        this.conditionTextObj.text(this.condition.toString());
+        this.conditionTextObj.moveToTop();
         this.setAssetSizes();
 
         //make sure the text does not cover the drag&inputcircles
         this.inputCircleHitbox.moveToTop();
         this.trueDragCircle.moveToTop();
         this.falseDragCircle.moveToTop();
-
-        //if not all necessary info is known, create a popup asking for additional info
-        if (!this.condition.isValid()) {
-            this.createAdditionalInfoPopup();
-        }
-
-
     }
 
-
-    //Creates a popup asking for additional information concerning the selected condition
-    createAdditionalInfoPopup() {
-        let wantedList;
-        switch (this.condition.id) {
-            case 1:
-                //First ask for object, if not yet known
-                if (this.condition.object == null) {
-                    wantedList = objectList;
-                } else {
-                    //Otherwise prompt for object
-                    wantedList = distanceList;
-                }
-                break;
-            case 2:
-                wantedList = objectList;
-                break;
-            case 3:
-                wantedList = objectList;
-                break;
-            case 4:
-                wantedList = objectList;
-                break;
-            case 5:
-                //empty by design, no further prompts necessary
-                break;
-            case 6:
-                wantedList = labelList;
-                break;
-            case 7:
-                wantedList = healthList;
-                break;
-            default:
-                break;
-        }
-        //If there is still an attribute missing, will ask for it via the popup
-        if (wantedList != null) {
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, wantedList, this.editCondition.bind(this)).group);
-            this.stage.staticlayer.moveToTop();
-            this.stage.draw();
-        }
-    }
-
-    //TODO fix with Math.max instead of if-statements
     //sets the size of the node and its input/false/true-nodes around
     setAssetSizes() {
         if (this.conditionTextObj.text != null) {
@@ -637,9 +562,19 @@ export default class conditionNode {
                     new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
                 }
             } else {
-                //If not dropped on other element, make a popup to create either a new condition or action
-                //TODO make popup to select 'new condition/new action'
 
+
+                //If not dropped on other element, make a popup to create either a new condition or action
+                node.stage.staticlayer.add(new popup(node.stage, node.stage.staticlayer, [new conditionNode(node.stage, node.layer, node.canvas), new actionNode(node.stage, node.layer, node.canvas)], (selection) => {
+                    let newNode = null;
+                    newNode = node.canvas.addNode(selection);
+                    new arrow(node, newNode, condition, node.stage, node.layer);
+                    if (newNode !== null) {
+                        newNode.group.absolutePosition(touchPos);
+                        newNode.updateArrows();
+                    }
+                }, "select a new condition or action").group);
+                node.stage.staticlayer.draw();
             }
             this.moveTo(g);
             this.x(this.originalX);
@@ -650,6 +585,14 @@ export default class conditionNode {
             node.stage.templayer.draw();
         });
         return dragCircle;
+    }
+
+    getRemainingOptions() {
+        return this.remainingOptions;
+    }
+
+    toString() {
+        return "condition"
     }
 
     getTrueDotPosition() {
