@@ -5,6 +5,8 @@ import reldir from "./reldir";
 import winddir from "./winddir";
 import speed from "./speed";
 import label from "./label";
+import seconds from "./seconds.js";
+
 
 const objectList = [
     new object(1),
@@ -48,9 +50,18 @@ const labelList = [
     new label(2),
     new label(3),
     new label(4),
-
+    new label(5),
+    new label(6),
+    new label(7),
+    new label(8)
 ];
 
+const secondsList = [
+    new seconds(1),
+    new seconds(3),
+    new seconds(5),
+    new seconds(7),
+];
 export default class action {
     _id;
     _object;
@@ -201,6 +212,10 @@ export default class action {
                 this.remainingOptions = [{
                     options: labelList, f: ((lbl) => {
                         this.label = lbl
+                    })
+                }, {
+                    options: secondsList, f: ((scnds) => {
+                        this.seconds = scnds
                     })
                 }];
                 break;
