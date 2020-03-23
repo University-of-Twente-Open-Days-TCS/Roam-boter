@@ -111,9 +111,16 @@ export default class actionNode {
         });
 
         this.setassetsizes();
-
+        this.remainingOptions = [{options: this.generatePossibleActionsList(), f: (actn) => this.addAction(actn)}];
         this.stage.draw();
+    }
 
+    getRemainingOptions() {
+        return this.remainingOptions;
+    }
+
+    toString() {
+        return "action";
     }
 
     createActionNodeText() {

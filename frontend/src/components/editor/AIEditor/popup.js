@@ -33,6 +33,7 @@ export default class popup {
     createGroup() {
         let thisStage = this.stage;
         this.group = new Konva.Group();
+        this.createClose();
         this.createRect();
         this.createText();
     }
@@ -94,14 +95,26 @@ export default class popup {
         this.layer.draw();
     }
 
+    //updates the popup to be the correct size
     updatePopupGroup() {
         let margin = 10;
         this.rect.width(Math.max(this.selector.width, this.textWidth) + margin * 2);
         this.rect.height(this.selector.height + 20 + this.textHeight);
-        this.selector.group.x(margin);
-        this.selector.group.y(margin + this.textHeight);
-        this.group.x(this.stage.width() / 2 - (this.rect.width() / 2));
-        this.group.y(this.stage.height() / 2 - (this.rect.height() / 2));
+        //offset to place the origin of the group at the center.
+        this.group.offset({x: this.rect.width() / 2, y: this.rect.height() / 2});
+        this.group.x(this.stage.width() / 2);
+        this.group.y(this.stage.height() / 2);
+
+        let ratioX = this.rect.width() / this.stage.width();
+        let ratioY = this.rect.height() / this.stage.height();
+        let maxRatio = Math.max(ratioX, ratioY);
+        let scale = 1;
+        console.log(maxRatio);
+        //if the  popup is larger than the stage it will scale down
+        if (maxRatio > 1) {
+            scale = 1 / maxRatio;
+        }
+        this.group.scale({x: scale, y: scale});
     }
 
     getNextOption(selection, f) {
@@ -131,6 +144,20 @@ export default class popup {
         this.group.add(this.rect);
     }
 
+    createClose() {
+
+        var exitRect = new Konva.Rect({
+            width: this.stage.width(),
+            height: this.stage.height(),
+            opacity: 0,
+        });
+        this.layer.add(exitRect);
+        exitRect.setAbsolutePosition({x: 0, y: 0});
+        exitRect.on("click tap", () => {
+            this.closePopup();
+            exitRect.destroy();
+        });
+    }
 
 
     //Close popup, if an attribute has been given
