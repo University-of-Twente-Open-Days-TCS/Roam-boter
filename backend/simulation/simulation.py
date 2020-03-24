@@ -132,11 +132,11 @@ class Simulation:
     # Retrieve the winning AI object.
     def get_winner(self):
         heighest_score = -99999999
-        winner = -1
+        winner = None
 
         for i, s in enumerate(self.state.scores):
             if s == heighest_score:
-                winner = -1
+                winner = None
 
             if s > heighest_score:
                 heighest_score = s

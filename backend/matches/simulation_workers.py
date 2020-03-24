@@ -75,7 +75,13 @@ class WorkerPool:
                     team_ids.append(team_id)
 
                 playback_object = simulate(eval_trees)
-                sim.winner = team_ids[playback_object.winner]
+
+                # Check for a tie.
+                if playback_object.winner is None:
+                    sim.winner = None
+                else:
+                    sim.winner = team_ids[playback_object.winner]
+
                 sim.playback = simulate(eval_trees).to_json(team_ids)
                 sim.success = True
 
