@@ -169,6 +169,14 @@ class RoamBotAPI {
         return response
     }
 
+    getBotList() {
+        /**
+         * Gets all bots
+         */
+        let response = this.callApi('matches/bots/', 'GET')
+        return response
+    }
+
     getBotMatchHistoryList() {
         /**
          * Gets the match history of a team
