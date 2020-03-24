@@ -40,6 +40,7 @@ class Frame:
     def __init__(self, state):
         self.tanks = deepcopy(state.tanks)
         self.bullets = deepcopy(state.bullets)
+        self.health_packs = state.level.health_packs
         self.visibility = [{'tanks': t.visible_tanks(state), 'bullets': t.visible_bullets(state)} for t in state.tanks]
         self.events = []
         self.scores = deepcopy(state.scores)
