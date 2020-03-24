@@ -222,6 +222,22 @@ class Level:
 
         return paths
 
+    # Line of sight without padded walls.
+    def direct_line_of_sight(self, pos1, pos2):
+        points = list(self.points(pos1, pos2))
+        if len(points) <= 2:
+            return True
+
+        for p in points:
+            x, y = p
+            try:
+                if self.get_object(x, y) == Object.WALL:
+                    return False
+            except Exception:
+                return False
+        return True
+
+    # Line of sight with extra padding at walls to generate good paths.
     def line_of_sight(self, pos1, pos2):
         # x1, y1 = pos1
         # x2, y2 = pos2
