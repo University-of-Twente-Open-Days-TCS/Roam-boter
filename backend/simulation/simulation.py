@@ -91,7 +91,6 @@ class Simulation:
         # Execute gamemode specific stuff like king of the hill scores and bladiebla
         self.handle_game_mode()
 
-
         # Collect all actions that the tanks are going to execute according to their AI's
         for tank in self.get_tanks():
             tank.collectActions(self.state)
@@ -105,10 +104,12 @@ class Simulation:
         for tank in self.get_tanks():
             tank.handle_health_packs(self.state)
 
+        for tank in self.get_tanks():
+            tank.process_label_timers()
+
         # Update bullet locations.
         for bullet in self.get_bullets():
             bullet.update(self.state)
-
 
         # Check if tanks don't have any HP left.
         for tank in self.get_tanks():

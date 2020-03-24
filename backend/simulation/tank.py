@@ -36,6 +36,9 @@ class Tank:
 
     team_id = 0
 
+    labels = [False] * 9
+    label_timers = [-1] * 9
+
     scout_target = None
 
     path = None
@@ -43,6 +46,24 @@ class Tank:
     def __init__(self, ai):
         self.ai = ai
         self.actions = []
+
+    def get_label(self, index):
+        return self.labels[index]
+
+    def set_label(self, index):
+        self.labels[index] = True
+
+    def unset_label(self, index):
+        self.labels[index] = False
+
+    def set_label_timer(self, index, seconds):
+        self.label_timers[index] = seconds * 60
+
+    def process_label_timers(self):
+        for i, x in enumerate(self.label_timers):
+            if x == 0:
+                self.labels[i] = False
+            self.label_timers[i] -= 1
 
     def set_spawn(self, x, y):
         self.spawn = (x, y)
