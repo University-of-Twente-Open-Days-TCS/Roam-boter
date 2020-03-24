@@ -1,6 +1,11 @@
 # RoamBot-er
 Open Days Workshop for University of Twente. 
 
+## Table of contents
+>[Installation](#installation)
+
+>[Troubleshooting](#troubleshooting)
+
 ## Installation 
 
 ### Dependencies
@@ -59,8 +64,45 @@ For example the following command will generate cache for level1 and level2:
 
 `./prepare_caches.py level1 level2`
 
+### Starting simulation workers
+To simulate matches efficiently the webserver uses multiprocessing.
+This is done with a worker pool which take pending simulations from a queue and simulate them.
+The workers can be started as follows:
+
+`./manage.py startsimulationworkers`
+
+Note this done as a background process in the start.sh file.
+This file is run when the docker container is started.
+
 
 ### Insert bots
 Follow the following command to load bots into the database.
 
 1. ./manage.py loaddata roamboter/fixtures/bots.json
+
+## Troubleshooting
+
+### Migrations won't apply
+Django keeps track of the migrations in it's own database table. 
+Sometimes by a sudden change of code migrations can't be applied.
+The suggested approach to fix this is to delete the database.
+
+#### Full reset
+Complete these steps to fully reset the webserver.
+**NOTE:** Be very carefull when completing these steps on a system with other docker containers.
+It will delete all data in ALL docker containers. 
+Also in the contaiers not related to the RoamBot-er Project.
+
+1.  Delete all migration files. (keep \_\_init\_\_.py)
+2.  `sudo docker-compose down`
+3.  `sudo docker volume rm $(sudo docker volume -q)`
+
+    This will delete **all** docker volumes on the system!
+
+4.  Follow installations steps. 
+
+### Makemigrations doesn't create all migrations
+Make sure you specify app names as follows:
+
+    `./manage.py makemigrations app1-name app2-name etc...
+
