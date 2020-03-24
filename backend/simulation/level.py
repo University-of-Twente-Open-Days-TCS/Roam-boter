@@ -5,7 +5,11 @@ import math
 
 import os
 
+import logging
+LOGGER = logging.getLogger('simulation.simulation')
+
 HEALTH_PACK_COOLDOWN = 9999999
+
 
 class Level:
 
@@ -68,7 +72,8 @@ class Level:
 
     def prepare_nearest_objects(self):
         # for y, for x, for object collect nearest of obj from x, y
-        return [] # return [[{obj: self.find_nearest_object(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)]for y, row in enumerate(self.objects)]
+        LOGGER.info("Preparing find_nearest_object cache for " + self.path)
+        return []  # return [[{obj: self.find_nearest_object(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)]for y, row in enumerate(self.objects)]
 
     def find_nearest_object(self, obj, x, y):
         queue = [(x, y)]
@@ -125,6 +130,7 @@ class Level:
         return nearest_paths
 
     def prepare_all_paths(self):
+        LOGGER.info("Preparing all_paths cache for " + self.path)
         return [[{obj: self.find_all_paths(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)] for y, row in enumerate(self.objects)]
 
     def find_all_paths(self, obj, x, y):
