@@ -1,10 +1,6 @@
 import arrow from "./arrow.js";
 import popup from "./popup.js"
 import condition from "./condition.js";
-import object from "./object.js";
-import distance from "./distance.js";
-import label from "./label.js";
-import health from "./health.js";
 import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
@@ -89,7 +85,7 @@ export default class conditionNode {
         this.falseDragCircle = this.createDragCircle(this.falseCircle, false);
         this.createInputCircle();
         this.group.on("dragmove", () => {
-            this.updateArrows(this.stage);
+            this.updateArrows();
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
@@ -185,22 +181,22 @@ export default class conditionNode {
 
 
         //adjust arrows
-        this.updateArrows(this.stage);
+        this.updateArrows();
 
         this.stage.draw();
 
     }
 
 
-    updateArrows(stage) {
+    updateArrows() {
         if (this.trueArrow != null) {
-            this.trueArrow.update(stage);
+            this.trueArrow.update();
         }
         if (this.falseArrow != null) {
-            this.falseArrow.update(stage);
+            this.falseArrow.update();
         }
         if (this.inputArrow != null) {
-            this.inputArrow.update(stage);
+            this.inputArrow.update();
         }
     }
 
@@ -228,7 +224,7 @@ export default class conditionNode {
     }
 
     generateConditionList() {
-        let conditionList = [
+        return [
             new condition(1),
             new condition(2),
             new condition(3),
@@ -236,8 +232,7 @@ export default class conditionNode {
             new condition(5),
             new condition(6),
             new condition(7),
-        ];
-        return conditionList
+        ]
     }
 
     intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
@@ -495,7 +490,7 @@ export default class conditionNode {
         dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
             this.tempArrow.absolutePosition({x: 0, y: 0});
-            var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
+            let points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
             this.tempArrow.points(points.map(function (p) {
                 return p / node.stage.scale
             }));
@@ -506,8 +501,8 @@ export default class conditionNode {
         //when the drag has ended, return the invisible circle to its original position, remove the temporary arrow
         // and create a new connection between nodes if applicable
         dragCircle.on("dragend", function () {
-            var touchPos = node.stage.getPointerPosition();
-            var intersect = node.layer.getIntersection(touchPos);
+            let touchPos = node.stage.getPointerPosition();
+            let intersect = node.layer.getIntersection(touchPos);
             //If arrow is dropped on another element
             if (intersect != null) {
                 //If the other element is an inputnode
@@ -516,7 +511,7 @@ export default class conditionNode {
                     if (node.stage.inputDict.get(intersect).inputArrow != null) {
                         node.stage.inputDict.get(intersect).inputArrow.delete();
                     }
-                    //Create new arrw between the two nodes
+                    //Create new arrow between the two nodes
                     new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
                 }
             } else {

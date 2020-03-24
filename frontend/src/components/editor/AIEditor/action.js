@@ -216,14 +216,7 @@ export default class action {
     }
 
 
-    editAction(id, object = null, dir = null, deg = null) {
-        this.id = id;
-        this.object = object;
-        this.winddir = dir;
-        this.reldir = deg;
-    }
-
-    //ToString method of an Action, currently hardcoded enters to avoid too long lines #TODO insert variable newlines
+    //ToString method of an Action, currently hardcoded enters to avoid too long lines
     toString() {
         switch (this.id) {
             case 0:

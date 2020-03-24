@@ -18,7 +18,7 @@ export default class distance {
                 return null;
         }
     }
-    //TODO jsonify
+
     get id() {
         return this._id;
     }

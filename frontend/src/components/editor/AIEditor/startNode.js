@@ -37,7 +37,7 @@ export default class startNode {
         this.createDragCircle();
         let node = this;
         this.group.on("dragmove", function () {
-            node.updateArrows(stage)
+            node.updateArrows()
         });
     }
 
@@ -155,9 +155,9 @@ export default class startNode {
         return [pos.x, pos.y];
     }
 
-    updateArrows(stage) {
+    updateArrows() {
         if (this.trueArrow != null) {
-            this.trueArrow.update(stage);
+            this.trueArrow.update();
         }
     }
 

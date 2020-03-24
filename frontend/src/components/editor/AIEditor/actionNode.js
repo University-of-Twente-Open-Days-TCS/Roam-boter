@@ -56,10 +56,8 @@ export default class actionNode {
             this.actionNodeTextObj.moveToTop();
         }
         this.createInputCircle();
-
-        //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
         this.group.on("dragmove", () => {
-            this.updateArrows(this.stage);
+            this.updateArrows();
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
@@ -223,7 +221,7 @@ export default class actionNode {
 
     }
 
-    intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)})
+    intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
     jsonify() {
         let node = this.rect;
@@ -388,9 +386,9 @@ export default class actionNode {
         return [pos.x, pos.y];
     }
 
-    updateArrows(stage) {
+    updateArrows() {
         if (this.inputArrow != null) {
-            this.inputArrow.update(stage);
+            this.inputArrow.update();
         }
     }
 

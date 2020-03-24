@@ -135,7 +135,7 @@ class aiCanvas {
 // we need to enable all events on Konva, even when we are dragging a node
 // so it triggers touchmove correctly
         Konva.hitOnDragEnabled = true;
-        var lastDist = 0;
+        let lastDist = 0;
 
         function getDistance(p1, p2) {
             return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
@@ -144,11 +144,11 @@ class aiCanvas {
         let thisStage = this.stage;
         this.stage.on('touchmove', function (e) {
             e.evt.preventDefault();
-            var touch1 = e.evt.touches[0];
-            var touch2 = e.evt.touches[1];
+            let touch1 = e.evt.touches[0];
+            let touch2 = e.evt.touches[1];
 
             if (touch1 && touch2) {
-                var dist = getDistance(
+                let dist = getDistance(
                     {
                         x: touch1.clientX,
                         y: touch1.clientY
@@ -163,7 +163,7 @@ class aiCanvas {
                     lastDist = dist;
                 }
 
-                var scale = (thisStage.scaleX() * dist) / lastDist;
+                let scale = (thisStage.scaleX() * dist) / lastDist;
 
                 thisStage.scaleX(scale);
                 thisStage.scaleY(scale);

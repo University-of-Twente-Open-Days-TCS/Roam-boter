@@ -147,7 +147,7 @@ export default class popup {
 
     createClose() {
 
-        var exitRect = new Konva.Rect({
+        let exitRect = new Konva.Rect({
             width: this.stage.width(),
             height: this.stage.height(),
             opacity: 0,
