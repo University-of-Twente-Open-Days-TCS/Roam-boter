@@ -91,7 +91,7 @@ class RoamBotAPI {
         return response
     }
 
-    putTeamDetail(aiPk){
+    putActiveAI(aiPk){
         /**
          * Sets the active AI of a team.
          * @param aiPk Primary Key of AI to set active
