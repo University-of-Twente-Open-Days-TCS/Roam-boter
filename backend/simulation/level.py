@@ -115,7 +115,7 @@ class Level:
                 file_checksum, nearest_paths = pickle.load(f)
 
                 if file_checksum != checksum:
-                    raise FileExistsError
+                    raise FileNotFoundError
 
         except FileNotFoundError:
             nearest_paths = self.prepare_all_paths()
