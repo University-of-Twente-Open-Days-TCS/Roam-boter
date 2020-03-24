@@ -20,11 +20,17 @@ class ReplayCanvas {
     constructor(canvasContainer, gameData) {
         this.frame = 0
         this.draw = this.draw.bind(this)
-        this.tankSprite = new Image();
-        this.tankSprite.src = "simulation_images/tank_body.png";
 
-        this.tankTurretSprite = new Image();
-        this.tankTurretSprite.src = "simulation_images/tank_turret.png"
+        this.tankTurretSprites = []
+        this.tankSprites = []
+
+        for (var i = 0; i < 2; i++) {
+          this.tankSprites.push(new Image());
+          this.tankSprites[i].src = "simulation_images/tank_body" + i + ".png";
+
+          this.tankTurretSprites.push(new Image());
+          this.tankTurretSprites[i].src = "simulation_images/tank_turret" + i + ".png"
+        }
 
         this.healthPackSprite = new Image();
         this.healthPackSprite.src = "simulation_images/health_pack.png"
@@ -87,8 +93,8 @@ class ReplayCanvas {
 
         var ctx = this.ctx2d;
         var blockColors = this.BLOCK_COLORS;
-        var tankSprite = this.tankSprite;
-        var turretSprite = this.tankTurretSprite;
+        var tankSprites = this.tankSprites;
+        var turretSprites = this.tankTurretSprites;
         var healthPackSprite = this.healthPackSprite;
         var width = this.canvas.width;
         var height = this.canvas.height;
@@ -115,8 +121,8 @@ class ReplayCanvas {
         });
 
         this.gameData.frames[frame].tanks.forEach(function (elem, index) {
-            drawImage(tankSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
-            drawImage(turretSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation - elem.turret_rotation);
+            drawImage(tankSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
+            drawImage(turretSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation - elem.turret_rotation);
 
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.fillStyle = "rgb(" + ((100 - elem.health) * (255 / 100)) + ", " + (elem.health * (255 / 100)) + ", 0)"
@@ -127,7 +133,7 @@ class ReplayCanvas {
 
         this.gameData.frames[frame].health_packs.forEach(function (elem, index) {
             if (elem.respawn_timer == 0) {
-                drawImage(healthPackSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
+                drawImage(healthPackSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling / 1.5, -elem.rotation);
             }
         });
 
