@@ -1,5 +1,66 @@
-//Action (NOT A NODE), has zero or more attributes, by default null. DOES NOT WORK WITH LABELS YET
+//Action (NOT A NODE), has zero or more attributes, by default null.
 
+import object from "./object.js";
+import reldir from "./reldir.js";
+import winddir from "./winddir.js";
+import speed from "./speed.js";
+import label from "./label.js";
+import seconds from "./seconds.js";
+
+
+const objectList = [
+    new object(1),
+    new object(2),
+    new object(3),
+    new object(4),
+    new object(5),
+    new object(6),
+    new object(7),
+    new object(8),
+    new object(9),
+    new object(10)
+
+];
+
+const reldirList = [
+    new reldir(0),
+    new reldir(1),
+    new reldir(2),
+    new reldir(3)
+];
+
+const winddirList = [
+    new winddir(0),
+    new winddir(1),
+    new winddir(2),
+    new winddir(3)
+];
+
+const speedList = [
+    new speed(0),
+    new speed(1),
+    new speed(2)
+];
+
+
+const labelList = [
+    new label(0),
+    new label(1),
+    new label(2),
+    new label(3),
+    new label(4),
+    new label(5),
+    new label(6),
+    new label(7),
+    new label(8)
+];
+
+const secondsList = [
+    new seconds(1),
+    new seconds(3),
+    new seconds(5),
+    new seconds(7),
+];
 export default class action {
     _id;
     _object;
@@ -18,6 +79,7 @@ export default class action {
         this.label = label;
         this.speed = speed;
         this.seconds = seconds;
+        this.setRemainingOptions();
     }
 
     //Returns whether the current action has all its necessary attributes
@@ -57,6 +119,114 @@ export default class action {
                 return false;
         }
     }
+
+    //initialises the remaining options to be selected
+    setRemainingOptions() {
+        switch (this.id) {
+            case 0:
+                this.remainingOptions = [];
+                break;
+            case 1:
+                this.remainingOptions = [{
+                    options: objectList, f: ((obj) => {
+                        this.object = obj
+                    })
+                }];
+                break;
+            case 2:
+                this.remainingOptions = [];
+                break;
+            case 3:
+                this.remainingOptions = [{
+                    options: objectList, f: ((obj) => {
+                        this.object = obj
+                    })
+                }];
+                break;
+            case 4:
+                this.remainingOptions = [{
+                    options: objectList, f: ((obj) => {
+                        this.object = obj
+                    })
+                }];
+                break;
+            case 5:
+                this.remainingOptions = [{
+                    options: objectList, f: ((obj) => {
+                        this.object = obj
+                    })
+                }];
+                break;
+            case 6:
+                this.remainingOptions = [{
+                    options: winddirList, f: ((dir) => {
+                        this.winddir = dir
+                    })
+                }];
+                break;
+            case 7:
+                this.remainingOptions = [{
+                    options: reldirList, f: ((dir) => {
+                        this.reldir = dir
+                    })
+                }];
+                break;
+            case 8:
+                this.remainingOptions = [{
+                    options: speedList, f: ((spd) => {
+                        this.speed = spd
+                    })
+                }];
+                break;
+            case 9:
+                this.remainingOptions = [{
+                    options: speedList, f: ((spd) => {
+                        this.speed = spd
+                    })
+                }];
+                break;
+            case 10:
+                this.remainingOptions = [];
+                break;
+            case 11:
+                this.remainingOptions = [];
+                break;
+            case 12:
+                this.remainingOptions = [{
+                    options: labelList, f: ((lbl) => {
+                        this.label = lbl
+                    })
+                }];
+                break;
+            case 13:
+                this.remainingOptions = [{
+                    options: labelList, f: ((lbl) => {
+                        this.label = lbl
+                    })
+                }];
+                break;
+            case 14:
+                //TODO: add seconds
+                this.remainingOptions = [{
+                    options: labelList, f: ((lbl) => {
+                        this.label = lbl
+                    })
+                }, {
+                    options: secondsList, f: ((scnds) => {
+                        this.seconds = scnds
+                    })
+                }];
+                break;
+            default:
+                this.remainingOptions = [];
+
+        }
+    }
+
+    getRemainingOptions() {
+        return this.remainingOptions;
+    }
+
 
     editAction(id, object = null, dir = null, deg = null) {
         this.id = id;

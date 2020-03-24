@@ -36,16 +36,29 @@ def move_to_nearest_object(tank, state, obj):
         move_to_position(state, tank, nearest_path[0])
 
 
+# The function correlated with the action of the tank scouting the map.
 def scout(tank, state):
-    while tank.scout_target is None or distance(tank.get_pos(), tank.scout_target[-1]) < 1:
-        targets = []
-        for obj in ALL_OBJECTS:
-            targets += state.level.get_paths_to_object(tank, obj)
-        tank.scout_target = random.choice(targets)
+    # Select all paths to the different scout nodes.
+    paths = filter_objects(tank, state, Object.SCOUT_NODE)
 
-    while distance(tank.scout_target[0], tank.get_pos()) < 0.5:
-        tank.scout_target = tank.scout_target[1:]
-    move_to_position(state, tank, tank.scout_target[0])
+    # Check whether we still have a scout target to go to.
+    while tank.scout_target is None or distance(tank.get_pos(), tank.scout_target[0]) < 1:
+
+        # Upon first scout action, a node has not yet been selected.
+        if tank.scout_target is None:
+            goal = closest_object_in_paths(tank, paths)
+            tank.scout_target = (goal[-1], state.level.scout_nodes.index(goal[-1]))
+        else:
+            # Select next scout node.
+            current_goal, current_index = tank.scout_target
+            next_index = (current_index + tank.next_scout_increment) % len(paths)
+            tank.scout_target = (state.level.scout_nodes[next_index], next_index)
+
+    # Actually move to the next node in the scout path.
+    for p in paths:
+        if p[-1] == tank.scout_target[0]:
+            tank.path = p
+            move_to_position(state, tank, p[0])
 
 
 

@@ -51,7 +51,10 @@ class Simulation:
     # Put all tanks on their starting positions.
     def set_starting_position(self):
         spawns = self.get_spawns()
+
         for i, tank in enumerate(self.get_tanks()):
+            tank.next_scout_increment = -1 + (i % 2) * 2
+
             tank.spawn = spawns[i]
             tank.team_id = i
             tank.set_pos(tank.spawn[0], tank.spawn[1])
@@ -176,12 +179,10 @@ class Simulation:
             on_hill = []
 
             for t in self.get_tanks():
-                print("tank: ", t.get_team(), t.get_pos(), t.destroyed)
                 if not t.destroyed and t.on_hill(self.state):
                     on_hill.append(t)  
 
             if len(on_hill) == 1:
-                print(on_hill[0].get_team())
                 self.state.scores[on_hill[0].get_team()] += 1
 
 
@@ -217,6 +218,7 @@ def test_simulation():
 
     ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 1}), true_node, false_node)
     playback = simulate([ai, ai])
+
     print(playback.to_json(0, 1))
 
     # cProfile.run("simulate([ai, ai])")

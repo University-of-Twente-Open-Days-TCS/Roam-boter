@@ -91,6 +91,16 @@ class RoamBotAPI {
         return response
     }
 
+    putTeamDetail(aiPk){
+        /**
+         * Sets the active AI of a team.
+         * @param aiPk Primary Key of AI to set active
+         */
+
+        let response = this.callApi('dashboard/team/detail/', 'PUT', {active_ai: aiPk})
+        return response
+    }
+
     getAiList() {
         /**
          * Gets a list from ai's associated with this request.
@@ -142,21 +152,28 @@ class RoamBotAPI {
         return response
     }
 
+    getSimulation(pk) {
+        /**
+         * Gets a simulation.
+         * @param pk Primary key of the Simulation to get
+         */
+        let response = this.callApi('matches/simulation/'+pk+'/', 'GET')
+        return response
+    }
+
+    getTeamMatchHistoryList() {
+        /**
+         * Get list team matches played by team associated with this session.
+         */
+        let response = this.callApi('matches/teammatches/', 'GET')
+        return response
+    }
+
     getBotMatchHistoryList() {
         /**
          * Gets the match history of a team
          */
         let response = this.callApi('matches/botmatches/', 'GET')
-        return response
-    }
-
-    getBotMatchDetails(pk) {
-        /**
-         * Gets details of a bot match including the simulation.
-         * @param pk Primary key of the match. 
-         * Only returns if you own the bot match.
-         */
-        let response = this.callApi('matches/botmatches/'+pk+'/', 'GET')
         return response
     }
 
@@ -169,6 +186,16 @@ class RoamBotAPI {
          */
         let data = {gamemode, bot, ai}
         let response = this.callApi('matches/botmatches/', 'POST', data)
+        return response
+    }
+
+    getBotMatchDetails(pk) {
+        /**
+         * Gets details of a bot match including the simulation.
+         * @param pk Primary key of the match. 
+         * Only returns if you own the bot match.
+         */
+        let response = this.callApi('matches/botmatches/'+pk+'/', 'GET')
         return response
     }
 

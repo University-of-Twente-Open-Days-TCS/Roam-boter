@@ -28,6 +28,7 @@ class Tank:
     reload_time = 60
 
     bullet_speed = 1
+    max_speed = 0.1
     speed = 0.1
 
     width = 1
@@ -75,10 +76,13 @@ class Tank:
         return self.turret_rotation
 
     def rotate_tank_towards(self, angle):
+
         self.rotation %= 360
         angle %= 360
 
         difference = angle - self.rotation
+
+        # self.speed = self.max_speed * min(((90 - min(difference, 90)) / 90), 1)
 
         if abs(difference) > 180:
             self.rotation -= max(min(difference, TANK_TURN_SPEED), -TANK_TURN_SPEED)

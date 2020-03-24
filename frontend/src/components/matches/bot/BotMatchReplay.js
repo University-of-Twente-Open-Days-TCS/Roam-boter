@@ -41,7 +41,7 @@ class BotMatchReplay extends Component {
         // selects the id of the match from the URL
         const id = this.props.match.url.split('/').slice(-1)[0]
 
-        const response = await RoamBotAPI.getBotMatchDetails(id)
+        const response = await RoamBotAPI.getSimulation(id)
         let data = await response.json();
 
         let gameData = JSON.parse(data.simulation);
@@ -121,7 +121,6 @@ class BotMatchReplay extends Component {
         let frame = this.state.frame
         let frames = this.state.framesLength
         let progress = parseInt((frame / frames) * 10000)
-        console.log(progress)
 
         let props = {
             playing: this.state.playing,

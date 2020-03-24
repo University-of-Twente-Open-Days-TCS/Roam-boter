@@ -4,9 +4,10 @@ from rest_framework import status
 """
 These mixins are designed to work with generic.GenericAPIView
 All these mixins are related to working on models which have a team field.
-The request's session team's id is compared to the object. 
+The request's session team's id is compared to the object.
 And the action is completed if the session owns the object.
 """
+
 
 class RetrieveTeamObjectMixin(object):
     """
@@ -17,6 +18,10 @@ class RetrieveTeamObjectMixin(object):
         instance = self.get_object()
         # check that the object belongs to the team
         team_pk = request.session['team_id']
+
+        if instance.team is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         if team_pk == instance.team.pk:
             serializer = self.get_serializer(instance)
             return Response(serializer.data)
@@ -38,6 +43,7 @@ class DestroyTeamObjectMixin(object):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             raise PermissionDenied("Your team does not own this object")
+
 
 class UpdateTeamObjectMixin(object):
     """
@@ -68,4 +74,3 @@ class UpdateTeamObjectMixin(object):
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
-

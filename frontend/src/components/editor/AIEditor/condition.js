@@ -1,3 +1,50 @@
+import object from "./object.js";
+import distance from "./distance.js";
+import health from "./health.js";
+import label from "./label.js";
+
+const objectList = [
+    new object(1),
+    new object(2),
+    new object(3),
+    new object(4),
+    new object(5),
+    new object(6),
+    new object(7),
+    new object(8),
+    new object(9),
+    new object(10)
+
+];
+
+const distanceList = [
+    new distance(1),
+    new distance(2),
+    new distance(3)
+];
+
+const healthList = [
+    new health(0),
+    new health(20),
+    new health(40),
+    new health(60),
+    new health(80),
+
+];
+
+const labelList = [
+    new label(0),
+    new label(1),
+    new label(2),
+    new label(3),
+    new label(4),
+    new label(5),
+    new label(6),
+    new label(7),
+    new label(8)
+];
+
+
 export default class condition {
 
     //The attributes of a condition
@@ -15,6 +62,7 @@ export default class condition {
         this.object = object;
         this.label = label;
         this.health = health;
+        this.setRemainingOptions();
     }
 
     //Edits the condition, resets everything to null and creates a condition with the given parameters
@@ -48,31 +96,91 @@ export default class condition {
         }
     }
 
+    //initialises the remaining options to be selected
+    setRemainingOptions() {
+        switch (this.id) {
+            case 1:
+                this.remainingOptions = [{
+                    options: distanceList, f: ((dist) => {
+                        this.distance = dist
+                    })
+                }, {
+                    options: objectList, f: ((obj) => {
+                        this.object = obj
+                    })
+                }];
+                break;
+            case 2:
+                this.remainingOptions = [{
+                    options: objectList, f: ((obj) => {
+                        this.object = obj
+                    })
+                }];
+                break;
+            case 3:
+                this.remainingOptions = [{
+                    options: objectList, f: ((obj) => {
+                        this.object = obj
+                    })
+                }];
+                break;
+            case 4:
+                this.remainingOptions = [{
+                    options: objectList, f: ((obj) => {
+                        this.object = obj
+                    })
+                }];
+                break;
+            case 5:
+                this.remainingOptions = [];
+                break;
+            case 6:
+                this.remainingOptions = [{
+                    options: labelList, f: ((lbl) => {
+                        this.label = lbl
+                    })
+                }];
+                break;
+            case 7:
+                this.remainingOptions = [{
+                    options: healthList, f: ((hlth) => {
+                        this.healt = hlth
+                    })
+                }];
+                break;
+        }
+    }
+
+    getRemainingOptions() {
+        return this.remainingOptions;
+    }
+
+
     //Converts the condition into a string, with pre-given enters for readibility #TODO: variable (not hardcoded) newlines
     toString() {
         switch (this.id) {
             case 1:
                 // provide both distance and object, otherwise both will be ignored
                 if (this.distance == null || this.object == null) {
-                    return "If distance to nearest \n _object_ is greater \n than _distance_";
+                    return "If distance to nearest \n <object> is greater \n than <distance>";
                 } else {
                     return "If distance to nearest \n" + this.object + " is greater \n than " + this.distance;
                 }
             case 2:
                 if (this.object == null) {
-                    return "If <b>object</b>_ \n is visible";
+                    return "If <object> \n is visible";
                 } else {
                     return "If " + this.object + " \n is  visible";
                 }
             case 3:
                 if (this.object == null) {
-                    return "If aimed at _object_";
+                    return "If aimed at <object>";
                 } else {
                     return "If aimed at \n" + this.object;
                 }
             case 4:
                 if (this.object == null) {
-                    return "If _object_ exists";
+                    return "If <object> exists";
                 } else {
                     return "If " + this.object + "\n exists";
                 }
@@ -86,7 +194,7 @@ export default class condition {
                 }
             case 7:
                 if (this.health == null) {
-                    return "If health is \n greater than _amount_";
+                    return "If health is \n greater than <amount>";
                 } else {
                     return "If health is \n greater than " + this.health;
                 }

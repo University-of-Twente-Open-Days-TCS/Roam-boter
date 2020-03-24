@@ -20,16 +20,14 @@ class PlayBack:
 
         # index of the winning ai
         self.winner = None
-        self.player0_id = -1
-        self.player1_id = -1
+        self.player_ids = []
 
     def add_frame(self, state):
         self.frames.append(Frame(state))
        
     # use -1 for bots
-    def to_json(self, player0_id, player1_id):
-        self.player0_id = player0_id
-        self.player1_id = player1_id
+    def to_json(self, player_ids):
+        self.player_ids = player_ids
         encoder = PlayBackEncoder()
         return encoder.encode(self)
 

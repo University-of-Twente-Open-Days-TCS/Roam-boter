@@ -121,9 +121,19 @@ class AIEditor extends Component {
     }
 
     handleSave() {
-        this.setState({
-            dialogOpen: true
-        })
+        try {
+            let canvas = this.canvas
+            canvas.treeToJson()
+
+            this.setState({
+                dialogOpen: true
+            })
+        } catch(e) {
+            this.setState({
+                errorMessage: e.message,
+                errorAlertOpen: true,
+            })
+        }
     }
 
     saveAI = () => {
@@ -142,14 +152,24 @@ class AIEditor extends Component {
                 if (res.ok) {
                     this.setState({successAlertOpen: true})
                 } else {
-                    console.error(res)
-                    alert("An error occurred, see console.")
+                    if(res.status === 400){
+                        // Bad Request. 
+                        let json = res.json()
+                        json.then((json) => {
+                            this.setState({
+                                errorMessage: JSON.stringify(json),
+                                errorAlertOpen: true,
+                            })
+                        })
+                    }else {
+                        alert("An error occurred")
+                    }
                 }
             })
         } catch (error) {
             this.setState({
                 errorMessage: error.message,
-                errorAlertOpen: true
+                errorAlertOpen: true,
             })
         }
       
