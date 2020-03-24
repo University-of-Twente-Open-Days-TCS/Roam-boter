@@ -25,7 +25,7 @@ const NewBotMatch = props => {
     const playMatch = async pk => {
         let call = RoambotAPI.postBotMatch({
             gamemode: 'DM',
-            bot: 1,
+            bot: 4,
             ai: pk
         })
         call.then((response) => {
