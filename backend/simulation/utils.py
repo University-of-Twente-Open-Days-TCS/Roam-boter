@@ -166,10 +166,16 @@ def filter_bullets(tank, obj, bullets):
     return bullets
 
 
-# Returns angle between 0 and 360 degrees
+# Calculates the angle between the vector given by 2 positions and a straight line up (straight up is 0 degrees)
 def vector_angle(pos1, pos2):
     x1, y1 = pos1
     x2, y2 = pos2
 
-    inproduct = ((x1 * x2 + y1 * y2) / (math.sqrt(distance_squared((0, 0), pos1)) * math.sqrt(distance_squared((0, 0), pos2))))
-    return math.degrees(math.acos(inproduct)) % 360
+    dx1 = x2 - x1
+    dy1 = y2 - y1
+
+    dx2 = 0
+    dy2 = -1
+
+    inproduct = (((dx1 * dx2) + (dy1 * dy2)) / (math.sqrt(distance_squared(pos1, pos2))))
+    return (-math.degrees(math.acos(inproduct))) % 360
