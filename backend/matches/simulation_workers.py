@@ -15,7 +15,7 @@ from enum import Enum
 import traceback
 
 import logging
-logger = logging.getLogger('debugLogger')
+logger = logging.getLogger('matches.simulation_worker')
 
 
 class WorkerPool:
