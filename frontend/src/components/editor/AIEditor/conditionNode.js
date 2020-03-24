@@ -104,6 +104,7 @@ export default class conditionNode {
     // and if (all) its appropriate parameter(s) is given this will be included.
     constructor(stage, layer, canvas, condition, position = spawnPoint) {
         this.canvas = canvas;
+        this.trashcan = stage.trashcan;
         this.group = new Konva.Group({
             draggable: true
         });
@@ -136,7 +137,7 @@ export default class conditionNode {
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
-            if (this.stage.staticlayer.getIntersection(touchPos) != null) {
+            if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
                 this.stage.trashcan.fire('touchstart', {
                     type: 'touchstart',
                     target: this.stage.trashcan
@@ -156,7 +157,7 @@ export default class conditionNode {
             let touchPos = this.stage.getPointerPosition();
 
             //If node is released above trashcan, remove it and close trashcan
-            if (this.stage.staticlayer.getIntersection(touchPos) != null) {
+            if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
                 this.remove();
                 this.stage.trashcan.fire('touchend', {
                     type: 'touchend',
@@ -551,7 +552,7 @@ export default class conditionNode {
             var touchPos = node.stage.getPointerPosition();
             var intersect = node.layer.getIntersection(touchPos);
             //If arrow is dropped on another element
-            if (intersect != null) {
+            if (intersect === this.trashcan) {
                 //If the other element is an inputnode
                 if (node.stage.inputDict.has(intersect)) {
                     //If the inputnode already had an arrow, remove that one
@@ -562,8 +563,6 @@ export default class conditionNode {
                     new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
                 }
             } else {
-
-
                 //If not dropped on other element, make a popup to create either a new condition or action
                 node.stage.staticlayer.add(new popup(node.stage, node.stage.staticlayer, [new conditionNode(node.stage, node.layer, node.canvas), new actionNode(node.stage, node.layer, node.canvas)], (selection) => {
                     let newNode = null;
