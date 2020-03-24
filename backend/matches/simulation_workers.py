@@ -3,7 +3,7 @@ import time
 
 from django.db import transaction
 
-from matches.models import BotMatch, Simulation
+from matches.models import BotMatch, TeamMatch, Simulation
 from dashboard.models import Team
 
 from django.db.models import Q
@@ -15,7 +15,7 @@ from enum import Enum
 import traceback
 
 import logging
-logger = logging.getLogger('debugLogger')
+LOGGER = logging.getLogger('matches.worker')
 
 
 class WorkerPool:
@@ -26,6 +26,7 @@ class WorkerPool:
 
     class MatchKind(Enum):
         BotMatch = 0
+        TeamMatch = 1
 
     class SimulationObject:
         success = False
@@ -75,12 +76,18 @@ class WorkerPool:
                     team_ids.append(team_id)
 
                 playback_object = simulate(eval_trees)
-                sim.winner = team_ids[playback_object.winner]
+
+                # Check for a tie.
+                if playback_object.winner is None:
+                    sim.winner = None
+                else:
+                    sim.winner = team_ids[playback_object.winner]
+
                 sim.playback = simulate(eval_trees).to_json(team_ids)
                 sim.success = True
 
             except Exception:
-                logger.debug(traceback.format_exc())
+                LOGGER.debug(traceback.format_exc())
 
             # If anything goes wrong with the simulation, still return the object, because success is false by default.
             finally:
@@ -97,28 +104,48 @@ class WorkerPool:
 
             unplayed_matches = BotMatch.objects.filter(simulation__state=Simulation.SimulationState.PENDING)[0:queue_left]
             with transaction.atomic():
-                for botmatch in unplayed_matches:
-                    botmatch.simulation.state = Simulation.SimulationState.BUSY
-                    botmatch.simulation.save()
+                for bot_match in unplayed_matches:
+                    bot_match.simulation.state = Simulation.SimulationState.BUSY
+                    bot_match.simulation.save()
 
                     sim = self.SimulationObject()
-                    sim.match_id = botmatch.pk
+                    sim.match_id = bot_match.pk
                     sim.kind = self.MatchKind.BotMatch
-                    sim.players = [(botmatch.team_id, botmatch.ai.ai), (None, botmatch.bot.ais.first().ai)]
+                    sim.players = [(bot_match.team_id, bot_match.ai.ai), (None, bot_match.bot.ais.first().ai)]
 
                     self.match_queue.put(sim)
 
+        queue_left = self.num_workers * 2 - self.match_queue.qsize()
+        if queue_left > 0:
+            unplayed_matches = TeamMatch.objects.filter(simulation__state=Simulation.SimulationState.PENDING)[0:queue_left]
+            with transaction.atomic():
+                for team_match in unplayed_matches:
+                    team_match.simulation.state = Simulation.SimulationState.BUSY
+                    team_match.simulation.save()
+
+                    sim = self.SimulationObject()
+                    sim.match_id = team_match.pk
+                    sim.kind = self.MatchKind.TeamMatch
+                    sim.players = [(team_match.initiator_id, team_match.initiator_ai.ai),
+                                   (team_match.opponent_id, team_match.opponent_ai.ai)]
+
     # Process the results from the workers.
     def handle_results(self):
-        results = {}
+        bot_results = {}
+        team_results = {}
         while self.result_queue.qsize() > 0:
             sim = self.result_queue.get()
-            results[sim.match_id] = sim
+
+            if sim.kind == self.MatchKind.BotMatch:
+                bot_results[sim.match_id] = sim
+
+            if sim.kind == self.MatchKind.TeamMatch:
+                team_results[sim.match_id] = sim
 
         # Request all botmatches within results
-        bot_matches = BotMatch.objects.filter(pk__in=results.keys())
+        bot_matches = BotMatch.objects.filter(pk__in=bot_results.keys())
         for bot_match in bot_matches:
-            sim = results[bot_match.pk]
+            sim = bot_results[bot_match.pk]
 
             if sim.success:
                 winner = Team.objects.filter(pk=sim.winner).first()
@@ -129,6 +156,20 @@ class WorkerPool:
             else:
                 bot_match.simulation.state = Simulation.SimulationState.IDLE
                 bot_match.simulation.save()
-
             bot_match.save()
-            # print("match", bot_match.pk, "played", len(bot_matches))
+
+        # Request all team matches within results
+        team_matches = TeamMatch.objects.filter(pk__in=team_results.keys())
+        for team_match in team_matches:
+            sim = team_results[team_match.pk]
+
+            if sim.success:
+                winner = Team.objects.filter(pk=sim.winner).first()
+                team_match.winner = winner
+                team_match.simulation.simulation = sim.playback
+                team_match.simulation.state = Simulation.SimulationState.DONE
+                team_match.simulation.save()
+            else:
+                team_match.simulation.state = Simulation.SimulationState.IDLE
+                team_match.simulation.save()
+            team_match.save()

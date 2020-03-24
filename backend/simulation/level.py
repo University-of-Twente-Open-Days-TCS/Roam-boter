@@ -9,11 +9,11 @@ HEALTH_PACK_COOLDOWN = 9999999
 
 class Level:
 
-    def __init__(self, path, objects):
+    def __init__(self, path, checksum, objects):
         self.objects = objects
         self.path = path
         self.nearest_objects = self.cache_or_prepare_nearest_objects()
-        self.nearest_paths = self.cache_or_prepare_all_paths()
+        self.nearest_paths = self.cache_or_prepare_all_paths(checksum)
         self.health_packs = self.collect_health_packs()
         self.scout_nodes = []
 
@@ -107,16 +107,20 @@ class Level:
             for x in range(len(self.objects[0])):
                 yield self.get_object(x, y), x, y
 
-    def cache_or_prepare_all_paths(self):
+    def cache_or_prepare_all_paths(self, checksum):
         nearest_paths = None
         pickle_path = os.path.join(self.get_caching_directory(), "nearest_paths_" + self.path + ".p")
         try:
             with open(pickle_path, 'rb') as f:
-                nearest_paths = pickle.load(f)
+                file_checksum, nearest_paths = pickle.load(f)
+
+                if file_checksum != checksum:
+                    raise FileNotFoundError
+
         except FileNotFoundError:
             nearest_paths = self.prepare_all_paths()
             with open(pickle_path, 'wb') as f:
-                pickle.dump(nearest_paths, f)
+                pickle.dump((checksum, nearest_paths), f)
 
         return nearest_paths
 
@@ -218,6 +222,22 @@ class Level:
 
         return paths
 
+    # Line of sight without padded walls.
+    def direct_line_of_sight(self, pos1, pos2):
+        points = list(self.points(pos1, pos2))
+        if len(points) <= 2:
+            return True
+
+        for p in points:
+            x, y = p
+            try:
+                if self.get_object(x, y) == Object.WALL:
+                    return False
+            except Exception:
+                return False
+        return True
+
+    # Line of sight with extra padding at walls to generate good paths.
     def line_of_sight(self, pos1, pos2):
         # x1, y1 = pos1
         # x2, y2 = pos2

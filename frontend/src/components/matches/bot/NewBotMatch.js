@@ -98,7 +98,6 @@ const NewBotMatch = props => {
 
                 {(ais) ? (<SelectAIDialog ais={ais} open={selectAIOpen} handleClose={() => setSelectAIOpen(false)} handleClick={handleAIListItemClick} />) : "no AIs found"}
                 {(bots) ? (<SelectBotDialog bots = {bots} open={selectBotOpen} handleClose={() => setSelectBotOpen(false)} handleClick={handleBotListItemClick} />) : ("no bots found")}
-
             </div>
         </ContentBox>
     )

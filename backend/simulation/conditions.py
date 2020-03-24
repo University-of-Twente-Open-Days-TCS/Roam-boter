@@ -64,6 +64,10 @@ def bullet_ready(tank, state):
     return tank.bullet_ready(state)
 
 
+def label_set(tank, state, label):
+    return tank.get_label(label)
+
+
 def health_greater_than(tank, state, health):
     return tank.health > health
 
@@ -81,7 +85,7 @@ CONDITIONS = [
     aimed_at_object,                                #3
     object_exists,                                  #4
     bullet_ready,                                   #5
-    placeholder_condition,                          #6
+    label_set,                                      #6
     health_greater_than,                            #7
     placeholder_condition,                          #8
     placeholder_condition,                          #9
