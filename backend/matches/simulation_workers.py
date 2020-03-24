@@ -77,7 +77,6 @@ class WorkerPool:
 
                 playback_object = simulate(eval_trees)
 
-                print("played match: ", sim.__dict__)
                 # Check for a tie.
                 if playback_object.winner is None:
                     sim.winner = None
