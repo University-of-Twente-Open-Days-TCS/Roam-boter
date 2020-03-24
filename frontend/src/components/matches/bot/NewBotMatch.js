@@ -50,7 +50,6 @@ const NewBotMatch = props => {
     return (
         <ContentBox>
             <Typography variant="h4" align="center">New Bot Match</Typography>
-            <Typography variant="h5" align="center" color="primary">Hier moet nog shit aan gedaan worden</Typography>
             <div style={{ // This needs to be changed
                 display: 'flex',
                 flexDirection: 'column',
