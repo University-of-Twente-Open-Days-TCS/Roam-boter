@@ -18,7 +18,6 @@ const circle_radius = 10;
 const spawnPoint = {x: 0, y: 0};
 
 
-
 export default class actionNode {
 
 
@@ -149,6 +148,14 @@ export default class actionNode {
         //Fill the actionNode with the newly added info
         this.actionNodeText = this.createActionNodeText();
         this.actionNodeTextObj.text(this.actionNodeText);
+        //Check what type of action was added and adjust booleans accordingly
+        if (this.movementActions.includes(action.id)) {
+            this.containsMovement = true;
+        } else if (this.fireActions.includes(action.id)) {
+            this.containsFire = true;
+        } else if (this.aimActions.includes(action.id)) {
+            this.containsAim = true;
+        }
         this.setassetsizes();
         this.inputCircle.moveToTop();
     }
