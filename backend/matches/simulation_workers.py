@@ -6,7 +6,6 @@ from django.db import transaction
 from matches.models import BotMatch, TeamMatch, Simulation
 from dashboard.models import Team
 
-from django.db.models import Q
 from multiprocessing import Process
 
 from multiprocessing import Queue
@@ -48,14 +47,24 @@ class WorkerPool:
     # Reset lost matches.
     @staticmethod
     def reset_unfinished_matches():
-        unplayed_matches = BotMatch.objects.filter(~Q(simulation__state=Simulation.SimulationState.DONE),
-                                                   ~Q(simulation__state=Simulation.SimulationState.IDLE))
+
+        # find busy simulated Bot Matches
+        unplayed_matches = BotMatch.objects.filter(simulation__state=Simulation.SimulationState.BUSY)
+
+        for x in unplayed_matches:
+            x.simulation.state = Simulation.SimulationState.PENDING
+            x.simulation.save()
+
+        # find busy simulated Team Matches
+        unplayed_matches = TeamMatch.objects.filter(simulation__state=Simulation.SimulationState.BUSY)
+
         for x in unplayed_matches:
             x.simulation.state = Simulation.SimulationState.PENDING
             x.simulation.save()
 
     # Initialise workers
     def init_workers(self):
+
         for _ in range(self.num_workers):
             t = Process(target=WorkerPool.worker_task, args=(self.match_queue, self.result_queue))
             t.start()
@@ -129,10 +138,13 @@ class WorkerPool:
                     sim.players = [(team_match.initiator_id, team_match.initiator_ai.ai),
                                    (team_match.opponent_id, team_match.opponent_ai.ai)]
 
+                    self.match_queue.put(sim)
+
     # Process the results from the workers.
     def handle_results(self):
         bot_results = {}
         team_results = {}
+
         while self.result_queue.qsize() > 0:
             sim = self.result_queue.get()
 
