@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import { Grid, Typography, Button } from '@material-ui/core'
 
-import ContentBox from './layout/ContentBox'
+import ContentBox from '../layout/ContentBox'
 
-import RoamBotAPI from '../RoamBotAPI'
+import RoamBotAPI from '../../RoamBotAPI'
+import TeamInfo from "./TeamInfo";
 
 const Home = (props) => {
 
@@ -32,9 +33,9 @@ const Home = (props) => {
 
     return (
         <ContentBox>
-            <Grid>
-                <Typography>{team ? team.team_name : null}</Typography>
-                <Button onClick={logoutHandler} color="secondary" variant="contained">Logout</Button>
+            {team ? <TeamInfo team={team}></TeamInfo> : null}
+            <Grid container justify="center">
+                <Button onClick={logoutHandler} variant="contained" color="secondary" style={{margin: '0.5rem'}}>Logout</Button>
             </Grid>
         </ContentBox>
     )

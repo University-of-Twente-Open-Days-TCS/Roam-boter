@@ -3,15 +3,13 @@ import React, {useState, useEffect} from 'react'
 import RoambotAPI from '../../../RoamBotAPI'
 
 import {Typography, Button, Grid} from '@material-ui/core'
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+
 import {makeStyles} from "@material-ui/core/styles";
 
 import ContentBox from '../../layout/ContentBox'
 
+import SelectAIDialog from '../SelectAIDialog'
+import SelectBotDialog from '../SelectBotDialog'
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -86,7 +84,7 @@ const NewBotMatch = props => {
         <ContentBox>
             <Typography variant="h4" align="center">New Bot Match</Typography>
             <Grid container justify="center" spacing={2}>
-                <Grid xs={12} sm={9} md={6}>
+                <Grid item xs={12} sm={9} md={6}>
                     <div className={classes.wrapper}>
                         <Button className={classes.button} variant="outlined" color={selectedAI ? "primary" : "secondary"} onClick={() => {
                             setSelectAIOpen(true)
@@ -106,36 +104,6 @@ const NewBotMatch = props => {
                 </Grid>
             </Grid>
         </ContentBox>
-    )
-}
-
-const SelectAIDialog = ({ais, handleClose, open, handleClick}) => {
-    return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-            <DialogTitle id="simple-dialog-title">Select AI</DialogTitle>
-            <List>
-                {ais.map(ai => (
-                    <ListItem button onClick={() => handleClick(ai)} key={ai.pk}>
-                        <ListItemText primary={ai.name}/>
-                    </ListItem>
-                ))}
-            </List>
-        </Dialog>
-    )
-}
-
-const SelectBotDialog = ({bots, handleClose, open, handleClick}) => {
-    return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-            <DialogTitle id="simple-dialog-title">Select Bot</DialogTitle>
-            <List>
-                {bots.map(bot => (
-                    <ListItem button onClick={() => handleClick(bot)} key={bot.pk}>
-                        <ListItemText primary={bot.name}/>
-                    </ListItem>
-                ))}
-            </List>
-        </Dialog>
     )
 }
 
