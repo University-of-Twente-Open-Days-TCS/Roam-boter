@@ -29,7 +29,7 @@ export default class actionNode {
     _inputCircle;
     _position;
 
-    movementActions = [1, 2, 3, 4];
+    movementActions = [1, 2, 4];
     containsMovement = false;
     aimActions = [5, 6, 7, 8, 9];
     containsAim = false;
@@ -268,14 +268,6 @@ export default class actionNode {
                         "type_id": 2, "attributes": {}
                     });
                     break;
-
-                // Patrols in a possible eight-figure around a location.
-                case 3:
-                    tree.actionlist.push({
-                        "type_id": 3, "attributes": {"obj": item.object.id}
-                    });
-                    break;
-
 
                 //Keeps moving in a straight away from object, if wall is hit keeps increasing either x or y-value to increase distance
                 case 4:

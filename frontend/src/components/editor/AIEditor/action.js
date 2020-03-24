@@ -91,8 +91,6 @@ export default class action {
                 return (this.object != null);
             case 2:
                 return true;
-            case 3:
-                return (this.object != null);
             case 4:
                 return (this.object != null);
             case 5:
@@ -135,13 +133,6 @@ export default class action {
                 break;
             case 2:
                 this.remainingOptions = [];
-                break;
-            case 3:
-                this.remainingOptions = [{
-                    options: objectList, f: ((obj) => {
-                        this.object = obj
-                    })
-                }];
                 break;
             case 4:
                 this.remainingOptions = [{
@@ -248,12 +239,6 @@ export default class action {
                 }
             case 2:
                 return "Scout";
-            case 3:
-                if (this.object != null) {
-                    return "Patrol " + this.object;
-                } else {
-                    return "Patrol _object_";
-                }
             case 4:
                 if (this.object != null) {
                     return "Move away from \n nearest " + this.object;
