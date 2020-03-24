@@ -104,7 +104,8 @@ export default class popup {
         this.group.offset({x: this.rect.width() / 2, y: this.rect.height() / 2});
         this.group.x(this.stage.width() / 2);
         this.group.y(this.stage.height() / 2);
-
+        this.selector.group.x(margin);
+        this.selector.group.y(margin + this.textHeight);
         let ratioX = this.rect.width() / this.stage.width();
         let ratioY = this.rect.height() / this.stage.height();
         let maxRatio = Math.max(ratioX, ratioY);
@@ -153,9 +154,9 @@ export default class popup {
         });
         this.layer.add(exitRect);
         exitRect.setAbsolutePosition({x: 0, y: 0});
+        this.exitRect = exitRect;
         exitRect.on("click tap", () => {
             this.closePopup();
-            exitRect.destroy();
         });
     }
 
@@ -163,6 +164,7 @@ export default class popup {
     //Close popup, if an attribute has been given
     closePopup(attribute) {
         this.layer.moveToBottom();
+        this.exitRect.destroy();
         this.group.destroy();
         this.stage.draggable(true);
         this.stage.draw();

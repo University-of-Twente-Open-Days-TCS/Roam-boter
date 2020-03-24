@@ -121,9 +121,19 @@ class AIEditor extends Component {
     }
 
     handleSave() {
-        this.setState({
-            dialogOpen: true
-        })
+        try {
+            let canvas = this.canvas
+            canvas.treeToJson()
+
+            this.setState({
+                dialogOpen: true
+            })
+        } catch(e) {
+            this.setState({
+                errorMessage: e.message,
+                errorAlertOpen: true,
+            })
+        }
     }
 
     saveAI = () => {

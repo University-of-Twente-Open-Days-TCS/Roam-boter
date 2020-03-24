@@ -41,6 +41,7 @@ export default class actionNode {
         this.group = new Konva.Group({
             draggable: true
         });
+        this.trashcan = stage.trashcan;
         this.stage = stage;
         this.layer = layer;
         this.position = position;
@@ -69,7 +70,7 @@ export default class actionNode {
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
-            if (this.stage.staticlayer.getIntersection(touchPos) != null) {
+            if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
                 this.stage.trashcan.fire('touchstart', {
                     type: 'touchstart',
                     target: this.stage.trashcan
@@ -89,7 +90,7 @@ export default class actionNode {
             let touchPos = this.stage.getPointerPosition();
 
             //If node is released above trashcan, remove it and close trashcan
-            if (this.stage.staticlayer.getIntersection(touchPos) != null) {
+            if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
                 this.remove();
                 this.layer.draw();
                 this.stage.trashcan.fire('touchend', {
