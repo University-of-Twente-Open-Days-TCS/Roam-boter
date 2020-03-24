@@ -153,9 +153,9 @@ export default class popup {
         });
         this.layer.add(exitRect);
         exitRect.setAbsolutePosition({x: 0, y: 0});
+        this.exitRect = exitRect;
         exitRect.on("click tap", () => {
             this.closePopup();
-            exitRect.destroy();
         });
     }
 
@@ -163,6 +163,7 @@ export default class popup {
     //Close popup, if an attribute has been given
     closePopup(attribute) {
         this.layer.moveToBottom();
+        this.exitRect.destroy();
         this.group.destroy();
         this.stage.draggable(true);
         this.stage.draw();

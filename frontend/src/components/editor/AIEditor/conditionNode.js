@@ -157,6 +157,7 @@ export default class conditionNode {
             let touchPos = this.stage.getPointerPosition();
 
             //If node is released above trashcan, remove it and close trashcan
+            console.log(this.stage.staticlayer.getIntersection(touchPos));
             if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
                 this.remove();
                 this.stage.trashcan.fire('touchend', {
@@ -552,7 +553,7 @@ export default class conditionNode {
             var touchPos = node.stage.getPointerPosition();
             var intersect = node.layer.getIntersection(touchPos);
             //If arrow is dropped on another element
-            if (intersect === this.trashcan) {
+            if (intersect != null) {
                 //If the other element is an inputnode
                 if (node.stage.inputDict.has(intersect)) {
                     //If the inputnode already had an arrow, remove that one
