@@ -83,7 +83,7 @@ class WorkerPool:
                 else:
                     sim.winner = team_ids[playback_object.winner]
 
-                sim.playback = simulate(eval_trees).to_json(team_ids)
+                sim.playback = playback_object.to_json(team_ids)
                 sim.success = True
 
             except Exception:
