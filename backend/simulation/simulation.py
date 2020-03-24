@@ -13,9 +13,11 @@ import cProfile
 import json
 
 import os
+import logging
 
 import time
 
+LOGGER = logging.getLogger('simulation.simulation')
 MAX_GAME_LENGTH = 1800
 
 
@@ -203,6 +205,7 @@ def simulate(ais, game_mode="DM", level="level1"):
 def prepare_caches(levels):
     level_loader = LevelLoader()
     for l in levels:
+        LOGGER.info("Preparing Cache for: " + l)
         level_loader.load_level(l)
 
 

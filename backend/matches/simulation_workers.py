@@ -15,7 +15,7 @@ from enum import Enum
 import traceback
 
 import logging
-logger = logging.getLogger('matches.simulation_worker')
+LOGGER = logging.getLogger('matches.worker')
 
 
 class WorkerPool:
@@ -80,7 +80,7 @@ class WorkerPool:
                 sim.success = True
 
             except Exception:
-                logger.debug(traceback.format_exc())
+                LOGGER.debug(traceback.format_exc())
 
             # If anything goes wrong with the simulation, still return the object, because success is false by default.
             finally:

@@ -155,8 +155,12 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'magenta': {
+        'simulationworker': {
             'format': '\u001b[35mSIMWORKER[{asctime}]:\u001b[0m\n{message}',
+            'style': '{',
+        },
+        'simulation': {
+            'format': '\u001b[36mSIMULATION[{asctime}]:\u001b[0m\n{message}',
             'style': '{',
         },
     },
@@ -167,7 +171,11 @@ LOGGING = {
         },
         'simworker': {
             'class': 'logging.StreamHandler',
-            'formatter': 'magenta',
+            'formatter': 'simulationworker',
+        },
+        'simulation': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simulation',
         },
     },
     'loggers': {
@@ -181,8 +189,13 @@ LOGGING = {
             'level': 'DEBUG',
             'propogate': True,
         },
-        'matches.simulation_worker': {
+        'matches.worker': {
             'handlers': ['simworker'],
+            'level': 'DEBUG',
+            'propogate': True,
+        },
+        'simulation.simulation': {
+            'handlers': ['simulation'],
             'level': 'DEBUG',
             'propogate': True,
         }
