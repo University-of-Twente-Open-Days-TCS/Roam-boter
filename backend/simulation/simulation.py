@@ -118,6 +118,7 @@ class Simulation:
 
         # Check if tanks don't have any HP left.
         for tank in self.get_tanks():
+            print("Frame: ", self.state.frames_passed, tank.get_pos())
             if tank.get_health() <= 0:
                 self.state.scores[tank.get_team()] -= 1
                 tank.destroy(self.game_mode)
@@ -214,13 +215,15 @@ def prepare_caches(levels):
 
 def test_simulation():
 
-    false_node = ActionNode([Action(10, {})])
-    true_node = ActionNode([Action(1, {'obj': 10}), Action(10, {}), Action(5, {'obj': 2})])
+    false_node = ActionNode([Action(0, {})])
+    true_node = ActionNode([Action(1, {'obj': 10})])
 
     ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 1}), true_node, false_node)
-    playback = simulate([ai, ai])
 
-    print(playback.to_json(0, 1))
+    ai2 = ActionNode([Action(1, {'obj': 8})])
+    playback = simulate([ai2, ai])
+
+    print(playback.to_json([0, 1]))
 
     # cProfile.run("simulate([ai, ai])")
     # PlayBackEncoder.encode(a.get_playback())

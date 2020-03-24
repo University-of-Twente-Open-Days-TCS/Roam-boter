@@ -26,11 +26,14 @@ class ReplayCanvas {
         this.tankTurretSprite = new Image();
         this.tankTurretSprite.src = "simulation_images/tank_turret.png"
 
+        this.healthPackSprite = new Image();
+        this.healthPackSprite.src = "simulation_images/health_pack.png"
+
         this.canvasContainer = canvasContainer
         this.gameData = gameData
 
 
-        
+
         let canvas = document.createElement('canvas')
         this.canvas = canvas
         this.updateSize()
@@ -65,7 +68,7 @@ class ReplayCanvas {
         this.canvas.width = width
         this.canvas.height = height
     }
-    
+
     setFrame(frame) {
         this.frame = frame
     }
@@ -86,6 +89,7 @@ class ReplayCanvas {
         var blockColors = this.BLOCK_COLORS;
         var tankSprite = this.tankSprite;
         var turretSprite = this.tankTurretSprite;
+        var healthPackSprite = this.healthPackSprite;
         var width = this.canvas.width;
         var height = this.canvas.height;
 
@@ -119,6 +123,12 @@ class ReplayCanvas {
             ctx.fillRect(elem.pos[0] * cellsize_x - 20, elem.pos[1] * cellsize_y - 20, elem.health / 100 * 40, 5);
             //ctx.drawImage(tankSprite, elem.pos[0] * 20 - 32, elem.pos[1] * 20 - 32, 64, 64);
             //ctx.fillRect((elem.pos[0] * 20 - 10), elem.pos[1] * 20 - 10, 20, 20);
+        });
+
+        this.gameData.frames[frame].health_packs.forEach(function (elem, index) {
+            if (elem.respawn_timer == 0) {
+                drawImage(healthPackSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
+            }
         });
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);

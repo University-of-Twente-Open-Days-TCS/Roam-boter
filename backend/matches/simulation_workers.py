@@ -77,13 +77,14 @@ class WorkerPool:
 
                 playback_object = simulate(eval_trees)
 
+                print("played match: ", sim.__dict__)
                 # Check for a tie.
                 if playback_object.winner is None:
                     sim.winner = None
                 else:
                     sim.winner = team_ids[playback_object.winner]
 
-                sim.playback = simulate(eval_trees).to_json(team_ids)
+                sim.playback = playback_object.to_json(team_ids)
                 sim.success = True
 
             except Exception:

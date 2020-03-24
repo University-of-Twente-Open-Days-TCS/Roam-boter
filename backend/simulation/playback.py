@@ -24,7 +24,8 @@ class PlayBack:
 
     def add_frame(self, state):
         self.frames.append(Frame(state))
-       
+
+
     # use -1 for bots
     def to_json(self, player_ids):
         self.player_ids = player_ids
@@ -33,17 +34,22 @@ class PlayBack:
 
 
 class Frame:
-    tanks = []
-    bullets = []
-
     # Extract a frame from state data.
     def __init__(self, state):
         self.tanks = deepcopy(state.tanks)
         self.bullets = deepcopy(state.bullets)
-        self.health_packs = state.level.health_packs
-        self.visibility = [{'tanks': t.visible_tanks(state), 'bullets': t.visible_bullets(state)} for t in state.tanks]
+        self.health_packs = Frame.convert_health_packs(deepcopy(state.level.health_packs))
+        self.visibility = [{'tanks': t.visible_tanks(state), 'bullets': t.visible_bullets(state)} for t in self.tanks]
         self.events = []
         self.scores = deepcopy(state.scores)
+
+    @staticmethod
+    def convert_health_packs(health_packs):
+        new_list = []
+        for pos in health_packs:
+            x, y = pos
+            new_list.append({'pos': (x + 0.5, y + 0.5), 'respawn_timer': health_packs[pos]})
+        return new_list
 
 
 class PlayBackEncoder(JSONEncoder):

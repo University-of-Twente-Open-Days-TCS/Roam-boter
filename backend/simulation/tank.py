@@ -36,8 +36,6 @@ class Tank:
 
     team_id = 0
 
-    labels = [False] * 9
-    label_timers = [-1] * 9
 
     scout_target = None
 
@@ -47,6 +45,8 @@ class Tank:
         self.ai = ai
         self.actions = []
         self.ai_path = []
+        self.labels = [False] * 9
+        self.label_timers = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
 
     def get_label(self, index):
         return self.labels[index]
