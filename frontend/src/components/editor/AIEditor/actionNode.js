@@ -1,13 +1,7 @@
 import popup from "./popup.js"
 import action from "./action.js";
-import object from "./object.js";
-import reldir from "./reldir.js";
-import winddir from "./winddir.js";
-import label from "./label.js";
-import seconds from "./seconds.js";
 import Konva from "konva"
 import AIValidationError from "../Errors/AIValidationError.js";
-import speed from "./speed.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 
 

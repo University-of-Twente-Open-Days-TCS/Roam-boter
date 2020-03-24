@@ -32,8 +32,6 @@ export default class object {
         }
     }
 
-    //TODO jsonify
-
     get id() {
         return this._id;
     }

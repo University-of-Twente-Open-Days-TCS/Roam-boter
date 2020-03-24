@@ -1,5 +1,3 @@
-//Action (NOT A NODE), has zero or more attributes, by default null.
-
 import object from "./object.js";
 import reldir from "./reldir.js";
 import winddir from "./winddir.js";

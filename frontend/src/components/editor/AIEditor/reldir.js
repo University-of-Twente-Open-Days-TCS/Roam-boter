@@ -3,7 +3,7 @@ export default class reldir {
         _id;
 
     constructor(id) {
-        this._id = id;
+        this.id = id;
     }
 
     toString(){

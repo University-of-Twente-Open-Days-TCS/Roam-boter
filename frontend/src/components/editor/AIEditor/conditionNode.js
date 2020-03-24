@@ -8,7 +8,6 @@ import health from "./health.js";
 import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
-import action from "./action";
 import actionNode from "./actionNode";
 
 
