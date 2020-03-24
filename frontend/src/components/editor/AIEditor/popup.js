@@ -104,7 +104,8 @@ export default class popup {
         this.group.offset({x: this.rect.width() / 2, y: this.rect.height() / 2});
         this.group.x(this.stage.width() / 2);
         this.group.y(this.stage.height() / 2);
-
+        this.selector.group.x(margin);
+        this.selector.group.y(margin + this.textHeight);
         let ratioX = this.rect.width() / this.stage.width();
         let ratioY = this.rect.height() / this.stage.height();
         let maxRatio = Math.max(ratioX, ratioY);
