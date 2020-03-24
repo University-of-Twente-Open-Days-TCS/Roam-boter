@@ -2,14 +2,16 @@ import React, {useState, useEffect} from 'react'
 
 import RoambotAPI from '../../../RoamBotAPI'
 
-import ContentBox from '../../layout/ContentBox'
-import {Typography, Button} from '@material-ui/core'
+import {Typography, Button, Grid} from '@material-ui/core'
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {makeStyles} from "@material-ui/core/styles";
+
+import ContentBox from '../../layout/ContentBox'
+
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -83,22 +85,26 @@ const NewBotMatch = props => {
     return (
         <ContentBox>
             <Typography variant="h4" align="center">New Bot Match</Typography>
-            <div className={classes.wrapper}>
-                <Button className={classes.button} variant="outlined" color={selectedAI ? "primary" : "secondary"} onClick={() => {
-                    setSelectAIOpen(true)
-                }}>
-                    {selectedAI ? selectedAI.name : "Select AI"}
-                </Button>
-                <Button className={classes.button} variant="outlined" color={selectedBot ? "primary" : "secondary"} onClick={() => {
-                    setSelectBotOpen(true)
-                }}>
-                    {selectedBot ? selectedBot.name : "Select Bot"}
-                </Button>
-                <Button className={classes.button} type="submit" variant="contained" disabled={!(selectedAI && selectedBot)} color="secondary" onClick={playMatch}>Play</Button>
+            <Grid container justify="center" spacing={2}>
+                <Grid xs={12} sm={9} md={6}>
+                    <div className={classes.wrapper}>
+                        <Button className={classes.button} variant="outlined" color={selectedAI ? "primary" : "secondary"} onClick={() => {
+                            setSelectAIOpen(true)
+                        }}>
+                            {selectedAI ? selectedAI.name : "Select AI"}
+                        </Button>
+                        <Button className={classes.button} variant="outlined" color={selectedBot ? "primary" : "secondary"} onClick={() => {
+                            setSelectBotOpen(true)
+                        }}>
+                            {selectedBot ? selectedBot.name : "Select Bot"}
+                        </Button>
+                        <Button className={classes.button} type="submit" variant="contained" disabled={!(selectedAI && selectedBot)} color="secondary" onClick={playMatch}>Play</Button>
 
-                {(ais) ? (<SelectAIDialog ais={ais} open={selectAIOpen} handleClose={() => setSelectAIOpen(false)} handleClick={handleAIListItemClick} />) : "no AIs found"}
-                {(bots) ? (<SelectBotDialog bots = {bots} open={selectBotOpen} handleClose={() => setSelectBotOpen(false)} handleClick={handleBotListItemClick} />) : ("no bots found")}
-            </div>
+                        {(ais) ? (<SelectAIDialog ais={ais} open={selectAIOpen} handleClose={() => setSelectAIOpen(false)} handleClick={handleAIListItemClick} />) : "no AIs found"}
+                        {(bots) ? (<SelectBotDialog bots = {bots} open={selectBotOpen} handleClose={() => setSelectBotOpen(false)} handleClick={handleBotListItemClick} />) : ("no bots found")}
+                    </div>
+                </Grid>
+            </Grid>
         </ContentBox>
     )
 }

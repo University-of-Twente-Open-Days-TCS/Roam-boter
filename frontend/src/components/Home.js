@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography, Button } from '@material-ui/core'
 
 import ContentBox from './layout/ContentBox'
 
@@ -34,6 +34,7 @@ const Home = (props) => {
         <ContentBox>
             <Grid>
                 <Typography>{team ? team.team_name : null}</Typography>
+                <Button onClick={logoutHandler} color="secondary" variant="contained">Logout</Button>
             </Grid>
         </ContentBox>
     )
