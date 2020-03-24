@@ -9,11 +9,11 @@ HEALTH_PACK_COOLDOWN = 9999999
 
 class Level:
 
-    def __init__(self, path, objects):
+    def __init__(self, path, checksum, objects):
         self.objects = objects
         self.path = path
         self.nearest_objects = self.cache_or_prepare_nearest_objects()
-        self.nearest_paths = self.cache_or_prepare_all_paths()
+        self.nearest_paths = self.cache_or_prepare_all_paths(checksum)
         self.health_packs = self.collect_health_packs()
         self.scout_nodes = []
 
@@ -107,16 +107,20 @@ class Level:
             for x in range(len(self.objects[0])):
                 yield self.get_object(x, y), x, y
 
-    def cache_or_prepare_all_paths(self):
+    def cache_or_prepare_all_paths(self, checksum):
         nearest_paths = None
         pickle_path = os.path.join(self.get_caching_directory(), "nearest_paths_" + self.path + ".p")
         try:
             with open(pickle_path, 'rb') as f:
-                nearest_paths = pickle.load(f)
+                file_checksum, nearest_paths = pickle.load(f)
+
+                if file_checksum != checksum:
+                    raise FileExistsError
+
         except FileNotFoundError:
             nearest_paths = self.prepare_all_paths()
             with open(pickle_path, 'wb') as f:
-                pickle.dump(nearest_paths, f)
+                pickle.dump((checksum, nearest_paths), f)
 
         return nearest_paths
 
