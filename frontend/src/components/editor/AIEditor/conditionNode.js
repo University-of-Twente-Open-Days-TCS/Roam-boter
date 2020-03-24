@@ -19,48 +19,6 @@ const hitboxCircleRadius = 20;
 const spawnPoint = {x: 0, y: 0};
 
 
-const objectList = [
-    new object(1),
-    new object(2),
-    new object(3),
-    new object(4),
-    new object(5),
-    new object(6),
-    new object(7),
-    new object(8),
-    new object(9),
-    new object(10)
-
-];
-
-const distanceList = [
-    new distance(1),
-    new distance(2),
-    new distance(3)
-];
-
-const healthList = [
-    new health(0),
-    new health(20),
-    new health(40),
-    new health(60),
-    new health(80),
-
-];
-
-const labelList = [
-    new label(0),
-    new label(1),
-    new label(2),
-    new label(3),
-    new label(4),
-    new label(5),
-    new label(6),
-    new label(7),
-    new label(8)
-];
-
-
 export default class conditionNode {
 
 
@@ -130,7 +88,6 @@ export default class conditionNode {
         this.trueDragCircle = this.createDragCircle(this.trueCircle, true);
         this.falseDragCircle = this.createDragCircle(this.falseCircle, false);
         this.createInputCircle();
-        //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
         this.group.on("dragmove", () => {
             this.updateArrows(this.stage);
             let touchPos = this.stage.getPointerPosition();
