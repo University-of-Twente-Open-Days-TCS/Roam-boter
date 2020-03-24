@@ -195,7 +195,6 @@ export default class action {
                 }];
                 break;
             case 14:
-                //TODO: add seconds
                 this.remainingOptions = [{
                     options: labelList, f: ((lbl) => {
                         this.label = lbl
@@ -233,7 +232,7 @@ export default class action {
                 if (this.object != null) {
                     return "Go to nearest\n" + this.object;
                 } else {
-                    return "Go to nearest \n _object_";
+                    return "Go to nearest \n <object>";
                 }
             case 2:
                 return "Scout";
@@ -241,38 +240,38 @@ export default class action {
                 if (this.object != null) {
                     return "Move away from \n nearest " + this.object;
                 } else {
-                    return "Move away from \n nearest _object_"
+                    return "Move away from \n nearest <object>"
                 }
             case 5:
                 if (this.object != null) {
                     return "Aim to nearest\n" + this.object;
                 } else {
-                    return "Aim to nearest \n _object_"
+                    return "Aim to nearest \n <object>"
                 }
             case 6:
                 if (this.winddir != null) {
                     return "Aim " + this.winddir;
                 } else {
-                    return "Aim _winddir_";
+                    return "Aim <winddir>";
                 }
             case 7:
                 if (this.reldir != null) {
                     return "Aim " + this.reldir;
                 } else {
-                    return "Aim _reldir_";
+                    return "Aim <reldir>";
                 }
 
             case 8:
                 if (this.speed != null) {
                     return "Aim to left \n with " + this.speed;
                 } else {
-                    return "Aim to left \n with _speed_";
+                    return "Aim to left \n with <speed>";
                 }
             case 9:
                 if (this.speed != null) {
                     return "Aim to right \n with " + this.speed;
                 } else {
-                    return "Aim to right \n with _speed_";
+                    return "Aim to right \n with <speed>";
                 }
             case 10:
                 return "Shoot!";
