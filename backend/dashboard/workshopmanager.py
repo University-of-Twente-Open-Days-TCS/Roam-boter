@@ -30,6 +30,7 @@ def generate_teamcodes(amount):
     for i in range(amount):
 
         name = choice(team_names)[:20]
+        name = name.strip()
         generated_code = False
 
         while not generated_code:

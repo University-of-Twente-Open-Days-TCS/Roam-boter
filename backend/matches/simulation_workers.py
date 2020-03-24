@@ -1,11 +1,11 @@
-
-from threading import Thread
 import time
 
 
 from django.db import transaction
 
 from matches.models import BotMatch, Simulation
+from dashboard.models import Team
+
 from django.db.models import Q
 from multiprocessing import Process
 
@@ -16,6 +16,7 @@ import traceback
 
 import logging
 logger = logging.getLogger('debugLogger')
+
 
 class WorkerPool:
 
@@ -120,7 +121,8 @@ class WorkerPool:
             sim = results[bot_match.pk]
 
             if sim.success:
-                bot_match.winner = sim.winner
+                winner = Team.objects.filter(pk=sim.winner).first()
+                bot_match.winner = winner
                 bot_match.simulation.simulation = sim.playback
                 bot_match.simulation.state = Simulation.SimulationState.DONE
                 bot_match.simulation.save()
@@ -130,4 +132,3 @@ class WorkerPool:
 
             bot_match.save()
             # print("match", bot_match.pk, "played", len(bot_matches))
-

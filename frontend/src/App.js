@@ -10,14 +10,16 @@ import {
 import Home from "./components/Home";
 import AIEditor from "./components/editor/AIEditor.js";
 import AIList from "./components/editor/AIList";
-import PlayvsPlayer from "./components/matches/player/PlayvsPlayer";
 import Login from "./components/login/Login";
 import Structure from "./components/structure/Structure";
+
 import PlayvsBot from "./components/matches/bot/PlayvsBot";
 import NewBotMatch from "./components/matches/bot/NewBotMatch";
 import BotMatchHistory from './components/matches/bot/BotMatchHistory.js';
 import BotMatchReplay from './components/matches/bot/BotMatchReplay.js';
 
+import PlayvsPlayer from "./components/matches/team/PlayvsPlayer";
+import NewTeamMatch from "./components/matches/team/NewTeamMatch";
 
 
 class App extends Component {
@@ -129,9 +131,10 @@ class App extends Component {
                         <Route path="/AIList" component={AIList}/>
                         <Route path="/PlayvsBot" component={PlayvsBot}/>
                         <Route path="/BotMatchHistory" component={BotMatchHistory}/>
+                        <Route path="/BotMatchReplay/:matchId" component={BotMatchReplay}/>
                         <Route path="/NewBotMatch" component={NewBotMatch}/>
                         <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
-                        <Route path="/BotMatchReplay/:matchId" component={BotMatchReplay}/>
+                        <Route path="/NewTeamMatch" component={NewTeamMatch}/>
                     </Structure>
                 </div>) 
                     : 
