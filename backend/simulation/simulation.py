@@ -118,7 +118,6 @@ class Simulation:
 
         # Check if tanks don't have any HP left.
         for tank in self.get_tanks():
-            print("Frame: ", self.state.frames_passed, tank.get_pos())
             if tank.get_health() <= 0:
                 self.state.scores[tank.get_team()] -= 1
                 tank.destroy(self.game_mode)
