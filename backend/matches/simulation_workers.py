@@ -26,6 +26,7 @@ class WorkerPool:
 
     class MatchKind(Enum):
         BotMatch = 0
+        TeamMatch = 1
 
     class SimulationObject:
         success = False
