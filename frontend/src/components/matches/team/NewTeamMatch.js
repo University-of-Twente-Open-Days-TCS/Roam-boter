@@ -41,7 +41,12 @@ const NewTeamMatch = props => {
     })
 
     const playMatch = async () => {
-        //TODO:
+        let call = await RoamBotAPI.postTeamMatch({gamemode: "DM", ai: selectedAI.pk})
+        if (call.ok){
+            window.alert("Simulation successfull")
+        }else {
+            window.alert("Match could not be simulation")
+        }
     }
 
     const handleAIListItemClick = (ai) => {
