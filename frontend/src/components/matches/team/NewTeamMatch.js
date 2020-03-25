@@ -24,6 +24,8 @@ const NewTeamMatch = props => {
 
     const classes = useStyles()
 
+    let team = props.team
+
     let [ais, setAis] = useState(null)
     let [selectAIOpen, setSelectAIOpen] = useState(false)
     let [selectedAI, setSelectedAI] = useState(null)
@@ -41,6 +43,17 @@ const NewTeamMatch = props => {
     })
 
     const playMatch = async () => {
+        if (!team.active_ai) {
+            // prompt whether to set this as active ai
+            let prompt = window.confirm("You do not have an active AI yet. Do you want to set this as your active AI?")
+            if (prompt){
+                let call = await RoamBotAPI.putActiveAI(selectedAI.pk)
+                if(!call.ok){
+                    window.alert("Could not set as active AI")
+                }
+            }
+        }
+
         let call = await RoamBotAPI.postTeamMatch({gamemode: "DM", ai: selectedAI.pk})
         if (call.ok){
             window.alert("Simulation successfull")
