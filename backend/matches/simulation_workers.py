@@ -137,8 +137,8 @@ class WorkerPool:
                     sim = self.SimulationObject()
                     sim.match_id = team_match.pk
                     sim.kind = self.MatchKind.TeamMatch
-                    sim.players = [(team_match.initiator_id, team_match.initiator.name, team_match.initiator_ai.ai),
-                                   (team_match.opponent_id, team_match.opponent.name, team_match.opponent_ai.ai)]
+                    sim.players = [(team_match.initiator_id, team_match.initiator.team_name, team_match.initiator_ai.ai),
+                                   (team_match.opponent_id, team_match.opponent.team_name, team_match.opponent_ai.ai)]
 
                     self.match_queue.put(sim)
 
