@@ -416,7 +416,6 @@ class aiCanvas {
     }
 
     set dragging(bool) {
-        console.log(bool);
         this._dragging = bool;
     }
 
