@@ -12,12 +12,15 @@ SIM_PID=$!
 GUNI_PID=$!
 
 stop_gracefully(){
+    # stop simulation workers
     kill -15 $SIM_PID
+    wait $!
+    # stop gunicorn process
     kill -15 $GUNI_PID
     wait $!
     exit 0
 }
 
 trap 'stop_gracefully' SIGTERM
-wait $GUNI_PID
 
+wait $GUNI_PID
