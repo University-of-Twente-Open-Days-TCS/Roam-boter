@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 
-import Home from "./components/Home";
+import Home from "./components/home/Home";
 import AIEditor from "./components/editor/AIEditor.js";
 import AIList from "./components/editor/AIList";
 import Login from "./components/login/Login";
@@ -27,7 +27,6 @@ class App extends Component {
         super(props);
 
         this.state = {
-            AIs: [],
             loggedIn: false,
             loginAttemptFailed: false
         };
