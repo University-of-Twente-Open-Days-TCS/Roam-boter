@@ -42,7 +42,7 @@ export default class popup {
             this.textGroup.destroy();
         }
 
-        let boldWords = ["<object>", "<distance>", "<amount>", "<label>", "<speed>", "<reldir>", "<winddir>"];
+        let boldWords = ["<object>", "<distance>", "<amount>", "<label>", "<speed>", "<reldir>", "<winddir>", "<seconds>"];
         let words = this.text.split(" ");
         let textGroup = new Konva.Group();
         let currentX = 0;
@@ -82,7 +82,6 @@ export default class popup {
             this.selector.group.destroy();
         }
         this.selector = new selector(this.stage, this.layer, options, (selection) => {
-            console.log(selection);
             if (typeof selection.getRemainingOptions !== "undefined") {
                 this.getNextOption(selection, f);
             } else {
@@ -109,7 +108,6 @@ export default class popup {
         let ratioY = this.rect.height() / this.stage.height();
         let maxRatio = Math.max(ratioX, ratioY);
         let scale = 1;
-        console.log(maxRatio);
         //if the  popup is larger than the stage it will scale down
         if (maxRatio > 1) {
             scale = 1 / maxRatio;
