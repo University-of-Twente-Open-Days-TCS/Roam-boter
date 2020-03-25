@@ -17,6 +17,7 @@ class PlayBack:
     def __init__(self, level):
         self.level = level
         self.frames = []
+        self.team_names = []
 
         # index of the winning ai
         self.winner = None
@@ -25,10 +26,9 @@ class PlayBack:
     def add_frame(self, state):
         self.frames.append(Frame(state))
 
-
-    # use -1 for bots
-    def to_json(self, player_ids):
+    def to_json(self, player_ids, team_names):
         self.player_ids = player_ids
+        self.team_names = team_names
         encoder = PlayBackEncoder()
         return encoder.encode(self)
 

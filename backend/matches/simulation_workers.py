@@ -80,9 +80,11 @@ class WorkerPool:
             try:
                 eval_trees = []
                 team_ids = []
-                for team_id, ai in sim.players:
+                team_names = []
+                for team_id, team_name, ai in sim.players:
                     eval_trees.append(converter.convert_aijson(ai))
                     team_ids.append(team_id)
+                    team_names.append(team_name)
 
                 playback_object = simulate(eval_trees)
 
@@ -92,7 +94,7 @@ class WorkerPool:
                 else:
                     sim.winner = team_ids[playback_object.winner]
 
-                sim.playback = playback_object.to_json(team_ids)
+                sim.playback = playback_object.to_json(team_ids, team_names)
                 sim.success = True
 
             except Exception:
@@ -120,7 +122,7 @@ class WorkerPool:
                     sim = self.SimulationObject()
                     sim.match_id = bot_match.pk
                     sim.kind = self.MatchKind.BotMatch
-                    sim.players = [(bot_match.team_id, bot_match.ai.ai), (None, bot_match.bot.ais.first().ai)]
+                    sim.players = [(bot_match.team_id, bot_match.team.team_name, bot_match.ai.ai), (None, bot_match.bot.name, bot_match.bot.ais.first().ai)]
 
                     self.match_queue.put(sim)
 
@@ -135,8 +137,8 @@ class WorkerPool:
                     sim = self.SimulationObject()
                     sim.match_id = team_match.pk
                     sim.kind = self.MatchKind.TeamMatch
-                    sim.players = [(team_match.initiator_id, team_match.initiator_ai.ai),
-                                   (team_match.opponent_id, team_match.opponent_ai.ai)]
+                    sim.players = [(team_match.initiator_id, team_match.initiator.name, team_match.initiator_ai.ai),
+                                   (team_match.opponent_id, team_match.opponent.name, team_match.opponent_ai.ai)]
 
                     self.match_queue.put(sim)
 

@@ -224,7 +224,7 @@ def test_simulation():
     ai2 = ActionNode([Action(1, {'obj': 8})])
     playback = simulate([ai2, ai])
 
-    print(playback.to_json([0, 1]))
+    print(playback.to_json([0, 1], ["Team1", "Team2"]))
 
     # cProfile.run("simulate([ai, ai])")
     # PlayBackEncoder.encode(a.get_playback())
