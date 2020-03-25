@@ -283,7 +283,7 @@ class aiCanvas {
 
                     return newOwnNode;
                 case 7:
-                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(6,
+                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(7,
                         null, null, null, new health(nodeJson.condition.health)),
                          this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
