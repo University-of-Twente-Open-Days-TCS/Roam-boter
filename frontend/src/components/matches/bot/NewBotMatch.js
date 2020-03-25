@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 
 import RoambotAPI from '../../../RoamBotAPI'
 
-import {Typography, Button, Grid} from '@material-ui/core'
+import {Typography, Button, Grid, Snackbar} from '@material-ui/core'
 
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -10,6 +10,7 @@ import ContentBox from '../../layout/ContentBox'
 
 import SelectAIDialog from '../SelectAIDialog'
 import SelectBotDialog from '../SelectBotDialog'
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -27,10 +28,20 @@ const NewBotMatch = props => {
 
     let [ais, setAis] = useState(null)
     let [bots, setBots] = useState(null)
-    let [selectAIOpen, setSelectAIOpen] = useState(false)
-    let [selectBotOpen, setSelectBotOpen] = useState(false)
-    let [selectedAI, setSelectedAI] = useState(null)
-    let [selectedBot, setSelectedBot] = useState(null)
+    
+    let [dialogOpen, setDialogOpen] = useState({
+        ai: false,
+        bot: false
+    })
+    let [selected, setSelected] = useState({
+        ai: null,
+        bot: null
+    })
+    let [snackbar, setSnackbar] = useState({
+        open: false,
+        error: false,
+        message: ""
+    })
 
     useEffect(() => {
         async function updateAis() {
@@ -57,28 +68,35 @@ const NewBotMatch = props => {
     const playMatch = async () => {
         let call = RoambotAPI.postBotMatch({
             gamemode: 'DM',
-            bot: selectedBot.pk,
-            ai: selectedAI.pk
+            bot: selected.bot.pk,
+            ai: selected.ai.pk
         })
         call.then((response) => {
             if (response.ok) {
-                alert("Simulation Successfull")
+                setSnackbar({
+                    open: true,
+                    error: false,
+                    message: "Simulation successful, replay available under Bot Replays"
+                })
             } else {
-                alert("Error See Console")
+                setSnackbar({
+                    open: true,
+                    error: true,
+                    message: "Something went wrong"
+                })
             }
         })
     }
 
     const handleAIListItemClick = (ai) => {
-        setSelectedAI(ai)
-        setSelectAIOpen(false)
+        setSelected({...selected, ai: ai})
+        setDialogOpen({...dialogOpen, ai: false})
     }
 
     const handleBotListItemClick = (bot) => {
-        setSelectedBot(bot)
-        setSelectBotOpen(false)
+        setSelected({...selected, bot: bot})
+        setDialogOpen({...dialogOpen, bot: false})
     }
-
 
     return (
         <ContentBox>
@@ -86,20 +104,20 @@ const NewBotMatch = props => {
             <Grid container justify="center" spacing={2}>
                 <Grid item xs={12} sm={9} md={6}>
                     <div className={classes.wrapper}>
-                        <Button className={classes.button} variant="outlined" color={selectedAI ? "primary" : "secondary"} onClick={() => {
-                            setSelectAIOpen(true)
-                        }}>
-                            {selectedAI ? selectedAI.name : "Select AI"}
+                        <Button className={classes.button} variant="outlined" color={selected.ai ? "primary" : "secondary"} onClick={() => {setDialogOpen({...dialogOpen, ai: true})}}>
+                            {selected.ai ? selected.ai.name : "Select AI"}
                         </Button>
-                        <Button className={classes.button} variant="outlined" color={selectedBot ? "primary" : "secondary"} onClick={() => {
-                            setSelectBotOpen(true)
-                        }}>
-                            {selectedBot ? selectedBot.name : "Select Bot"}
+                        <Button className={classes.button} variant="outlined" color={selected.bot ? "primary" : "secondary"} onClick={() => {setDialogOpen({...dialogOpen, bot: true})}}>
+                            {selected.bot ? selected.bot.name : "Select Bot"}
                         </Button>
-                        <Button className={classes.button} type="submit" variant="contained" disabled={!(selectedAI && selectedBot)} color="secondary" onClick={playMatch}>Play</Button>
+                        <Button className={classes.button} type="submit" variant="contained" disabled={!(selected.ai && selected.bot)} color="secondary" onClick={playMatch}>Play</Button>
 
-                        {(ais) ? (<SelectAIDialog ais={ais} open={selectAIOpen} handleClose={() => setSelectAIOpen(false)} handleClick={handleAIListItemClick} />) : "no AIs found"}
-                        {(bots) ? (<SelectBotDialog bots = {bots} open={selectBotOpen} handleClose={() => setSelectBotOpen(false)} handleClick={handleBotListItemClick} />) : ("no bots found")}
+                        {(ais) ? (<SelectAIDialog ais={ais} open={dialogOpen.ai} handleClose={() => setDialogOpen({...dialogOpen, ai: false})} handleClick={handleAIListItemClick} />) : "no AIs found"}
+                        {(bots) ? (<SelectBotDialog bots = {bots} open={dialogOpen.bot} handleClose={() => setDialogOpen({...dialogOpen, bot: false})} handleClick={handleBotListItemClick} />) : ("no bots found")}
+
+                        <Snackbar open={snackbar.open} autoHideDuration={6000} >
+                            <Alert severity={snackbar.error ? "error" : "success"}> {snackbar.message} </Alert>
+                        </Snackbar>
                     </div>
                 </Grid>
             </Grid>
