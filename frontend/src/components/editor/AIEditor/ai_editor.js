@@ -276,7 +276,7 @@ class aiCanvas {
                     return newOwnNode;
                 case 6:
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(6,
-                        null, null, new label(nodeJson.condition.label)),
+                        null, null, new label(nodeJson.condition.attributes.label)),
                          this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
@@ -284,7 +284,7 @@ class aiCanvas {
                     return newOwnNode;
                 case 7:
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(7,
-                        null, null, null, new health(nodeJson.condition.health)),
+                        null, null, null, new health(nodeJson.condition.attributes.health)),
                          this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
