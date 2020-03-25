@@ -223,7 +223,7 @@ export default class actionNode {
 
     intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
-    jsonify() {
+    jsonify(startNodePos) {
         let node = this.rect;
         let tree = {};
         tree.actionlist = [];
@@ -346,10 +346,16 @@ export default class actionNode {
 
 
         });
-        tree.position = this.intifyPosition(node.getAbsolutePosition());
+        tree.position = this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()));
         let result = {};
         result.actionblock = tree;
         return result;
+    }
+
+    subtractPosAFromPosB(posA, posB) {
+        let posX = posB.x - posA.x;
+        let posY = posB.y - posA.y;
+        return {x: posX, y: posY};
     }
 
 

@@ -237,7 +237,7 @@ export default class conditionNode {
 
     intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
-    jsonify() {
+    jsonify(startNodePos) {
         let node = this.rect;
         let tree = {};
 
@@ -263,7 +263,7 @@ export default class conditionNode {
                         "distance": this.condition.distance.id,
                         "obj": this.condition.object.id
                     },
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -275,7 +275,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position":this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
                 return tree;
 
@@ -287,7 +287,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -300,7 +300,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -312,7 +312,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
 
                 };
 
@@ -325,7 +325,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {"label": this.condition.label.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -337,7 +337,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {"health": this.condition.health.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
 
@@ -348,6 +348,12 @@ export default class conditionNode {
                 throw new AIValidationError("The condition has an unknown ID!");
 
         }
+    }
+
+    subtractPosAFromPosB(posA, posB) {
+        let posX = posB.x - posA.x;
+        let posY = posB.y - posA.y;
+        return {x: posX, y: posY};
     }
 
 

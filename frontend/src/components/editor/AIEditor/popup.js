@@ -31,7 +31,6 @@ export default class popup {
     }
 
     createGroup() {
-        let thisStage = this.stage;
         this.group = new Konva.Group();
         this.createClose();
         this.createRect();

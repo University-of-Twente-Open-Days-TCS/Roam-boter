@@ -139,6 +139,8 @@ export default class condition {
                     })
                 }];
                 break;
+            default:
+
         }
     }
 
