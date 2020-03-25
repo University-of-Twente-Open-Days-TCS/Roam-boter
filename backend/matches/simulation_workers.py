@@ -1,5 +1,5 @@
 import time
-
+import signal
 
 from django.db import transaction
 
@@ -36,13 +36,29 @@ class WorkerPool:
         winner = None
 
     def __init__(self):
+        self.stopped = False
         self.reset_unfinished_matches()
-        self.init_workers()
 
-        while True:
+        self.processes = self.init_workers()
+        signal.signal(signal.SIGTERM, self.stop_gracefully)
+        signal.signal(signal.SIGINT, self.stop_gracefully)
+        signal.signal(signal.SIGHUP, self.stop_gracefully)
+
+        self.start()
+
+    def stop_gracefully(self, signum, frame):
+        LOGGER.info("Stopping simulation workers")
+        self.stopped = True
+
+        # kill workers
+        for process in self.processes:
+            process.terminate()
+
+    def start(self):
+        while not self.stopped:
             self.collect_matches()
             self.handle_results()
-            time.sleep(1)
+            time.sleep(0.5)
 
     # Reset lost matches.
     @staticmethod
@@ -64,10 +80,14 @@ class WorkerPool:
 
     # Initialise workers
     def init_workers(self):
+        processes = []
 
         for _ in range(self.num_workers):
             t = Process(target=WorkerPool.worker_task, args=(self.match_queue, self.result_queue))
             t.start()
+            processes.append(t)
+
+        return processes
 
     @staticmethod
     def worker_task(in_queue, out_queue):

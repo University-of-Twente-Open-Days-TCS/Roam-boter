@@ -15,4 +15,4 @@ RUN chown -R roambot /django
 USER roambot 
 
 EXPOSE 8000
-CMD ["/bin/bash", "start.sh"]
+CMD ["/django/start.sh"]
