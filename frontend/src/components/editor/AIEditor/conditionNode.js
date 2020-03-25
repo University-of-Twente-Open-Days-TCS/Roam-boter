@@ -109,7 +109,6 @@ export default class conditionNode {
             let touchPos = this.stage.getPointerPosition();
 
             //If node is released above trashcan, remove it and close trashcan
-            console.log(this.stage.staticlayer.getIntersection(touchPos));
             if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
                 this.remove();
                 this.stage.trashcan.fire('touchend', {
@@ -275,7 +274,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(startNodePos),
                     "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"obj": this.condition.object.id},
-                    "position":this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
                 return tree;
 
@@ -453,11 +452,12 @@ export default class conditionNode {
     //creates an invisible circle used only for making a new connection between nodes,
     // based on condition will create one for true or for false
     createDragCircle(circle, condition) {
+
         let node = this;
         let dragCircle = new Konva.Circle({
             draggable: true,
-            y: this.position.y + circle.y(),
-            x: this.position.x + circle.x(),
+            y: circle.y(),
+            x: circle.x(),
             radius: hitboxCircleRadius,
             fill: 'black',
             opacity: 0
