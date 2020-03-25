@@ -131,7 +131,9 @@ class Level:
 
     def prepare_all_paths(self):
         LOGGER.info("Preparing all_paths cache for " + self.path)
-        return [[{obj: self.find_all_paths(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)] for y, row in enumerate(self.objects)]
+        cache = [[{obj: self.find_all_paths(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)] for y, row in enumerate(self.objects)]
+        LOGGER.info("Cache for " + self.path + " done ")
+        return cache
 
     def find_all_paths(self, obj, x, y):
         if x == 0:
