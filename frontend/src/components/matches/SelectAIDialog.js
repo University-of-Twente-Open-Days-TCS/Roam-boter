@@ -1,17 +1,9 @@
 import React from 'react'
 
 import {Dialog, DialogTitle, List, ListItem, ListItemText } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
 
-const useStyles = makeStyles(theme => ({
-
-}))
 
 const SelectAIDialog = ({ais, handleClose, open, handleClick}) => {
-
-    const classes = useStyles()
-
-
 
     return (
         <Dialog fullWidth={true} maxWidth="sm" onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
@@ -25,6 +17,6 @@ const SelectAIDialog = ({ais, handleClose, open, handleClick}) => {
             </List>
         </Dialog>
     )
-}
+} 
 
 export default SelectAIDialog;

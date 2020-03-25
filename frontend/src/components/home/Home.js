@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Grid, Typography, Button } from '@material-ui/core'
+import { Grid, Button } from '@material-ui/core'
 
 import ContentBox from '../layout/ContentBox'
 
