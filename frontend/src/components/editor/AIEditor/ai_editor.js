@@ -39,7 +39,7 @@ class aiCanvas {
         this.stage.staticlayer = new Konva.Layer();
 
         //Create the canvas
-        this.startNode = new startNode(this.stage, this.layer);
+        this.startNode = new startNode(this.stage, this.layer, this);
         this.layer.add(this.startNode.group);
         this.stage.add(this.stage.staticlayer);
         this.stage.add(this.layer);
