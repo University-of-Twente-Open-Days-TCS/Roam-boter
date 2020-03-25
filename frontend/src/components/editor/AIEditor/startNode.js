@@ -87,9 +87,11 @@ export default class startNode {
 
         //when the invisible circle starts to be dragged create a new temporary arrow
         this.dragCircle.on("dragstart", function () {
-            this.tempX = this.getAbsolutePosition().x;
-            this.tempY = this.getAbsolutePosition().y;
-            //it is important that the invisible circle is in a different layer in order to check what is under the cursor it later
+            this.tempX = this.x() + node.group.x();
+            this.tempY = this.y() + node.group.y();
+
+            //it is important that the invisible circle is in a different layer
+            // in order to check what is under the cursor later
             this.moveTo(node.stage.templayer);
             this.tempArrow = new Konva.Arrow({
                 stroke: "black",
@@ -101,18 +103,15 @@ export default class startNode {
                 node.trueArrow.delete();
             }
 
-            node.stage.templayer.add(this.tempArrow);
+            node.layer.add(this.tempArrow);
         });
 
         //update the temporary arrow
         this.dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
-            this.tempArrow.absolutePosition({x: 0, y: 0});
-            var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
-            this.tempArrow.points(points.map(function (p) {
-                return p / node.stage.scale
-            }));
-            node.stage.templayer.batchDraw();
+            var points = [this.tempX, this.tempY, this.x(), this.y()];
+            this.tempArrow.points(points);
+            node.layer.batchDraw();
         });
         let g = this.group;
         //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable

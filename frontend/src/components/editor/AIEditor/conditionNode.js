@@ -157,7 +157,6 @@ export default class conditionNode {
             let touchPos = this.stage.getPointerPosition();
 
             //If node is released above trashcan, remove it and close trashcan
-            console.log(this.stage.staticlayer.getIntersection(touchPos));
             if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
                 this.remove();
                 this.stage.trashcan.fire('touchend', {

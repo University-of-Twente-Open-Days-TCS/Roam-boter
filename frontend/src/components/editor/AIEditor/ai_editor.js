@@ -188,13 +188,12 @@ class aiCanvas {
                         stage.scaleY(newScale);
                         stage.staticlayer.scaleX(1 / newScale);
                         stage.staticlayer.scaleY(1 / newScale);
-                        stage.staticlayer.setAbsolutePosition({})
                         const newPosition = {
                             x: (pointer.x / newScale - startPos.x) * newScale,
                             y: (pointer.y / newScale - startPos.y) * newScale,
                         };
-
                         stage.position(newPosition);
+                        stage.staticlayer.setAbsolutePosition({x: 0, y: 0});
                         stage.batchDraw();
                         lastDist = dist;
                     }
@@ -398,8 +397,6 @@ class aiCanvas {
     }
 
     addNode(node) {
-        console.log("node: ");
-        console.log(node);
         this.layer.add(node.group);
         node.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
         this.stage.draw();
