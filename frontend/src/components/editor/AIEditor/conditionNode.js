@@ -131,8 +131,13 @@ export default class conditionNode {
         this.trueDragCircle = this.createDragCircle(this.trueCircle, true);
         this.falseDragCircle = this.createDragCircle(this.falseCircle, false);
         this.createInputCircle();
+        this.group.on("dragstart", () => {
+            this.canvas.dragging = true;
+        });
+
         //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
         this.group.on("dragmove", () => {
+            this.canvas.dragging = true;
             this.updateArrows(this.stage);
             let touchPos = this.stage.getPointerPosition();
 
@@ -154,6 +159,7 @@ export default class conditionNode {
         });
 
         this.group.on("dragend", () => {
+            this.canvas.dragging = false;
             let touchPos = this.stage.getPointerPosition();
 
             //If node is released above trashcan, remove it and close trashcan
@@ -510,11 +516,13 @@ export default class conditionNode {
 
         dragCircle.originalX = dragCircle.x();
         dragCircle.originalY = dragCircle.y();
+        let canvas = this.canvas;
 
         //when the invisible circle starts to be dragged create a new temporary arrow
         dragCircle.on("dragstart", function () {
             this.tempX = this.x() + node.group.x();
             this.tempY = this.y() + node.group.y();
+            canvas.dragging = true;
 
             //it is important that the invisible circle is in a different layer
             // in order to check what is under the cursor later
@@ -537,6 +545,7 @@ export default class conditionNode {
         //update the temporary arrow
         dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
+            canvas.dragging = true;
             var points = [this.tempX, this.tempY, this.x(), this.y()];
             this.tempArrow.points(points);
             node.layer.batchDraw();
@@ -546,6 +555,7 @@ export default class conditionNode {
         //when the drag has ended, return the invisible circle to its original position, remove the temporary arrow
         // and create a new connection between nodes if applicable
         dragCircle.on("dragend", function () {
+            canvas.dragging = false;
             var touchPos = node.stage.getPointerPosition();
             var intersect = node.layer.getIntersection(touchPos);
             //If arrow is dropped on another element

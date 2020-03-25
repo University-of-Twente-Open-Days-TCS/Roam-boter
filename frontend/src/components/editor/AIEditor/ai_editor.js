@@ -23,6 +23,7 @@ class aiCanvas {
 
     _stage;
     _layer;
+    _dragging;
 
 
     _startNode;
@@ -37,9 +38,9 @@ class aiCanvas {
 
         this.stage.inputDict = new Map([]);
         this.stage.staticlayer = new Konva.Layer();
-
+        this._dragging = false;
         //Create the canvas
-        this.startNode = new startNode(this.stage, this.layer);
+        this.startNode = new startNode(this.stage, this.layer, this);
         this.layer.add(this.startNode.group);
         this.stage.add(this.stage.staticlayer);
         this.stage.add(this.layer);
@@ -154,13 +155,14 @@ class aiCanvas {
             }
         }
 
+        let self = this;
+
         function pinchZoomTouchEvent(stage) {
             if (stage) {
                 stage.getContent().addEventListener('touchmove', (evt) => {
                     const t1 = evt.touches[0];
                     const t2 = evt.touches[1];
-
-                    if (t1 && t2) {
+                    if (t1 && t2 && !self._dragging) {
                         evt.preventDefault();
                         evt.stopPropagation();
                         const oldScale = stage.scaleX();
@@ -411,6 +413,11 @@ class aiCanvas {
     addActionNode() {
         let newActionNode = new actionNode(this.stage, this.layer, this);
         return this.addNode(newActionNode);
+    }
+
+    set dragging(bool) {
+        console.log(bool);
+        this._dragging = bool;
     }
 
     //getters&setters

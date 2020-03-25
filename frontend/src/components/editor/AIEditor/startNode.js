@@ -1,5 +1,8 @@
 import arrow from "./arrow.js";
 import Konva from "konva"
+import popup from "./popup";
+import actionNode from "./actionNode";
+import conditionNode from "./conditionNode.js";
 
 const blockHeight = 40;
 const blockWidth = 100;
@@ -19,8 +22,9 @@ export default class startNode {
     _trueCircle;
     _dragCircle;
 
-    constructor(stage, layer) {
+    constructor(stage, layer, canvas) {
         //    bla insert shape and a point which can be dragged to a condition/action
+        this.canvas = canvas;
         this.stage = stage;
         this.layer = layer;
         this.createGroup(stage, layer);
@@ -67,6 +71,7 @@ export default class startNode {
 
     }
 
+
     //creates an invisible circle used only for making a new connection between nodes, based on condition will create one for true or for false
     createDragCircle() {
         let node = this;
@@ -85,10 +90,12 @@ export default class startNode {
         this.dragCircle.originalX = this.dragCircle.x();
         this.dragCircle.originalY = this.dragCircle.y();
 
+        let canvas = this.canvas;
         //when the invisible circle starts to be dragged create a new temporary arrow
         this.dragCircle.on("dragstart", function () {
             this.tempX = this.x() + node.group.x();
             this.tempY = this.y() + node.group.y();
+            canvas.dragging = true;
 
             //it is important that the invisible circle is in a different layer
             // in order to check what is under the cursor later
@@ -108,6 +115,7 @@ export default class startNode {
 
         //update the temporary arrow
         this.dragCircle.on("dragmove", function () {
+            canvas.dragging = true;
             //this is to offset the position of the stage
             var points = [this.tempX, this.tempY, this.x(), this.y()];
             this.tempArrow.points(points);
@@ -116,6 +124,7 @@ export default class startNode {
         let g = this.group;
         //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
         this.dragCircle.on("dragend", function () {
+            canvas.dragging = false;
             var touchPos = node.stage.getPointerPosition();
             var intersect = node.layer.getIntersection(touchPos);
             if (node.stage.inputDict.has(intersect)) {
@@ -123,6 +132,18 @@ export default class startNode {
                     node.stage.inputDict.get(intersect).inputArrow.delete();
                 }
                 new arrow(node, node.stage.inputDict.get(intersect), true, node.stage, node.layer);
+            } else {
+                //If not dropped on other element, make a popup to create either a new condition or action
+                node.stage.staticlayer.add(new popup(node.stage, node.stage.staticlayer, [new conditionNode(node.stage, node.layer, node.canvas), new actionNode(node.stage, node.layer, node.canvas)], (selection) => {
+                    let newNode = null;
+                    newNode = node.canvas.addNode(selection);
+                    new arrow(node, newNode, true, node.stage, node.layer);
+                    if (newNode !== null) {
+                        newNode.group.absolutePosition(touchPos);
+                        newNode.updateArrows();
+                    }
+                }, "select a new condition or action").group);
+                node.stage.staticlayer.draw();
             }
             this.moveTo(g);
             this.x(this.originalX);
