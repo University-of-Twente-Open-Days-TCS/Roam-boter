@@ -6,6 +6,7 @@ class GenerateTeamCodesForm(forms.Form):
     """Generates Team Codes"""
     amount = forms.IntegerField(label="Amount", required=True, validators=[MinValueValidator(0)])
 
+
 class EnterTeamForm(forms.Form):
     """Form for entering team code"""
     team_code_validator = MinValueValidator(0)

@@ -96,8 +96,7 @@ class RoamBotAPI {
          * Sets the active AI of a team.
          * @param aiPk Primary Key of AI to set active
          */
-
-        let response = this.callApi('dashboard/team/detail/', 'PUT', {active_ai: aiPk})
+        let response = this.callApi('dashboard/team/detail/', 'PUT', {active_ai_pk: aiPk})
         return response
     }
 
