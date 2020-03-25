@@ -155,6 +155,11 @@ class ReplayCanvas {
             ctx.fillText("Team " + index + ": " + score, width / (8 / 7), height / 8 + (10 * index + 10));
         });
 
+
+        ctx.font = "40px Arial";
+        var team_names_string = this.gameData.team_names[0] + " VS " + this.gameData.team_names[1]
+        ctx.fillText(team_names_string, (width / 2) - (team_names_string.length * 20 / 2), height / 8);
+
         requestAnimationFrame(this.draw)
     }
 }
