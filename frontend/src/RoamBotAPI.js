@@ -96,8 +96,7 @@ class RoamBotAPI {
          * Sets the active AI of a team.
          * @param aiPk Primary Key of AI to set active
          */
-
-        let response = this.callApi('dashboard/team/detail/', 'PUT', {active_ai: aiPk})
+        let response = this.callApi('dashboard/team/detail/', 'PUT', {active_ai_pk: aiPk})
         return response
     }
 
@@ -178,6 +177,15 @@ class RoamBotAPI {
          */
         let data = {gamemode: gamemode, initiator_ai: ai}
         let response = this.callApi('matches/teammatches/', 'POST', data)
+        return response
+    }
+
+    deleteTeamMatch(pk) {
+        /**
+         * Deletes a team match
+         * @param pk primary key of the match to delete
+         */
+        let response = this.callApi('matches/teammatches/'+pk, 'DELETE')
         return response
     }
 
