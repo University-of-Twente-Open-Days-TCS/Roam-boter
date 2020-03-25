@@ -257,8 +257,8 @@ export default class conditionNode {
             case 1:
                 tree.condition = {
                     "type_id": 1,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {
                         "distance": this.condition.distance.id,
                         "obj": this.condition.object.id
@@ -272,8 +272,8 @@ export default class conditionNode {
             case 2:
                 tree.condition = {
                     "type_id": 2,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"obj": this.condition.object.id},
                     "position":this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
@@ -284,8 +284,8 @@ export default class conditionNode {
             case 3:
                 tree.condition = {
                     "type_id": 3,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"obj": this.condition.object.id},
                     "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
@@ -297,8 +297,8 @@ export default class conditionNode {
             case 4:
                 tree.condition = {
                     "type_id": 4,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"obj": this.condition.object.id},
                     "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
@@ -309,8 +309,8 @@ export default class conditionNode {
             case 5:
                 tree.condition = {
                     "type_id": 5,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {},
                     "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
 
@@ -322,8 +322,8 @@ export default class conditionNode {
             case 6:
                 tree.condition = {
                     "type_id": 6,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"label": this.condition.label.id},
                     "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
@@ -334,8 +334,8 @@ export default class conditionNode {
             case 7:
                 tree.condition = {
                     "type_id": 7,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"health": this.condition.health.id},
                     "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
