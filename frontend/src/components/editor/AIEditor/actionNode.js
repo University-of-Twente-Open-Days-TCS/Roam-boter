@@ -391,8 +391,7 @@ export default class actionNode {
     }
 
     getInputDotPosition() {
-        let pos = this.inputCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.inputCircle.x() + this.group.x(), this.inputCircle.y() + this.group.y()];
     }
 
     updateArrows(stage) {

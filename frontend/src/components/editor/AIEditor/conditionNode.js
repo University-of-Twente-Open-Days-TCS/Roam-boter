@@ -514,8 +514,8 @@ export default class conditionNode {
 
         //when the invisible circle starts to be dragged create a new temporary arrow
         dragCircle.on("dragstart", function () {
-            this.tempX = this.getAbsolutePosition().x;
-            this.tempY = this.getAbsolutePosition().y;
+            this.tempX = this.x() + node.group.x();
+            this.tempY = this.y() + node.group.y();
 
             //it is important that the invisible circle is in a different layer
             // in order to check what is under the cursor later
@@ -532,18 +532,15 @@ export default class conditionNode {
                 node.falseArrow.delete();
             }
 
-            node.stage.templayer.add(this.tempArrow);
+            node.layer.add(this.tempArrow);
         });
 
         //update the temporary arrow
         dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
-            this.tempArrow.absolutePosition({x: 0, y: 0});
-            var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
-            this.tempArrow.points(points.map(function (p) {
-                return p / node.stage.scale
-            }));
-            node.stage.templayer.batchDraw();
+            var points = [this.tempX, this.tempY, this.x(), this.y()];
+            this.tempArrow.points(points);
+            node.layer.batchDraw();
         });
         let g = this.group;
 
@@ -596,18 +593,15 @@ export default class conditionNode {
     }
 
     getTrueDotPosition() {
-        let pos = this.trueCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.trueCircle.x() + this.group.x(), this.trueCircle.y() + this.group.y()];
     }
 
     getFalseDotPosition() {
-        let pos = this.falseCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.falseCircle.x() + this.group.x(), this.falseCircle.y() + this.group.y()];
     }
 
     getInputDotPosition() {
-        let pos = this.inputCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.inputCircle.x() + this.group.x(), this.inputCircle.y() + this.group.y()];
     }
 
     remove() {

@@ -136,8 +136,7 @@ export default class startNode {
     }
 
     getTrueDotPosition() {
-        let pos = this.trueCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.trueCircle.x() + this.group.x(), this.trueCircle.y() + this.group.y()];
     }
 
     updateArrows(stage) {

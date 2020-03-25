@@ -68,11 +68,8 @@ export default class arrow {
         }
         this.endpos = this.dest.getInputDotPosition();
         //this is to offset the possible movement of the entire stage, otherwise the arrows would not be in the correct position
-        this.arrowline.absolutePosition({x: 0, y: 0});
         let arrow = this;
-        this.arrowline.points(this.startpos.concat(this.endpos).map(function (p) {
-            return p / arrow.stage.scale
-        }));
+        this.arrowline.points(this.startpos.concat(this.endpos));
         this.layer.batchDraw();
 
     }
