@@ -14,10 +14,9 @@ GUNI_PID=$!
 stop_gracefully(){
     # stop simulation workers
     kill -15 $SIM_PID
-    wait $!
-    # stop gunicorn process
     kill -15 $GUNI_PID
-    wait $!
+    wait $SIM_PID
+    wait $GUNI_PID
     exit 0
 }
 
