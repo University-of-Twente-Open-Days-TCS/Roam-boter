@@ -19,6 +19,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: 'white',
         height: '100vh',
         flexGrow: 1,
+        overflow: "scroll"
     },
 }));
 
