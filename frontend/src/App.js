@@ -20,6 +20,7 @@ import BotMatchReplay from './components/matches/bot/BotMatchReplay.js';
 
 import PlayvsPlayer from "./components/matches/team/PlayvsPlayer";
 import NewTeamMatch from "./components/matches/team/NewTeamMatch";
+import TeamMatchHistory from './components/matches/team/TeamMatchHistory.js';
 
 
 class App extends Component {
@@ -134,6 +135,7 @@ class App extends Component {
                         <Route path="/NewBotMatch" component={NewBotMatch}/>
                         <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
                         <Route path="/NewTeamMatch" component={NewTeamMatch}/>
+                        <Route path="/TeamMatchHistory" component={TeamMatchHistory}/>
                     </Structure>
                 </div>) 
                     : 

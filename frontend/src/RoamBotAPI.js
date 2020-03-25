@@ -180,6 +180,15 @@ class RoamBotAPI {
         return response
     }
 
+    deleteTeamMatch(pk) {
+        /**
+         * Deletes a team match
+         * @param pk primary key of the match to delete
+         */
+        let response = this.callApi('matches/teammatches/'+pk, 'DELETE')
+        return response
+    }
+
     getBotList() {
         /**
          * Gets all bots

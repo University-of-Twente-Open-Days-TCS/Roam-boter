@@ -61,7 +61,7 @@ const Home = (props) => {
     return (
         <ContentBox>
             {team ? <TeamInfo team={team} ais={ais} setActiveAI={setActiveAI}></TeamInfo> : null}
-            <Grid container justify="center" style={{marginTop: '2rem'}}>
+            <Grid container justify="center" style={{marginTop: '1rem'}}>
                 <Button onClick={logoutHandler} variant="contained" color="secondary" style={{margin: '0.5rem'}}>Logout</Button>
             </Grid>
         </ContentBox>
