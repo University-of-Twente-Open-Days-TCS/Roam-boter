@@ -1,14 +1,9 @@
 import arrow from "./arrow.js";
 import popup from "./popup.js"
 import condition from "./condition.js";
-import object from "./object.js";
-import distance from "./distance.js";
-import label from "./label.js";
-import health from "./health.js";
 import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
-import action from "./action";
 import actionNode from "./actionNode";
 
 
@@ -18,48 +13,6 @@ const blockWidth = 100;
 const circle_radius = 10;
 const hitboxCircleRadius = 20;
 const spawnPoint = {x: 0, y: 0};
-
-
-const objectList = [
-    new object(1),
-    new object(2),
-    new object(3),
-    new object(4),
-    new object(5),
-    new object(6),
-    new object(7),
-    new object(8),
-    new object(9),
-    new object(10)
-
-];
-
-const distanceList = [
-    new distance(1),
-    new distance(2),
-    new distance(3)
-];
-
-const healthList = [
-    new health(0),
-    new health(20),
-    new health(40),
-    new health(60),
-    new health(80),
-
-];
-
-const labelList = [
-    new label(0),
-    new label(1),
-    new label(2),
-    new label(3),
-    new label(4),
-    new label(5),
-    new label(6),
-    new label(7),
-    new label(8)
-];
 
 
 export default class conditionNode {
@@ -131,9 +84,8 @@ export default class conditionNode {
         this.trueDragCircle = this.createDragCircle(this.trueCircle, true);
         this.falseDragCircle = this.createDragCircle(this.falseCircle, false);
         this.createInputCircle();
-        //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
         this.group.on("dragmove", () => {
-            this.updateArrows(this.stage);
+            this.updateArrows();
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
@@ -229,22 +181,22 @@ export default class conditionNode {
 
 
         //adjust arrows
-        this.updateArrows(this.stage);
+        this.updateArrows();
 
         this.stage.draw();
 
     }
 
 
-    updateArrows(stage) {
+    updateArrows() {
         if (this.trueArrow != null) {
-            this.trueArrow.update(stage);
+            this.trueArrow.update();
         }
         if (this.falseArrow != null) {
-            this.falseArrow.update(stage);
+            this.falseArrow.update();
         }
         if (this.inputArrow != null) {
-            this.inputArrow.update(stage);
+            this.inputArrow.update();
         }
     }
 
@@ -272,7 +224,7 @@ export default class conditionNode {
     }
 
     generateConditionList() {
-        let conditionList = [
+        return [
             new condition(1),
             new condition(2),
             new condition(3),
@@ -280,13 +232,12 @@ export default class conditionNode {
             new condition(5),
             new condition(6),
             new condition(7),
-        ];
-        return conditionList
+        ]
     }
 
     intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
-    jsonify() {
+    jsonify(startNodePos) {
         let node = this.rect;
         let tree = {};
 
@@ -312,7 +263,7 @@ export default class conditionNode {
                         "distance": this.condition.distance.id,
                         "obj": this.condition.object.id
                     },
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -324,7 +275,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position":this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
                 return tree;
 
@@ -336,7 +287,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -349,7 +300,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {"obj": this.condition.object.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -361,7 +312,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
 
                 };
 
@@ -374,7 +325,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {"label": this.condition.label.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -386,7 +337,7 @@ export default class conditionNode {
                     "child_true": this.trueChild().jsonify(),
                     "child_false": this.falseChild().jsonify(),
                     "attributes": {"health": this.condition.health.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
 
@@ -397,6 +348,12 @@ export default class conditionNode {
                 throw new AIValidationError("The condition has an unknown ID!");
 
         }
+    }
+
+    subtractPosAFromPosB(posA, posB) {
+        let posX = posB.x - posA.x;
+        let posY = posB.y - posA.y;
+        return {x: posX, y: posY};
     }
 
 
@@ -539,7 +496,7 @@ export default class conditionNode {
         dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
             this.tempArrow.absolutePosition({x: 0, y: 0});
-            var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
+            let points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
             this.tempArrow.points(points.map(function (p) {
                 return p / node.stage.scale
             }));
@@ -550,8 +507,8 @@ export default class conditionNode {
         //when the drag has ended, return the invisible circle to its original position, remove the temporary arrow
         // and create a new connection between nodes if applicable
         dragCircle.on("dragend", function () {
-            var touchPos = node.stage.getPointerPosition();
-            var intersect = node.layer.getIntersection(touchPos);
+            let touchPos = node.stage.getPointerPosition();
+            let intersect = node.layer.getIntersection(touchPos);
             //If arrow is dropped on another element
             if (intersect != null) {
                 //If the other element is an inputnode
@@ -560,7 +517,7 @@ export default class conditionNode {
                     if (node.stage.inputDict.get(intersect).inputArrow != null) {
                         node.stage.inputDict.get(intersect).inputArrow.delete();
                     }
-                    //Create new arrw between the two nodes
+                    //Create new arrow between the two nodes
                     new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
                 }
             } else {

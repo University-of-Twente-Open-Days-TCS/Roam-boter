@@ -31,7 +31,6 @@ export default class popup {
     }
 
     createGroup() {
-        let thisStage = this.stage;
         this.group = new Konva.Group();
         this.createClose();
         this.createRect();
@@ -147,7 +146,7 @@ export default class popup {
 
     createClose() {
 
-        var exitRect = new Konva.Rect({
+        let exitRect = new Konva.Rect({
             width: this.stage.width(),
             height: this.stage.height(),
             opacity: 0,

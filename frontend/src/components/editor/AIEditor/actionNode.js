@@ -1,13 +1,7 @@
 import popup from "./popup.js"
 import action from "./action.js";
-import object from "./object.js";
-import reldir from "./reldir.js";
-import winddir from "./winddir.js";
-import label from "./label.js";
-import seconds from "./seconds.js";
 import Konva from "konva"
 import AIValidationError from "../Errors/AIValidationError.js";
-import speed from "./speed.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 
 
@@ -16,7 +10,6 @@ const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
 const spawnPoint = {x: 0, y: 0};
-
 
 
 export default class actionNode {
@@ -30,7 +23,7 @@ export default class actionNode {
     _inputCircle;
     _position;
 
-    movementActions = [1, 2, 3, 4];
+    movementActions = [1, 2, 4];
     containsMovement = false;
     aimActions = [5, 6, 7, 8, 9];
     containsAim = false;
@@ -63,10 +56,8 @@ export default class actionNode {
             this.actionNodeTextObj.moveToTop();
         }
         this.createInputCircle();
-
-        //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
         this.group.on("dragmove", () => {
-            this.updateArrows(this.stage);
+            this.updateArrows();
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
@@ -149,6 +140,14 @@ export default class actionNode {
         //Fill the actionNode with the newly added info
         this.actionNodeText = this.createActionNodeText();
         this.actionNodeTextObj.text(this.actionNodeText);
+        //Check what type of action was added and adjust booleans accordingly
+        if (this.movementActions.includes(action.id)) {
+            this.containsMovement = true;
+        } else if (this.fireActions.includes(action.id)) {
+            this.containsFire = true;
+        } else if (this.aimActions.includes(action.id)) {
+            this.containsAim = true;
+        }
         this.setassetsizes();
         this.inputCircle.moveToTop();
     }
@@ -222,9 +221,9 @@ export default class actionNode {
 
     }
 
-    intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)})
+    intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
-    jsonify() {
+    jsonify(startNodePos) {
         let node = this.rect;
         let tree = {};
         tree.actionlist = [];
@@ -261,14 +260,6 @@ export default class actionNode {
                         "type_id": 2, "attributes": {}
                     });
                     break;
-
-                // Patrols in a possible eight-figure around a location.
-                case 3:
-                    tree.actionlist.push({
-                        "type_id": 3, "attributes": {"obj": item.object.id}
-                    });
-                    break;
-
 
                 //Keeps moving in a straight away from object, if wall is hit keeps increasing either x or y-value to increase distance
                 case 4:
@@ -355,10 +346,16 @@ export default class actionNode {
 
 
         });
-        tree.position = this.intifyPosition(node.getAbsolutePosition());
+        tree.position = this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()));
         let result = {};
         result.actionblock = tree;
         return result;
+    }
+
+    subtractPosAFromPosB(posA, posB) {
+        let posX = posB.x - posA.x;
+        let posY = posB.y - posA.y;
+        return {x: posX, y: posY};
     }
 
 
@@ -395,9 +392,9 @@ export default class actionNode {
         return [pos.x, pos.y];
     }
 
-    updateArrows(stage) {
+    updateArrows() {
         if (this.inputArrow != null) {
-            this.inputArrow.update(stage);
+            this.inputArrow.update();
         }
     }
 

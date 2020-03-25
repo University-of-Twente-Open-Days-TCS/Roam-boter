@@ -65,15 +65,6 @@ export default class condition {
         this.setRemainingOptions();
     }
 
-    //Edits the condition, resets everything to null and creates a condition with the given parameters
-    editCondition(id = null, distance = null, object = null, label = null, health = null) {
-        this.id = id;
-        this.distance = distance;
-        this.object = object;
-        this.label = label;
-        this.health = health;
-    }
-
     //Returns whether the condition has all the necessary parameters
     isValid() {
         switch (this.id) {
@@ -144,10 +135,12 @@ export default class condition {
             case 7:
                 this.remainingOptions = [{
                     options: healthList, f: ((hlth) => {
-                        this.healt = hlth
+                        this.health = hlth
                     })
                 }];
                 break;
+            default:
+
         }
     }
 
@@ -156,7 +149,7 @@ export default class condition {
     }
 
 
-    //Converts the condition into a string, with pre-given enters for readibility #TODO: variable (not hardcoded) newlines
+    //Converts the condition into a string, with pre-given enters for readibility
     toString() {
         switch (this.id) {
             case 1:

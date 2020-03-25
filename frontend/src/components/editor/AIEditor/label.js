@@ -28,8 +28,7 @@ export default class label {
             case 8:
                 return "'black'";
             default:
-            //TODO raise error, wrong label
-
+                return null;
         }
     }
 

@@ -1,7 +1,7 @@
 export default class health {
     constructor(id) {
 
-        this._id = id;
+        this.id = id;
     }
     toString() {
         switch (this.id) {
@@ -19,7 +19,7 @@ export default class health {
                 return null;
         }
     }
-    //TODO jsonify()
+
     _id;
     get id() {
         return this._id;

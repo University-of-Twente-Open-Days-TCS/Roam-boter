@@ -60,7 +60,7 @@ export default class arrow {
 
 
     //Move the arrow and update the canvas
-    update(stage) {
+    update() {
         if (this.isTrue) {
             this.startpos = this.src.getTrueDotPosition();
         } else {

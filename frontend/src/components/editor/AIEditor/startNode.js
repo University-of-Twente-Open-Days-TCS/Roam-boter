@@ -23,20 +23,21 @@ export default class startNode {
         //    bla insert shape and a point which can be dragged to a condition/action
         this.stage = stage;
         this.layer = layer;
-        this.createGroup(stage, layer);
+        this.createGroup(stage);
 
     }
 
-    createGroup(stage, layer) {
+    createGroup(stage) {
         this.group = new Konva.Group({
             x: stage.width() / 2
         });
         this.createRect();
+        this.createText();
         this.createTrueCircle();
         this.createDragCircle();
         let node = this;
         this.group.on("dragmove", function () {
-            node.updateArrows(stage)
+            node.updateArrows()
         });
     }
 
@@ -52,6 +53,20 @@ export default class startNode {
             cornerRadius: 10,
         });
         this.group.add(this.rect);
+    }
+
+    createText() {
+        this.text = new Konva.Text({
+            x: 20,
+            y: 5,
+            text: "Start",
+            fontSize: 12,
+            fill: '#FFF',
+            fontFamily: 'Monospace',
+            align: 'center',
+            padding: 10
+        });
+        this.group.add(this.text);
     }
 
     //create a circle from which the true connection is made to another node
@@ -108,7 +123,7 @@ export default class startNode {
         this.dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
             this.tempArrow.absolutePosition({x: 0, y: 0});
-            var points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
+            let points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
             this.tempArrow.points(points.map(function (p) {
                 return p / node.stage.scale
             }));
@@ -117,8 +132,8 @@ export default class startNode {
         let g = this.group;
         //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
         this.dragCircle.on("dragend", function () {
-            var touchPos = node.stage.getPointerPosition();
-            var intersect = node.layer.getIntersection(touchPos);
+            let touchPos = node.stage.getPointerPosition();
+            let intersect = node.layer.getIntersection(touchPos);
             if (node.stage.inputDict.has(intersect)) {
                 if (node.stage.inputDict.get(intersect).inputArrow != null) {
                     node.stage.inputDict.get(intersect).inputArrow.delete();
@@ -140,16 +155,10 @@ export default class startNode {
         return [pos.x, pos.y];
     }
 
-    updateArrows(stage) {
+    updateArrows() {
         if (this.trueArrow != null) {
-            this.trueArrow.update(stage);
+            this.trueArrow.update();
         }
-    }
-
-    getRectMiddlePos() {
-        let x = this.rect.x() + this.rect.width() / 2;
-        let y = this.rect.y() + this.rect.height() / 2;
-        return {x: x, y: y};
     }
 
     get trueArrow() {
