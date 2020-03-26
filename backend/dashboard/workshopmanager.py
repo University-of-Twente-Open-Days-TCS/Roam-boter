@@ -48,15 +48,15 @@ def generate_teamcodes(amount):
 
         while not generated_code:
             # generate team code
-            candidate_team_code = randint(0,999999)
+            candidate_team_code = randint(100000, 999999)
 
             if candidate_team_code not in team_codes:
-                #Valid team code
+                # valid team code
                 team_codes.append(candidate_team_code)
 
                 new_team = Team(team_code=candidate_team_code, workshop=workshop, team_name=name)
                 new_team.save()
-                # End loop
+                # end loop
                 generated_code = True
 
 
@@ -117,7 +117,6 @@ def remove_user_session(session):
         del session['team_id']
 
 
-
 def open_workshop():
     """Opens a workshop. Returns whether successful."""
     if not all_workshops_closed():
@@ -127,6 +126,7 @@ def open_workshop():
     workshop = Workshop(workshop_open=True)
     workshop.save()
     return True
+
 
 def close_workshop():
     """Closes a workshop. Returns whether successful."""
@@ -147,12 +147,10 @@ def get_cur_workshop():
     return Workshop.objects.filter(workshop_open=True).first()
 
 
-
 def all_workshops_closed():
     """Returns whether all workshops are closed"""
     open_workshops = Workshop.objects.filter(workshop_open=True).count()
     return open_workshops == 0
-
 
 
 if __name__ == "__main__":
