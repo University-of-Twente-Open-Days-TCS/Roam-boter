@@ -588,19 +588,41 @@ export default class conditionNode {
     }
 
     darkenAll() {
-        this.group.cache();
         this.group.filters([Konva.Filters.Brighten]);
-        this.group.brightness(-0.3);
+        this.group.brightness(-0.5);
         this._trueArrow.dest.darkenAll();
         this._falseArrow.dest.darkenAll();
+        this._trueArrow.arrowline.fill("black");
+        this._falseArrow.arrowline.fill("black");
+        this._trueArrow.arrowline.strokeWidth(2);
+        this._falseArrow.arrowline.strokeWidth(2);
+        this.falseCircle.cache();
+        this.falseCircle.filters([Konva.Filters.Brighten]);
+        this.falseCircle.brightness(0);
+        this.trueCircle.cache();
+        this.trueCircle.filters([Konva.Filters.Brighten]);
+        this.trueCircle.brightness(0);
+        this.group.cache();
     }
 
     highlightPath(boolList) {
         this.group.brightness(0);
         if (boolList.shift()) {
             this._trueArrow.dest.highlightPath(boolList);
+            this._trueArrow.arrowline.stroke("green");
+            this._trueArrow.arrowline.strokeWidth(4);
+            this.falseCircle.cache();
+            this.falseCircle.filters([Konva.Filters.Brighten]);
+            this.falseCircle.brightness(-0.5);
+            this.group.cache();
         } else {
             this._falseArrow.dest.highlightPath(boolList);
+            this._falseArrow.arrowline.stroke("red");
+            this._falseArrow.arrowline.strokeWidth(4);
+            this.trueCircle.cache();
+            this.trueCircle.filters([Konva.Filters.Brighten]);
+            this.trueCircle.brightness(-0.5);
+            this.group.cache();
         }
     }
 
