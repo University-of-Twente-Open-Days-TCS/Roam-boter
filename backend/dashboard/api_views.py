@@ -55,7 +55,7 @@ class TeamDetailAPI(APIView):
             team.active_ai = ai
             team.save()
 
-            serializer = TeamMatchPrimaryKeySerializer(team)
+            serializer = TeamSerializer(team)
             return Response(serializer.data)
 
         except (TypeError, ValueError):
