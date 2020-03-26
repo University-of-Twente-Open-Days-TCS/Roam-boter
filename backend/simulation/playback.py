@@ -17,6 +17,7 @@ class PlayBack:
     def __init__(self, level):
         self.level = level
         self.frames = []
+        self.team_names = []
 
         # index of the winning ai
         self.winner = None
@@ -24,25 +25,31 @@ class PlayBack:
 
     def add_frame(self, state):
         self.frames.append(Frame(state))
-       
-    # use -1 for bots
-    def to_json(self, player_ids):
+
+    def to_json(self, player_ids, team_names):
         self.player_ids = player_ids
+        self.team_names = team_names
         encoder = PlayBackEncoder()
         return encoder.encode(self)
 
 
 class Frame:
-    tanks = []
-    bullets = []
-
     # Extract a frame from state data.
     def __init__(self, state):
         self.tanks = deepcopy(state.tanks)
         self.bullets = deepcopy(state.bullets)
-        self.visibility = [{'tanks': t.visible_tanks(state), 'bullets': t.visible_bullets(state)} for t in state.tanks]
+        self.health_packs = Frame.convert_health_packs(deepcopy(state.level.health_packs))
+        self.visibility = [{'tanks': t.visible_tanks(state), 'bullets': t.visible_bullets(state)} for t in self.tanks]
         self.events = []
         self.scores = deepcopy(state.scores)
+
+    @staticmethod
+    def convert_health_packs(health_packs):
+        new_list = []
+        for pos in health_packs:
+            x, y = pos
+            new_list.append({'pos': (x + 0.5, y + 0.5), 'respawn_timer': health_packs[pos]})
+        return new_list
 
 
 class PlayBackEncoder(JSONEncoder):
@@ -53,7 +60,7 @@ class PlayBackEncoder(JSONEncoder):
         elif isinstance(obj, Frame):
             return obj.__dict__
         elif isinstance(obj, Tank):
-            return {'pos': obj.get_pos(), 'rotation': obj.get_rotation(), 'turret_rotation': obj.get_turret_rotation(), 'health': obj.get_health(), 'ai_path': obj.ai_path}
+            return {'pos': obj.get_pos(), 'rotation': obj.get_rotation(), 'turret_rotation': obj.get_turret_rotation(), 'health': obj.get_health(), 'labels': obj.labels, 'timers': obj.label_timers, 'ai_path': obj.ai_path}
         elif isinstance(obj, Bullet):
             return {'pos': obj.get_pos()}
         elif isinstance(obj, Object):

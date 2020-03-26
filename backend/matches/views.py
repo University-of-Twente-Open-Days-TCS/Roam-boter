@@ -2,21 +2,17 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from django.db.models import Q
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-
-
 
 from roamboter.api.permissions import InTeamPermission
 from roamboter.api.mixins import RetrieveTeamObjectMixin, DestroyTeamObjectMixin
 
-from AIapi.models import AI
 from dashboard.models import Team
 
 
 from .models import Bot, Simulation, BotMatch, TeamMatch
-from .serializers import BotSerializer, BotMatchSerializer, TeamMatchSerializer, DetailedTeamMatchSerializer, SimulationSerializer
+from .serializers import BotSerializer, BotMatchSerializer, TeamMatchPrimaryKeySerializer, TeamMatchSerializer, DetailedTeamMatchSerializer, SimulationSerializer
 from .matchplayer import SIMULATION_PLAYER
 
 
@@ -108,7 +104,8 @@ class BotMatchHistoryRetrieveAPI(RetrieveTeamObjectMixin, DestroyTeamObjectMixin
 
 class TeamMatchHistoryListAPI(APIView):
     """
-    Retrieves a list of team matches related to the team
+    Retrieves a list of team matches related to the team.
+    NOTE: post uses a different serializer than get.
     """
 
     permission_classes = [InTeamPermission]
@@ -140,7 +137,7 @@ class TeamMatchHistoryListAPI(APIView):
 
         context = {'opponent': opponent, 'initiator': initiator}
 
-        serializer = TeamMatchSerializer(data=request.data, context=context)
+        serializer = TeamMatchPrimaryKeySerializer(data=request.data, context=context)
 
         if serializer.is_valid():
             serializer.save()

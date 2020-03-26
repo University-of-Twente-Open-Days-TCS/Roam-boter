@@ -21,10 +21,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if options['levels'] is not None:
             for level in options['levels']:
-                self.log_message("Preparing cache for level: " + level)
                 prepare_caches([level])
         else:
             raise CommandError("TODO: Implement preparing caches for level files in level folder")
 
-    def log_message(self, message):
-        self.stdout.write("\u001b[36m" + message + "\u001b[0m")

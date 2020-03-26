@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 
-import Home from "./components/Home";
+import Home from "./components/home/Home";
 import AIEditor from "./components/editor/AIEditor.js";
 import AIList from "./components/editor/AIList";
 import Login from "./components/login/Login";
@@ -20,6 +20,7 @@ import BotMatchReplay from './components/matches/bot/BotMatchReplay.js';
 
 import PlayvsPlayer from "./components/matches/team/PlayvsPlayer";
 import NewTeamMatch from "./components/matches/team/NewTeamMatch";
+import TeamMatchHistory from './components/matches/team/TeamMatchHistory.js';
 
 
 class App extends Component {
@@ -27,9 +28,9 @@ class App extends Component {
         super(props);
 
         this.state = {
-            AIs: [],
             loggedIn: false,
-            loginAttemptFailed: false
+            loginAttemptFailed: false,
+            team: null
         };
 
         // Bind handlers
@@ -37,14 +38,17 @@ class App extends Component {
         this.toggleFull = this.toggleFull.bind(this)
     }
 
-    componentDidMount() {
+    componentDidMount() { //TODO: Make async
         document.addEventListener('fullscreenchange', () => this.forceUpdate())
        
         // Check whether the session is logged in
         RoamBotAPI.getTeamDetail()
             .then((response) => {
                 if (response.ok) {
-                    this.setState({loggedIn: true})
+                    let json = response.json()
+                    json.then((result) => {
+                        this.setState({loggedIn: true, team: result})
+                    })
                 } else {
                     this.setState({loggedIn: false})
                 }
@@ -108,7 +112,7 @@ class App extends Component {
 
 
 
-
+    
     render() {
 
         // Props to send to layout component. Neccesary for fullscreen option.
@@ -134,7 +138,8 @@ class App extends Component {
                         <Route path="/BotMatchReplay/:matchId" component={BotMatchReplay}/>
                         <Route path="/NewBotMatch" component={NewBotMatch}/>
                         <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
-                        <Route path="/NewTeamMatch" component={NewTeamMatch}/>
+                        <Route path="/NewTeamMatch" component={() => <NewTeamMatch team={this.state.team}></NewTeamMatch>}/>
+                        <Route path="/TeamMatchHistory" component={TeamMatchHistory}/>
                     </Structure>
                 </div>) 
                     : 

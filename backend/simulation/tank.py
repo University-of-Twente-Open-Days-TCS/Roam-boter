@@ -36,6 +36,7 @@ class Tank:
 
     team_id = 0
 
+
     scout_target = None
 
     path = None
@@ -44,6 +45,26 @@ class Tank:
         self.ai = ai
         self.actions = []
         self.ai_path = []
+        self.labels = [False] * 9
+        self.label_timers = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
+
+    def get_label(self, index):
+        return self.labels[index]
+
+    def set_label(self, index):
+        self.labels[index] = True
+
+    def unset_label(self, index):
+        self.labels[index] = False
+
+    def set_label_timer(self, index, seconds):
+        self.label_timers[index] = seconds * 60
+
+    def process_label_timers(self):
+        for i, x in enumerate(self.label_timers):
+            if x == 0:
+                self.labels[i] = False
+            self.label_timers[i] -= 1
 
     def set_spawn(self, x, y):
         self.spawn = (x, y)
@@ -197,7 +218,7 @@ class Tank:
             angle = math.degrees(math.acos(inproduct))
 
             if angle < 20 or angle > 340:
-                if state.level.line_of_sight(self.get_pos(), other.get_pos()):
+                if state.level.direct_line_of_sight(self.get_pos(), other.get_pos()):
                     visible_tanks.append(other)
 
         return visible_tanks
@@ -231,7 +252,7 @@ class Tank:
             angle = math.degrees(math.acos(inproduct))
 
             if angle < 20 or angle > 340:
-                if state.level.line_of_sight(self.get_pos(), other.get_pos()):
+                if state.level.direct_line_of_sight(self.get_pos(), other.get_pos()):
                     visible_bullets.append(other)
 
         return visible_bullets

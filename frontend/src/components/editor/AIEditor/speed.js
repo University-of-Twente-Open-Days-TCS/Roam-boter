@@ -3,17 +3,17 @@ export default class speed {
     _id;
 
     constructor(id) {
-        this._id = id;
+        this.id = id;
     }
 
     toString() {
         switch (this.id) {
             case 0:
-                return "Slow";
+                return "Slow speed";
             case 1:
-                return "Normal";
+                return "Normal speed";
             case 2:
-                return "Fast";
+                return "Fast speed";
             default:
                 return null;
 

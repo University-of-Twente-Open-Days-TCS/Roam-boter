@@ -13,9 +13,11 @@ import cProfile
 import json
 
 import os
+import logging
 
 import time
 
+LOGGER = logging.getLogger('simulation.simulation')
 MAX_GAME_LENGTH = 1800
 
 
@@ -96,7 +98,6 @@ class Simulation:
         # Execute gamemode specific stuff like king of the hill scores and bladiebla
         self.handle_game_mode()
 
-
         # Collect all actions that the tanks are going to execute according to their AI's
         for tank in self.get_tanks():
             tank.collectActions(self.state)
@@ -110,10 +111,12 @@ class Simulation:
         for tank in self.get_tanks():
             tank.handle_health_packs(self.state)
 
+        for tank in self.get_tanks():
+            tank.process_label_timers()
+
         # Update bullet locations.
         for bullet in self.get_bullets():
             bullet.update(self.state)
-
 
         # Check if tanks don't have any HP left.
         for tank in self.get_tanks():
@@ -137,11 +140,11 @@ class Simulation:
     # Retrieve the winning AI object.
     def get_winner(self):
         heighest_score = -99999999
-        winner = -1
+        winner = None
 
         for i, s in enumerate(self.state.scores):
             if s == heighest_score:
-                winner = -1
+                winner = None
 
             if s > heighest_score:
                 heighest_score = s
@@ -213,13 +216,15 @@ def prepare_caches(levels):
 
 def test_simulation():
 
-    false_node = ActionNode([Action(10, {})])
-    true_node = ActionNode([Action(1, {'obj': 10}), Action(10, {}), Action(5, {'obj': 2})])
+    false_node = ActionNode([Action(0, {})])
+    true_node = ActionNode([Action(1, {'obj': 10})])
 
     ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 1}), true_node, false_node)
-    playback = simulate([ai, ai])
 
-    print(playback.to_json(0, 1))
+    ai2 = ActionNode([Action(1, {'obj': 8})])
+    playback = simulate([ai2, ai])
+
+    print(playback.to_json([0, 1], ["Team1", "Team2"]))
 
     # cProfile.run("simulate([ai, ai])")
     # PlayBackEncoder.encode(a.get_playback())

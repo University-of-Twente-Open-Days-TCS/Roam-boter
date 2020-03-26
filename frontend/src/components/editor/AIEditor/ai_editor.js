@@ -28,7 +28,8 @@ class aiCanvas {
 
     _startNode;
 
-    constructor(container) {
+    constructor(container, isReplay) {
+        this.isReplay = isReplay;
         //Create the stage
         this.createStage(container);
 
@@ -45,17 +46,21 @@ class aiCanvas {
         this.stage.add(this.stage.staticlayer);
         this.stage.add(this.layer);
         this.stage.add(this.stage.templayer);
+        if (isReplay) {
+            this.addInteractionBlocker();
+        }
         this.layer.draw();
 
 
         //add trashcan
-        this.addTrashcan(this.stage);
+        if (!isReplay) {
+            this.addTrashcan(this.stage);
+        }
         this.layer.draw();
         this.stage.staticlayer.draw();
 
         //Make canvas draggable
         this.makeDraggable();
-
 
     }
 
@@ -79,6 +84,13 @@ class aiCanvas {
             width: width,
             height: height
         });
+        if (this.isReplay) {
+            this.blocker.size({
+                width: width,
+                height: height
+            })
+        }
+
         this.stage.batchDraw()
     }
 
@@ -128,6 +140,19 @@ class aiCanvas {
             stage.staticlayer.absolutePosition({x: 0, y: 0});
         });
 
+    }
+
+    //prevents any interaction with the elements of the canvas, effectively making kind of an image
+    addInteractionBlocker() {
+        this.blocker = new Konva.Rect({
+            width: this.stage.width(),
+            height: this.stage.height(),
+            opacity: 0,
+            fill: "black"
+        });
+        this.stage.staticlayer.add(this.blocker);
+        this.stage.staticlayer.moveToTop();
+        this.stage.staticlayer.draw();
     }
 
 
@@ -209,15 +234,6 @@ class aiCanvas {
         }
     }
 
-
-    // let thisStage = this.stage;
-    // let thisLayer = this.layer;
-    //         thisStage.scaleX(scale);
-    //         thisStage.scaleY(scale);
-    //         //the static layer is the only thing which should not scale with the rest of the stage
-    //         thisStage.staticlayer.scaleX(1 / scale);
-    //         thisStage.staticlayer.scaleY(1 / scale);
-
 //-----------------------------------------------------------
 
 
@@ -227,9 +243,15 @@ class aiCanvas {
             new ErrorCircle(this.startNode.trueCircle.position(), this.startNode, this.layer);
             throw new AIValidationError("The startnode is not connected!");
         } else {
-            return this.startNode.trueArrow.dest.jsonify();
+            return this.startNode.trueArrow.dest.jsonify(this.intifyPosition(this.startNode.rect.getAbsolutePosition()));
         }
+    }
 
+    intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
+
+    highlightPath(boolList) {
+        this.startNode.darkenAll();
+        this.startNode.highlightPath(boolList);
     }
 
     //Turn a json file into a tree
@@ -238,18 +260,24 @@ class aiCanvas {
         // let parsedJson = JSON.parse(jsonFile);
 
         //Create first child from the startnode (and therefore iteratively all their successors)
-        let nodeChild = this.treeify(json);
+        let nodeChild = this.treeify(json, this.intifyPosition(this.startNode.rect.getAbsolutePosition()));
 
         //Add child to canvas
         this.layer.add(nodeChild.group);
 
         //Draw arrows to child
         this.drawArrowFromJson(this.startNode, nodeChild, true);
-
+        //this.highlightPath([true, false]);
+    }
+        //Add two positions
+        addPosAAndPosB(posA, posB) {
+        let posX = posB.x + posA.x;
+        let posY = posB.y + posA.y;
+        return {x: posX, y: posY};
     }
 
     //Create a new node to which this will point.
-    treeify(nodeJson) {
+    treeify(nodeJson, startNodePos) {
 
         //If the new childNode is a condition
         let newOwnNode;
@@ -260,63 +288,63 @@ class aiCanvas {
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(1,
                         new distance(nodeJson.condition.attributes.distance),
                         new object(nodeJson.condition.attributes.obj)),
-                        nodeJson.condition.position);
+                        this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
-                    this.createChildren(newOwnNode, nodeJson.condition);
+                    this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 2:
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(2,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
-                        nodeJson.condition.position);
+                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
-                    this.createChildren(newOwnNode, nodeJson.condition);
+                    this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 3:
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(3,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
-                        nodeJson.condition.position);
+                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
-                    this.createChildren(newOwnNode, nodeJson.condition);
+                    this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 4:
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(4,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
-                        nodeJson.condition.position);
+                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
-                    this.createChildren(newOwnNode, nodeJson.condition);
+                    this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 5:
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(5),
-                        nodeJson.condition.position);
+                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
-                    this.createChildren(newOwnNode, nodeJson.condition);
+                    this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 6:
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(6,
-                        null, null, new label(nodeJson.condition.label)),
-                        nodeJson.condition.position);
+                        null, null, new label(nodeJson.condition.attributes.label)),
+                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
-                    this.createChildren(newOwnNode, nodeJson.condition);
+                    this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 7:
-                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(6,
-                        null, null, null, new health(nodeJson.condition.health)),
-                        nodeJson.condition.position);
+                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(7,
+                        null, null, null, new health(nodeJson.condition.attributes.health)),
+                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
-                    this.createChildren(newOwnNode, nodeJson.condition);
+                    this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 default:
-                //TODO throw exception, incorrect type_id in JSON
+
             }
         } else if (nodeJson.actionblock != null) {
             //Otherwise if new childNode is an action
@@ -366,15 +394,14 @@ class aiCanvas {
                         newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label), new seconds(actionItem.attributes.seconds)));
                         break;
                     default:
-                    //TODO throw error, incorrect json action ID
 
                 }
 
             });
 
-            return new actionNode(this.stage, this.layer, this, newActionList, nodeJson.actionblock.position);
+            return new actionNode(this.stage, this.layer, this, newActionList, this.addPosAAndPosB(nodeJson.actionblock.position, startNodePos));
         } else {
-            //TODO throw exception, json incorrect!
+
         }
     }
 
@@ -384,10 +411,10 @@ class aiCanvas {
     }
 
     //Create childNodes, draw them on canvas and draw arrows to them
-    createChildren(ownNode, conditionJson) {
+    createChildren(ownNode, conditionJson, startNodePos) {
         //create children
-        let newTrueChild = this.treeify(conditionJson.child_true);
-        let newFalseChild = this.treeify(conditionJson.child_false);
+        let newTrueChild = this.treeify(conditionJson.child_true, startNodePos);
+        let newFalseChild = this.treeify(conditionJson.child_false, startNodePos);
 
         //Draw them on canvas
         this.layer.add(newTrueChild.group);

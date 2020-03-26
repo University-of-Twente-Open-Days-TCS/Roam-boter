@@ -17,6 +17,7 @@ export default class startNode {
     _trueArrow;
     _layer;
     _stage;
+    _canvas;
     _group;
     _rect;
     _trueCircle;
@@ -27,20 +28,22 @@ export default class startNode {
         this.canvas = canvas;
         this.stage = stage;
         this.layer = layer;
-        this.createGroup(stage, layer);
+        this.createGroup(stage);
+        this.canvas = canvas;
 
     }
 
-    createGroup(stage, layer) {
+    createGroup(stage) {
         this.group = new Konva.Group({
             x: stage.width() / 2
         });
         this.createRect();
+        this.createText();
         this.createTrueCircle();
         this.createDragCircle();
         let node = this;
         this.group.on("dragmove", function () {
-            node.updateArrows(stage)
+            node.updateArrows()
         });
     }
 
@@ -56,6 +59,20 @@ export default class startNode {
             cornerRadius: 10,
         });
         this.group.add(this.rect);
+    }
+
+    createText() {
+        this.text = new Konva.Text({
+            x: 20,
+            y: 5,
+            text: "Start",
+            fontSize: 12,
+            fill: '#FFF',
+            fontFamily: 'Monospace',
+            align: 'center',
+            padding: 10
+        });
+        this.group.add(this.text);
     }
 
     //create a circle from which the true connection is made to another node
@@ -124,9 +141,9 @@ export default class startNode {
         let g = this.group;
         //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
         this.dragCircle.on("dragend", function () {
+            let touchPos = node.stage.getPointerPosition();
+            let intersect = node.layer.getIntersection(touchPos);
             canvas.dragging = false;
-            var touchPos = node.stage.getPointerPosition();
-            var intersect = node.layer.getIntersection(touchPos);
             if (node.stage.inputDict.has(intersect)) {
                 if (node.stage.inputDict.get(intersect).inputArrow != null) {
                     node.stage.inputDict.get(intersect).inputArrow.delete();
@@ -143,7 +160,8 @@ export default class startNode {
                         newNode.updateArrows();
                     }
                 }, "select a new condition or action").group);
-                node.stage.staticlayer.draw();
+                node.stage.staticlayer.moveToTop();
+                node.stage.draw();
             }
             this.moveTo(g);
             this.x(this.originalX);
@@ -155,20 +173,24 @@ export default class startNode {
         });
     }
 
+    darkenAll() {
+        this._trueArrow.dest.darkenAll();
+        this.layer.draw();
+    }
+
+    highlightPath(boolList) {
+        this._trueArrow.dest.highlightPath(boolList);
+        this.layer.draw();
+    }
+
     getTrueDotPosition() {
         return [this.trueCircle.x() + this.group.x(), this.trueCircle.y() + this.group.y()];
     }
 
-    updateArrows(stage) {
+    updateArrows() {
         if (this.trueArrow != null) {
-            this.trueArrow.update(stage);
+            this.trueArrow.update();
         }
-    }
-
-    getRectMiddlePos() {
-        let x = this.rect.x() + this.rect.width() / 2;
-        let y = this.rect.y() + this.rect.height() / 2;
-        return {x: x, y: y};
     }
 
     get trueArrow() {
@@ -185,6 +207,14 @@ export default class startNode {
 
     set stage(value) {
         this._stage = value;
+    }
+
+    get canvas() {
+        return this._canvas;
+    }
+
+    set canvas(value) {
+        this._canvas = value;
     }
 
     get layer() {

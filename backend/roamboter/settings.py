@@ -154,21 +154,49 @@ STATIC_URL = '/static/'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'simulationworker': {
+            'format': '\u001b[35mSIMWORKER[{asctime}]:\u001b[0m\n{message}',
+            'style': '{',
+        },
+        'simulation': {
+            'format': '\u001b[36mSIMULATION[{asctime}]:\u001b[0m\n{message}',
+            'style': '{',
+        },
+    },
     'handlers': {
-        'console' : {
-            'level' : 'DEBUG',
-            'class' : 'logging.StreamHandler',
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+        'simworker': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simulationworker',
+        },
+        'simulation': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simulation',
         },
     },
     'loggers': {
-        'matchmaking.views' : {
+        'matchmaking.views': {
             'handlers': ['console'],
-            'level' : 'DEBUG',
+            'level': 'DEBUG',
             'propogate': True,
         },
-        'debugLogger' : {
+        'debugLogger': {
             'handlers': ['console'],
-            'level' : 'DEBUG',
+            'level': 'DEBUG',
+            'propogate': True,
+        },
+        'matches.worker': {
+            'handlers': ['simworker'],
+            'level': 'DEBUG',
+            'propogate': True,
+        },
+        'simulation.simulation': {
+            'handlers': ['simulation'],
+            'level': 'DEBUG',
             'propogate': True,
         }
     },

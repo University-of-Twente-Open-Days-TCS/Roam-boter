@@ -3,6 +3,7 @@ from .objects import Object, ColorValues
 from .level import Level
 
 import os
+import hashlib
 
 
 class LevelLoader:
@@ -26,10 +27,13 @@ class LevelLoader:
         this_dir = os.path.dirname(os.path.realpath(__file__))
         level_file = os.path.join(this_dir, "levels/" + path + ".png")
 
+        checksum = LevelLoader.calculate_checksum(level_file)
+
         im = Image.open(level_file)
         width, height = im.size
 
-        level = Level(path, [[LevelLoader.color_to_object(im.getpixel((x, y))) for x in range(width)] for y in range(height)])
+
+        level = Level(path, checksum, [[LevelLoader.color_to_object(im.getpixel((x, y))) for x in range(width)] for y in range(height)])
 
         # Awkward loading of scout nodes since their blue value tells the order, thus should be determined here.
         scout_nodes = []
@@ -54,6 +58,15 @@ class LevelLoader:
         if r == 100 and g == 100:
             return Object.SCOUT_NODE
         return ColorValues[color_values]
+
+    @staticmethod
+    def calculate_checksum(file_path):
+        hash_md5 = hashlib.md5()
+
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
 
 
 

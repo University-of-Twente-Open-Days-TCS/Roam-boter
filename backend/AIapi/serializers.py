@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from .models import AI
-from dashboard.models import Team
 
 from .grammar.converter import is_valid_aijson
 
@@ -10,12 +9,17 @@ import json
 import logging
 logger = logging.getLogger("debugLogger")
 
-class AISerializer(serializers.Serializer):
+
+class AIOverviewSerializer(serializers.Serializer):
 
     pk = serializers.IntegerField(read_only=True)
-    ai = serializers.JSONField()
     team = serializers.PrimaryKeyRelatedField(read_only=True)
     name = serializers.CharField(max_length=20)
+
+
+class AISerializer(AIOverviewSerializer):
+
+    ai = serializers.JSONField()
 
     def validate_ai(self, value):
         # Checks whether aijson is valid
@@ -37,7 +41,7 @@ class AISerializer(serializers.Serializer):
         return AI.objects.create(ai=json_string, name=name, team=team)
 
     def update(self, instance, validated_data):
-        # only allow for the name and ai to be updated.   
+        # update name and ai
         if 'ai' in validated_data:
             # convert to string and update instance
             json_string = json.dumps(validated_data['ai'])
@@ -46,4 +50,3 @@ class AISerializer(serializers.Serializer):
         instance.name = validated_data.get('name', instance.name)
         instance.save()
         return instance
-

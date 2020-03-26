@@ -39,7 +39,7 @@ def object_visible(tank, state, obj):
     paths = filter_objects(tank, state, obj)
     for p in paths:
         # If any of the possible paths has an end node that is visible, there exists an object of type obj that is.
-        if state.level.line_of_sight(tank.get_pos(), p[-1]):
+        if state.level.direct_line_of_sight(tank.get_pos(), p[-1]):
             return True
     return False
 
@@ -49,7 +49,14 @@ def aimed_at_object(tank, state, obj):
     paths = filter_objects(tank, state, obj)
     for p in paths:
         location = p[-1]
-        if 0.5 > vector_angle(tank.get_pos(), location) > 359.5:
+        # get direction tank is aiming at
+        vision_angle = tank.get_rotation() + tank.get_turret_rotation()
+
+        # angle difference between goal and where tank is aiming.
+        angle = (vector_angle(tank.get_pos(), location) - vision_angle) % 360
+
+        # If angle difference is small enough return true
+        if 0.5 > angle or angle > 359.5:
             return True
     return False
 
@@ -62,6 +69,10 @@ def object_exists(tank, state, obj):
 
 def bullet_ready(tank, state):
     return tank.bullet_ready(state)
+
+
+def label_set(tank, state, label):
+    return tank.get_label(label)
 
 
 def health_greater_than(tank, state, health):
@@ -81,7 +92,7 @@ CONDITIONS = [
     aimed_at_object,                                #3
     object_exists,                                  #4
     bullet_ready,                                   #5
-    placeholder_condition,                          #6
+    label_set,                                      #6
     health_greater_than,                            #7
     placeholder_condition,                          #8
     placeholder_condition,                          #9

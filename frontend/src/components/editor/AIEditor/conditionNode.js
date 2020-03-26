@@ -1,65 +1,17 @@
 import arrow from "./arrow.js";
 import popup from "./popup.js"
 import condition from "./condition.js";
-import object from "./object.js";
-import distance from "./distance.js";
-import label from "./label.js";
-import health from "./health.js";
 import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
-import action from "./action";
 import actionNode from "./actionNode";
 
 
-//TODO place all these variables somewhere nicer
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
 const hitboxCircleRadius = 20;
 const spawnPoint = {x: 0, y: 0};
-
-
-const objectList = [
-    new object(1),
-    new object(2),
-    new object(3),
-    new object(4),
-    new object(5),
-    new object(6),
-    new object(7),
-    new object(8),
-    new object(9),
-    new object(10)
-
-];
-
-const distanceList = [
-    new distance(1),
-    new distance(2),
-    new distance(3)
-];
-
-const healthList = [
-    new health(0),
-    new health(20),
-    new health(40),
-    new health(60),
-    new health(80),
-
-];
-
-const labelList = [
-    new label(0),
-    new label(1),
-    new label(2),
-    new label(3),
-    new label(4),
-    new label(5),
-    new label(6),
-    new label(7),
-    new label(8)
-];
 
 
 export default class conditionNode {
@@ -139,6 +91,7 @@ export default class conditionNode {
         this.group.on("dragmove", () => {
             this.canvas.dragging = true;
             this.updateArrows(this.stage);
+            this.updateArrows();
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
@@ -182,7 +135,7 @@ export default class conditionNode {
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
-        this.remainingOptions = [{options: this.generateConditionList(), f: (cndtn) => this.condition = cndtn}];
+        this.remainingOptions = [{options: this.generateConditionList(), f: (cndtn) => this.setCondition(cndtn)}];
         this.stage.draw();
 
     }
@@ -234,22 +187,22 @@ export default class conditionNode {
 
 
         //adjust arrows
-        this.updateArrows(this.stage);
+        this.updateArrows();
 
         this.stage.draw();
 
     }
 
 
-    updateArrows(stage) {
+    updateArrows() {
         if (this.trueArrow != null) {
-            this.trueArrow.update(stage);
+            this.trueArrow.update();
         }
         if (this.falseArrow != null) {
-            this.falseArrow.update(stage);
+            this.falseArrow.update();
         }
         if (this.inputArrow != null) {
-            this.inputArrow.update(stage);
+            this.inputArrow.update();
         }
     }
 
@@ -277,7 +230,7 @@ export default class conditionNode {
     }
 
     generateConditionList() {
-        let conditionList = [
+        return [
             new condition(1),
             new condition(2),
             new condition(3),
@@ -285,13 +238,12 @@ export default class conditionNode {
             new condition(5),
             new condition(6),
             new condition(7),
-        ];
-        return conditionList
+        ]
     }
 
     intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
-    jsonify() {
+    jsonify(startNodePos) {
         let node = this.rect;
         let tree = {};
 
@@ -311,13 +263,13 @@ export default class conditionNode {
             case 1:
                 tree.condition = {
                     "type_id": 1,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {
                         "distance": this.condition.distance.id,
                         "obj": this.condition.object.id
                     },
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -326,10 +278,10 @@ export default class conditionNode {
             case 2:
                 tree.condition = {
                     "type_id": 2,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"obj": this.condition.object.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
                 return tree;
 
@@ -338,10 +290,10 @@ export default class conditionNode {
             case 3:
                 tree.condition = {
                     "type_id": 3,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"obj": this.condition.object.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -351,10 +303,10 @@ export default class conditionNode {
             case 4:
                 tree.condition = {
                     "type_id": 4,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"obj": this.condition.object.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -363,10 +315,10 @@ export default class conditionNode {
             case 5:
                 tree.condition = {
                     "type_id": 5,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
 
                 };
 
@@ -376,10 +328,10 @@ export default class conditionNode {
             case 6:
                 tree.condition = {
                     "type_id": 6,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"label": this.condition.label.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
                 return tree;
@@ -388,10 +340,10 @@ export default class conditionNode {
             case 7:
                 tree.condition = {
                     "type_id": 7,
-                    "child_true": this.trueChild().jsonify(),
-                    "child_false": this.falseChild().jsonify(),
+                    "child_true": this.trueChild().jsonify(startNodePos),
+                    "child_false": this.falseChild().jsonify(startNodePos),
                     "attributes": {"health": this.condition.health.id},
-                    "position": this.intifyPosition(node.getAbsolutePosition())
+                    "position": this.subtractPosAFromPosB(startNodePos, this.intifyPosition(node.getAbsolutePosition()))
                 };
 
 
@@ -402,6 +354,12 @@ export default class conditionNode {
                 throw new AIValidationError("The condition has an unknown ID!");
 
         }
+    }
+
+    subtractPosAFromPosB(posA, posB) {
+        let posX = posB.x - posA.x;
+        let posY = posB.y - posA.y;
+        return {x: posX, y: posY};
     }
 
 
@@ -444,7 +402,6 @@ export default class conditionNode {
         this.group.add(this.conditionTextObj);
     }
 
-    //TODO fix using Math.max instead of if-statement
     //base rectangle which contains the condition text
     createRect() {
         if (this.conditionText != null) {
@@ -501,11 +458,12 @@ export default class conditionNode {
     //creates an invisible circle used only for making a new connection between nodes,
     // based on condition will create one for true or for false
     createDragCircle(circle, condition) {
+
         let node = this;
         let dragCircle = new Konva.Circle({
             draggable: true,
-            y: this.position.y + circle.y(),
-            x: this.position.x + circle.x(),
+            y: circle.y(),
+            x: circle.x(),
             radius: hitboxCircleRadius,
             fill: 'black',
             opacity: 0
@@ -546,7 +504,7 @@ export default class conditionNode {
         dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
             canvas.dragging = true;
-            var points = [this.tempX, this.tempY, this.x(), this.y()];
+            let points = [this.tempX, this.tempY, this.x(), this.y()];
             this.tempArrow.points(points);
             node.layer.batchDraw();
         });
@@ -555,9 +513,9 @@ export default class conditionNode {
         //when the drag has ended, return the invisible circle to its original position, remove the temporary arrow
         // and create a new connection between nodes if applicable
         dragCircle.on("dragend", function () {
+            let touchPos = node.stage.getPointerPosition();
+            let intersect = node.layer.getIntersection(touchPos);
             canvas.dragging = false;
-            var touchPos = node.stage.getPointerPosition();
-            var intersect = node.layer.getIntersection(touchPos);
             //If arrow is dropped on another element
             if (intersect != null) {
                 //If the other element is an inputnode
@@ -566,7 +524,7 @@ export default class conditionNode {
                     if (node.stage.inputDict.get(intersect).inputArrow != null) {
                         node.stage.inputDict.get(intersect).inputArrow.delete();
                     }
-                    //Create new arrw between the two nodes
+                    //Create new arrow between the two nodes
                     new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
                 }
             } else {
@@ -580,7 +538,8 @@ export default class conditionNode {
                         newNode.updateArrows();
                     }
                 }, "select a new condition or action").group);
-                node.stage.staticlayer.draw();
+                node.stage.staticlayer.moveToTop();
+                node.stage.draw();
             }
             this.moveTo(g);
             this.x(this.originalX);
@@ -631,6 +590,23 @@ export default class conditionNode {
         let x = this.rect.x() + this.rect.width() / 2;
         let y = this.rect.y() + this.rect.height() / 2;
         return {x: x, y: y};
+    }
+
+    darkenAll() {
+        this.group.cache();
+        this.group.filters([Konva.Filters.Brighten]);
+        this.group.brightness(-0.3);
+        this._trueArrow.dest.darkenAll();
+        this._falseArrow.dest.darkenAll();
+    }
+
+    highlightPath(boolList) {
+        this.group.brightness(0);
+        if (boolList.shift()) {
+            this._trueArrow.dest.highlightPath(boolList);
+        } else {
+            this._falseArrow.dest.highlightPath(boolList);
+        }
     }
 
     //Getters and setters for arrows and conditiontext

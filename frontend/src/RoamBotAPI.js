@@ -28,9 +28,9 @@ class RoamBotAPI {
 
     async callApi(url, method, data) {
         /**
-         * url: url to call API
-         * method: http method to use
-         * data: optional data to include. Currenlty only supports JSON
+         * @param url: url to call API
+         * @param method: http method to use
+         * @param data: optional data to include. Currenlty only supports JSON
          */
         let headers = {}
         headers['Content-Type'] = 'application/json'
@@ -91,13 +91,12 @@ class RoamBotAPI {
         return response
     }
 
-    putTeamDetail(aiPk){
+    putActiveAI(aiPk){
         /**
          * Sets the active AI of a team.
          * @param aiPk Primary Key of AI to set active
          */
-
-        let response = this.callApi('dashboard/team/detail/', 'PUT', {active_ai: aiPk})
+        let response = this.callApi('dashboard/team/detail/', 'PUT', {active_ai_pk: aiPk})
         return response
     }
 
@@ -166,6 +165,35 @@ class RoamBotAPI {
          * Get list team matches played by team associated with this session.
          */
         let response = this.callApi('matches/teammatches/', 'GET')
+        return response
+    }
+
+    postTeamMatch({gamemode, ai}) {
+        /**
+         * @param gamemode Gamemode
+         * @param ai Primary key of AI to play with
+         * Plays a team match. The server selects an opponent.
+         * Returns a 423 if no suitable opponent can be found.
+         */
+        let data = {gamemode: gamemode, initiator_ai: ai}
+        let response = this.callApi('matches/teammatches/', 'POST', data)
+        return response
+    }
+
+    deleteTeamMatch(pk) {
+        /**
+         * Deletes a team match
+         * @param pk primary key of the match to delete
+         */
+        let response = this.callApi('matches/teammatches/'+pk, 'DELETE')
+        return response
+    }
+
+    getBotList() {
+        /**
+         * Gets all bots
+         */
+        let response = this.callApi('matches/bots/', 'GET')
         return response
     }
 

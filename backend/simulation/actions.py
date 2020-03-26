@@ -127,6 +127,18 @@ def self_destruct(tank, state):
             t.health -= 200
 
 
+def set_label(tank, state, label):
+    tank.set_label(label)
+
+
+def unset_label(tank, state, label):
+    tank.unset_label(label)
+
+
+def set_label_for_seconds(tank, state, label, seconds):
+    tank.set_label_timer(label, seconds)
+
+
 def placeholder_action(tank, state):
     raise NotImplementedError("Placeholder action should never be called")
 
@@ -159,9 +171,9 @@ ACTIONS = [
     aim_to_right,                           #9
     shoot,                                  #13
     self_destruct,                          #14
-    placeholder_action,                     #15
-    placeholder_action,                     #16
-    placeholder_action,                     #17
+    set_label,                              #15
+    unset_label,                            #16
+    set_label_for_seconds,                  #17
     placeholder_action,                     #18
     placeholder_action,                     #19
     placeholder_action,                     #20

@@ -1,9 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework import status
 
+from django.shortcuts import get_object_or_404
+
 from roamboter.api.permissions import InTeamPermission
+from AIapi.models import AI
 
 from .models import Team
 from .serializers import TeamSerializer, TeamCodeSerializer
@@ -14,6 +17,7 @@ import dashboard.workshopmanager as wmanager
 class TeamDetailAPI(APIView):
     """
     Returns a team detail
+    Note that the put method is slighlty different than normal usage of APIView.
     """
 
     permission_classes = [InTeamPermission]
@@ -36,13 +40,27 @@ class TeamDetailAPI(APIView):
         Update active champion.
         """
         team = self._get_team(request)
+        active_ai_pk = request.data['active_ai_pk']
 
-        serializer = TeamSerializer(team, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            ai = get_object_or_404(AI, pk=active_ai_pk)
+
+            # check whether ai is valid
+            if ai.team is None:
+                raise PermissionDenied('You do not own this AI')
+
+            if not ai.team.pk == team.pk:
+                raise PermissionDenied('You do not own this AI')
+
+            team.active_ai = ai
+            team.save()
+
+            serializer = TeamMatchPrimaryKeySerializer(team)
+            return Response(serializer.data)
+
+        except (TypeError, ValueError):
+            err = ValidationError("Incorrect type. Expected a primary key but was: {}".format(str(type(active_ai_pk))))
+            raise ValidationError(detail={'active_ai_pk': err.detail})
 
 
 class EnterTeamAPI(APIView):
