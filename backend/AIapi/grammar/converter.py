@@ -152,21 +152,25 @@ logger = logging.getLogger("debugLogger")
 
 def convert_aijson(json):
     """Converts a string of json to an AINode tree."""
-    eval_tree = None
+    try:
+        eval_tree = None
 
-    input_stream = InputStream(json)
-    lexer = aiJsonLexer(input_stream)
-    stream = CommonTokenStream(lexer)
-    parser = aiJsonParser(stream)
-    parser._listeners = [ConverterErrorListener()]
+        input_stream = InputStream(json)
+        lexer = aiJsonLexer(input_stream)
+        stream = CommonTokenStream(lexer)
+        parser = aiJsonParser(stream)
+        parser._listeners = [ConverterErrorListener()]
 
-    # Try to parse the input
-    root_node = parser.startrule()
-    converter = EvaluationTreeConverter()
-    eval_tree = converter.visit(root_node)
+        # Try to parse the input
+        root_node = parser.startrule()
+        converter = EvaluationTreeConverter()
+        eval_tree = converter.visit(root_node)
 
+        return eval_tree
 
-    return eval_tree
+    except Exception as e:
+        logger.debug(e.msg)
+        logger.debug(e.exc_info())
 
 def is_valid_aijson(json):
     """Checks whether a given json string is valid"""
