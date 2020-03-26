@@ -83,7 +83,14 @@ export default class conditionNode {
         this.trueDragCircle = this.createDragCircle(this.trueCircle, true);
         this.falseDragCircle = this.createDragCircle(this.falseCircle, false);
         this.createInputCircle();
+        this.group.on("dragstart", () => {
+            this.canvas.dragging = true;
+        });
+
+        //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
         this.group.on("dragmove", () => {
+            this.canvas.dragging = true;
+            this.updateArrows(this.stage);
             this.updateArrows();
             let touchPos = this.stage.getPointerPosition();
 
@@ -105,6 +112,7 @@ export default class conditionNode {
         });
 
         this.group.on("dragend", () => {
+            this.canvas.dragging = false;
             let touchPos = this.stage.getPointerPosition();
 
             //If node is released above trashcan, remove it and close trashcan
@@ -466,11 +474,13 @@ export default class conditionNode {
 
         dragCircle.originalX = dragCircle.x();
         dragCircle.originalY = dragCircle.y();
+        let canvas = this.canvas;
 
         //when the invisible circle starts to be dragged create a new temporary arrow
         dragCircle.on("dragstart", function () {
-            this.tempX = this.getAbsolutePosition().x;
-            this.tempY = this.getAbsolutePosition().y;
+            this.tempX = this.x() + node.group.x();
+            this.tempY = this.y() + node.group.y();
+            canvas.dragging = true;
 
             //it is important that the invisible circle is in a different layer
             // in order to check what is under the cursor later
@@ -487,18 +497,16 @@ export default class conditionNode {
                 node.falseArrow.delete();
             }
 
-            node.stage.templayer.add(this.tempArrow);
+            node.layer.add(this.tempArrow);
         });
 
         //update the temporary arrow
         dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
-            this.tempArrow.absolutePosition({x: 0, y: 0});
-            let points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
-            this.tempArrow.points(points.map(function (p) {
-                return p / node.stage.scale
-            }));
-            node.stage.templayer.batchDraw();
+            canvas.dragging = true;
+            let points = [this.tempX, this.tempY, this.x(), this.y()];
+            this.tempArrow.points(points);
+            node.layer.batchDraw();
         });
         let g = this.group;
 
@@ -507,6 +515,7 @@ export default class conditionNode {
         dragCircle.on("dragend", function () {
             let touchPos = node.stage.getPointerPosition();
             let intersect = node.layer.getIntersection(touchPos);
+            canvas.dragging = false;
             //If arrow is dropped on another element
             if (intersect != null) {
                 //If the other element is an inputnode
@@ -552,18 +561,15 @@ export default class conditionNode {
     }
 
     getTrueDotPosition() {
-        let pos = this.trueCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.trueCircle.x() + this.group.x(), this.trueCircle.y() + this.group.y()];
     }
 
     getFalseDotPosition() {
-        let pos = this.falseCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.falseCircle.x() + this.group.x(), this.falseCircle.y() + this.group.y()];
     }
 
     getInputDotPosition() {
-        let pos = this.inputCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.inputCircle.x() + this.group.x(), this.inputCircle.y() + this.group.y()];
     }
 
     remove() {

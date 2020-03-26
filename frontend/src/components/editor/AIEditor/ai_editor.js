@@ -23,6 +23,7 @@ class aiCanvas {
 
     _stage;
     _layer;
+    _dragging;
 
 
     _startNode;
@@ -38,6 +39,7 @@ class aiCanvas {
 
         this.stage.inputDict = new Map([]);
         this.stage.staticlayer = new Konva.Layer();
+        this._dragging = false;
         //Create the canvas
         this.startNode = new startNode(this.stage, this.layer, this);
         this.layer.add(this.startNode.group);
@@ -133,6 +135,11 @@ class aiCanvas {
             };
         });
 
+        this.stage.on("dragmove", function () {
+            // when the stage is moved the trashcan should remain in the same position
+            stage.staticlayer.absolutePosition({x: 0, y: 0});
+        });
+
     }
 
     //prevents any interaction with the elements of the canvas, effectively making kind of an image
@@ -158,60 +165,77 @@ class aiCanvas {
 // it improve the performance and work well for 95% of cases
 // we need to enable all events on Konva, even when we are dragging a node
 // so it triggers touchmove correctly
-        Konva.hitOnDragEnabled = true;
-        let lastDist = 0;
+        let lastDist;
+        let point;
+        pinchZoomTouchEvent(this.stage);
 
         function getDistance(p1, p2) {
-            return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+            return Math.sqrt(Math.pow((p2.x - p1.x), 2) + Math.pow((p2.y - p1.y), 2));
         }
 
-        let thisStage = this.stage;
-        this.stage.on('touchmove', function (e) {
-            e.evt.preventDefault();
-            let touch1 = e.evt.touches[0];
-            let touch2 = e.evt.touches[1];
-
-            if (touch1 && touch2) {
-                let dist = getDistance(
-                    {
-                        x: touch1.clientX,
-                        y: touch1.clientY
-                    },
-                    {
-                        x: touch2.clientX,
-                        y: touch2.clientY
-                    }
-                );
-
-                if (!lastDist) {
-                    lastDist = dist;
-                }
-
-                let scale = (thisStage.scaleX() * dist) / lastDist;
-
-                thisStage.scaleX(scale);
-                thisStage.scaleY(scale);
-                //the trashcan is the only thing which should not scale with the rest of the stage
-                thisStage.staticlayer.scaleX(1 / scale);
-                thisStage.staticlayer.scaleY(1 / scale);
-                thisStage.scale = scale;
-                thisStage.batchDraw();
-                lastDist = dist;
+        function clientPointerRelativeToStage(clientX, clientY, stage) {
+            return {
+                x: clientX - stage.getContent().offsetLeft,
+                y: clientY - stage.getContent().offsetTop,
             }
-        });
+        }
 
-        this.stage.on('touchend', function () {
-            lastDist = 0;
-        });
+        let self = this;
 
+        function pinchZoomTouchEvent(stage) {
+            if (stage) {
+                stage.getContent().addEventListener('touchmove', (evt) => {
+                    const t1 = evt.touches[0];
+                    const t2 = evt.touches[1];
+                    if (t1 && t2 && !self._dragging) {
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        const oldScale = stage.scaleX();
 
-        this.stage.on("dragmove", function () {
-            // when the stage is moved the trashcan should remain in the same position
-            thisStage.staticlayer.absolutePosition({x: 0, y: 0});
-        });
+                        const dist = getDistance(
+                            {x: t1.clientX, y: t1.clientY},
+                            {x: t2.clientX, y: t2.clientY}
+                        );
+                        if (!lastDist) lastDist = dist;
+                        const delta = dist - lastDist;
+
+                        const px = (t1.clientX + t2.clientX) / 2;
+                        const py = (t1.clientY + t2.clientY) / 2;
+                        const pointer = point || clientPointerRelativeToStage(px, py, stage);
+                        if (!point) point = pointer;
+
+                        const startPos = {
+                            x: pointer.x / oldScale - stage.x() / oldScale,
+                            y: pointer.y / oldScale - stage.y() / oldScale,
+                        };
+
+                        const scaleBy = 1.01 + Math.abs(delta) / 100;
+                        const newScale = delta < 0 ? oldScale / scaleBy : oldScale * scaleBy;
+                        stage.scaleX(newScale);
+                        stage.scaleY(newScale);
+                        stage.staticlayer.scaleX(1 / newScale);
+                        stage.staticlayer.scaleY(1 / newScale);
+                        const newPosition = {
+                            x: (pointer.x / newScale - startPos.x) * newScale,
+                            y: (pointer.y / newScale - startPos.y) * newScale,
+                        };
+                        stage.position(newPosition);
+                        stage.staticlayer.setAbsolutePosition({x: 0, y: 0});
+                        stage.batchDraw();
+                        lastDist = dist;
+                    }
+                }, false);
+
+                stage.getContent().addEventListener('touchend', () => {
+                    lastDist = 0;
+                    point = undefined;
+                }, false);
+            }
+        }
     }
 
 //-----------------------------------------------------------
+
 
     //Turn the tree into a json file
     treeToJson() {
@@ -232,8 +256,6 @@ class aiCanvas {
 
     //Turn a json file into a tree
     jsonToTree(json) {
-        //this.isReplay = true;
-        //this.addInteractionBlocker()
         //Parse JSON to JS format
         // let parsedJson = JSON.parse(jsonFile);
 
@@ -418,6 +440,10 @@ class aiCanvas {
     addActionNode() {
         let newActionNode = new actionNode(this.stage, this.layer, this);
         return this.addNode(newActionNode);
+    }
+
+    set dragging(bool) {
+        this._dragging = bool;
     }
 
     //getters&setters
