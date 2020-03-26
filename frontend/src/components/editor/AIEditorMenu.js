@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 const AIEditorMenu = (props) => {
     const classes = useStyles()
     
-    let {addConditionHandler, addActionHandler, saveHandler, deleteHandler } = props
+    let { addConditionHandler, addActionHandler, handleSave, handleSaveAsNew, handleDelete } = props
     let ai = props.ai
 
     const theme = useTheme()
@@ -43,13 +43,19 @@ const AIEditorMenu = (props) => {
     return (
         <div className={classes.root}>
             <Typography variant={bigScreen ? "h4" : "h6"} align="center">{ai ? ai.name : ""}</Typography>
+
             <div className={classes.menuSection}>
                 <Button variant="contained" color="primary" onClick={addConditionHandler} className={classes.button}>Condition</Button>
                 <Button variant="contained" color="primary" onClick={addActionHandler} className={classes.button}>Action</Button>
-                <Button variant="contained" color="primary" onClick={saveHandler} className={classes.button}>Save</Button>
             </div>
+
             <div className={classes.menuSection}>
-                <Button variant="contained" color="secondary" onClick={deleteHandler} className={classes.button}>Delete</Button>
+                <Button variant="contained" color="primary" disabled={ai ? false : true}  onClick={handleSave} className={classes.button}>Save</Button>
+                <Button variant="contained" color="primary" onClick={handleSaveAsNew} className={classes.button}>Save as new</Button>
+            </div>
+
+            <div className={classes.menuSection}>
+                <Button variant="contained" color="secondary" onClick={handleDelete} className={classes.button}>Delete</Button>
             </div>
         </div>
     )

@@ -1,7 +1,7 @@
 import arrow from "./arrow.js";
 import Konva from "konva"
-import popup from "./popup.js";
-import actionNode from "./actionNode.js";
+import popup from "./popup";
+import actionNode from "./actionNode";
 import conditionNode from "./conditionNode.js";
 
 const blockHeight = 40;
@@ -25,6 +25,7 @@ export default class startNode {
 
     constructor(stage, layer, canvas) {
         //    bla insert shape and a point which can be dragged to a condition/action
+        this.canvas = canvas;
         this.stage = stage;
         this.layer = layer;
         this.createGroup(stage);
@@ -87,6 +88,7 @@ export default class startNode {
 
     }
 
+
     //creates an invisible circle used only for making a new connection between nodes, based on condition will create one for true or for false
     createDragCircle() {
         let node = this;
@@ -105,11 +107,15 @@ export default class startNode {
         this.dragCircle.originalX = this.dragCircle.x();
         this.dragCircle.originalY = this.dragCircle.y();
 
+        let canvas = this.canvas;
         //when the invisible circle starts to be dragged create a new temporary arrow
         this.dragCircle.on("dragstart", function () {
-            this.tempX = this.getAbsolutePosition().x;
-            this.tempY = this.getAbsolutePosition().y;
-            //it is important that the invisible circle is in a different layer in order to check what is under the cursor it later
+            this.tempX = this.x() + node.group.x();
+            this.tempY = this.y() + node.group.y();
+            canvas.dragging = true;
+
+            //it is important that the invisible circle is in a different layer
+            // in order to check what is under the cursor later
             this.moveTo(node.stage.templayer);
             this.tempArrow = new Konva.Arrow({
                 stroke: "black",
@@ -121,24 +127,23 @@ export default class startNode {
                 node.trueArrow.delete();
             }
 
-            node.stage.templayer.add(this.tempArrow);
+            node.layer.add(this.tempArrow);
         });
 
         //update the temporary arrow
         this.dragCircle.on("dragmove", function () {
+            canvas.dragging = true;
             //this is to offset the position of the stage
-            this.tempArrow.absolutePosition({x: 0, y: 0});
-            let points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
-            this.tempArrow.points(points.map(function (p) {
-                return p / node.stage.scale
-            }));
-            node.stage.templayer.batchDraw();
+            var points = [this.tempX, this.tempY, this.x(), this.y()];
+            this.tempArrow.points(points);
+            node.layer.batchDraw();
         });
         let g = this.group;
         //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
         this.dragCircle.on("dragend", function () {
             let touchPos = node.stage.getPointerPosition();
             let intersect = node.layer.getIntersection(touchPos);
+            canvas.dragging = false;
             if (node.stage.inputDict.has(intersect)) {
                 if (node.stage.inputDict.get(intersect).inputArrow != null) {
                     node.stage.inputDict.get(intersect).inputArrow.delete();
@@ -179,8 +184,7 @@ export default class startNode {
     }
 
     getTrueDotPosition() {
-        let pos = this.trueCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.trueCircle.x() + this.group.x(), this.trueCircle.y() + this.group.y()];
     }
 
     updateArrows() {

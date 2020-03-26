@@ -132,7 +132,7 @@ class App extends Component {
                 (<div>
                     <Structure {...layoutProps}>
                         <Route exact path="/"
-                            render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
+                            render={() => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
                         />
 
                         <Route path="/AIEditor/:id?" component={AIEditor} />
@@ -142,7 +142,7 @@ class App extends Component {
                         <Route path="/BotMatchReplay/:matchId" component={BotMatchReplay} />
                         <Route path="/NewBotMatch" component={NewBotMatch} />
                         <Route path="/PlayvsPlayer" component={PlayvsPlayer} />
-                        <Route path="/NewTeamMatch" component={() => <NewTeamMatch></NewTeamMatch>} />
+                        <Route path="/NewTeamMatch" component={NewTeamMatch} />
                         <Route path="/TeamMatchHistory" component={TeamMatchHistory} />
                     </Structure>
                 </div>)

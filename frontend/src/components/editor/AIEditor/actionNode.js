@@ -36,6 +36,7 @@ export default class actionNode {
         this.trashcan = stage.trashcan;
         this.stage = stage;
         this.layer = layer;
+        this.canvas = canvas;
         this.position = position;
         this.actionList = actionList;
         this.actionList.forEach(action => {
@@ -55,8 +56,15 @@ export default class actionNode {
             this.actionNodeTextObj.moveToTop();
         }
         this.createInputCircle();
+        this.group.on("dragstart", () => {
+            this.canvas.dragging = true;
+        });
+
+        //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
         this.group.on("dragmove", () => {
             this.updateArrows();
+            this.canvas.dragging = true;
+            this.updateArrows(this.stage);
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
@@ -77,6 +85,7 @@ export default class actionNode {
         });
 
         this.group.on("dragend", () => {
+            this.canvas.dragging = false;
             let touchPos = this.stage.getPointerPosition();
 
             //If node is released above trashcan, remove it and close trashcan
@@ -387,8 +396,7 @@ export default class actionNode {
     }
 
     getInputDotPosition() {
-        let pos = this.inputCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.inputCircle.x() + this.group.x(), this.inputCircle.y() + this.group.y()];
     }
 
     updateArrows() {

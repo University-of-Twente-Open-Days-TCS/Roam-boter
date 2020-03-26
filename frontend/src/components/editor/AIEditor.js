@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component} from "react"
 
 import {withStyles} from '@material-ui/styles'
 import Grid from '@material-ui/core/Grid'
@@ -62,12 +62,16 @@ class AIEditor extends Component {
         this.handleAddCondition = this.handleAddCondition.bind(this)
         this.handleAddAction = this.handleAddAction.bind(this)
         this.handleSave = this.handleSave.bind(this)
+        this.handleSaveAsNew = this.handleSaveAsNew.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
 
         this.state = {
             id: null,
-            dialogOpen: false,
             ai: null,
+            dialog: {
+                aiName: "",
+                open: false,
+            },
             errorAlertOpen: false,
             errorMessage: "",
             successAlertOpen: false
@@ -121,60 +125,32 @@ class AIEditor extends Component {
         this.canvas.addActionNode()
     }
 
-    handleSave() {
-        try {
-            let canvas = this.canvas
-            canvas.treeToJson()
-            
-            this.setState({
-                dialogOpen: true
-            })
-        } catch(e) {
-            this.setState({
-                errorMessage: e.message,
-                errorAlertOpen: true,
-            })
-        }
+    handleSave() { 
+        // update current AI
+        if (this.state.ai) {
+
+            try {
+                let aiJson = this.canvas.treeToJson()
+                let call = RoamBotAPI.putAI(this.state.ai.pk, {name: this.state.ai.name, ai: aiJson})
+                call.then((response) => {
+                    if (response.ok){
+                        this.setState({successAlertOpen: true})
+                    }else {
+                        this.setState({errorAlertOpen: true, errorMessage: response.body})
+                    }
+                })
+            } catch (error) {
+                this.setState({errorAlertOpen: true, errorMessage: error.message})
+            }
+
+        }else {
+            this.handleSaveAsNew()
+        }   
     }
 
-    saveAI = () => {
-        // Save an AI
-        let canvas = this.canvas
-
-        try{
-            let ai = canvas.treeToJson()
-            let data = {}
-            data.name = this.state.ai.name
-            data.ai = ai
-
-            const response = (this.state.id) ? (RoamBotAPI.putAI(this.state.id, data)) : (RoamBotAPI.postAI(data))
-
-            response.then((res) => {
-                if (res.ok) {
-                    this.setState({successAlertOpen: true})
-                } else {
-                    if(res.status === 400){
-                        // Bad Request. 
-                        let json = res.json()
-                        json.then((json) => {
-                            this.setState({
-                                errorMessage: JSON.stringify(json),
-                                errorAlertOpen: true,
-                            })
-                        })
-                    }else {
-                        alert("An error occurred")
-                    }
-                }
-            })
-        } catch (error) {
-            this.setState({
-                errorMessage: error.message,
-                errorAlertOpen: true,
-            })
-        }
-      
-        this.setState({dialogOpen: false})
+    handleSaveAsNew() {
+        // Open dialog
+        this.setState({dialog: {...this.state.dialog, open: true}})
     }
 
     handleDelete = () => {
@@ -186,13 +162,13 @@ class AIEditor extends Component {
                 let call = RoamBotAPI.deleteAI(this.state.ai.pk)
                 call.then((response) => {
                     if(response.ok){
-                        window.location = "/#/AIList"
+                        this.props.history.push('/AIList')
                     }else{
                         window.alert(response.json)
                     }
                 })
             }else {
-                window.location = "/#/AIList"
+                this.props.history.push('/AIList')
             }
         }
     }
@@ -215,18 +191,61 @@ class AIEditor extends Component {
         let response = await RoamBotAPI.getAiDetail(id)
         let json = await response.json()
         this.canvas.jsonToTree(JSON.parse(json.ai))
-        this.setState({ai: json})
+        this.setState({ai: json, dialog: {...this.state.dialog, aiName: json.name}})
     }
 
-    handleCloseDialog = () => {
+    handleCancelDialog = () => {
+        /**
+         * User cancels dialog
+         */
         this.setState({
-            dialogOpen: false
+            dialog: {...this.state.dialog, open: false}
         })
+        
+    }
+
+    handleConfirmDialog = () => {
+        /**
+         * Called when user confirms dialog
+         * Save the AI as a new AI.
+         */
+        this.setState({
+            dialog: {...this.state.dialog, open: false}
+        })
+
+        let name = this.state.dialog.aiName
+        try {
+            let ai = this.canvas.treeToJson()
+            let call = RoamBotAPI.postAI({name: name, ai: ai})
+
+            call.then((response) => {
+                    if(response.ok){
+                        //Successfully saved the ai.
+                        let json = response.json()
+                        json.then((ai) => {
+                                this.props.history.push('/AIEditor/'+ai.pk)
+                                // update state
+                                this.setState({id: ai.pk, ai: ai, dialog: {...this.state.dialog, aiName: ai.name}})
+                                this.setState({successAlertOpen: true})
+                            }).catch((error) => {
+                                console.error(error)
+                                window.alert("Something went wrong...")
+                            })
+
+                    }else {
+                        console.error(response)
+                        window.alert("Something went wrong...")
+                    }
+            }).catch((err) => {console.error(err); window.alert("Something went wrong...")})
+        } catch (error) {
+            this.setState({errorAlertOpen: true, errorMessage: error.message})
+        }
+        
     }
 
     handleChangeName = (e) => {
-        let ai = {...this.state.ai, name: e.target.value}
-        this.setState({ai: ai})
+        let dialog = {...this.state.dialog, aiName: e.target.value}
+        this.setState({dialog: dialog})
     }
 
     render() {
@@ -236,8 +255,9 @@ class AIEditor extends Component {
         let menuProps = {
             addConditionHandler: this.handleAddCondition,
             addActionHandler: this.handleAddAction,
-            saveHandler: this.handleSave,
-            deleteHandler: this.handleDelete,
+            handleSave: this.handleSave,
+            handleSaveAsNew: this.handleSaveAsNew,
+            handleDelete: this.handleDelete,
             ai: this.state.ai
         }
 
@@ -256,7 +276,7 @@ class AIEditor extends Component {
 
 
                 {/** DIALOG */}
-                <Dialog open={this.state.dialogOpen} onClose={this.handleCloseDialog}
+                <Dialog open={this.state.dialog.open} onClose={this.handleCancelDialog}
                         aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Enter AI name</DialogTitle>
                     <DialogContent>
@@ -267,16 +287,16 @@ class AIEditor extends Component {
                             label="AI name"
                             type="text"
                             fullWidth
-                            value={this.state.ai ? this.state.ai.name : ""}
+                            value={this.state.dialog.aiName ? this.state.dialog.aiName : ""}
                             onChange={this.handleChangeName}
                             required={true}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleCloseDialog} color="primary">
+                        <Button onClick={this.handleCancelDialog} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={this.saveAI} color="primary" disabled={!this.state.ai}>
+                        <Button onClick={this.handleConfirmDialog} color="primary" disabled={!this.state.dialog.aiName}>
                             Save
                         </Button>
                     </DialogActions>
