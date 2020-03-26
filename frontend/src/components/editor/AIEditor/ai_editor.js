@@ -51,7 +51,9 @@ class aiCanvas {
 
 
         //add trashcan
-        this.addTrashcan(this.stage);
+        if (!isReplay) {
+            this.addTrashcan(this.stage);
+        }
         this.layer.draw();
         this.stage.staticlayer.draw();
 
