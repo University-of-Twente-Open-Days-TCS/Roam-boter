@@ -162,13 +162,13 @@ class AIEditor extends Component {
                 let call = RoamBotAPI.deleteAI(this.state.ai.pk)
                 call.then((response) => {
                     if(response.ok){
-                        window.location = "/#/AIList"
+                        this.props.history.push('/AIList')
                     }else{
                         window.alert(response.json)
                     }
                 })
             }else {
-                window.location = "/#/AIList"
+                this.props.history.push('/AIList')
             }
         }
     }
@@ -218,19 +218,16 @@ class AIEditor extends Component {
             let ai = this.canvas.treeToJson()
             let call = RoamBotAPI.postAI({name: name, ai: ai})
 
-            call.
-                then((response) => {
+            call.then((response) => {
                     if(response.ok){
                         //Successfully saved the ai.
                         let json = response.json()
-                        json.
-                            then((ai) => {
+                        json.then((ai) => {
                                 this.props.history.push('/AIEditor/'+ai.pk)
                                 // update state
                                 this.setState({id: ai.pk, ai: ai, dialog: {...this.state.dialog, aiName: ai.name}})
                                 this.setState({successAlertOpen: true})
-                            }).
-                            catch((error) => {
+                            }).catch((error) => {
                                 console.error(error)
                                 window.alert("Something went wrong...")
                             })
@@ -239,8 +236,7 @@ class AIEditor extends Component {
                         console.error(response)
                         window.alert("Something went wrong...")
                     }
-            })
-                .catch((err) => {console.error(err); window.alert("Somethign went wrong...")})
+            }).catch((err) => {console.error(err); window.alert("Something went wrong...")})
         } catch (error) {
             this.setState({errorAlertOpen: true, errorMessage: error.message})
         }
