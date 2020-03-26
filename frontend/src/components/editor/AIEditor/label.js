@@ -1,3 +1,4 @@
+/** Label, works as a boolean, every label can be (temporarily) set to true or false**/
 export default class label {
     _id;
 

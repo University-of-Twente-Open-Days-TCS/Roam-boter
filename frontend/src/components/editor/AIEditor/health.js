@@ -1,3 +1,4 @@
+/** Health of a tank **/
 export default class health {
     constructor(id) {
 

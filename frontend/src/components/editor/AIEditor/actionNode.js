@@ -16,7 +16,7 @@ const hitboxCircleRadius = 25;
 const spawnPoint = {x: 0, y: 0};
 
 
-
+/** ActionNode, the object on the canvas which can contain one or more actions **/
 export default class actionNode {
 
 
@@ -30,6 +30,7 @@ export default class actionNode {
     _inputCircleHitbox;
     _position;
 
+    //The ID's of which actions are in a certain category
     movementActions = [1, 2, 4];
     containsMovement = false;
     aimActions = [5, 6, 7, 8, 9];
@@ -431,8 +432,9 @@ export default class actionNode {
         });
         this.stage.inputDict.set(this.inputCircleHitbox, this);
 
-        this.group.add(this.inputCircleHitbox);
+
         this.group.add(this.inputCircle);
+        this.group.add(this.inputCircleHitbox);
     }
 
     /** Get position of the inputdot, to draw an arrow to **/

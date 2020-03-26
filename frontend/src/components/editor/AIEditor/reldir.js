@@ -1,4 +1,4 @@
-//Relative direction
+/** Relative direction **/
 export default class reldir {
         _id;
 
