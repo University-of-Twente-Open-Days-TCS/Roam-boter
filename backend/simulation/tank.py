@@ -59,6 +59,7 @@ class Tank:
 
     def set_label_timer(self, index, seconds):
         self.label_timers[index] = seconds * 60
+        self.labels[index] = True
 
     def process_label_timers(self):
         for i, x in enumerate(self.label_timers):
