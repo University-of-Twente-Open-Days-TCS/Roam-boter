@@ -132,7 +132,7 @@ class ReplayCanvas {
         });
 
         this.gameData.frames[frame].health_packs.forEach(function (elem, index) {
-            if (elem.respawn_timer == 0) {
+            if (elem.respawn_timer === 0) {
                 drawImage(healthPackSprite, elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling / 1.5, -elem.rotation);
             }
         });

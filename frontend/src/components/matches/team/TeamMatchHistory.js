@@ -8,7 +8,7 @@ import ContentBox from '../../layout/ContentBox'
 import RoamBotAPI from '../../../RoamBotAPI'
 
 
-const MatchItem = (props) => {
+const TeamMatchItem = (props) => {
 
     let date = new Date(props.match.date)
     let timeString = date.toLocaleTimeString()
@@ -40,7 +40,6 @@ class TeamMatchHistory extends Component {
     async refreshMatchHistory() {
         let call = await RoamBotAPI.getTeamMatchHistoryList()
         let json = await call.json()
-        console.log(json)
         this.setState({matches: json})
     }
 
@@ -61,7 +60,7 @@ class TeamMatchHistory extends Component {
                 (<ul>{
                         this.state.matches.map((match, i) => {
                             return (
-                                <MatchItem key={i} match={match} onDelete={this.deleteHandler}></MatchItem>
+                                <TeamMatchItem key={i} match={match} onDelete={this.deleteHandler}></TeamMatchItem>
                             )
                         })
                     }

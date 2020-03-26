@@ -1,10 +1,15 @@
 from rest_framework import serializers
 
-from AIapi.models import AI
 from AIapi.serializers import AIOverviewSerializer
 
 import logging
 logger = logging.getLogger("debugLogger")
+
+
+class TeamOverviewSerializer(serializers.Serializer):
+
+    pk = serializers.IntegerField(read_only=True)
+    team_name = serializers.CharField(read_only=True)
 
 
 class TeamSerializer(serializers.Serializer):

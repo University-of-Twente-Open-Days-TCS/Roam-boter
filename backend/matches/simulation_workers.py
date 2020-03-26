@@ -1,5 +1,5 @@
 import time
-
+import signal
 
 from django.db import transaction
 
@@ -36,19 +36,37 @@ class WorkerPool:
         winner = None
 
     def __init__(self):
+        self.stopped = False
         self.reset_unfinished_matches()
-        self.init_workers()
 
-        while True:
+        self.processes = self.init_workers()
+        signal.signal(signal.SIGTERM, self.stop_gracefully)
+        signal.signal(signal.SIGINT, self.stop_gracefully)
+        signal.signal(signal.SIGHUP, self.stop_gracefully)
+
+        self.start()
+
+    def stop_gracefully(self, signum, frame):
+        LOGGER.info("STOPPING SIMULATION WORKERS")
+        self.stopped = True
+
+        # kill workers.
+        # this can be done dirty, because lost matches are collected at the start.
+        for process in self.processes:
+            process.terminate()
+            process.join()
+
+    def start(self):
+        while not self.stopped:
             self.collect_matches()
             self.handle_results()
-            time.sleep(1)
+            time.sleep(0.5)
 
     # Reset lost matches.
     @staticmethod
     def reset_unfinished_matches():
 
-        # find busy simulated Bot Matches
+        # find busy simulated Bot Matches and reset them.
         unplayed_matches = BotMatch.objects.filter(simulation__state=Simulation.SimulationState.BUSY)
 
         for x in unplayed_matches:
@@ -64,10 +82,15 @@ class WorkerPool:
 
     # Initialise workers
     def init_workers(self):
+        processes = []
 
         for _ in range(self.num_workers):
             t = Process(target=WorkerPool.worker_task, args=(self.match_queue, self.result_queue))
             t.start()
+            LOGGER.info("Created simulation worker: " + str(t.pid))
+            processes.append(t)
+
+        return processes
 
     @staticmethod
     def worker_task(in_queue, out_queue):
@@ -137,8 +160,8 @@ class WorkerPool:
                     sim = self.SimulationObject()
                     sim.match_id = team_match.pk
                     sim.kind = self.MatchKind.TeamMatch
-                    sim.players = [(team_match.initiator_id, team_match.initiator.name, team_match.initiator_ai.ai),
-                                   (team_match.opponent_id, team_match.opponent.name, team_match.opponent_ai.ai)]
+                    sim.players = [(team_match.initiator_id, team_match.initiator.team_name, team_match.initiator_ai.ai),
+                                   (team_match.opponent_id, team_match.opponent.team_name, team_match.opponent_ai.ai)]
 
                     self.match_queue.put(sim)
 

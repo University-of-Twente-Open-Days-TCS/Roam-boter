@@ -1,7 +1,11 @@
 from rest_framework import serializers
 
 from .models import Bot, Simulation, BotMatch, TeamMatch, Match
+
 from AIapi.models import AI
+from AIapi.serializers import AIOverviewSerializer
+
+from dashboard.serializers import TeamOverviewSerializer
 
 
 class BotSerializer(serializers.ModelSerializer):
@@ -100,7 +104,20 @@ class DetailedBotMatchSerializer(BotMatchSerializer):
 
 class TeamMatchSerializer(MatchSerializer):
     """
-    Team Match serializer. Opponents will be selected dynamically and need to be passed as extra context.
+    TeamMatch serializer.
+    Includes overview of opponent and used AI.
+    This serializer is made for teams to see their matches.
+    """
+
+    opponent = TeamOverviewSerializer()
+    initiator = TeamOverviewSerializer()
+    initiator_ai = AIOverviewSerializer()
+
+
+class TeamMatchPrimaryKeySerializer(MatchSerializer):
+    """
+    Team Match serializer for initiating matches.
+    Opponents will be selected dynamically and need to be passed as extra context.
     """
 
     # read only fields
@@ -119,7 +136,7 @@ class TeamMatchSerializer(MatchSerializer):
         required_context = ['opponent', 'initiator']
         for key in required_context:
             if key not in self.context:
-                raise Exception("Serializer was not passed required context: "+key)
+                raise Exception("Serializer was not passed required context: " + key)
 
         opponent = self.context['opponent']
         opponent_ai = opponent.active_ai
