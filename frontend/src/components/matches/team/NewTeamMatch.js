@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import ContentBox from '../../layout/ContentBox'
 import SelectAIDialog from '../SelectAIDialog'
+import ActiveAIDialog from "../ActiveAIDialog"
 
 import RoamBotAPI from '../../../RoamBotAPI'
 import Alert from "@material-ui/lab/Alert";
@@ -35,6 +36,7 @@ const NewTeamMatch = props => {
         error: false,
         message: ""
     })
+    let [activeAIDialogOpen, setActiveAIDialogOpen] = useState(false)
 
     useEffect(() => {
         async function updateAis() {
@@ -50,18 +52,7 @@ const NewTeamMatch = props => {
 
     const playMatch = async () => {
         if (!team.active_ai) {
-            // prompt whether to set this as active ai
-            let prompt = window.confirm("You do not have an active AI yet. Do you want to set this as your active AI?")
-            if (prompt){
-                let call = await RoamBotAPI.putActiveAI(selectedAI.pk)
-                if(!call.ok){
-                    setSnackbar({
-                        message: "Could not set active AI",
-                        error: true,
-                        open: true
-                    })
-                }
-            }
+            setActiveAIDialogOpen(true)
         }
 
         let call = await RoamBotAPI.postTeamMatch({gamemode: "DM", ai: selectedAI.pk})
@@ -85,7 +76,17 @@ const NewTeamMatch = props => {
         setSelectAIOpen(false)
     }
 
-
+    const handleSetActiveAI = async () => {
+        setActiveAIDialogOpen(false)
+        let call = await RoamBotAPI.putActiveAI(selectedAI.pk)
+        if(!call.ok){
+            setSnackbar({
+                message: "Could not set active AI",
+                error: true,
+                open: true
+            })
+        }
+    }
 
     return (
          <ContentBox>
@@ -107,6 +108,8 @@ const NewTeamMatch = props => {
                         <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({...snackbar, open: false})}>
                             <Alert severity={snackbar.error ? "error" : "success"} elevation={6} variant="filled"> {snackbar.message} </Alert>
                         </Snackbar>
+
+                        <ActiveAIDialog open={activeAIDialogOpen} handleDeny={() => setActiveAIDialogOpen(false)} selectedAI={selectedAI} />
                     </div>
                 </Grid>
             </Grid>
