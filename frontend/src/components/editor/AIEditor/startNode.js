@@ -168,6 +168,16 @@ export default class startNode {
         });
     }
 
+    darkenAll() {
+        this._trueArrow.dest.darkenAll();
+        this.layer.draw();
+    }
+
+    highlightPath(boolList) {
+        this._trueArrow.dest.highlightPath(boolList);
+        this.layer.draw();
+    }
+
     getTrueDotPosition() {
         let pos = this.trueCircle.getAbsolutePosition();
         return [pos.x, pos.y];
