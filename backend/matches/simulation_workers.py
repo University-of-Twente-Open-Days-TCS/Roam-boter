@@ -47,12 +47,14 @@ class WorkerPool:
         self.start()
 
     def stop_gracefully(self, signum, frame):
-        LOGGER.info("Stopping simulation workers")
+        LOGGER.info("STOPPING SIMULATION WORKERS")
         self.stopped = True
 
-        # kill workers
+        # kill workers.
+        # this can be done dirty, because lost matches are collected at the start.
         for process in self.processes:
             process.terminate()
+            process.join()
 
     def start(self):
         while not self.stopped:
@@ -64,7 +66,7 @@ class WorkerPool:
     @staticmethod
     def reset_unfinished_matches():
 
-        # find busy simulated Bot Matches
+        # find busy simulated Bot Matches and reset them.
         unplayed_matches = BotMatch.objects.filter(simulation__state=Simulation.SimulationState.BUSY)
 
         for x in unplayed_matches:
@@ -85,6 +87,7 @@ class WorkerPool:
         for _ in range(self.num_workers):
             t = Process(target=WorkerPool.worker_task, args=(self.match_queue, self.result_queue))
             t.start()
+            LOGGER.info("Created simulation worker: " + str(t.pid))
             processes.append(t)
 
         return processes
