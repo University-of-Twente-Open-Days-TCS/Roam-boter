@@ -1,7 +1,4 @@
-from django.http import Http404
-
 from rest_framework import status, generics
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -15,6 +12,7 @@ from dashboard.models import Team
 
 import logging
 logger = logging.getLogger("debugLogger")
+
 
 class AIList(APIView):
 
@@ -35,7 +33,7 @@ class AIList(APIView):
         serializer = AISerializer(data=request.data, context={'team': team})
 
         if serializer.is_valid():
-            # save new AI 
+            # save new AI
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -48,7 +46,6 @@ class AIDetail(RetrieveTeamObjectMixin, DestroyTeamObjectMixin, UpdateTeamObject
 
     queryset = AI.objects.all()
     serializer_class = AISerializer
-
 
     def get(self, request, *args, **kwargs):
         """
@@ -73,4 +70,3 @@ class AIDetail(RetrieveTeamObjectMixin, DestroyTeamObjectMixin, UpdateTeamObject
         Delete Existing AI
         """
         return self.destroy(request, *args, **kwargs)
-
