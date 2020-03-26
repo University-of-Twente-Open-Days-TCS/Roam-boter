@@ -161,3 +161,12 @@ class aiJsonListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by aiJsonParser#integer.
+    def enterInteger(self, ctx:aiJsonParser.IntegerContext):
+        pass
+
+    # Exit a parse tree produced by aiJsonParser#integer.
+    def exitInteger(self, ctx:aiJsonParser.IntegerContext):
+        pass
+
+

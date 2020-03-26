@@ -110,8 +110,8 @@ class EvaluationTreeConverter(ParseTreeVisitor):
     # Visit a parse tree produced by aiJsonParser#value.
     def visitValue(self, ctx:aiJsonParser.ValueContext):
         """Return int if it is and integer and a string if it is a string"""
-        if ctx.INTEGER() is not None:
-            value = int(ctx.INTEGER().getText())
+        if ctx.NUMBER() is not None:
+            value = int(ctx.NUMBER().getText())
             return value
         else:
             value = self.visitAphstring(ctx.APHSTRING())
@@ -120,7 +120,7 @@ class EvaluationTreeConverter(ParseTreeVisitor):
 
     # Visit a parse tree produced by aiJsonParser#type_id.
     def visitType_id(self, ctx:aiJsonParser.Type_idContext):
-        type_id = int(ctx.INTEGER().getText())
+        type_id = int(ctx.NUMBER().getText())
         return type_id
 
 
@@ -157,6 +157,7 @@ def convert_aijson(json):
 
         input_stream = InputStream(json)
         lexer = aiJsonLexer(input_stream)
+        lexer._listeners = [ConverterErrorListener()]
         stream = CommonTokenStream(lexer)
         parser = aiJsonParser(stream)
         parser._listeners = [ConverterErrorListener()]
@@ -169,18 +170,20 @@ def convert_aijson(json):
         return eval_tree
 
     except Exception as e:
-        logger.debug(e.msg)
         logger.debug(e.exc_info())
+        raise e
 
 def is_valid_aijson(json):
     """Checks whether a given json string is valid"""
     input_stream = InputStream(json)
-    lexer = aiJsonLexer(input_stream)
-    stream = CommonTokenStream(lexer)
-    parser = aiJsonParser(stream)
-    parser._listeners = [ConverterErrorListener()]
 
     try:
+        lexer = aiJsonLexer(input_stream)
+        lexer._listeners = [ConverterErrorListener()]
+        stream = CommonTokenStream(lexer)
+        parser = aiJsonParser(stream)
+        parser._listeners = [ConverterErrorListener()]
+
         root_node = parser.startrule()
         # no exception has occurred. 
         return True
