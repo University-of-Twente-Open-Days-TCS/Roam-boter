@@ -1,17 +1,21 @@
 import React from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
+import { Button, Typography} from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
-    AIMenu: {
+    root: {
+        margin: theme.spacing(2, 0),
+    },
+    menuSection: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '0.25rem'
+        padding: '0.25rem',
+        margin: '0.5rem 0'
     },
 
-    Button: {
+    button: {
         width: '80%',
         margin: '0.5rem 0',
 
@@ -27,17 +31,20 @@ const useStyles = makeStyles(theme => ({
 const AIEditorMenu = (props) => {
     const classes = useStyles()
     
-    let addConditionHandler = props.addConditionHandler
-    let addActionHandler = props.addActionHandler
-    let saveHandler = props.saveHandler
+    let {addConditionHandler, addActionHandler, saveHandler, deleteHandler } = props
+    let ai = props.ai
 
 
     return (
-        <div>
-            <div className={classes.AIMenu}>
-                <Button variant="contained" color="primary" onClick={addConditionHandler} className={classes.Button}>Condition</Button>
-                <Button variant="contained" color="primary" onClick={addActionHandler} className={classes.Button}>Action</Button>
-                <Button variant="contained" color="primary" onClick={saveHandler} className={classes.Button}>Save</Button>
+        <div className={classes.root}>
+            <Typography variant="h4" align="center">{ai ? ai.name : ""}</Typography>
+            <div className={classes.menuSection}>
+                <Button variant="contained" color="primary" onClick={addConditionHandler} className={classes.button}>Condition</Button>
+                <Button variant="contained" color="primary" onClick={addActionHandler} className={classes.button}>Action</Button>
+                <Button variant="contained" color="primary" onClick={saveHandler} className={classes.button}>Save</Button>
+            </div>
+            <div className={classes.menuSection}>
+                <Button variant="contained" color="secondary" onClick={deleteHandler} className={classes.button}>Delete</Button>
             </div>
         </div>
     )

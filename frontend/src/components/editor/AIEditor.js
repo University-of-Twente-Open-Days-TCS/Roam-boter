@@ -62,11 +62,12 @@ class AIEditor extends Component {
         this.handleAddCondition = this.handleAddCondition.bind(this)
         this.handleAddAction = this.handleAddAction.bind(this)
         this.handleSave = this.handleSave.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
 
         this.state = {
             id: null,
             dialogOpen: false,
-            aiName: "",
+            ai: null,
             errorAlertOpen: false,
             errorMessage: "",
             successAlertOpen: false
@@ -76,7 +77,7 @@ class AIEditor extends Component {
 
     componentDidMount() {
         /** Konva Canvas */
-        const canvas = new AICanvas('konva-container')
+        const canvas = new AICanvas('konva-container', false)
         this.canvas = canvas
 
         /** add resize listeners */
@@ -124,7 +125,7 @@ class AIEditor extends Component {
         try {
             let canvas = this.canvas
             canvas.treeToJson()
-
+            
             this.setState({
                 dialogOpen: true
             })
@@ -143,7 +144,7 @@ class AIEditor extends Component {
         try{
             let ai = canvas.treeToJson()
             let data = {}
-            data.name = this.state.aiName
+            data.name = this.state.ai.name
             data.ai = ai
 
             const response = (this.state.id) ? (RoamBotAPI.putAI(this.state.id, data)) : (RoamBotAPI.postAI(data))
@@ -176,6 +177,27 @@ class AIEditor extends Component {
         this.setState({dialogOpen: false})
     }
 
+    handleDelete = () => {
+        /** Prompts user and deletes AI if user confirms. */
+        let confirmation = window.confirm("Are you sure you want to delete this AI?")
+        if(confirmation){
+            // check if ai exists
+            if (this.state.ai) {
+                let call = RoamBotAPI.deleteAI(this.state.ai.pk)
+                call.then((response) => {
+                    if(response.ok){
+                        window.location = "/#/AIList"
+                    }else{
+                        window.alert(response.json)
+                    }
+                })
+            }else {
+                window.location = "/#/AIList"
+            }
+        }
+    }
+
+
     handleErrorSnackbarClose = () => {
         this.setState({
             errorAlertOpen: false
@@ -193,7 +215,7 @@ class AIEditor extends Component {
         let response = await RoamBotAPI.getAiDetail(id)
         let json = await response.json()
         this.canvas.jsonToTree(JSON.parse(json.ai))
-        this.setState({aiName: json.name})
+        this.setState({ai: json})
     }
 
     handleCloseDialog = () => {
@@ -203,7 +225,8 @@ class AIEditor extends Component {
     }
 
     handleChangeName = (e) => {
-        this.setState({aiName: e.target.value})
+        let ai = {...this.state.ai, name: e.target.value}
+        this.setState({ai: ai})
     }
 
     render() {
@@ -213,7 +236,9 @@ class AIEditor extends Component {
         let menuProps = {
             addConditionHandler: this.handleAddCondition,
             addActionHandler: this.handleAddAction,
-            saveHandler: this.handleSave
+            saveHandler: this.handleSave,
+            deleteHandler: this.handleDelete,
+            ai: this.state.ai
         }
 
         return (
@@ -228,6 +253,9 @@ class AIEditor extends Component {
                         <AIEditorMenu {...menuProps} />
                     </Grid>
                 </Grid>
+
+
+                {/** DIALOG */}
                 <Dialog open={this.state.dialogOpen} onClose={this.handleCloseDialog}
                         aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Enter AI name</DialogTitle>
@@ -239,7 +267,7 @@ class AIEditor extends Component {
                             label="AI name"
                             type="text"
                             fullWidth
-                            value={this.state.aiName}
+                            value={this.state.ai ? this.state.ai.name : ""}
                             onChange={this.handleChangeName}
                             required={true}
                         />
@@ -248,7 +276,7 @@ class AIEditor extends Component {
                         <Button onClick={this.handleCloseDialog} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={this.saveAI} color="primary" disabled={!this.state.aiName}>
+                        <Button onClick={this.saveAI} color="primary" disabled={!this.state.ai}>
                             Save
                         </Button>
                     </DialogActions>
