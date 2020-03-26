@@ -7,9 +7,9 @@ import Button from "@material-ui/core/Button";
 import React from "react";
 import RoamBotAPI from "../../RoamBotAPI";
 
-const ActiveAIDialog = ({ open, handleDeny, selectedAI }) => {
+const ActiveAIDialog = ({ open, handleDeny: handleClose, selectedAI }) => {
     const handleConfirm = async (selectedAI) => {
-        handleDeny()
+        handleClose()
         console.log(selectedAI)
         let call = await RoamBotAPI.putActiveAI(selectedAI.pk)
         if(!call.ok){
@@ -25,7 +25,7 @@ const ActiveAIDialog = ({ open, handleDeny, selectedAI }) => {
     return (
         <Dialog
             open={open}
-            onClose={handleDeny}
+            onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
@@ -36,7 +36,7 @@ const ActiveAIDialog = ({ open, handleDeny, selectedAI }) => {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleDeny} color="primary">
+                <Button onClick={handleClose} color="primary">
                     Cancel
                 </Button>
                 <Button onClick={() => handleConfirm(selectedAI)} color="primary" autoFocus>

@@ -76,18 +76,6 @@ const NewTeamMatch = props => {
         setSelectAIOpen(false)
     }
 
-    const handleSetActiveAI = async () => {
-        setActiveAIDialogOpen(false)
-        let call = await RoamBotAPI.putActiveAI(selectedAI.pk)
-        if(!call.ok){
-            setSnackbar({
-                message: "Could not set active AI",
-                error: true,
-                open: true
-            })
-        }
-    }
-
     return (
          <ContentBox>
             <Typography variant="h4" align="center">New Team Match</Typography>
@@ -109,7 +97,7 @@ const NewTeamMatch = props => {
                             <Alert severity={snackbar.error ? "error" : "success"} elevation={6} variant="filled"> {snackbar.message} </Alert>
                         </Snackbar>
 
-                        <ActiveAIDialog open={activeAIDialogOpen} handleDeny={() => setActiveAIDialogOpen(false)} selectedAI={selectedAI} />
+                        <ActiveAIDialog open={activeAIDialogOpen} handleClose={() => setActiveAIDialogOpen(false)} selectedAI={selectedAI} />
                     </div>
                 </Grid>
             </Grid>
