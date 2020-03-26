@@ -48,21 +48,51 @@ div.dash-grid {
 
 /* TEAM CODE */
 div.team-codes {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10+ and Edge */
+    user-select: none; /* Standard syntax */
 }
 
 .team-codes h2 {
+    text-align: center;
 }
 
 .team-codes div.team-code-list {
     width: 100%;
+    max-width: 270px;
     height: 60vh;
     padding: 2rem;
+    overflow-y: scroll;
 }
 
-.team-codes div.team-code-list textarea {
-    height: 100%;
+.team-codes div.team-code-list-codes {
     width: 100%;
+}
+
+.team-codes div.team-code-list .team-code {
+    display: inline-block;
+    text-align: left;
+    -webkit-user-select: text; /* Safari */
+    -ms-user-select: text; /* IE 10+ and Edge */
+    user-select: text; /* Standard syntax */
+}
+
+.team-codes div.team-code-list .team-active {
+    display: inline-block;
+    float: right;
+    text-align: right;
+    
+}
+
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+
+    text-align: center;
 }
 
 .red {

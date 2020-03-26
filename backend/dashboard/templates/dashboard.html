@@ -46,21 +46,36 @@
                                 <div class='team-code-list'>
 
                                     {% if teams %}
-                                        <textarea readonly>{% for team in teams %}{{ team.team_code }}
-{% endfor %}</textarea>
+                                        <div class='team-code-list-codes'>
+                                            {% for team in teams %}
+                                            <div>
+                                                <div class='team-code'>{{ team.team_code }}</div>
+                                                <div class='team-active'>
+                                                    {% if team.active %} 
+                                                        <span class='green'>active</span>
+                                                    {% else %}
+                                                        <span class='red'>inactive</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+
                                     {% else %}
                                         <h4>No team codes</h4>
 
                                     {% endif %}
                                 </div>
 
-                                <form method="POST" action="/dashboard/generate/" id='generate-form'>
-                                    {% csrf_token %}
+                                <div class='form-wrapper'>
+                                    <form method="POST" action="/dashboard/generate/" id='generate-form'>
+                                        {% csrf_token %}
     
-                                    <input type="number" name="amount" placeholder="Number of new codes"></input>
-                                    <input type="submit" value="Generate" id="generate-team-codes-button"></input>
+                                        <input type="number" name="amount" placeholder="Number of new codes"></input>
+                                        <input type="submit" value="Generate" id="generate-team-codes-button"></input>
 
-                                </form>
+                                    </form>
+                                </div>
     
                             </div>    
     
