@@ -1,7 +1,10 @@
 import React from 'react'
 
-import { makeStyles } from '@material-ui/core/styles'
+
 import { Button, Typography} from '@material-ui/core'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { makeStyles } from '@material-ui/core/styles'
+import { useTheme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -14,7 +17,6 @@ const useStyles = makeStyles(theme => ({
         padding: '0.25rem',
         margin: '0.5rem 0'
     },
-
     button: {
         width: '80%',
         margin: '0.5rem 0',
@@ -34,10 +36,13 @@ const AIEditorMenu = (props) => {
     let {addConditionHandler, addActionHandler, saveHandler, deleteHandler } = props
     let ai = props.ai
 
+    const theme = useTheme()
+    const bigScreen = useMediaQuery(theme.breakpoints.up('md'))
+
 
     return (
         <div className={classes.root}>
-            <Typography variant="h4" align="center">{ai ? ai.name : ""}</Typography>
+            <Typography variant={bigScreen ? "h4" : "h6"} align="center">{ai ? ai.name : ""}</Typography>
             <div className={classes.menuSection}>
                 <Button variant="contained" color="primary" onClick={addConditionHandler} className={classes.button}>Condition</Button>
                 <Button variant="contained" color="primary" onClick={addActionHandler} className={classes.button}>Action</Button>

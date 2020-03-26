@@ -44,10 +44,7 @@ class App extends Component {
         RoamBotAPI.getTeamDetail()
             .then((response) => {
                 if (response.ok) {
-                    let json = response.json()
-                    json.then((result) => {
-                        this.setState({ loggedIn: true })
-                    })
+                   this.setState({ loggedIn: true})
                 } else {
                     this.setState({ loggedIn: false })
                 }

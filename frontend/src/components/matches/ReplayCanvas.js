@@ -120,10 +120,12 @@ class ReplayCanvas {
             });
         });
 
+        //draw tanks
         this.gameData.frames[frame].tanks.forEach(function (elem, index) {
             drawImage(tankSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
             drawImage(turretSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation - elem.turret_rotation);
 
+            // draw health bar
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.fillStyle = "rgb(" + ((100 - elem.health) * (255 / 100)) + ", " + (elem.health * (255 / 100)) + ", 0)"
             ctx.fillRect(elem.pos[0] * cellsize_x - 20, elem.pos[1] * cellsize_y - 20, elem.health / 100 * 40, 5);
