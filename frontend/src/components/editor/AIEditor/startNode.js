@@ -1,5 +1,8 @@
 import arrow from "./arrow.js";
 import Konva from "konva"
+import popup from "./popup.js";
+import actionNode from "./actionNode.js";
+import conditionNode from "./conditionNode.js";
 
 const blockHeight = 40;
 const blockWidth = 100;
@@ -14,16 +17,18 @@ export default class startNode {
     _trueArrow;
     _layer;
     _stage;
+    _canvas;
     _group;
     _rect;
     _trueCircle;
     _dragCircle;
 
-    constructor(stage, layer) {
+    constructor(stage, layer, canvas) {
         //    bla insert shape and a point which can be dragged to a condition/action
         this.stage = stage;
         this.layer = layer;
         this.createGroup(stage);
+        this.canvas = canvas;
 
     }
 
@@ -139,6 +144,19 @@ export default class startNode {
                     node.stage.inputDict.get(intersect).inputArrow.delete();
                 }
                 new arrow(node, node.stage.inputDict.get(intersect), true, node.stage, node.layer);
+            } else {
+                //If not dropped on other element, make a popup to create either a new condition or action
+                node.stage.staticlayer.add(new popup(node.stage, node.stage.staticlayer, [new conditionNode(node.stage, node.layer, node.canvas), new actionNode(node.stage, node.layer, node.canvas)], (selection) => {
+                    let newNode = null;
+                    newNode = node.canvas.addNode(selection);
+                    new arrow(node, newNode, true, node.stage, node.layer);
+                    if (newNode !== null) {
+                        newNode.group.absolutePosition(touchPos);
+                        newNode.updateArrows();
+                    }
+                }, "select a new condition or action").group);
+                node.stage.staticlayer.moveToTop();
+                node.stage.draw();
             }
             this.moveTo(g);
             this.x(this.originalX);
@@ -175,6 +193,14 @@ export default class startNode {
 
     set stage(value) {
         this._stage = value;
+    }
+
+    get canvas() {
+        return this._canvas;
+    }
+
+    set canvas(value) {
+        this._canvas = value;
     }
 
     get layer() {

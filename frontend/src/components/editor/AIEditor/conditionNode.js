@@ -127,7 +127,7 @@ export default class conditionNode {
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
-        this.remainingOptions = [{options: this.generateConditionList(), f: (cndtn) => this.condition = cndtn}];
+        this.remainingOptions = [{options: this.generateConditionList(), f: (cndtn) => this.setCondition(cndtn)}];
         this.stage.draw();
 
     }
@@ -529,7 +529,8 @@ export default class conditionNode {
                         newNode.updateArrows();
                     }
                 }, "select a new condition or action").group);
-                node.stage.staticlayer.draw();
+                node.stage.staticlayer.moveToTop();
+                node.stage.draw();
             }
             this.moveTo(g);
             this.x(this.originalX);
