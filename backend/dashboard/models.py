@@ -19,6 +19,9 @@ class Workshop(models.Model):
         if open_workshops > 0:
             raise ValidationError("Can't create workshop, because another workshop is open")
 
+    def __str__(self):
+        return "Workshop at: " + str(self.creation_date)
+
 
 class Team(models.Model):
     """Team model"""
