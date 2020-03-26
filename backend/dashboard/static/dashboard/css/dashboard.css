@@ -62,8 +62,7 @@ div.team-codes {
 }
 
 .team-codes div.team-code-list {
-    width: 100%;
-    max-width: 270px;
+    width: 80%;
     height: 60vh;
     padding: 2rem;
     overflow-y: scroll;

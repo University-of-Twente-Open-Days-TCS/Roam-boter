@@ -52,9 +52,9 @@
                                                 <div class='team-code'>{{ team.team_code }}</div>
                                                 <div class='team-active'>
                                                     {% if team.active %} 
-                                                        <span class='green'>active</span>
+                                                    <span class='green'> {{ team.team_name }} </span>
                                                     {% else %}
-                                                        <span class='red'>inactive</span>
+                                                    <span class='red'> {{ team.team_name }} </span>
                                                     {% endif %}
                                                 </div>
                                             </div>
