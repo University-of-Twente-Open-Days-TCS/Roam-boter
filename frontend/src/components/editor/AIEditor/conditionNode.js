@@ -587,6 +587,23 @@ export default class conditionNode {
         return {x: x, y: y};
     }
 
+    darkenAll() {
+        this.group.cache();
+        this.group.filters([Konva.Filters.Brighten]);
+        this.group.brightness(-0.3);
+        this._trueArrow.dest.darkenAll();
+        this._falseArrow.dest.darkenAll();
+    }
+
+    highlightPath(boolList) {
+        this.group.brightness(0);
+        if (boolList.shift()) {
+            this._trueArrow.dest.highlightPath(boolList);
+        } else {
+            this._falseArrow.dest.highlightPath(boolList);
+        }
+    }
+
     //Getters and setters for arrows and conditiontext
     get inputArrow() {
         return this._inputArrow;

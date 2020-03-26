@@ -413,6 +413,16 @@ export default class actionNode {
         return {x: x, y: y};
     }
 
+    darkenAll() {
+        this.group.cache();
+        this.group.filters([Konva.Filters.Brighten]);
+        this.group.brightness(-0.3);
+    }
+
+    highlightPath(boolList) {
+        this.group.brightness(0);
+    }
+
     get actionList() {
         return this._actionList;
     }

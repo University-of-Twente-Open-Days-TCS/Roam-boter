@@ -27,7 +27,8 @@ class aiCanvas {
 
     _startNode;
 
-    constructor(container) {
+    constructor(container, isReplay) {
+        this.isReplay = isReplay;
         //Create the stage
         this.createStage(container);
 
@@ -37,13 +38,15 @@ class aiCanvas {
 
         this.stage.inputDict = new Map([]);
         this.stage.staticlayer = new Konva.Layer();
-
         //Create the canvas
         this.startNode = new startNode(this.stage, this.layer);
         this.layer.add(this.startNode.group);
         this.stage.add(this.stage.staticlayer);
         this.stage.add(this.layer);
         this.stage.add(this.stage.templayer);
+        if (isReplay) {
+            this.addInteractionBlocker();
+        }
         this.layer.draw();
 
 
@@ -54,7 +57,6 @@ class aiCanvas {
 
         //Make canvas draggable
         this.makeDraggable();
-
 
     }
 
@@ -78,6 +80,13 @@ class aiCanvas {
             width: width,
             height: height
         });
+        if (this.isReplay) {
+            this.blocker.size({
+                width: width,
+                height: height
+            })
+        }
+
         this.stage.batchDraw()
     }
 
@@ -122,6 +131,19 @@ class aiCanvas {
             };
         });
 
+    }
+
+    //prevents any interaction with the elements of the canvas, effectively making kind of an image
+    addInteractionBlocker() {
+        this.blocker = new Konva.Rect({
+            width: this.stage.width(),
+            height: this.stage.height(),
+            opacity: 0,
+            fill: "black"
+        });
+        this.stage.staticlayer.add(this.blocker);
+        this.stage.staticlayer.moveToTop();
+        this.stage.staticlayer.draw();
     }
 
 
@@ -201,8 +223,15 @@ class aiCanvas {
 
     intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
+    highlightPath(boolList) {
+        this.startNode.darkenAll();
+        this.startNode.highlightPath(boolList);
+    }
+
     //Turn a json file into a tree
     jsonToTree(json) {
+        //this.isReplay = true;
+        //this.addInteractionBlocker()
         //Parse JSON to JS format
         // let parsedJson = JSON.parse(jsonFile);
 
@@ -214,7 +243,7 @@ class aiCanvas {
 
         //Draw arrows to child
         this.drawArrowFromJson(this.startNode, nodeChild, true);
-
+        //this.highlightPath([true, false]);
     }
         //Add two positions
         addPosAAndPosB(posA, posB) {
