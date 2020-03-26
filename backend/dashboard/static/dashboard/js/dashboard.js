@@ -12,6 +12,9 @@ function initializeDashboard() {
     let generateTeamCodesButton = document.getElementById("generate-team-codes-button")
     if (generateTeamCodesButton) generateTeamCodesButton.addEventListener("click", generateTeamCodes)
 
+    let downloadTeamCodes = document.getElementById("generate-textfile-button")
+    downloadTeamCodes.addEventListener("click", downloadTextfile)
+
 }
 
 // First confirms with user and then closes the current workshop
@@ -65,6 +68,12 @@ function generateTeamCodes(event) {
     generateTeamCodesCall(amount).then(response => {
         location.reload()
     })  
+}
+
+function downloadTextfile() {
+    //TODO: IMPLEMENT
+    //Generate a file with team codes
+    //Such that it is easy for the Open Days Team to print them.
 }
 
 /* 

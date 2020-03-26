@@ -48,7 +48,7 @@
                                     {% if teams %}
                                         <div class='team-code-list-codes'>
                                             {% for team in teams %}
-                                            <div>
+                                            <div class='team-list-item'>
                                                 <div class='team-code'>{{ team.team_code }}</div>
                                                 <div class='team-active'>
                                                     {% if team.active %} 
@@ -75,6 +75,10 @@
                                         <input type="submit" value="Generate" id="generate-team-codes-button"></input>
 
                                     </form>
+                                </div>
+
+                                <div class='form-wrapper'>
+                                    <button type="submit" id="generate-textfile-button">Generate team_codes.txt</button>
                                 </div>
     
                             </div>    
