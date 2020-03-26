@@ -9,6 +9,7 @@ const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
 const spawnPoint = {x: 0, y: 0};
+const hitboxCircleRadius = 25;
 
 
 export default class actionNode {
@@ -18,8 +19,10 @@ export default class actionNode {
     _actionNodeText;
     _actionNodeTextObj;
     _group;
+    _canvas;
     _rect;
     _inputCircle;
+    _inputCircleHitbox;
     _position;
 
     movementActions = [1, 2, 4];
@@ -40,11 +43,11 @@ export default class actionNode {
         this.position = position;
         this.actionList = actionList;
         this.actionList.forEach(action => {
-            if (this.movementActions.includes(action)) {
+            if (this.movementActions.includes(action.id)) {
                 this.containsMovement = true;
-            } else if (this.aimActions.includes(action)) {
+            } else if (this.aimActions.includes(action.id)) {
                 this.containsAim = true;
-            } else if (this.fireActions.includes(action)) {
+            } else if (this.fireActions.includes(action.id)) {
                 this.containsFire = true;
             }
         });
@@ -60,7 +63,6 @@ export default class actionNode {
             this.canvas.dragging = true;
         });
 
-        //TODO IF MOVING BECOMES SLOW, MAKE SURE THIS DOES NOT CHECK 24/7
         this.group.on("dragmove", () => {
             this.updateArrows();
             this.canvas.dragging = true;
@@ -104,7 +106,6 @@ export default class actionNode {
 
         //Popup to add an action to the actionList within the node
         this.group.on("click tap", () => {
-
             this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generatePossibleActionsList(), this.addAction.bind(this), "select an action").group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
@@ -157,7 +158,7 @@ export default class actionNode {
             this.containsAim = true;
         }
         this.setassetsizes();
-        this.inputCircle.moveToTop();
+        this.inputCircleHitbox.moveToTop();
     }
 
     generatePossibleActionsList() {
@@ -200,9 +201,11 @@ export default class actionNode {
         this.rect.width(Math.max(this.actionNodeTextObj.width(), blockWidth));
         this.rect.height(Math.max(this.actionNodeTextObj.height(), blockHeight));
 
-        //adjust inputcircle
+        //adjust inputcircle and hitbox
         this.inputCircle.y(this.rect.y());
         this.inputCircle.x(this.rect.x() + (this.rect.width() / 2));
+        this.inputCircleHitbox.y(this.rect.y());
+        this.inputCircleHitbox.x(this.rect.x() + (this.rect.width() / 2));
 
         //adjust arrows
         this.updateArrows(this.stage);
@@ -390,8 +393,18 @@ export default class actionNode {
             fill: 'white',
             stroke: 'black',
         });
-        this.stage.inputDict.set(this.inputCircle, this);
 
+        this.inputCircleHitbox = new Konva.Circle({
+            y: this.position.y,
+            x: this.position.x + this.rect.width() / 2,
+            radius: hitboxCircleRadius,
+            fill: 'white',
+            stroke: 'black',
+            opacity: 0
+        });
+        this.stage.inputDict.set(this.inputCircleHitbox, this);
+
+        this.group.add(this.inputCircleHitbox);
         this.group.add(this.inputCircle);
     }
 
@@ -486,6 +499,14 @@ export default class actionNode {
         this._rect = value;
     }
 
+    get canvas() {
+        return this._canvas;
+    }
+
+    set canvas(value) {
+        this._canvas = value;
+    }
+
 
     get inputCircle() {
         return this._inputCircle;
@@ -493,6 +514,14 @@ export default class actionNode {
 
     set inputCircle(value) {
         this._inputCircle = value;
+    }
+
+    get inputCircleHitbox() {
+        return this._inputCircleHitbox;
+    }
+
+    set inputCircleHitbox(value) {
+        this._inputCircleHitbox = value;
     }
 
     get position() {

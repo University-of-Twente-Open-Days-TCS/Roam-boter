@@ -4,13 +4,13 @@ import condition from "./condition.js";
 import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
-import actionNode from "./actionNode";
+import actionNode from "./actionNode.js";
 
 
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
-const hitboxCircleRadius = 20;
+const hitboxCircleRadius = 25;
 const spawnPoint = {x: 0, y: 0};
 
 
