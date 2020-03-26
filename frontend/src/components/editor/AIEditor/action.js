@@ -196,12 +196,12 @@ export default class action {
                 break;
             case 14:
                 this.remainingOptions = [{
-                    options: labelList, f: ((lbl) => {
-                        this.label = lbl
-                    })
-                }, {
                     options: secondsList, f: ((scnds) => {
                         this.seconds = scnds
+                    })
+                }, {
+                    options: labelList, f: ((lbl) => {
+                        this.label = lbl
                     })
                 }];
                 break;

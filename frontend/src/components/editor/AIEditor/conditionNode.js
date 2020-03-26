@@ -7,7 +7,6 @@ import ErrorCircle from "../Errors/ErrorCircle.js";
 import actionNode from "./actionNode";
 
 
-//TODO place all these variables somewhere nicer
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
@@ -395,7 +394,6 @@ export default class conditionNode {
         this.group.add(this.conditionTextObj);
     }
 
-    //TODO fix using Math.max instead of if-statement
     //base rectangle which contains the condition text
     createRect() {
         if (this.conditionText != null) {

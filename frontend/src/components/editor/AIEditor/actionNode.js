@@ -5,7 +5,6 @@ import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 
 
-//TODO place all these variables somewhere nicer
 const blockHeight = 40;
 const blockWidth = 100;
 const circle_radius = 10;
