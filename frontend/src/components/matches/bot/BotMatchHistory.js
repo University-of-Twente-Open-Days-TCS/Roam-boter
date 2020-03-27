@@ -6,11 +6,13 @@ import {NavLink} from "react-router-dom";
 import RoamBotAPI from "../../../RoamBotAPI"
 
 import ContentBox from '../../layout/ContentBox';
+import {Refresh} from "@material-ui/icons";
 
 
 const MatchItem = (props) => {
     let date = new Date(props.match.date)
     let timeString = date.toLocaleTimeString()
+    let done = (props.match.simulation.state === "DONE")
 
     const deleteMatch = () => {
         let call = RoamBotAPI.deleteBotMatch(props.match.pk)
@@ -30,8 +32,8 @@ const MatchItem = (props) => {
 
     return (
         <li>
-            <NavLink to={'/BotMatchReplay/'+props.match.simulation.pk}>
-                <Button variant="outlined" color="primary" size="small">{timeString}</Button>
+            <NavLink to={'/BotMatchReplay/'+props.match.simulation.pk} onClick={e => done ? null : e.preventDefault()}>
+                <Button variant="outlined" color="primary" size="small" disabled={!done}>{timeString} {(done) ? null : "Simulating.."}</Button>
             </NavLink><span className='spacing'></span>
             <Button variant="outlined" color="secondary" size="small" onClick={deleteMatch}>Delete</Button>
         </li>
@@ -55,12 +57,13 @@ class BotMatchHistory extends Component {
         let response = await RoamBotAPI.getBotMatchHistoryList()
         let data = await response.json()
         this.setState({matches: data})
+        console.log(data)
     }
 
     render() {
         return(
         <ContentBox>
-            <h1>Match History</h1>
+            <h1>Match History <Button onClick={() => this.refreshMatchHistory()} variant="contained" color="primary"><Refresh/></Button></h1>
             <ul>{
                 this.state.matches.map((match, i) => {
                     return (
