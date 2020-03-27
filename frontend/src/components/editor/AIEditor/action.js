@@ -5,7 +5,7 @@ import speed from "./speed.js";
 import label from "./label.js";
 import seconds from "./seconds.js";
 
-
+//Lists of possible attributes of an action
 const objectList = [
     new object(1),
     new object(2),
@@ -17,7 +17,6 @@ const objectList = [
     new object(8),
     new object(9),
     new object(10)
-
 ];
 
 const reldirList = [
@@ -59,6 +58,9 @@ const secondsList = [
     new seconds(5),
     new seconds(7),
 ];
+
+/** Action, used to be displayed inside an ActionNode or Selector. Can have one or more attributes depending on the
+ * action ID **/
 export default class action {
     _id;
     _object;
@@ -68,7 +70,7 @@ export default class action {
     _speed;
     _seconds;
 
-
+    /** Construct the action based on an ID and possible attributes**/
     constructor(id, object = null, winddir = null, reldir = null, speed = null, label = null, seconds = null) {
         this.id = id;
         this.object = object;
@@ -80,7 +82,7 @@ export default class action {
         this.setRemainingOptions();
     }
 
-    //Returns whether the current action has all its necessary attributes
+    /** Returns whether the current action has all its necessary attributes **/
     isValid() {
         switch (this.id) {
             case 0:
@@ -116,7 +118,7 @@ export default class action {
         }
     }
 
-    //initialises the remaining options to be selected
+    /** Initialises the remaining options to be selected **/
     setRemainingOptions() {
         switch (this.id) {
             case 0:
@@ -216,7 +218,7 @@ export default class action {
     }
 
 
-    //ToString method of an Action, currently hardcoded enters to avoid too long lines
+    /** ToString method of an Action, contains newlines to avoid too long lines **/
     toString() {
         switch (this.id) {
             case 0:
@@ -293,6 +295,7 @@ export default class action {
         }
     }
 
+    /** All getters & setters **/
     get id() {
         return this._id;
     }

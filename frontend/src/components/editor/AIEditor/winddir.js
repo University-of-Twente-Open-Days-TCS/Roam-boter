@@ -1,4 +1,4 @@
-//Wind direction
+/** Wind direction **/
 export default class winddir {
     _id;
 

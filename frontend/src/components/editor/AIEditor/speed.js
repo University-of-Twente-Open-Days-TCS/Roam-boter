@@ -1,4 +1,4 @@
-//Wind direction
+/** Speed with which a turret turns**/
 export default class speed {
     _id;
 
