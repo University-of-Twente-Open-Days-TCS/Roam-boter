@@ -109,8 +109,8 @@ export default class popup {
         let maxRatio = Math.max(ratioX, ratioY);
         let scale = 1;
         //if the  popup is larger than the stage it will scale down
-        if (maxRatio > 1) {
-            scale = 1 / maxRatio;
+        if (maxRatio > 0.9) {
+            scale = 1 / maxRatio * 0.9;
         }
         this.group.scale({x: scale, y: scale});
     }
