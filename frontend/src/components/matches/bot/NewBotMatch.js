@@ -115,8 +115,8 @@ const NewBotMatch = props => {
                         {(ais) ? (<SelectAIDialog ais={ais} open={dialogOpen.ai} handleClose={() => setDialogOpen({ ...dialogOpen, ai: false })} handleClick={handleAIListItemClick} />) : null}
                         {(bots) ? (<SelectBotDialog bots={bots} open={dialogOpen.bot} handleClose={() => setDialogOpen({ ...dialogOpen, bot: false })} handleClick={handleBotListItemClick} />) : null}
 
-                        <Snackbar open={snackbar.open} autoHideDuration={6000} >
-                            <Alert severity={snackbar.error ? "error" : "success"}> {snackbar.message} </Alert>
+                        <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({...snackbar, open: false})}>
+                            <Alert elevation={6} variant="filled" severity={snackbar.error ? "error" : "success"}> {snackbar.message} </Alert>
                         </Snackbar>
                     </div>
                 </Grid>
