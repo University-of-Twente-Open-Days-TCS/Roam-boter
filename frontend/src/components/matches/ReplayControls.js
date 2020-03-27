@@ -21,9 +21,6 @@ const useStyles = makeStyles(theme =>({
         alignItems: 'center',
         width: '80%'
     },
-    slider: {
-    
-    }
 }))
 
 

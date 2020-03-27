@@ -9,7 +9,7 @@ import ReplayControls from '../ReplayControls'
 import AIReplayCanvas from "../AIReplayCanvas";
 
 import RoamBotAPI from "../../../RoamBotAPI"
-import { Block } from "@material-ui/icons";
+
 
 const styles = theme => ({
     wrapper: {
@@ -55,6 +55,7 @@ class BotMatchReplay extends Component {
         //bind callbackFunctions
         this.handleSlideChange = this.handleSlideChange.bind(this)
         this.handlePlayButtonChange = this.handlePlayButtonChange.bind(this)
+        this.update = this.update.bind(this)
     }
 
     async componentDidMount() {
@@ -91,7 +92,8 @@ class BotMatchReplay extends Component {
         }
 
         this.setState({ gameData: gameData })
-        replayCanvas.start()
+
+        replayCanvas.draw()
     }
 
     async fetchMatchInfo(match_id, ai_id) {
@@ -104,21 +106,22 @@ class BotMatchReplay extends Component {
         const ai_response = await RoamBotAPI.getAiDetail(ai_id)
         let ai_data = await ai_response.json();
 
-        return { ai: JSON.parse(ai_data.ai), gameData: JSON.parse(match_data.simulation) }
+        let ai = JSON.parse(ai_data.ai)
+        let gameData = JSON.parse(match_data.simulation)
+
+        return { ai: ai, gameData: gameData }
     }
 
     componentDidUpdate() {
         // Stop or Start animation
         if (!this.state.playing) {
-            if (this.interval) {
-                clearInterval(this.interval)
-                this.interval = null
+            if (this.animRequestId) {
+                window.cancelAnimationFrame(this.animRequestId)
+                this.animRequestId = null
             }
         } else {
-            if (!this.interval) {
-                this.interval = setInterval(() => {
-                    this.updateFrames()
-                }, 32)
+            if (!this.animRequestId) {
+                this.animRequestId = window.requestAnimationFrame(this.update)
             }
         }
     }
@@ -128,7 +131,7 @@ class BotMatchReplay extends Component {
         clearInterval(this.interval)
     }
 
-    updateFrames() {
+    update() {
         let { frame, framesLength } = this.frameData
         if (frame >= framesLength - 1) {
             // reset and stop playing
@@ -136,20 +139,31 @@ class BotMatchReplay extends Component {
             this.setState({ playing: false })
         } else {
             // Increment frames and draw
-            let newFrame = frame + 2
+            let newFrame = frame + 1
             this.frameData = { ...this.frameData, frame: newFrame }
             this.redrawCanvases(newFrame)
         }
+
+        //this.forceUpdate()
+        this.animRequestId = window.requestAnimationFrame(this.update)
     }
 
     redrawCanvases(frame) {
         // only redraw state if data available
         if (this.state.gameData) {
+
             let curFrame = this.state.gameData.frames[frame]
             if (!curFrame) return;
             let aiPath = curFrame.tanks[0].ai_path
-            this.editorCanvas.setHighlightPath(aiPath)
+
+            const reverse = (array) => {
+                return array.map((item, i) => array[array.length-1-i])
+            }
+
+            this.editorCanvas.setHighlightPath(reverse(aiPath))
+
             this.replayCanvas.setFrame(frame)
+            this.replayCanvas.draw()
         }
     }
 
