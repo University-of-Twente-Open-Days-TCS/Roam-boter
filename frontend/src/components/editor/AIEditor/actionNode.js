@@ -4,13 +4,19 @@ import Konva from "konva"
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 
-
+//The default block size of an ActionNode
 const blockHeight = 40;
 const blockWidth = 100;
+
+//The circle radius of the inputcircle, and the hitbox (where the arrow will snap to this ActionNode)
 const circle_radius = 10;
+const hitboxCircleRadius = 25;
+
+//The default spawnpoint of a new ActionNode
 const spawnPoint = {x: 0, y: 0};
 
 
+/** ActionNode, the object on the canvas which can contain one or more actions **/
 export default class actionNode {
 
 
@@ -18,10 +24,13 @@ export default class actionNode {
     _actionNodeText;
     _actionNodeTextObj;
     _group;
+    _canvas;
     _rect;
     _inputCircle;
+    _inputCircleHitbox;
     _position;
 
+    //The ID's of which actions are in a certain category
     movementActions = [1, 2, 4];
     containsMovement = false;
     aimActions = [5, 6, 7, 8, 9];
@@ -29,6 +38,9 @@ export default class actionNode {
     fireActions = [10, 11];
     containsFire = false;
 
+    /** Constructor, takes at least the Konva stage, layer and canvas (ai_editor) it is positioned in.
+     * Possible arguments are an actionList to fill the node with actions upon construction, and a position
+     * other than the default spawnPoint **/
     constructor(stage, layer, canvas, actionList = [], position = spawnPoint) {
         this.group = new Konva.Group({
             draggable: true
@@ -36,14 +48,17 @@ export default class actionNode {
         this.trashcan = stage.trashcan;
         this.stage = stage;
         this.layer = layer;
+        this.canvas = canvas;
         this.position = position;
         this.actionList = actionList;
+
+        //Check every action in the list to flag which are still possible to add
         this.actionList.forEach(action => {
-            if (this.movementActions.includes(action)) {
+            if (this.movementActions.includes(action.id)) {
                 this.containsMovement = true;
-            } else if (this.aimActions.includes(action)) {
+            } else if (this.aimActions.includes(action.id)) {
                 this.containsAim = true;
-            } else if (this.fireActions.includes(action)) {
+            } else if (this.fireActions.includes(action.id)) {
                 this.containsFire = true;
             }
         });
@@ -55,8 +70,16 @@ export default class actionNode {
             this.actionNodeTextObj.moveToTop();
         }
         this.createInputCircle();
+
+        this.group.on("dragstart", () => {
+            this.canvas.dragging = true;
+        });
+
+
         this.group.on("dragmove", () => {
             this.updateArrows();
+            this.canvas.dragging = true;
+            this.updateArrows(this.stage);
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
@@ -77,6 +100,7 @@ export default class actionNode {
         });
 
         this.group.on("dragend", () => {
+            this.canvas.dragging = false;
             let touchPos = this.stage.getPointerPosition();
 
             //If node is released above trashcan, remove it and close trashcan
@@ -95,14 +119,17 @@ export default class actionNode {
 
         //Popup to add an action to the actionList within the node
         this.group.on("click tap", () => {
-
             this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generatePossibleActionsList(), this.addAction.bind(this), "select an action").group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
 
+        //Set the dimensions and hitboxes of this node according to its text contents
         this.setassetsizes();
+
+        //Helper for popup, bind every action to a method which adds it to this node
         this.remainingOptions = [{options: this.generatePossibleActionsList(), f: (actn) => this.addAction(actn)}];
+
         this.stage.draw();
     }
 
@@ -114,6 +141,7 @@ export default class actionNode {
         return "action";
     }
 
+    /** Loop over the ActionList, create the text  including newlines for the Node **/
     createActionNodeText() {
         let actionNodeString = "";
         let i = 0;
@@ -133,12 +161,14 @@ export default class actionNode {
 
     }
 
-    //adds a new action
+    /** Adds new action **/
     addAction(action) {
         this.actionList = this.actionList.concat(action);
+
         //Fill the actionNode with the newly added info
         this.actionNodeText = this.createActionNodeText();
         this.actionNodeTextObj.text(this.actionNodeText);
+
         //Check what type of action was added and adjust booleans accordingly
         if (this.movementActions.includes(action.id)) {
             this.containsMovement = true;
@@ -147,16 +177,19 @@ export default class actionNode {
         } else if (this.aimActions.includes(action.id)) {
             this.containsAim = true;
         }
+        //Correct the assetsizes and move hitbox to the top layer
         this.setassetsizes();
-        this.inputCircle.moveToTop();
+        this.inputCircleHitbox.moveToTop();
     }
 
+    /** Returns the actions which can still be added to this actionNode **/
     generatePossibleActionsList() {
 
 
         //Items which you may always choose from
         let possibleActionsList = [
-            //Infinite amount of Do Nothing
+
+            //Do Nothing may be added indefinitely
             new action(0),
         ];
 
@@ -176,7 +209,8 @@ export default class actionNode {
             })
         }
 
-        possibleActionsList.push(//Infinite labels
+        //labels may be added indefinitely
+        possibleActionsList.push(
             new action(12),
             new action(13),
             new action(14));
@@ -186,14 +220,17 @@ export default class actionNode {
 
     }
 
+    /** Fix the size of the node and its hitboxes/arrows based on its current text contents**/
     setassetsizes() {
         //Adjust rect size
         this.rect.width(Math.max(this.actionNodeTextObj.width(), blockWidth));
         this.rect.height(Math.max(this.actionNodeTextObj.height(), blockHeight));
 
-        //adjust inputcircle
+        //adjust inputcircle and hitbox
         this.inputCircle.y(this.rect.y());
         this.inputCircle.x(this.rect.x() + (this.rect.width() / 2));
+        this.inputCircleHitbox.y(this.rect.y());
+        this.inputCircleHitbox.x(this.rect.x() + (this.rect.width() / 2));
 
         //adjust arrows
         this.updateArrows(this.stage);
@@ -201,7 +238,7 @@ export default class actionNode {
         this.stage.draw();
     }
 
-    //create text for in the condition
+    /** create text object for in the condition**/
     createTextObject() {
         if (this.actionNodeText == null) {
             this.actionNodeText = "";
@@ -222,6 +259,9 @@ export default class actionNode {
 
     intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
+
+    /** Returns the json of its action contents and position relative to the startnode, raises an error if node is
+     * not valid **/
     jsonify(startNodePos) {
         let node = this.rect;
         let tree = {};
@@ -331,7 +371,7 @@ export default class actionNode {
                         "type_id": 13, "attributes": {"label": item.label.id}
                     });
                     break;
-                //set label for X seconds
+                //set label for seconds
                 case 14:
                     tree.actionlist.push({
                         "type_id": 14, "attributes": {"label": item.label.id, "seconds": item.seconds.id}
@@ -357,7 +397,7 @@ export default class actionNode {
         return {x: posX, y: posY};
     }
 
-
+    /** Create the rect object for the node **/
     createRect() {
         this.rect = new Konva.Rect({
             x: this.position.x,
@@ -372,7 +412,7 @@ export default class actionNode {
         this.group.add(this.rect);
     }
 
-    //circle to which connections can be made by dragging arrows on it
+    /** Create circle and hitbox to which connections can be made by dragging arrows on it **/
     createInputCircle() {
         this.inputCircle = new Konva.Circle({
             y: this.position.y,
@@ -381,22 +421,35 @@ export default class actionNode {
             fill: 'white',
             stroke: 'black',
         });
-        this.stage.inputDict.set(this.inputCircle, this);
+
+        this.inputCircleHitbox = new Konva.Circle({
+            y: this.position.y,
+            x: this.position.x + this.rect.width() / 2,
+            radius: hitboxCircleRadius,
+            fill: 'white',
+            stroke: 'black',
+            opacity: 0
+        });
+        this.stage.inputDict.set(this.inputCircleHitbox, this);
+
 
         this.group.add(this.inputCircle);
+        this.group.add(this.inputCircleHitbox);
     }
 
+    /** Get position of the inputdot, to draw an arrow to **/
     getInputDotPosition() {
-        let pos = this.inputCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.inputCircle.x() + this.group.x(), this.inputCircle.y() + this.group.y()];
     }
 
+    /** Update the arrows, for example if the node is being moved**/
     updateArrows() {
         if (this.inputArrow != null) {
             this.inputArrow.update();
         }
     }
 
+    /** Remove node and its ingoing arrow **/
     remove() {
         if (this.inputArrow != null) {
             this.inputArrow.delete();
@@ -406,22 +459,26 @@ export default class actionNode {
     }
 
 
+    /** Get the middle position of the node, for an errorRing**/
     getRectMiddlePos() {
         let x = this.rect.x() + this.rect.width() / 2;
         let y = this.rect.y() + this.rect.height() / 2;
         return {x: x, y: y};
     }
 
+    /** Darken the node, for when it is shown next to a simulation but is not active **/
     darkenAll() {
         this.group.cache();
         this.group.filters([Konva.Filters.Brighten]);
         this.group.brightness(-0.3);
     }
 
+    /** Highlight the node, for when it is shown next to a simulation and is active **/
     highlightPath(boolList) {
         this.group.brightness(0);
     }
 
+    /** All getters & setters **/
     get actionList() {
         return this._actionList;
     }
@@ -478,6 +535,14 @@ export default class actionNode {
         this._rect = value;
     }
 
+    get canvas() {
+        return this._canvas;
+    }
+
+    set canvas(value) {
+        this._canvas = value;
+    }
+
 
     get inputCircle() {
         return this._inputCircle;
@@ -485,6 +550,14 @@ export default class actionNode {
 
     set inputCircle(value) {
         this._inputCircle = value;
+    }
+
+    get inputCircleHitbox() {
+        return this._inputCircleHitbox;
+    }
+
+    set inputCircleHitbox(value) {
+        this._inputCircleHitbox = value;
     }
 
     get position() {

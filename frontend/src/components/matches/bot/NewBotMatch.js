@@ -112,8 +112,8 @@ const NewBotMatch = props => {
                         </Button>
                         <Button className={classes.button} type="submit" variant="contained" disabled={!(selected.ai && selected.bot)} color="secondary" onClick={playMatch}>Play</Button>
 
-                        {(ais) ? (<SelectAIDialog ais={ais} open={dialogOpen.ai} handleClose={() => setDialogOpen({...dialogOpen, ai: false})} handleClick={handleAIListItemClick} />) : "no AIs found"}
-                        {(bots) ? (<SelectBotDialog bots = {bots} open={dialogOpen.bot} handleClose={() => setDialogOpen({...dialogOpen, bot: false})} handleClick={handleBotListItemClick} />) : ("no bots found")}
+                        {(ais) ? (<SelectAIDialog ais={ais} open={dialogOpen.ai} handleClose={() => setDialogOpen({...dialogOpen, ai: false})} handleClick={handleAIListItemClick} />) : null}
+                        {(bots) ? (<SelectBotDialog bots = {bots} open={dialogOpen.bot} handleClose={() => setDialogOpen({...dialogOpen, bot: false})} handleClick={handleBotListItemClick} />) : null}
 
                         <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({...snackbar, open: false})}>
                             <Alert elevation={6} variant="filled" severity={snackbar.error ? "error" : "success"}> {snackbar.message} </Alert>

@@ -4,12 +4,15 @@ import popup from "./popup.js";
 import actionNode from "./actionNode.js";
 import conditionNode from "./conditionNode.js";
 
+//The default dimensions of this node
 const blockHeight = 40;
 const blockWidth = 100;
+
+//The size if its outgoing circle and its hitbox
 const circle_radius = 10;
-const hitboxCircleRadius = 20;
+const hitboxCircleRadius = 25;
 
-
+/** Startnode, the top of the decision tree, has one outgoing circle **/
 export default class startNode {
 
     arrow;
@@ -23,8 +26,10 @@ export default class startNode {
     _trueCircle;
     _dragCircle;
 
+    /** Create the startnode on the given stage, layer and canvas **/
     constructor(stage, layer, canvas) {
         //    bla insert shape and a point which can be dragged to a condition/action
+        this.canvas = canvas;
         this.stage = stage;
         this.layer = layer;
         this.createGroup(stage);
@@ -32,6 +37,7 @@ export default class startNode {
 
     }
 
+    /** Create the group with the node, text and its (drag)circle **/
     createGroup(stage) {
         this.group = new Konva.Group({
             x: stage.width() / 2
@@ -46,6 +52,7 @@ export default class startNode {
         });
     }
 
+    /** Create the rect object for the node **/
     createRect() {
         this.rect = new Konva.Rect({
             x: 0,
@@ -60,6 +67,7 @@ export default class startNode {
         this.group.add(this.rect);
     }
 
+    /** Create the text object for the node with contents 'Start' **/
     createText() {
         this.text = new Konva.Text({
             x: 20,
@@ -74,7 +82,7 @@ export default class startNode {
         this.group.add(this.text);
     }
 
-    //create a circle from which the true connection is made to another node
+    /** Create a circle from which the true connection is made to another node **/
     createTrueCircle() {
         this.trueCircle = new Konva.Circle({
             y: this.rect.height(),
@@ -87,7 +95,8 @@ export default class startNode {
 
     }
 
-    //creates an invisible circle used only for making a new connection between nodes, based on condition will create one for true or for false
+
+    /** Create an invisible circle used only for making a new connection between nodes **/
     createDragCircle() {
         let node = this;
         this.dragCircle = new Konva.Circle({
@@ -105,11 +114,16 @@ export default class startNode {
         this.dragCircle.originalX = this.dragCircle.x();
         this.dragCircle.originalY = this.dragCircle.y();
 
+        let canvas = this.canvas;
+
         //when the invisible circle starts to be dragged create a new temporary arrow
         this.dragCircle.on("dragstart", function () {
-            this.tempX = this.getAbsolutePosition().x;
-            this.tempY = this.getAbsolutePosition().y;
-            //it is important that the invisible circle is in a different layer in order to check what is under the cursor it later
+            this.tempX = this.x() + node.group.x();
+            this.tempY = this.y() + node.group.y();
+            canvas.dragging = true;
+
+            //it is important that the invisible circle is in a different layer
+            // in order to check what is under the cursor later
             this.moveTo(node.stage.templayer);
             this.tempArrow = new Konva.Arrow({
                 stroke: "black",
@@ -121,30 +135,31 @@ export default class startNode {
                 node.trueArrow.delete();
             }
 
-            node.stage.templayer.add(this.tempArrow);
+            node.layer.add(this.tempArrow);
         });
 
         //update the temporary arrow
         this.dragCircle.on("dragmove", function () {
+            canvas.dragging = true;
             //this is to offset the position of the stage
-            this.tempArrow.absolutePosition({x: 0, y: 0});
-            let points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
-            this.tempArrow.points(points.map(function (p) {
-                return p / node.stage.scale
-            }));
-            node.stage.templayer.batchDraw();
+            var points = [this.tempX, this.tempY, this.x(), this.y()];
+            this.tempArrow.points(points);
+            node.layer.batchDraw();
         });
         let g = this.group;
+
         //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
         this.dragCircle.on("dragend", function () {
             let touchPos = node.stage.getPointerPosition();
             let intersect = node.layer.getIntersection(touchPos);
+            canvas.dragging = false;
             if (node.stage.inputDict.has(intersect)) {
                 if (node.stage.inputDict.get(intersect).inputArrow != null) {
                     node.stage.inputDict.get(intersect).inputArrow.delete();
                 }
                 new arrow(node, node.stage.inputDict.get(intersect), true, node.stage, node.layer);
             } else {
+
                 //If not dropped on other element, make a popup to create either a new condition or action
                 node.stage.staticlayer.add(new popup(node.stage, node.stage.staticlayer, [new conditionNode(node.stage, node.layer, node.canvas), new actionNode(node.stage, node.layer, node.canvas)], (selection) => {
                     let newNode = null;
@@ -168,27 +183,30 @@ export default class startNode {
         });
     }
 
+    /** Recursively darkens its childnodes, used in a replay **/
     darkenAll() {
-        this._trueArrow.dest.darkenAll();
+        this.trueArrow.dest.darkenAll();
         this.layer.draw();
     }
 
+    /** Highlight its childnode according to the active path, used in a replay **/
     highlightPath(boolList) {
-        this._trueArrow.dest.highlightPath(boolList);
+        this.trueArrow.dest.highlightPath(boolList);
         this.layer.draw();
     }
 
     getTrueDotPosition() {
-        let pos = this.trueCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.trueCircle.x() + this.group.x(), this.trueCircle.y() + this.group.y()];
     }
 
+    /** Calls its arrow to update their position**/
     updateArrows() {
         if (this.trueArrow != null) {
             this.trueArrow.update();
         }
     }
 
+    /** All getters & setters **/
     get trueArrow() {
         return this._trueArrow;
     }

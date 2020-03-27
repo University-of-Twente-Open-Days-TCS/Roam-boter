@@ -94,5 +94,10 @@ class aiJsonVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by aiJsonParser#integer.
+    def visitInteger(self, ctx:aiJsonParser.IntegerContext):
+        return self.visitChildren(ctx)
+
+
 
 del aiJsonParser

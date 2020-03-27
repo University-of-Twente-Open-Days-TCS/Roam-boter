@@ -4,13 +4,17 @@ import condition from "./condition.js";
 import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
-import actionNode from "./actionNode";
+import actionNode from "./actionNode.js";
 
-
+//The default dimensions of a conditionNode
 const blockHeight = 40;
 const blockWidth = 100;
+
+//The radius of the in- and outputcircles and their hitboxes
 const circle_radius = 10;
-const hitboxCircleRadius = 20;
+const hitboxCircleRadius = 25;
+
+//The default spawnpoint of the node
 const spawnPoint = {x: 0, y: 0};
 
 
@@ -42,18 +46,16 @@ export default class conditionNode {
     //The condition which is in this conditionNode
     _condition;
 
-    //The text which corresponds to the condition
+    //The text which corresponds to the condition and its Konva Object
     _conditionText;
-
-    //
     _conditionTextObj;
 
     //The position of the conditionNode
     _position;
 
 
-//Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
-    // and if (all) its appropriate parameter(s) is given this will be included.
+    /** Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
+     * and if (all) its appropriate parameter(s) is given this will be included. **/
     constructor(stage, layer, canvas, condition, position = spawnPoint) {
         this.canvas = canvas;
         this.trashcan = stage.trashcan;
@@ -83,7 +85,13 @@ export default class conditionNode {
         this.trueDragCircle = this.createDragCircle(this.trueCircle, true);
         this.falseDragCircle = this.createDragCircle(this.falseCircle, false);
         this.createInputCircle();
+        this.group.on("dragstart", () => {
+            this.canvas.dragging = true;
+        });
+
         this.group.on("dragmove", () => {
+            this.canvas.dragging = true;
+            this.updateArrows(this.stage);
             this.updateArrows();
             let touchPos = this.stage.getPointerPosition();
 
@@ -105,6 +113,7 @@ export default class conditionNode {
         });
 
         this.group.on("dragend", () => {
+            this.canvas.dragging = false;
             let touchPos = this.stage.getPointerPosition();
 
             //If node is released above trashcan, remove it and close trashcan
@@ -132,10 +141,9 @@ export default class conditionNode {
 
     }
 
-
+    /** Set the new text in the conditionNode and adapt its size and position of input/false/truecircles **/
     setCondition(cond) {
         this.condition = cond;
-        //Set the new text in the conditionNode and adapt its input/false/truecircles
         this.conditionTextObj.text(this.condition.toString());
         this.conditionTextObj.moveToTop();
         this.setAssetSizes();
@@ -146,7 +154,7 @@ export default class conditionNode {
         this.falseDragCircle.moveToTop();
     }
 
-    //sets the size of the node and its input/false/true-nodes around
+    /** Sets the size of the node and its input/false/true-nodes around **/
     setAssetSizes() {
         if (this.conditionTextObj.text != null) {
             this.rect.width(this.conditionTextObj.width());
@@ -185,7 +193,7 @@ export default class conditionNode {
 
     }
 
-
+    /** Call its possible connected arrows to update their position **/
     updateArrows() {
         if (this.trueArrow != null) {
             this.trueArrow.update();
@@ -198,7 +206,7 @@ export default class conditionNode {
         }
     }
 
-
+    /** Returns the node connected to its true-circle, or raises an error if none is attached, used in jsonify() **/
     trueChild() {
         try {
             return this.trueArrow.dest;
@@ -210,6 +218,7 @@ export default class conditionNode {
         }
     }
 
+    /** Returns the node connected to its false-circle, or raises an error if none is attached, used in jsonify() **/
     falseChild() {
         try {
             return this.falseArrow.dest;
@@ -221,6 +230,7 @@ export default class conditionNode {
         }
     }
 
+    /** Generate the list of possible conditions **/
     generateConditionList() {
         return [
             new condition(1),
@@ -235,6 +245,7 @@ export default class conditionNode {
 
     intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
+    /** Returns the json of this node and its children, and raises errors if the tree is not complete **/
     jsonify(startNodePos) {
         let node = this.rect;
         let tree = {};
@@ -355,7 +366,7 @@ export default class conditionNode {
     }
 
 
-    //circle to which connections can be made by dragging arrows on it
+    /** Create circle to which connections can be made by dragging arrows on it **/
     createInputCircle() {
         this.inputCircle = new Konva.Circle({
             y: this.position.y,
@@ -379,7 +390,7 @@ export default class conditionNode {
         this.group.add(this.inputCircleHitbox);
     }
 
-    //create text for in the condition
+    /** create Konva text for in the condition **/
     createTextObject(conditionText) {
         this.conditionTextObj = new Konva.Text({
             x: this.position.x,
@@ -394,7 +405,7 @@ export default class conditionNode {
         this.group.add(this.conditionTextObj);
     }
 
-    //base rectangle which contains the condition text
+    /** Create base rectangle which contains the condition text **/
     createRect() {
         if (this.conditionText != null) {
             this.rect = new Konva.Rect({
@@ -422,7 +433,7 @@ export default class conditionNode {
         this.group.add(this.rect);
     }
 
-    //create a circle from which the false connection is made to another node
+    /** create a circle from which the false connection is made to another node **/
     createFalseCircle() {
         this.falseCircle = new Konva.Circle({
             y: this.position.y + this.rect.height(),
@@ -434,7 +445,7 @@ export default class conditionNode {
         this.group.add(this.falseCircle);
     }
 
-    //create a circle from which the true connection is made to another node
+    /** create a circle from which the true connection is made to another node **/
     createTrueCircle() {
         this.trueCircle = new Konva.Circle({
             y: this.position.y + this.rect.height(),
@@ -447,8 +458,8 @@ export default class conditionNode {
 
     }
 
-    //creates an invisible circle used only for making a new connection between nodes,
-    // based on condition will create one for true or for false
+    /** Creates an invisible circle used only for making a new connection between nodes,
+     * based on condition will create one for true or for false **/
     createDragCircle(circle, condition) {
 
         let node = this;
@@ -466,11 +477,13 @@ export default class conditionNode {
 
         dragCircle.originalX = dragCircle.x();
         dragCircle.originalY = dragCircle.y();
+        let canvas = this.canvas;
 
         //when the invisible circle starts to be dragged create a new temporary arrow
         dragCircle.on("dragstart", function () {
-            this.tempX = this.getAbsolutePosition().x;
-            this.tempY = this.getAbsolutePosition().y;
+            this.tempX = this.x() + node.group.x();
+            this.tempY = this.y() + node.group.y();
+            canvas.dragging = true;
 
             //it is important that the invisible circle is in a different layer
             // in order to check what is under the cursor later
@@ -487,18 +500,16 @@ export default class conditionNode {
                 node.falseArrow.delete();
             }
 
-            node.stage.templayer.add(this.tempArrow);
+            node.layer.add(this.tempArrow);
         });
 
         //update the temporary arrow
         dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
-            this.tempArrow.absolutePosition({x: 0, y: 0});
-            let points = [this.tempX, this.tempY, this.getAbsolutePosition().x, this.getAbsolutePosition().y];
-            this.tempArrow.points(points.map(function (p) {
-                return p / node.stage.scale
-            }));
-            node.stage.templayer.batchDraw();
+            canvas.dragging = true;
+            let points = [this.tempX, this.tempY, this.x(), this.y()];
+            this.tempArrow.points(points);
+            node.layer.batchDraw();
         });
         let g = this.group;
 
@@ -507,14 +518,18 @@ export default class conditionNode {
         dragCircle.on("dragend", function () {
             let touchPos = node.stage.getPointerPosition();
             let intersect = node.layer.getIntersection(touchPos);
+            canvas.dragging = false;
+
             //If arrow is dropped on another element
             if (intersect != null) {
                 //If the other element is an inputnode
                 if (node.stage.inputDict.has(intersect)) {
+
                     //If the inputnode already had an arrow, remove that one
                     if (node.stage.inputDict.get(intersect).inputArrow != null) {
                         node.stage.inputDict.get(intersect).inputArrow.delete();
                     }
+
                     //Create new arrow between the two nodes
                     new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
                 }
@@ -552,20 +567,18 @@ export default class conditionNode {
     }
 
     getTrueDotPosition() {
-        let pos = this.trueCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.trueCircle.x() + this.group.x(), this.trueCircle.y() + this.group.y()];
     }
 
     getFalseDotPosition() {
-        let pos = this.falseCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.falseCircle.x() + this.group.x(), this.falseCircle.y() + this.group.y()];
     }
 
     getInputDotPosition() {
-        let pos = this.inputCircle.getAbsolutePosition();
-        return [pos.x, pos.y];
+        return [this.inputCircle.x() + this.group.x(), this.inputCircle.y() + this.group.y()];
     }
 
+    /** Remove this node and its in/outgoing arrows **/
     remove() {
         if (this.trueArrow != null) {
             this.trueArrow.delete();
@@ -580,30 +593,55 @@ export default class conditionNode {
         this.layer.draw();
     }
 
+    /** Get the middle position of the node, used in showing an ErrorRing **/
     getRectMiddlePos() {
         let x = this.rect.x() + this.rect.width() / 2;
         let y = this.rect.y() + this.rect.height() / 2;
         return {x: x, y: y};
     }
 
+    /** Darken this node and its children, used in a replay **/
     darkenAll() {
-        this.group.cache();
         this.group.filters([Konva.Filters.Brighten]);
-        this.group.brightness(-0.3);
-        this._trueArrow.dest.darkenAll();
-        this._falseArrow.dest.darkenAll();
+        this.group.brightness(-0.5);
+        this.trueArrow.dest.darkenAll();
+        this.falseArrow.dest.darkenAll();
+        this.trueArrow.arrowline.fill("black");
+        this.falseArrow.arrowline.fill("black");
+        this.trueArrow.arrowline.strokeWidth(2);
+        this.falseArrow.arrowline.strokeWidth(2);
+        this.falseCircle.cache();
+        this.falseCircle.filters([Konva.Filters.Brighten]);
+        this.falseCircle.brightness(0);
+        this.trueCircle.cache();
+        this.trueCircle.filters([Konva.Filters.Brighten]);
+        this.trueCircle.brightness(0);
+        this.group.cache();
     }
 
+    /** Highlight this node and one of their children, used in a replay **/
     highlightPath(boolList) {
         this.group.brightness(0);
         if (boolList.shift()) {
-            this._trueArrow.dest.highlightPath(boolList);
+            this.trueArrow.dest.highlightPath(boolList);
+            this.trueArrow.arrowline.stroke("green");
+            this.trueArrow.arrowline.strokeWidth(4);
+            this.falseCircle.cache();
+            this.falseCircle.filters([Konva.Filters.Brighten]);
+            this.falseCircle.brightness(-0.5);
+            this.group.cache();
         } else {
-            this._falseArrow.dest.highlightPath(boolList);
+            this.falseArrow.dest.highlightPath(boolList);
+            this.falseArrow.arrowline.stroke("red");
+            this.falseArrow.arrowline.strokeWidth(4);
+            this.trueCircle.cache();
+            this.trueCircle.filters([Konva.Filters.Brighten]);
+            this.trueCircle.brightness(-0.5);
+            this.group.cache();
         }
     }
 
-    //Getters and setters for arrows and conditiontext
+    /** All getters & setters **/
     get inputArrow() {
         return this._inputArrow;
     }

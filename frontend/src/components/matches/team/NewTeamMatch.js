@@ -10,7 +10,6 @@ import ActiveAIDialog from "../ActiveAIDialog"
 import RoamBotAPI from '../../../RoamBotAPI'
 import Alert from "@material-ui/lab/Alert";
 
-
 const useStyles = makeStyles(theme => ({
     wrapper: {
         display: 'flex',
@@ -26,9 +25,10 @@ const NewTeamMatch = props => {
 
     const classes = useStyles()
 
-    let team = props.team
-
     let [ais, setAis] = useState(null)
+    let [team, setTeam] = useState(null)
+
+
     let [selectAIOpen, setSelectAIOpen] = useState(false)
     let [selectedAI, setSelectedAI] = useState(null)
     let [snackbar, setSnackbar] = useState({
@@ -45,8 +45,18 @@ const NewTeamMatch = props => {
             setAis(json)
         }
 
+        async function updateTeam() {
+            let call = await RoamBotAPI.getTeamDetail()
+            let json = await call.json()
+            setTeam(json)
+        }
+
         if (ais === null) {
             updateAis()
+        }
+
+        if (team === null){
+            updateTeam()
         }
     })
 
