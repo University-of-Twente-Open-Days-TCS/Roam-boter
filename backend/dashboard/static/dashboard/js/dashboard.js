@@ -71,9 +71,19 @@ function generateTeamCodes(event) {
 }
 
 function downloadTextfile() {
-    //TODO: IMPLEMENT
-    //Generate a file with team codes
-    //Such that it is easy for the Open Days Team to print them.
+    let codeElements = document.getElementsByClassName('team-code')
+    let codeList = []
+    for (i = 0; i < codeElements.length; i ++) {
+        elem = codeElements[i]
+        codeList.push(elem.innerText+"\n")
+    }
+    const blob = new Blob(codeList, {type: 'text/plain;charset=utf-8'})
+    
+    var url = URL.createObjectURL(blob)
+    var a = document.createElement('a')
+    a.download = "codes.txt"
+    a.href = url
+    a.click()
 }
 
 /* 
