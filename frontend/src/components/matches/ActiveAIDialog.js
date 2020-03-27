@@ -14,6 +14,7 @@ const ActiveAIDialog = ({ open, handleDeny: handleClose, selectedAI }) => {
         let call = await RoamBotAPI.putActiveAI(selectedAI.pk)
         if(!call.ok){
             console.error("Could not set active AI")
+            window.alert("Could not set active AI")
             // setSnackbar({
             //     message: "Could not set active AI",
             //     error: true,
