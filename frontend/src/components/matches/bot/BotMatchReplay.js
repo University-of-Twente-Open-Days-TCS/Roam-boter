@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {withRouter} from "react-router-dom";
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 
 import { withStyles } from '@material-ui/core/styles'
 
@@ -13,20 +13,16 @@ import RoamBotAPI from "../../../RoamBotAPI"
 const styles = theme => ({
     wrapper: {
         display: 'flex',
-        flexDirection: 'row',
-        margin: 'auto',
-        width: '90%',
+        width: '100%',
     },
     matchWrapper: {
         display: 'flex',
         flexDirection: 'column',
         width: '70%'
     },
-    matchContainer: {
-
-    },
     editorContainer: {
-        width: '30%',
+        display: 'block',
+        flexGrow: 1,
         backgroundColor: '#f6f6f6',
         overflow: 'hidden',
     },
@@ -40,11 +36,16 @@ class BotMatchReplay extends Component {
 
         this.matchContainer = React.createRef()
 
-        this.gameData = null
-        this.state = {
+        //For optimization reasons. The frameData is not in the Components State.
+        const frameData = {
             frame: 0,
             framesLength: 0,
-            gameData : null,
+        }
+        this.frameData = frameData
+
+        this.state = {
+            gameData: null,
+            playing: false,
         }
         //bind callbackFunctions
         this.handleSlideChange = this.handleSlideChange.bind(this)
@@ -56,7 +57,7 @@ class BotMatchReplay extends Component {
         const match_id = this.props.match.params.matchId;
         const ai_id = this.props.match.params.aiId;
 
-        let {ai, gameData} = await this.fetchMatchInfo(match_id, ai_id)
+        let { ai, gameData } = await this.fetchMatchInfo(match_id, ai_id)
         this.ai = ai
 
         let matchContainer = this.matchContainer.current
@@ -78,10 +79,14 @@ class BotMatchReplay extends Component {
         window.addEventListener('load', this.resizeCanvas)
         window.addEventListener('orientationchange', this.resizeCanvas)
 
-        
-        replayCanvas.start()
 
-        this.setState({framesLength: replayCanvas.getFramesLength(), gameData: gameData})
+        this.frameData = {
+            ...this.frameData,
+            framesLength: this.replayCanvas.getFramesLength()
+        }
+
+        this.setState({gameData: gameData })
+        replayCanvas.start()
     }
 
     async fetchMatchInfo(match_id, ai_id) {
@@ -94,48 +99,52 @@ class BotMatchReplay extends Component {
         const ai_response = await RoamBotAPI.getAiDetail(ai_id)
         let ai_data = await ai_response.json();
 
-        return {ai: JSON.parse(ai_data.ai), gameData: JSON.parse(match_data.simulation)}
+        return { ai: JSON.parse(ai_data.ai), gameData: JSON.parse(match_data.simulation) }
     }
 
     componentDidUpdate() {
         // Stop or Start animation
-        if(!this.state.playing){
-            if(this.interval){
+        if (!this.state.playing) {
+            if (this.interval) {
                 clearInterval(this.interval)
                 this.interval = null
             }
         } else {
-            if(!this.interval){
+            if (!this.interval) {
                 this.interval = setInterval(() => {
-                    this.setState({frame: this.state.frame+1})
+                    this.updateFrames()
                 }, 16)
             }
-        }
-
-        if(this.state.frame >= this.state.framesLength){
-            // Stop playing
-            this.setState({frame: this.state.frame-1, playing: false})
-        } else {
-            // update components
-            let gameData = this.state.gameData
-            if (gameData) {
-                let frame = gameData.frames[this.state.frame]
-                if (frame) {
-                    let aiPath = gameData.frames[this.state.frame].tanks[0].ai_path
-                    this.editorCanvas.setHighlightPath(aiPath.reverse())
-                }else {
-                    console.log(this.state)
-                }
-            }
-
-            // Update replay
-            this.replayCanvas.setFrame(this.state.frame)
         }
     }
 
     componentWillUnmount() {
         // Stop interval
         clearInterval(this.interval)
+    }
+
+    updateFrames() {
+        let {frame, framesLength} = this.frameData
+        if (frame >= framesLength - 1){
+            // reset and stop playing
+            this.frameData = {...this.frameData, frame: 0}
+            this.setState({playing: false})
+        }else {
+            // Increment frames and draw
+            let newFrame = frame + 1
+            this.frameData = {...this.frameData, frame: newFrame}
+            this.redrawCanvases(newFrame)
+        }
+    }
+
+    redrawCanvases(frame) {
+        // only redraw state if data available
+        if (this.state.gameData){
+            let curFrame = this.state.gameData.frames[frame]
+            let aiPath = curFrame.tanks[0].ai_path
+            this.editorCanvas.setHighlightPath(aiPath)
+            this.replayCanvas.setFrame(frame)
+        }
     }
 
 
@@ -146,20 +155,23 @@ class BotMatchReplay extends Component {
 
     handleSlideChange(event, newValue) {
         let progress = newValue
-        let frames = this.state.framesLength
-        let frame = parseInt((frames / 10000) * progress)
-        this.setState({frame: frame})
+        let { framesLength } = this.frameData
+
+        let newFrame = parseInt((framesLength / 10000) * progress)
+        this.frameData = {...this.frameData, frame: newFrame}
+
+        if (!this.state.playing) {
+            this.redrawCanvases(newFrame)
+        }
+
+        this.forceUpdate()
     }
 
     handlePlayButtonChange(event) {
-        if(!this.state.playing){
-            if(this.state.frame === this.state.framesLength - 1){
-                // reset to start position
-                this.setState({frame: 0})
-            }
-            this.setState({playing: true})
-        }else {
-            this.setState({playing: false})
+        if (!this.state.playing) {
+            this.setState({ playing: true })
+        } else {
+            this.setState({ playing: false })
         }
     }
 
@@ -168,9 +180,8 @@ class BotMatchReplay extends Component {
     render() {
         let { classes } = this.props
         // calculate progress
-        let frame = this.state.frame
-        let frames = this.state.framesLength
-        let progress = parseInt((frame / frames) * 10000)
+        let { frame, framesLength } = this.frameData
+        let progress = parseInt((frame / framesLength) * 10000)
 
         let props = {
             playing: this.state.playing,
@@ -184,7 +195,7 @@ class BotMatchReplay extends Component {
                 <div className={classes.wrapper}>
                     <div className={classes.matchWrapper}>
                         <div ref={this.matchContainer} className={classes.matchContainer}></div>
-                        <ReplayControls {...props}/>
+                        <ReplayControls {...props} />
                     </div>
                     <div id="editor-container" className={classes.editorContainer}></div>
                 </div>
