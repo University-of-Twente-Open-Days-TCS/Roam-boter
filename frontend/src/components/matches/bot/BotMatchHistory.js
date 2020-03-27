@@ -57,7 +57,6 @@ class BotMatchHistory extends Component {
         let response = await RoamBotAPI.getBotMatchHistoryList()
         let data = await response.json()
         this.setState({matches: data})
-        console.log(data)
     }
 
     render() {
