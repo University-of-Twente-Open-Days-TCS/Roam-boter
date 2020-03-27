@@ -77,6 +77,7 @@ class ReplayCanvas {
 
     setFrame(frame) {
         this.frame = frame
+        // this.draw()
     }
 
     getFramesLength() {

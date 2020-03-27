@@ -1,3 +1,5 @@
+import AICanvas from '../editor/AIEditor/ai_editor.js'
+
 class AIReplayCanvas {
 
     BLOCK_COLORS = [
@@ -17,61 +19,56 @@ class AIReplayCanvas {
         "#000000",    // 13: RESERVED
     ]
 
-    constructor(canvasContainer, gameData) {
+    componentDidMount() {
+        console.log('mount')
+    }
+
+    constructor(canvasContainer, gameData, tankId) {
         this.frame = 0
         this.draw = this.draw.bind(this)
-        this.tankSprite = new Image();
-        this.tankSprite.src = "simulation_images/tank_body.png";
-
-        this.tankTurretSprite = new Image();
-        this.tankTurretSprite.src = "simulation_images/tank_turret.png"
 
         this.canvasContainer = canvasContainer
         this.gameData = gameData
 
+        this.tankId = tankId
+
+        this.prev_path = []
+
+        console.log(this.gameData)
+        console.log(this.gameData.frames[this.frame].tanks[tankId].ai_path)
 
 
-        let canvas = document.createElement('canvas')
+        const canvas = new AICanvas(canvasContainer, true)
         this.canvas = canvas
-        this.updateSize()
-        // append canvas to div
-        canvasContainer.appendChild(canvas)
 
-        this.ctx2d = this.canvas.getContext("2d");
+        this.updateSize()
 
         //bind functions
         this.start = this.start.bind(this)
         this.draw = this.draw.bind(this)
     }
 
-    getCanvasSize(){
-        /**
-         * Calculates the height of the canvas.
-         * The canvas fills the width of canvasContainer and scales the height according to the level.
-         */
-
-        let width = this.canvasContainer.offsetWidth
-        let levelHeight = this.gameData.level.length
-        let levelWidth = this.gameData.level[0].length
-
-        let aspectRatio = levelWidth / levelHeight
-        let height = width / aspectRatio
-        return {width, height}
+    fillCanvas(ai) {
+        this.canvas.jsonToTree(ai)
     }
 
-
     updateSize() {
-        let {width, height} = this.getCanvasSize()
-        this.canvas.width = width
-        this.canvas.height = height
+        this.canvas.resizeStage(this.canvasContainer.offsetWidth, this.canvasContainer.offsetHeight)
     }
 
     setFrame(frame) {
         this.frame = frame
-    }
+        if (this.gameData.frames[this.frame]) {
+            this.ai_path = this.gameData.frames[this.frame].tanks[this.tankId].ai_path.reverse()
+            // console.log(this.ai_path)
+        }
+        if (this.canvas.startNode._trueArrow && this.prev_path != this.ai_path.toString()) {
+            // console.log('difference: redraw          ', this.ai_path.toString(), this.prev_path)
+            // console.log('prev_path', this.prev_path)
 
-    getFramesLength() {
-        return this.gameData.frames.length
+            // this.draw()
+        }
+        this.prev_path = this.ai_path.toString()
     }
 
     start() {
@@ -79,7 +76,16 @@ class AIReplayCanvas {
     }
 
     draw() {
-        // draw each frame
+        // console.log('frame', this.frame)
+        // console.log(this.ai_path)
+        // console.log('draw')
+        // this.canvas.highlightPath(this.ai_path)
+
+        // requestAnimationFrame(this.draw)
+    }
+
+    setPath(path) {
+        this.canvas.highlightPath(path)
     }
 }
 

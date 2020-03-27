@@ -8,25 +8,26 @@ import ReplayCanvas from "../ReplayCanvas";
 import ContentBox from '../../layout/ContentBox'
 import ReplayControls from '../ReplayControls'
 import AIReplayCanvas from "../AIReplayCanvas";
+import {withRouter} from "react-router-dom";
 
 const styles = theme => ({
     wrapper: {
+        display: 'flex',
+        flexDirection: 'row',
         margin: 'auto',
         width: '90%',
     },
-    canvasWrapper: {
+    matchWrapper: {
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around'
-    },
-    canvasContainer: {
-        display: 'inline-block',
+        flexDirection: 'column',
         width: '70%'
     },
+    matchContainer: {
+
+    },
     editorContainer: {
-        display: 'inline-block',
         width: '30%'
-    }
+    },
 })
 
 
@@ -34,12 +35,14 @@ class BotMatchReplay extends Component {
 
     constructor(props) {
         super(props)
-        this.canvasContainer = React.createRef()
+        this.matchContainer = React.createRef()
         this.editorContainer = React.createRef()
+        this.gameData = null
         this.state = {
             frame: 0,
             framesLength: 0,
-            playing: true
+            playing: true,
+            ai_path: []
         }
         //bind callbackFunctions
         this.handleSlideChange = this.handleSlideChange.bind(this)
@@ -50,22 +53,27 @@ class BotMatchReplay extends Component {
 
     async componentDidMount() {
         // selects the id of the match from the URL
-        // TODO: do this with the proper method
-        const id = this.props.match.url.split('/').slice(-1)[0]
+        const match_id = this.props.match.params.matchId;
+        const ai_id = this.props.match.params.aiId;
 
-        const response = await RoamBotAPI.getSimulation(id)
-        let data = await response.json();
+        console.log(match_id, ai_id)
 
-        let gameData = JSON.parse(data.simulation);
+        let {ai, gameData} = await this.fetchMatchInfo(match_id, ai_id)
+        this.setState({gameData: gameData})
+        this.ai = await ai
 
-        let canvasContainer = this.canvasContainer.current
+        let matchContainer = this.matchContainer.current
         let editorContainer = this.editorContainer.current
-        let replayCanvas = new ReplayCanvas(canvasContainer, gameData)
-        let editorCanvas = new AIReplayCanvas(editorContainer, gameData)
+        let replayCanvas = new ReplayCanvas(matchContainer, gameData)
+        let editorCanvas = new AIReplayCanvas(editorContainer, gameData, 0)
+        // TODO: tankId ophalen + meegeven, bij BotMatches ben je altijd tank 0
         this.replayCanvas = replayCanvas
         this.editorCanvas = editorCanvas
 
         this.setState({framesLength: replayCanvas.getFramesLength()})
+
+        // Fill editor canvas with AI
+        editorCanvas.fillCanvas(this.ai)
 
         //Make sure canvas reacts to responsively
         this.resizeCanvas = this.resizeCanvas.bind(this)
@@ -76,6 +84,16 @@ class BotMatchReplay extends Component {
         editorCanvas.start()
     }
 
+    async fetchMatchInfo(match_id, ai_id) {
+        const match_response = await RoamBotAPI.getSimulation(match_id)
+        let match_data = await match_response.json();
+
+        const ai_response = await RoamBotAPI.getAiDetail(ai_id)
+        let ai_data = await ai_response.json();
+
+        return {ai: JSON.parse(ai_data.ai), gameData: JSON.parse(match_data.simulation)}
+    }
+
     componentDidUpdate() {
         // Stop or Start animation
         if(!this.state.playing){
@@ -83,7 +101,7 @@ class BotMatchReplay extends Component {
                 clearInterval(this.interval)
                 this.interval = null
             }
-        }else {
+        } else {
             if(!this.interval){
                 this.interval = setInterval(() => {
                     this.setState({frame: this.state.frame+1})
@@ -97,6 +115,11 @@ class BotMatchReplay extends Component {
             this.setState({frame: this.state.frame-1, playing: false})
         }
         this.replayCanvas.setFrame(this.state.frame)
+
+        // retrieve ai_path matching the frame
+        // TODO: make tank ID something variable
+        this.setState({ai_path: this.state.gameData.frames[this.state.frame].tanks[0].ai_path.reverse()})
+        // this.editorCanvas.setFrame(this.state.frame)
     }
 
     componentWillUnmount() {
@@ -148,15 +171,15 @@ class BotMatchReplay extends Component {
         return (
             <ContentBox>
                 <div className={classes.wrapper}>
-                    <div className={classes.canvasWrapper}>
-                        <div ref={this.canvasContainer} className={classes.canvasContainer}></div>
-                        <div ref={this.editorContainer} className={classes.editorContainer} style={{borderStyle: 'solid'}}></div>
+                    <div className={classes.matchWrapper}>
+                        <div ref={this.matchContainer} className={classes.matchContainer}></div>
+                        <ReplayControls {...props}/>
                     </div>
-                    <ReplayControls {...props}/>
+                    <div id="editor-container" ref={this.editorContainer} className={classes.editorContainer} style={{borderStyle: 'solid'}}></div>
                 </div>
             </ContentBox>
         )
     }
 }
 
-export default withStyles(styles)(BotMatchReplay);
+export default withRouter(withStyles(styles)(BotMatchReplay));
