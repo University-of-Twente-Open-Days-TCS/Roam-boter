@@ -42,7 +42,7 @@ const AIEditorMenu = (props) => {
 
     return (
         <div className={classes.root}>
-            <Typography variant={bigScreen ? "h4" : "h6"} align="center">{ai ? ai.name : ""}</Typography>
+            <Typography variant={bigScreen ? "h4" : "h6"} align="center">{ai ? ai.name : "New AI"}</Typography>
 
             <div className={classes.menuSection}>
                 <Button variant="contained" color="primary" onClick={addConditionHandler} className={classes.button}>Condition</Button>

@@ -7,7 +7,6 @@
     {% if user.is_authenticated %}
 
         <div class='dash-container'>
-            {# TODO: workshops, generate codes #}
 
             <div class='dash-content'>
                
@@ -47,21 +46,40 @@
                                 <div class='team-code-list'>
 
                                     {% if teams %}
-                                        <textarea readonly>{% for team in teams %}{{ team.team_code }}
-{% endfor %}</textarea>
+                                        <div class='team-code-list-codes'>
+                                            {% for team in teams %}
+                                            <div class='team-list-item'>
+                                                <div class='team-code'>{{ team.team_code }}</div>
+                                                <div class='team-active'>
+                                                    {% if team.active %} 
+                                                    <span class='green'> {{ team.team_name }} </span>
+                                                    {% else %}
+                                                    <span class='red'> {{ team.team_name }} </span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+
                                     {% else %}
                                         <h4>No team codes</h4>
 
                                     {% endif %}
                                 </div>
 
-                                <form method="POST" action="/dashboard/generate/" id='generate-form'>
-                                    {% csrf_token %}
+                                <div class='form-wrapper'>
+                                    <form method="POST" action="/dashboard/generate/" id='generate-form'>
+                                        {% csrf_token %}
     
-                                    <input type="number" name="amount" placeholder="Number of new codes"></input>
-                                    <input type="submit" value="Generate" id="generate-team-codes-button"></input>
+                                        <input type="number" name="amount" placeholder="Number of new codes"></input>
+                                        <input type="submit" value="Generate" id="generate-team-codes-button"></input>
 
-                                </form>
+                                    </form>
+                                </div>
+
+                                <div class='form-wrapper'>
+                                    <button type="submit" id="generate-textfile-button">Download Team Codes</button>
+                                </div>
     
                             </div>    
     
