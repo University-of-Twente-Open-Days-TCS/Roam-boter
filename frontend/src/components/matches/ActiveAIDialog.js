@@ -7,13 +7,12 @@ import Button from "@material-ui/core/Button";
 import React from "react";
 import RoamBotAPI from "../../RoamBotAPI";
 
-const ActiveAIDialog = ({ open, handleDeny: handleClose, selectedAI }) => {
+const ActiveAIDialog = ({ open, handleClose, selectedAI }) => {
     const handleConfirm = async (selectedAI) => {
         handleClose()
         console.log(selectedAI)
         let call = await RoamBotAPI.putActiveAI(selectedAI.pk)
         if(!call.ok){
-            console.error("Could not set active AI")
             window.alert("Could not set active AI")
             // setSnackbar({
             //     message: "Could not set active AI",
