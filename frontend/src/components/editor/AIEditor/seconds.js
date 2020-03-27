@@ -1,4 +1,4 @@
-//Amount of seconds a label lasts
+/** Amount of seconds a label lasts **/
 export default class seconds {
     _id;
 

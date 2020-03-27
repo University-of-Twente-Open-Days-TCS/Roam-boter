@@ -1,3 +1,4 @@
+/** Object on the map **/
 export default class object {
     _id;
 

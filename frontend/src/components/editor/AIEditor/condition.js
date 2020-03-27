@@ -3,6 +3,7 @@ import distance from "./distance.js";
 import health from "./health.js";
 import label from "./label.js";
 
+//The attributes which a condition can contain
 const objectList = [
     new object(1),
     new object(2),
@@ -14,7 +15,6 @@ const objectList = [
     new object(8),
     new object(9),
     new object(10)
-
 ];
 
 const distanceList = [
@@ -28,8 +28,7 @@ const healthList = [
     new health(20),
     new health(40),
     new health(60),
-    new health(80),
-
+    new health(80)
 ];
 
 const labelList = [
@@ -44,18 +43,17 @@ const labelList = [
     new label(8)
 ];
 
-
+/** A condition, has an ID and possible extra attributes **/
 export default class condition {
 
     //The attributes of a condition
-
     _id = null;
     _distance = null;
     _object = null;
     _label = null;
     _health = null;
 
-    //Create a condition with the given parameters, can be partly, however for a toString will need at least an ID
+    /** Create a condition with the given parameters, can be partly, however for a toString will need at least an ID **/
     constructor(id = null, distance = null, object = null, label = null, health = null) {
         this.id = id;
         this.distance = distance;
@@ -65,7 +63,7 @@ export default class condition {
         this.setRemainingOptions();
     }
 
-    //Returns whether the condition has all the necessary parameters
+    /** Returns whether the condition has all the necessary parameters **/
     isValid() {
         switch (this.id) {
             case 1:
@@ -87,7 +85,7 @@ export default class condition {
         }
     }
 
-    //initialises the remaining options to be selected
+    /** Initialises the remaining options to be selected **/
     setRemainingOptions() {
         switch (this.id) {
             case 1:
@@ -149,7 +147,7 @@ export default class condition {
     }
 
 
-    //Converts the condition into a string, with pre-given enters for readibility
+    /** Converts the condition into a string, with pre-given enters for readability **/
     toString() {
         switch (this.id) {
             case 1:
@@ -197,7 +195,7 @@ export default class condition {
         }
     }
 
-    //All this class' getters and setters
+    /** All getters & setters **/
     get id() {
         return this._id;
     }

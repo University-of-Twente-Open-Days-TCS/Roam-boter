@@ -1,8 +1,7 @@
 import Konva from "konva"
 
 
-//The connection between two conditions or a condition and an action
-
+/** The connection between two conditions or a condition and an action **/
 export default class arrow {
 
     //The Konva arrow object
@@ -28,7 +27,8 @@ export default class arrow {
     _stage;
 
 
-    //Constructor takes the source node, destination node and whether it starts at the true- or false point as input/
+    /** Constructor takes the source node, destination node and whether it starts at the true- or false point as input
+     * Also the stage&layer to draw itself on **/
     constructor(src, dest, isTrue, stage, layer) {
         this.src = src;
         this.dest = dest;
@@ -36,6 +36,7 @@ export default class arrow {
         this.stage = stage;
         this.layer = layer;
 
+        //Its startposition is based on the ConditionNode and whether it sprouts from the true- or falsecircle
         if (isTrue) {
             this.startpos = this.src.getTrueDotPosition();
             this.src.trueArrow = this;
@@ -59,7 +60,7 @@ export default class arrow {
     }
 
 
-    //Move the arrow and update the canvas
+    /** Move the arrow and update the canvas **/
     update() {
         if (this.isTrue) {
             this.startpos = this.src.getTrueDotPosition();
@@ -68,13 +69,12 @@ export default class arrow {
         }
         this.endpos = this.dest.getInputDotPosition();
         //this is to offset the possible movement of the entire stage, otherwise the arrows would not be in the correct position
-        let arrow = this;
         this.arrowline.points(this.startpos.concat(this.endpos));
         this.layer.batchDraw();
 
     }
 
-    //Remove the arrow from the canvas and set the corresponding values at the src&dest nodes to null
+    /** Remove the arrow from the canvas and set the corresponding values at the src&dest nodes to null **/
     delete() {
         if (this.isTrue) {
             this.src.trueArrow = null;
@@ -86,7 +86,7 @@ export default class arrow {
         this.layer.draw();
     }
 
-    //All getters&setters
+    /** All getters & setters **/
     get src() {
         return this._src;
     }
