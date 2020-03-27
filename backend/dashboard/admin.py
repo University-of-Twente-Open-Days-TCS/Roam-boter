@@ -9,8 +9,8 @@ class WorkshopAdmin(admin.ModelAdmin):
 
 
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('id', 'team_name', 'team_code', 'workshop')
-    fields = ('team_code', 'team_name', 'workshop', 'active_ai')
+    list_display = ('id', 'team_name', 'team_code', 'active', 'workshop')
+    fields = ('team_code', 'team_name', 'active', 'workshop', 'active_ai')
 
 
 admin.site.register(Workshop, WorkshopAdmin)

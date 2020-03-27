@@ -22,6 +22,9 @@ class Workshop(models.Model):
     def __str__(self):
         return "Workshop at: " + str(self.creation_date)
 
+    class Meta:
+        ordering = ['-creation_date']
+
 
 class Team(models.Model):
     """Team model"""
@@ -35,6 +38,9 @@ class Team(models.Model):
 
     def __str__(self):
         return "Team: " + str(self.team_name) + "(" + str(self.id) + ")"
+
+    class Meta:
+        ordering = ['workshop', '-active', 'team_name']
 
 
 class UserSession(models.Model):
