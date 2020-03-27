@@ -88,7 +88,7 @@ class aiCanvas {
                 height: height
             })
         }
-
+        //TODO: Move ai to the center
         this.stage.batchDraw()
     }
 
