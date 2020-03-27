@@ -165,6 +165,38 @@ class aiCanvas {
 // it improve the performance and work well for 95% of cases
 // we need to enable all events on Konva, even when we are dragging a node
 // so it triggers touchmove correctly
+        pinchZoomWheelEvent(this.stage);
+
+        function pinchZoomWheelEvent(stage) {
+            if (stage) {
+                stage.getContent().addEventListener('wheel', (wheelEvent) => {
+                    wheelEvent.preventDefault();
+                    const oldScale = stage.scaleX();
+
+                    const pointer = stage.getPointerPosition();
+                    const startPos = {
+                        x: pointer.x / oldScale - stage.x() / oldScale,
+                        y: pointer.y / oldScale - stage.y() / oldScale,
+                    };
+
+                    const deltaYBounded = !(wheelEvent.deltaY % 1) ? Math.abs(Math.min(-10, Math.max(10, wheelEvent.deltaY))) : Math.abs(wheelEvent.deltaY);
+                    const scaleBy = 1.01 + deltaYBounded / 70;
+                    const newScale = wheelEvent.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
+                    stage.scaleX(newScale);
+                    stage.scaleY(newScale);
+                    stage.staticlayer.scaleX(1 / newScale);
+                    stage.staticlayer.scaleY(1 / newScale);
+                    const newPosition = {
+                        x: (pointer.x / newScale - startPos.x) * newScale,
+                        y: (pointer.y / newScale - startPos.y) * newScale,
+                    };
+                    stage.position(newPosition);
+                    stage.staticlayer.setAbsolutePosition({x: 0, y: 0});
+                    stage.batchDraw();
+                });
+            }
+        }
+
         let lastDist;
         let point;
         pinchZoomTouchEvent(this.stage);
@@ -269,8 +301,9 @@ class aiCanvas {
         this.drawArrowFromJson(this.startNode, nodeChild, true);
         //this.highlightPath([true, false]);
     }
-        //Add two positions
-        addPosAAndPosB(posA, posB) {
+
+    //Add two positions
+    addPosAAndPosB(posA, posB) {
         let posX = posB.x + posA.x;
         let posY = posB.y + posA.y;
         return {x: posX, y: posY};
@@ -297,7 +330,7 @@ class aiCanvas {
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(2,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
-                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
+                        this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
@@ -306,7 +339,7 @@ class aiCanvas {
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(3,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
-                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
+                        this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
@@ -315,14 +348,14 @@ class aiCanvas {
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(4,
                         null,
                         new object(nodeJson.condition.attributes.obj)),
-                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
+                        this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 5:
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(5),
-                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
+                        this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
@@ -330,7 +363,7 @@ class aiCanvas {
                 case 6:
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(6,
                         null, null, new label(nodeJson.condition.attributes.label)),
-                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
+                        this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
@@ -338,7 +371,7 @@ class aiCanvas {
                 case 7:
                     newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(7,
                         null, null, null, new health(nodeJson.condition.attributes.health)),
-                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
+                        this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
