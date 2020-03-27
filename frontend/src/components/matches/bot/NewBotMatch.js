@@ -11,6 +11,7 @@ import ContentBox from '../../layout/ContentBox'
 import SelectAIDialog from '../SelectAIDialog'
 import SelectBotDialog from '../SelectBotDialog'
 import Alert from "@material-ui/lab/Alert";
+import { NavLink } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -40,7 +41,8 @@ const NewBotMatch = props => {
     let [snackbar, setSnackbar] = useState({
         open: false,
         error: false,
-        message: ""
+        message: "",
+        url: null
     })
 
     useEffect(() => {
@@ -76,13 +78,15 @@ const NewBotMatch = props => {
                 setSnackbar({
                     open: true,
                     error: false,
-                    message: "Simulation successful, replay available under Bot Replays"
+                    message: "Simulation successful, click here to view replays",
+                    url: "/BotMatchHistory"
                 })
             } else {
                 setSnackbar({
                     open: true,
                     error: true,
-                    message: "Something went wrong"
+                    message: "Something went wrong",
+                    url: null
                 })
             }
         })
@@ -115,9 +119,11 @@ const NewBotMatch = props => {
                         {(ais) ? (<SelectAIDialog ais={ais} open={dialogOpen.ai} handleClose={() => setDialogOpen({...dialogOpen, ai: false})} handleClick={handleAIListItemClick} />) : null}
                         {(bots) ? (<SelectBotDialog bots = {bots} open={dialogOpen.bot} handleClose={() => setDialogOpen({...dialogOpen, bot: false})} handleClick={handleBotListItemClick} />) : null}
 
-                        <Snackbar open={snackbar.open} autoHideDuration={6000} >
-                            <Alert severity={snackbar.error ? "error" : "success"}> {snackbar.message} </Alert>
-                        </Snackbar>
+                        <NavLink to={snackbar.url ? snackbar.url : '/'} onClick={e => snackbar.url ? null : e.preventDefault()}>
+                            <Snackbar open={snackbar.open} autoHideDuration={6000} >
+                                <Alert severity={snackbar.error ? "error" : "success"}> {snackbar.message} </Alert>
+                            </Snackbar>
+                        </NavLink>
                     </div>
                 </Grid>
             </Grid>
