@@ -41,16 +41,29 @@ class ReplayCanvas {
 
 
         let canvas = document.createElement('canvas')
+        canvas.style.position = 'absolute'
+        canvas.style.zIndex = 2
+
+        // offscreen canvas for level. Improves performance
+        let levelCanvas = document.createElement('canvas')
+        levelCanvas.style.zIndex = 1
+
         this.canvas = canvas
+        this.levelCanvas = levelCanvas
+
+
         this.updateSize()
+
         // append canvas to div
         canvasContainer.appendChild(canvas)
+        canvasContainer.appendChild(levelCanvas)
 
         this.ctx2d = this.canvas.getContext("2d");
 
         //bind functions
         this.start = this.start.bind(this)
         this.draw = this.draw.bind(this)
+
     }
 
     getCanvasSize(){
@@ -73,6 +86,10 @@ class ReplayCanvas {
         let {width, height} = this.getCanvasSize()
         this.canvas.width = width
         this.canvas.height = height
+        this.levelCanvas.width = width
+        this.levelCanvas.height = height
+
+        this.drawLevel()
     }
 
     setFrame(frame) {
@@ -88,12 +105,35 @@ class ReplayCanvas {
         this.draw()
     }
 
+    drawLevel() {
+        /**
+         * Draws the level to a seperate canvas
+         * Since level stays constant this canvas does not need to be redrawn.
+         */
+        var ctx = this.levelCanvas.getContext('2d')
+        let blockColors = this.BLOCK_COLORS;
+
+        let width = this.canvas.width;
+        let height = this.canvas.height;
+
+        
+        let cellsize_y = height / this.gameData.level.length;
+        let cellsize_x = width / this.gameData.level[0].length;
+
+        this.gameData.level.forEach(function (row, y) {
+            row.forEach(function (cell, x) {
+                ctx.fillStyle = blockColors[cell];
+                ctx.fillRect((x * cellsize_x), (y * cellsize_y), cellsize_x, cellsize_y);
+            });
+        });
+    }
+
+
     draw() {
         let frame = this.frame
         frame = frame % this.gameData.frames.length
 
         var ctx = this.ctx2d;
-        var blockColors = this.BLOCK_COLORS;
         var tankSprites = this.tankSprites;
         var turretSprites = this.tankTurretSprites;
         var healthPackSprite = this.healthPackSprite;
@@ -105,21 +145,15 @@ class ReplayCanvas {
 
         var scaling = width / (this.gameData.level[0].length * 10);
 
+        ctx.clearRect(0, 0, width, height)
+
         function drawImage(image, x, y, scale, rotation) {
             ctx.setTransform(scale, 0, 0, scale, x, y); // sets scale and origin
             ctx.rotate(rotation * (Math.PI / 180));
             ctx.drawImage(image, -image.width / 2, -image.height / 2);
         }
 
-
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-        this.gameData.level.forEach(function (row, y) {
-            row.forEach(function (cell, x) {
-                ctx.fillStyle = blockColors[cell];
-                ctx.fillRect((x * cellsize_x), (y * cellsize_y), cellsize_x, cellsize_y);
-            });
-        });
 
         this.gameData.frames[frame].tanks.forEach(function (elem, index) {
             drawImage(tankSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
@@ -145,21 +179,22 @@ class ReplayCanvas {
             ctx.fillRect(elem.pos[0] * cellsize_x - 2, elem.pos[1] * cellsize_y - 2, 4, 4);
         });
 
-        ctx.fillStyle = "#000000";
-        ctx.font = "15px Arial";
-        ctx.textAlign = "left";
-        ctx.fillText("Scores", width / (8 / 7), height / (8));
+        // DONT DRAW TEXT
+        // ctx.fillStyle = "#000000";
+        // ctx.font = "15px Arial";
+        // ctx.textAlign = "left";
+        // ctx.fillText("Scores", width / (8 / 7), height / (8));
 
 
-        this.gameData.frames[frame].scores.forEach(function (score, index) {
-            ctx.font = "10px Arial";
-            ctx.fillText("Team " + index + ": " + score, width / (8 / 7), height / 8 + (10 * index + 10));
-        });
+        // this.gameData.frames[frame].scores.forEach(function (score, index) {
+        //     ctx.font = "10px Arial";
+        //     ctx.fillText("Team " + index + ": " + score, width / (8 / 7), height / 8 + (10 * index + 10));
+        // });
 
 
-        ctx.font = "40px Arial";
-        var team_names_string = this.gameData.team_names[0] + " VS " + this.gameData.team_names[1]
-        ctx.fillText(team_names_string, (width / 2) - (team_names_string.length * 20 / 2), height / 8);
+        // ctx.font = "40px Arial";
+        // var team_names_string = this.gameData.team_names[0] + " VS " + this.gameData.team_names[1]
+        // ctx.fillText(team_names_string, (width / 2) - (team_names_string.length * 20 / 2), height / 8);
 
         requestAnimationFrame(this.draw)
     }
