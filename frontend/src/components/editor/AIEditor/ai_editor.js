@@ -43,7 +43,7 @@ export default class aiCanvas {
 
         this.stage.inputDict = new Map([]);
         this.stage.staticlayer = new Konva.Layer();
-        this._dragging = false;
+        this.dragging = false;
 
         //Create the startnode and canvas
         this.startNode = new startNode(this.stage, this.layer, this);
@@ -193,7 +193,7 @@ export default class aiCanvas {
                 stage.getContent().addEventListener('touchmove', (evt) => {
                     const t1 = evt.touches[0];
                     const t2 = evt.touches[1];
-                    if (t1 && t2 && !self._dragging) {
+                    if (t1 && t2 && !self.dragging) {
                         evt.preventDefault();
                         evt.stopPropagation();
                         const oldScale = stage.scaleX();
@@ -451,6 +451,14 @@ export default class aiCanvas {
     }
 
     /** All getters & setters **/
+
+    set dragging(bool) {
+        this._dragging = bool;
+    }
+    
+    get dragging() {
+        return this._dragging;
+    }
 
     get stage() {
         return this._stage;
