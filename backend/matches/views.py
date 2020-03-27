@@ -8,6 +8,7 @@ from django.http import Http404
 from roamboter.api.permissions import InTeamPermission
 from roamboter.api.mixins import RetrieveTeamObjectMixin, DestroyTeamObjectMixin
 
+from dashboard import workshopmanager as wmanager
 from dashboard.models import Team
 
 
@@ -149,7 +150,8 @@ class TeamMatchHistoryListAPI(APIView):
         """
         Finds an opponent to play against
         """
-        potential_opponents = Team.objects.exclude(pk=initiator.id).filter(active_ai__isnull=False)
+        cur_workshop = wmanager.get_cur_workshop()
+        potential_opponents = Team.objects.exclude(pk=initiator.id).filter(active_ai__isnull=False, workshop=cur_workshop)
         if potential_opponents.exists():
             # select a random opponent
             opponent = potential_opponents.order_by("?").first()

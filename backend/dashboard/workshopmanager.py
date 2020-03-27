@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 
-from random import randint, choice
+from random import randint, shuffle
 
 from .models import *
 
@@ -10,40 +10,53 @@ import logging
 logger = logging.getLogger("debugLogger")
 
 
-
 def generate_teamcodes(amount):
     """
     Creates 'amount' teams and generates corresponding team codes.
     team code generation is done randomly. A random number is generated and if this number does not yet exist in another team it is used as a team code.
     Note that team codes do not uniquely identify a team. It is possible that two teams from two different workshops have the same team code.
+    A team name is taken from a list.
     """
     workshop = get_cur_workshop()
 
     team_codes = list(Team.objects.filter(workshop=workshop).values('team_code'))
     team_codes = list(map(lambda x: x['team_code'], team_codes))
 
+    # index available team names
     team_names = []
 
     with open(os.path.dirname(os.path.realpath(__file__)) + "/team_names.txt") as f:
-        team_names = f.readlines()
+        names = f.readlines()
+        for name in names:
+            team_name = name.strip()
+            team_names.append(team_name)
+
+    used_team_names = list(Team.objects.filter(workshop=workshop).values_list('team_name', flat=True))
+
+    available_names = []
+    for name in team_names:
+        if name not in used_team_names:
+            available_names.append(name)
+
+    shuffle(available_names)
 
     for i in range(amount):
 
-        name = choice(team_names)[:20]
+        name = available_names.pop()[:20]
         name = name.strip()
         generated_code = False
 
         while not generated_code:
             # generate team code
-            candidate_team_code = randint(0,999999)
+            candidate_team_code = randint(100000, 999999)
 
             if candidate_team_code not in team_codes:
-                #Valid team code
+                # valid team code
                 team_codes.append(candidate_team_code)
 
                 new_team = Team(team_code=candidate_team_code, workshop=workshop, team_name=name)
                 new_team.save()
-                # End loop
+                # end loop
                 generated_code = True
 
 
@@ -104,7 +117,6 @@ def remove_user_session(session):
         del session['team_id']
 
 
-
 def open_workshop():
     """Opens a workshop. Returns whether successful."""
     if not all_workshops_closed():
@@ -114,6 +126,7 @@ def open_workshop():
     workshop = Workshop(workshop_open=True)
     workshop.save()
     return True
+
 
 def close_workshop():
     """Closes a workshop. Returns whether successful."""
@@ -134,12 +147,10 @@ def get_cur_workshop():
     return Workshop.objects.filter(workshop_open=True).first()
 
 
-
 def all_workshops_closed():
     """Returns whether all workshops are closed"""
     open_workshops = Workshop.objects.filter(workshop_open=True).count()
     return open_workshops == 0
-
 
 
 if __name__ == "__main__":

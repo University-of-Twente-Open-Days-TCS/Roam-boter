@@ -171,6 +171,38 @@ export default class aiCanvas {
 // it improve the performance and work well for 95% of cases
 // we need to enable all events on Konva, even when we are dragging a node
 // so it triggers touchmove correctly
+        pinchZoomWheelEvent(this.stage);
+
+        function pinchZoomWheelEvent(stage) {
+            if (stage) {
+                stage.getContent().addEventListener('wheel', (wheelEvent) => {
+                    wheelEvent.preventDefault();
+                    const oldScale = stage.scaleX();
+
+                    const pointer = stage.getPointerPosition();
+                    const startPos = {
+                        x: pointer.x / oldScale - stage.x() / oldScale,
+                        y: pointer.y / oldScale - stage.y() / oldScale,
+                    };
+
+                    const deltaYBounded = !(wheelEvent.deltaY % 1) ? Math.abs(Math.min(-10, Math.max(10, wheelEvent.deltaY))) : Math.abs(wheelEvent.deltaY);
+                    const scaleBy = 1.01 + deltaYBounded / 70;
+                    const newScale = wheelEvent.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
+                    stage.scaleX(newScale);
+                    stage.scaleY(newScale);
+                    stage.staticlayer.scaleX(1 / newScale);
+                    stage.staticlayer.scaleY(1 / newScale);
+                    const newPosition = {
+                        x: (pointer.x / newScale - startPos.x) * newScale,
+                        y: (pointer.y / newScale - startPos.y) * newScale,
+                    };
+                    stage.position(newPosition);
+                    stage.staticlayer.setAbsolutePosition({x: 0, y: 0});
+                    stage.batchDraw();
+                });
+            }
+        }
+
         let lastDist;
         let point;
         pinchZoomTouchEvent(this.stage);
@@ -273,6 +305,7 @@ export default class aiCanvas {
         //Draw arrows to child
         this.drawArrowFromJson(this.startNode, nodeChild, true);
     }
+
 
     /** Add two positions **/
     addPosAAndPosB(posA, posB) {
