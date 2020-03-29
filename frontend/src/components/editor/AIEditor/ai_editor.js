@@ -88,6 +88,7 @@ export default class aiCanvas {
             width: width,
             height: height
         });
+
         if (this.isReplay) {
             this.blocker.size({
                 width: width,
@@ -468,7 +469,11 @@ export default class aiCanvas {
     /** Add a node to this layer **/
     addNode(node) {
         this.layer.add(node.group);
-        node.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
+        let { width, height } = this.getStageSize()
+        let posx = Math.floor(width / 2)
+        let posy = Math.floor(height / 2)
+
+        node.group.absolutePosition({x: posx, y: posy});
         this.stage.draw();
         return node;
     }
@@ -486,6 +491,9 @@ export default class aiCanvas {
     }
 
     /** All getters & setters **/
+    getStageSize() {
+        return this.stage.size()
+    }
 
     set dragging(bool) {
         this._dragging = bool;
