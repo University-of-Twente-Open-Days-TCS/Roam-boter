@@ -166,7 +166,7 @@ class Tank:
             if t == self:
                 continue
 
-            if distance(t.get_pos(), self.get_pos()) < 1.8:
+            if distance(t.get_pos(), (x, y)) < 1.8:
                 return True
 
         for a in numpy.arange(y - 0.8, y + 0.8, 0.2):
