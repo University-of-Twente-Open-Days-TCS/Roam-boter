@@ -33,14 +33,9 @@ class AIReplayCanvas {
         this.canvas.jsonToTree(ai)
     }
 
-    updateSize() {
-        /** Get width and height of container */
-        let container = document.getElementById(this.containerId)
-        if (container !== null) {
-            let width  = container.offsetWidth
-            let height = container.offsetHeight
-            this.canvas.resizeStage(width, height)
-        }
+    updateSize(width, height) {
+        /** set width and height of canvas */
+        this.canvas.resizeStage(width, height)
     }
 
     setHighlightPath(path) {

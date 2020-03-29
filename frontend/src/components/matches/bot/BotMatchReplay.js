@@ -14,20 +14,26 @@ import RoamBotAPI from "../../../RoamBotAPI"
 const styles = theme => ({
     wrapper: {
         display: 'flex',
-        width: '100%',
+        height: 'auto',
     },
     matchWrapper: {
+        position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        width: '70%'
+        width: '70%',
+        height: 'auto',
     },
     matchContainer: {
         display: 'block',
         position: 'relative',
     },
-    editorContainer: {
+    editorWrapper: {
         display: 'block',
+        minHeight: '100%',
+        maxHeigth: '100%',
         flexGrow: 1,
+    },
+    editorContainer: {
         backgroundColor: '#f6f6f6',
         overflow: 'hidden',
     },
@@ -36,25 +42,35 @@ const styles = theme => ({
 
 class BotMatchReplay extends Component {
 
+    SLIDER_MAX = 10000
+
     constructor(props) {
         super(props)
 
-        this.replayContainer = React.createRef()
+        this.replayContainerRef = React.createRef()
+        this.controlsRef = React.createRef();
+        this.editorWrapperRef = React.createRef()
 
-        //For optimization reasons. The frameData is not in the Components State.
+
+        //For optimization reasons. The frameData is outside of the Component's State.
         const frameData = {
             frame: 0,
             framesLength: 0,
         }
+
         this.frameData = frameData
+
 
         this.state = {
             gameData: null,
             playing: false,
         }
+
+
         //bind callbackFunctions
         this.handleSlideChange = this.handleSlideChange.bind(this)
         this.handlePlayButtonChange = this.handlePlayButtonChange.bind(this)
+        this.resizeCanvas = this.resizeCanvas.bind(this)
         this.update = this.update.bind(this)
     }
 
@@ -66,7 +82,7 @@ class BotMatchReplay extends Component {
         let { ai, gameData } = await this.fetchMatchInfo(match_id, ai_id)
         this.ai = ai
 
-        let matchContainer = this.replayContainer.current
+        let matchContainer = this.replayContainerRef.current
 
         let replayCanvas = new ReplayCanvas(matchContainer, gameData)
         let editorCanvas = new AIReplayCanvas('editor-container')
@@ -77,10 +93,7 @@ class BotMatchReplay extends Component {
 
         // Fill editor canvas with AI
         editorCanvas.fillCanvas(this.ai)
-
-        //Make sure canvas reacts to responsively
-        this.resizeCanvas = this.resizeCanvas.bind(this)
-
+        
         window.addEventListener('resize', this.resizeCanvas)
         window.addEventListener('load', this.resizeCanvas)
         window.addEventListener('orientationchange', this.resizeCanvas)
@@ -93,23 +106,8 @@ class BotMatchReplay extends Component {
 
         this.setState({ gameData: gameData })
 
+        this.resizeCanvas()
         replayCanvas.draw()
-    }
-
-    async fetchMatchInfo(match_id, ai_id) {
-        /**
-         * Fetches both the match and ai 
-         */
-        const match_response = await RoamBotAPI.getSimulation(match_id)
-        let match_data = await match_response.json();
-
-        const ai_response = await RoamBotAPI.getAiDetail(ai_id)
-        let ai_data = await ai_response.json();
-
-        let ai = JSON.parse(ai_data.ai)
-        let gameData = JSON.parse(match_data.simulation)
-
-        return { ai: ai, gameData: gameData }
     }
 
     componentDidUpdate() {
@@ -128,8 +126,29 @@ class BotMatchReplay extends Component {
 
     componentWillUnmount() {
         // Stop interval
-        clearInterval(this.interval)
+        if(this.animRequestId) window.cancelAnimationFrame(this.animRequestId)
+        // Remove listeners
+        window.removeEventListener('resize', this.resizeCanvas)
+        window.removeEventListener('load', this.resizeCanvas)
+        window.removeEventListener('orientationchange', this.resizeCanvas)
     }
+
+    async fetchMatchInfo(match_id, ai_id) {
+        /**
+         * Fetches both the match and ai 
+         */
+        const match_response = await RoamBotAPI.getSimulation(match_id)
+        let match_data = await match_response.json();
+
+        const ai_response = await RoamBotAPI.getAiDetail(ai_id)
+        let ai_data = await ai_response.json();
+
+        let ai = JSON.parse(ai_data.ai)
+        let gameData = JSON.parse(match_data.simulation)
+
+        return { ai: ai, gameData: gameData }
+    }
+
 
     update() {
         let { frame, framesLength } = this.frameData
@@ -141,11 +160,11 @@ class BotMatchReplay extends Component {
             // Increment frames and draw
             let newFrame = frame + 1
             this.frameData = { ...this.frameData, frame: newFrame }
+            this.controlsRef.current.setSliderProgress(this.calculateProgressFromFrame(newFrame))
             this.redrawCanvases(newFrame)
+            // animation callback
+            this.animRequestId = window.requestAnimationFrame(this.update)
         }
-
-        //this.forceUpdate()
-        this.animRequestId = window.requestAnimationFrame(this.update)
     }
 
     redrawCanvases(frame) {
@@ -170,21 +189,27 @@ class BotMatchReplay extends Component {
 
     resizeCanvas() {
         this.replayCanvas.updateSize()
-        this.editorCanvas.updateSize()
+        let editorWrapper = this.editorWrapperRef.current
+        // Reset size. We need to do this, to make sure the flexbox takes the size of the replayContainer.
+        this.editorCanvas.updateSize(1,1)
+
+        let height = editorWrapper.offsetHeight
+        let width = editorWrapper.offsetWidth
+        this.editorCanvas.updateSize(width, height)    
     }
 
     handleSlideChange(event, newValue) {
         let progress = newValue
-        let { framesLength } = this.frameData
-
-        let newFrame = parseInt((framesLength / 10000) * progress)
-        this.frameData = { ...this.frameData, frame: newFrame }
+        let frame = this.calculateFrameFromProgress(progress)
+        this.frameData = { ...this.frameData, frame: frame }
 
         if (!this.state.playing) {
-            this.redrawCanvases(newFrame)
+            // only redraw if not playing. Otherwise the update function will take care of drawing.
+            this.redrawCanvases(frame)
         }
 
-        this.forceUpdate()
+        // change position of slider imperatively (This is done for performance reasons)
+        this.controlsRef.current.setSliderProgress(progress)
     }
 
     handlePlayButtonChange(event) {
@@ -195,29 +220,30 @@ class BotMatchReplay extends Component {
         }
     }
 
-
+    calculateFrameFromProgress = progress   => parseInt((this.frameData.framesLength / this.SLIDER_MAX) * progress)
+    calculateProgressFromFrame = frame      => parseInt((frame / this.frameData.framesLength) * this.SLIDER_MAX)
 
     render() {
         let { classes } = this.props
         // calculate progress
-        let { frame, framesLength } = this.frameData
-        let progress = parseInt((frame / framesLength) * 10000)
 
         let props = {
             playing: this.state.playing,
-            progress: progress,
             handleSlideChange: this.handleSlideChange,
-            handlePlayButtonChange: this.handlePlayButtonChange
+            handlePlayButtonChange: this.handlePlayButtonChange,
+            sliderMax: this.SLIDER_MAX,
         }
 
         return (
             <ContentBox>
                 <div className={classes.wrapper}>
                     <div className={classes.matchWrapper}>
-                        <div ref={this.replayContainer} className={classes.matchContainer}></div>
-                        <ReplayControls {...props} />
+                        <div ref={this.replayContainerRef} className={classes.matchContainer}></div>
+                        <ReplayControls ref={this.controlsRef} {...props} />
                     </div>
-                    <div id="editor-container" className={classes.editorContainer}></div>
+                    <div ref={this.editorWrapperRef} className={classes.editorWrapper}>
+                        <div id="editor-container" className={classes.editorContainer}></div>
+                    </div>
                 </div>
             </ContentBox>
         )

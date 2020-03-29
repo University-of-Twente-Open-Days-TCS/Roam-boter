@@ -21,8 +21,6 @@ import JSONValidationError from "../Errors/JSONValidationError.js";
 export default class aiCanvas {
 
     //Stage dimensions
-    stageWidth = window.innerWidth;
-    stageHeight = window.innerHeight / 1.5;
 
     _stage;
     _layer;
@@ -74,8 +72,8 @@ export default class aiCanvas {
     createStage(container) {
         this.stage = new Konva.Stage({
             container: container,
-            width: this.stageWidth,
-            height: this.stageHeight,
+            width: 1,
+            height: 1,
             draggable: true,
             x: 0,
             y: 0,
@@ -289,6 +287,10 @@ export default class aiCanvas {
 
     /** Highlights the active path through the tree in a replay **/
     highlightPath(boolList) {
+        /**
+         * @param boolList a boolean list that represents the AI's state. 
+         * Note: this list will be cleared.
+         */
         this.startNode.darkenAll();
         this.startNode.highlightPath(boolList);
     }
