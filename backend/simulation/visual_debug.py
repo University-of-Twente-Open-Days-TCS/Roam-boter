@@ -6,7 +6,7 @@ import sys, os
 
 # TODO: Make it so that it is more a component that can be toggled on. 
 # Importing simulation imported this module, which resulted in the imgaes being loaded. 
-VISUAL_DEBUG = False
+VISUAL_DEBUG = True
 
 screen = None
 
@@ -35,7 +35,7 @@ def DRAW_WORLD(state):
         if tank.path is None:
             continue
 
-        for i, p in enumerate(tank.path):
+        for i, p in enumerate(tank.path.nodes):
             x, y = p
             x, y = x - 0.5, y - 0.5
             pygame.draw.rect(screen, (min(30 * i, 255), 0, 0,), (x * 10, y * 10, 10, 10))

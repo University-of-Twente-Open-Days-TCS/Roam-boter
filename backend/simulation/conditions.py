@@ -27,7 +27,7 @@ def distance_to_nearest_object_greater_than(tank, state, obj, distance):
 
     for p in paths:
         # p[-1] is last element of path, this indicates the actual position of the object.
-        dist = math.sqrt(distance_squared(tank.get_pos(), p[-1]))
+        dist = math.sqrt(distance_squared(tank.get_pos(), p.goal()))
         if dist < nearest_dist:
             nearest_dist = dist
 
@@ -39,7 +39,7 @@ def object_visible(tank, state, obj):
     paths = filter_objects(tank, state, obj)
     for p in paths:
         # If any of the possible paths has an end node that is visible, there exists an object of type obj that is.
-        if state.level.direct_line_of_sight(tank.get_pos(), p[-1]):
+        if state.level.direct_line_of_sight(tank.get_pos(), p.goal()):
             return True
     return False
 
@@ -48,7 +48,7 @@ def aimed_at_object(tank, state, obj):
     obj = Object(obj)
     paths = filter_objects(tank, state, obj)
     for p in paths:
-        location = p[-1]
+        location = p.goal()
         # get direction tank is aiming at
         vision_angle = tank.get_rotation() + tank.get_turret_rotation()
 

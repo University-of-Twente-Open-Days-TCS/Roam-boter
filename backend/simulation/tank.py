@@ -36,7 +36,7 @@ class Tank:
 
     team_id = 0
 
-
+    current_path = None
     scout_target = None
 
     path = None
