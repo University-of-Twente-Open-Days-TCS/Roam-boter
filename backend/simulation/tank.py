@@ -217,7 +217,7 @@ class Tank:
 
             angle = math.degrees(math.acos(inproduct))
 
-            if angle < 20 or angle > 340:
+            if angle < 30 or angle > 330:
                 if state.level.direct_line_of_sight(self.get_pos(), other.get_pos()):
                     visible_tanks.append(other)
 
@@ -251,7 +251,7 @@ class Tank:
 
             angle = math.degrees(math.acos(inproduct))
 
-            if angle < 20 or angle > 340:
+            if angle < 30 or angle > 330:
                 if state.level.direct_line_of_sight(self.get_pos(), other.get_pos()):
                     visible_bullets.append(other)
 
