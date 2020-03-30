@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box'
 import RoamBotAPI from '../../RoamBotAPI'
 
 import AIEditorMenu from "./AIEditorMenu";
-import AICanvas from './AIEditor/ai_editor.js'
+import AICanvas from './AIEditor/AIeditor.js'
 
 import {withRouter} from "react-router-dom"
 import Dialog from "@material-ui/core/Dialog";

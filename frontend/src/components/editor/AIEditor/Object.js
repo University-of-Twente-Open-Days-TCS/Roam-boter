@@ -1,5 +1,5 @@
 /** Object on the map **/
-export default class object {
+export default class Object {
     _id;
 
     constructor(id) {

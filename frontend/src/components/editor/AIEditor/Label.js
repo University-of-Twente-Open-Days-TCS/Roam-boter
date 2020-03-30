@@ -1,5 +1,5 @@
-/** Label, works as a boolean, every label can be (temporarily) set to true or false**/
-export default class label {
+/** Label, works as a boolean, every Label can be (temporarily) set to true or false**/
+export default class Label {
     _id;
 
 

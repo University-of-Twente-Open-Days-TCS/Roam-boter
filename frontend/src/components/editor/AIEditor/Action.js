@@ -1,67 +1,67 @@
-import object from "./object.js";
-import reldir from "./reldir.js";
-import winddir from "./winddir.js";
-import speed from "./speed.js";
-import label from "./label.js";
-import seconds from "./seconds.js";
+import Object from "./Object.js";
+import RelDir from "./RelDir.js";
+import WindDir from "./WindDir.js";
+import Speed from "./Speed.js";
+import Label from "./Label.js";
+import Seconds from "./Seconds.js";
 
-//Lists of possible attributes of an action
+//Lists of possible attributes of an Action
 const objectList = [
-    new object(1),
-    new object(2),
-    new object(3),
-    new object(4),
-    new object(5),
-    new object(6),
-    new object(7),
-    new object(8),
-    new object(9),
-    new object(10)
+    new Object(1),
+    new Object(2),
+    new Object(3),
+    new Object(4),
+    new Object(5),
+    new Object(6),
+    new Object(7),
+    new Object(8),
+    new Object(9),
+    new Object(10)
 ];
 
 const reldirList = [
-    new reldir(0),
-    new reldir(1),
-    new reldir(2),
-    new reldir(3)
+    new RelDir(0),
+    new RelDir(1),
+    new RelDir(2),
+    new RelDir(3)
 ];
 
 const winddirList = [
-    new winddir(0),
-    new winddir(1),
-    new winddir(2),
-    new winddir(3)
+    new WindDir(0),
+    new WindDir(1),
+    new WindDir(2),
+    new WindDir(3)
 ];
 
 const speedList = [
-    new speed(0),
-    new speed(1),
-    new speed(2)
+    new Speed(0),
+    new Speed(1),
+    new Speed(2)
 ];
 
 
 const labelList = [
-    new label(0),
-    new label(1),
-    new label(2),
-    new label(3),
-    new label(4),
-    new label(5),
-    new label(6),
-    new label(7),
-    new label(8)
+    new Label(0),
+    new Label(1),
+    new Label(2),
+    new Label(3),
+    new Label(4),
+    new Label(5),
+    new Label(6),
+    new Label(7),
+    new Label(8)
 ];
 
 const secondsList = [
-    new seconds(1),
-    new seconds(3),
-    new seconds(5),
-    new seconds(7),
+    new Seconds(1),
+    new Seconds(3),
+    new Seconds(5),
+    new Seconds(7),
 ];
 
 /** Action, used to be displayed inside an ActionNode or Selector. Can have one or more attributes depending on the
- * action ID **/
-export default class action {
+ * Action ID **/
+export default class Action {
     _id;
     _object;
     _winddir;
@@ -70,7 +70,7 @@ export default class action {
     _speed;
     _seconds;
 
-    /** Construct the action based on an ID and possible attributes**/
+    /** Construct the Action based on an ID and possible attributes**/
     constructor(id, object = null, winddir = null, reldir = null, speed = null, label = null, seconds = null) {
         this.id = id;
         this.object = object;
@@ -82,7 +82,7 @@ export default class action {
         this.setRemainingOptions();
     }
 
-    /** Returns whether the current action has all its necessary attributes **/
+    /** Returns whether the current Action has all its necessary attributes **/
     isValid() {
         switch (this.id) {
             case 0:
@@ -227,7 +227,7 @@ export default class action {
                 if (this.object != null) {
                     return "Go to nearest\n" + this.object;
                 } else {
-                    return "Go to nearest \n <object>";
+                    return "Go to nearest \n <Object>";
                 }
             case 2:
                 return "Scout";
@@ -235,38 +235,38 @@ export default class action {
                 if (this.object != null) {
                     return "Move away from \n nearest " + this.object;
                 } else {
-                    return "Move away from \n nearest <object>"
+                    return "Move away from \n nearest <Object>"
                 }
             case 5:
                 if (this.object != null) {
                     return "Aim to nearest\n" + this.object;
                 } else {
-                    return "Aim to nearest \n <object>"
+                    return "Aim to nearest \n <Object>"
                 }
             case 6:
                 if (this.winddir != null) {
                     return "Aim " + this.winddir;
                 } else {
-                    return "Aim <winddir>";
+                    return "Aim <WindDir>";
                 }
             case 7:
                 if (this.reldir != null) {
                     return "Aim " + this.reldir;
                 } else {
-                    return "Aim <reldir>";
+                    return "Aim <RelDir>";
                 }
 
             case 8:
                 if (this.speed != null) {
                     return "Aim to left \n with " + this.speed;
                 } else {
-                    return "Aim to left \n with <speed>";
+                    return "Aim to left \n with <Speed>";
                 }
             case 9:
                 if (this.speed != null) {
                     return "Aim to right \n with " + this.speed;
                 } else {
-                    return "Aim to right \n with <speed>";
+                    return "Aim to right \n with <Speed>";
                 }
             case 10:
                 return "Shoot!";
@@ -274,21 +274,21 @@ export default class action {
                 return "Self-destruct!";
             case 12:
                 if (this.label != null) {
-                    return "Set label " + this.label;
+                    return "Set Label " + this.label;
                 } else {
-                    return "Set label  <label>";
+                    return "Set Label  <Label>";
                 }
             case 13:
                 if (this.label != null) {
-                    return "Unset label " + this.label;
+                    return "Unset Label " + this.label;
                 } else {
-                    return "Unset label  <label>";
+                    return "Unset Label  <Label>";
                 }
             case 14:
                 if (this.label != null && this.seconds != null) {
-                    return "Set label " + this.label + "\n for " + this.seconds;
+                    return "Set Label " + this.label + "\n for " + this.seconds;
                 } else {
-                    return "Set label \n <label> \n for <seconds>";
+                    return "Set Label \n <Label> \n for <Seconds>";
                 }
             default:
                 return null

@@ -1,5 +1,5 @@
-/** Speed with which a turret turns**/
-export default class speed {
+/** Amount of Seconds a Label lasts **/
+export default class Seconds {
     _id;
 
     constructor(id) {
@@ -8,12 +8,14 @@ export default class speed {
 
     toString() {
         switch (this.id) {
-            case 0:
-                return "Slow speed";
             case 1:
-                return "Normal speed";
-            case 2:
-                return "Fast speed";
+                return "1 second";
+            case 3:
+                return "3 Seconds";
+            case 5:
+                return "5 Seconds";
+            case 7:
+                return "7 Seconds";
             default:
                 return null;
 
