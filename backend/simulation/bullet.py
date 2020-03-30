@@ -40,9 +40,7 @@ class Bullet:
             return True
         return False
 
-
     # Check if a bullet has a collision with a tank.
-    # TODO: This is now a rectangle collision, do we want it to stay that way?
     def check_collision_tank(self, state):
         for tank in state.tanks:
             if tank == self.owner:
