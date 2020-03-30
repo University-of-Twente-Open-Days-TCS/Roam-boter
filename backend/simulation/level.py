@@ -137,8 +137,9 @@ class Level:
         return cache
 
     def find_all_paths(self, obj, x, y):
-        if x == 0:
-            print(y)
+        if x == 0 and y % 3 == 0:
+            # Print status message for cache generation.
+            LOGGER.debug((x * 100) // len(self.objects), "%")
         # A tank can always walk straight towards the nearest wall
         if obj == Object.WALL:
             return Path([self.find_nearest_object(obj, x, y)])

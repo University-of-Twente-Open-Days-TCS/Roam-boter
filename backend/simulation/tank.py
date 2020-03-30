@@ -274,7 +274,6 @@ class Tank:
         p = state.level.get_path_to_object(self, Object.HILL)
         if p is not None and len(p) > 0:
             d = distance(self.get_pos(), p[-1])
-            print(d)
             return d < 5
 
     def get_team(self):
