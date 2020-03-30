@@ -154,6 +154,25 @@ class ReplayCanvas {
         }
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+
+        // Draw the vision bars for each tank.
+        this.gameData.frames[frame].tanks.forEach(function (tank, index) {
+            var goal_x_1 = (tank.pos[0] * cellsize_x) + -Math.sin((tank.rotation + tank.turret_rotation - 30) * (Math.PI / 180)) * 100 * scaling;
+            var goal_y_1 = (tank.pos[1] * cellsize_y) + -Math.cos((tank.rotation + tank.turret_rotation - 30)  * (Math.PI / 180)) * 100 * scaling;
+
+            var goal_x_2 = (tank.pos[0] * cellsize_x) + -Math.sin((tank.rotation + tank.turret_rotation + 30) * (Math.PI / 180)) * 100 * scaling;
+            var goal_y_2 = (tank.pos[1] * cellsize_y) + -Math.cos((tank.rotation + tank.turret_rotation + 30)  * (Math.PI / 180)) * 100 * scaling;
+
+            ctx.beginPath();
+            ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
+            ctx.moveTo(tank.pos[0] * cellsize_x, tank.pos[1] * cellsize_y);
+            ctx.lineTo(goal_x_1, goal_y_1);
+            ctx.moveTo(tank.pos[0] * cellsize_x, tank.pos[1] * cellsize_y);
+            ctx.lineTo(goal_x_2, goal_y_2);
+            ctx.stroke();
+        });
+
         this.gameData.frames[frame].tanks.forEach(function (elem, index) {
             drawImage(tankSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
             drawImage(turretSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation - elem.turret_rotation);
@@ -178,6 +197,7 @@ class ReplayCanvas {
             ctx.fillStyle = "#000000";
             ctx.fillRect(elem.pos[0] * cellsize_x - 2, elem.pos[1] * cellsize_y - 2, 4, 4);
         });
+
     }
 }
 
