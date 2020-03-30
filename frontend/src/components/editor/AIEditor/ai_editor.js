@@ -21,8 +21,6 @@ import JSONValidationError from "../Errors/JSONValidationError.js";
 export default class aiCanvas {
 
     //Stage dimensions
-    stageWidth = window.innerWidth;
-    stageHeight = window.innerHeight / 1.5;
 
     _stage;
     _layer;
@@ -74,8 +72,8 @@ export default class aiCanvas {
     createStage(container) {
         this.stage = new Konva.Stage({
             container: container,
-            width: this.stageWidth,
-            height: this.stageHeight,
+            width: 1,
+            height: 1,
             draggable: true,
             x: 0,
             y: 0,
@@ -90,13 +88,14 @@ export default class aiCanvas {
             width: width,
             height: height
         });
+
         if (this.isReplay) {
             this.blocker.size({
                 width: width,
                 height: height
             })
         }
-
+        //TODO: Move ai to the center
         this.stage.batchDraw()
     }
 
@@ -289,6 +288,10 @@ export default class aiCanvas {
 
     /** Highlights the active path through the tree in a replay **/
     highlightPath(boolList) {
+        /**
+         * @param boolList a boolean list that represents the AI's state. 
+         * Note: this list will be cleared.
+         */
         this.startNode.darkenAll();
         this.startNode.highlightPath(boolList);
     }
@@ -466,7 +469,11 @@ export default class aiCanvas {
     /** Add a node to this layer **/
     addNode(node) {
         this.layer.add(node.group);
-        node.group.absolutePosition({x: this.stageWidth / 2, y: this.stageHeight / 2});
+        let { width, height } = this.getStageSize()
+        let posx = Math.floor(width / 2)
+        let posy = Math.floor(height / 2)
+
+        node.group.absolutePosition({x: posx, y: posy});
         this.stage.draw();
         return node;
     }
@@ -484,6 +491,9 @@ export default class aiCanvas {
     }
 
     /** All getters & setters **/
+    getStageSize() {
+        return this.stage.size()
+    }
 
     set dragging(bool) {
         this._dragging = bool;

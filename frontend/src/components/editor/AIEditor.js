@@ -105,7 +105,6 @@ class AIEditor extends Component {
         this.resize()
     }
 
-
     resize() {
         /** Resizes the Konva Canvas */
         let konvaContainer = document.getElementById('konva-container')
