@@ -1,20 +1,20 @@
-import Object from "./Object.js";
+import Obj from "./Obj.js";
 import Distance from "./Distance.js";
 import Health from "./Health.js";
 import Label from "./Label.js";
 
 //The attributes which a Condition can contain
 const objectList = [
-    new Object(1),
-    new Object(2),
-    new Object(3),
-    new Object(4),
-    new Object(5),
-    new Object(6),
-    new Object(7),
-    new Object(8),
-    new Object(9),
-    new Object(10)
+    new Obj(1),
+    new Obj(2),
+    new Obj(3),
+    new Obj(4),
+    new Obj(5),
+    new Obj(6),
+    new Obj(7),
+    new Obj(8),
+    new Obj(9),
+    new Obj(10)
 ];
 
 const distanceList = [
@@ -151,7 +151,7 @@ export default class Condition {
     toString() {
         switch (this.id) {
             case 1:
-                // provide both Distance and Object, otherwise both will be ignored
+                // provide both Distance and Obj, otherwise both will be ignored
                 if (this.distance == null || this.object == null) {
                     return "If Distance to nearest \n <Object> is greater \n than <Distance>";
                 } else {

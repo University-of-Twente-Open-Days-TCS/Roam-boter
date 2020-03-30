@@ -1,4 +1,4 @@
-/** Distance from one Object to another on the map **/
+/** Distance from one Obj to another on the map **/
 export default class Distance {
     _id;
 

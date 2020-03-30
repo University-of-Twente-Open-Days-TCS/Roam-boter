@@ -3,7 +3,7 @@ import ConditionNode from "./ConditionNode.js";
 import StartNode from "./StartNode.js";
 import Konva from "konva"
 import Distance from "./Distance.js";
-import Object from "./Object.js";
+import Obj from "./Obj.js";
 import Label from "./Label.js";
 import Health from "./Health.js";
 import WindDir from "./WindDir.js";
@@ -327,7 +327,7 @@ export default class AiCanvas {
                 case 1:
                     newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(1,
                         new Distance(nodeJson.condition.attributes.distance),
-                        new Object(nodeJson.condition.attributes.obj)),
+                        new Obj(nodeJson.condition.attributes.obj)),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
@@ -336,7 +336,7 @@ export default class AiCanvas {
                 case 2:
                     newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(2,
                         null,
-                        new Object(nodeJson.condition.attributes.obj)),
+                        new Obj(nodeJson.condition.attributes.obj)),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
@@ -345,7 +345,7 @@ export default class AiCanvas {
                 case 3:
                     newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(3,
                         null,
-                        new Object(nodeJson.condition.attributes.obj)),
+                        new Obj(nodeJson.condition.attributes.obj)),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
@@ -354,7 +354,7 @@ export default class AiCanvas {
                 case 4:
                     newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(4,
                         null,
-                        new Object(nodeJson.condition.attributes.obj)),
+                        new Obj(nodeJson.condition.attributes.obj)),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
@@ -391,20 +391,23 @@ export default class AiCanvas {
             let newActionList = [];
             nodeJson.actionblock.actionlist.forEach(actionItem => {
                 switch (actionItem.type_id) {
+                    case 0:
+                        newActionList = newActionList.concat(new Action(0));
+                        break;
                     case 1:
-                        newActionList = newActionList.concat(new Action(1, new Object(actionItem.attributes.obj)));
+                        newActionList = newActionList.concat(new Action(1, new Obj(actionItem.attributes.obj)));
                         break;
                     case 2:
                         newActionList = newActionList.concat(new Action(2));
                         break;
                     case 3:
-                        newActionList = newActionList.concat(new Action(3, new Object(actionItem.attributes.obj)));
+                        newActionList = newActionList.concat(new Action(3, new Obj(actionItem.attributes.obj)));
                         break;
                     case 4:
-                        newActionList = newActionList.concat(new Action(4, new Object(actionItem.attributes.obj)));
+                        newActionList = newActionList.concat(new Action(4, new Obj(actionItem.attributes.obj)));
                         break;
                     case 5:
-                        newActionList = newActionList.concat(new Action(5, new Object(actionItem.attributes.obj)));
+                        newActionList = newActionList.concat(new Action(5, new Obj(actionItem.attributes.obj)));
                         break;
                     case 6:
                         newActionList = newActionList.concat(new Action(6, null, new WindDir(actionItem.attributes.winddir)));

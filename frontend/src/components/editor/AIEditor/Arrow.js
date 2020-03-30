@@ -4,7 +4,7 @@ import Konva from "konva"
 /** The connection between two conditions or a Condition and an Action **/
 export default class Arrow {
 
-    //The Konva Arrow Object
+    //The Konva Arrow Obj
     _arrowline;
 
     //The source/origin group of nodes (Condition)

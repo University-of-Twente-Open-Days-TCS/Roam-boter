@@ -1,4 +1,4 @@
-import Object from "./Object.js";
+import Obj from "./Obj.js";
 import RelDir from "./RelDir.js";
 import WindDir from "./WindDir.js";
 import Speed from "./Speed.js";
@@ -7,16 +7,16 @@ import Seconds from "./Seconds.js";
 
 //Lists of possible attributes of an Action
 const objectList = [
-    new Object(1),
-    new Object(2),
-    new Object(3),
-    new Object(4),
-    new Object(5),
-    new Object(6),
-    new Object(7),
-    new Object(8),
-    new Object(9),
-    new Object(10)
+    new Obj(1),
+    new Obj(2),
+    new Obj(3),
+    new Obj(4),
+    new Obj(5),
+    new Obj(6),
+    new Obj(7),
+    new Obj(8),
+    new Obj(9),
+    new Obj(10)
 ];
 
 const reldirList = [
@@ -247,13 +247,13 @@ export default class Action {
                 if (this.winddir != null) {
                     return "Aim " + this.winddir;
                 } else {
-                    return "Aim <WindDir>";
+                    return "Aim <Wind Direction>";
                 }
             case 7:
                 if (this.reldir != null) {
                     return "Aim " + this.reldir;
                 } else {
-                    return "Aim <RelDir>";
+                    return "Aim <Relative Direction>";
                 }
 
             case 8:

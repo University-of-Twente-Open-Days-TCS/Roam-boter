@@ -16,7 +16,7 @@ const hitboxCircleRadius = 25;
 const spawnPoint = {x: 0, y: 0};
 
 
-/** ActionNode, the Object on the canvas which can contain one or more actions **/
+/** ActionNode, the Obj on the canvas which can contain one or more actions **/
 export default class ActionNode {
 
 
@@ -238,7 +238,7 @@ export default class ActionNode {
         this.stage.draw();
     }
 
-    /** create text Object for in the Condition**/
+    /** create text Obj for in the Condition**/
     createTextObject() {
         if (this.actionNodeText == null) {
             this.actionNodeText = "";
@@ -286,7 +286,7 @@ export default class ActionNode {
                         "type_id": 0, "attributes": {}
                     });
                     break;
-                // Finds shortest path to reach given Object.
+                // Finds shortest path to reach given Obj.
                 case 1:
                     tree.actionlist.push({
                         "type_id": 1, "attributes": {"obj": item.object.id}
@@ -300,7 +300,7 @@ export default class ActionNode {
                     });
                     break;
 
-                //Keeps moving in a straight away from Object, if wall is hit keeps increasing either x or y-value to increase Distance
+                //Keeps moving in a straight away from Obj, if wall is hit keeps increasing either x or y-value to increase Distance
                 case 4:
                     tree.actionlist.push({
                         "type_id": 4, "attributes": {"obj": item.object.id}
@@ -308,7 +308,7 @@ export default class ActionNode {
                     break;
 
 
-                //Aims at an Object. It aims according to the predicted position and bullet travel time
+                //Aims at an Obj. It aims according to the predicted position and bullet travel time
                 case 5:
                     tree.actionlist.push({
                         "type_id": 5, "attributes": {"obj": item.object.id}
@@ -397,7 +397,7 @@ export default class ActionNode {
         return {x: posX, y: posY};
     }
 
-    /** Create the rect Object for the node **/
+    /** Create the rect Obj for the node **/
     createRect() {
         this.rect = new Konva.Rect({
             x: this.position.x,

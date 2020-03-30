@@ -46,7 +46,7 @@ export default class ConditionNode {
     //The Condition which is in this ConditionNode
     _condition;
 
-    //The text which corresponds to the Condition and its Konva Object
+    //The text which corresponds to the Condition and its Konva Obj
     _conditionText;
     _conditionTextObj;
 
@@ -262,7 +262,7 @@ export default class ConditionNode {
 
         //case Condition:
         switch (this.condition.id) {
-            //Distance to nearest Object greater than Distance
+            //Distance to nearest Obj greater than Distance
             case 1:
                 tree.condition = {
                     "type_id": 1,
@@ -277,7 +277,7 @@ export default class ConditionNode {
 
                 return tree;
 
-            //Object visible
+            //Obj visible
             case 2:
                 tree.condition = {
                     "type_id": 2,
@@ -289,7 +289,7 @@ export default class ConditionNode {
                 return tree;
 
 
-            //aimed at Object
+            //aimed at Obj
             case 3:
                 tree.condition = {
                     "type_id": 3,
@@ -302,7 +302,7 @@ export default class ConditionNode {
                 return tree;
 
 
-            // if Object exists
+            // if Obj exists
             case 4:
                 tree.condition = {
                     "type_id": 4,

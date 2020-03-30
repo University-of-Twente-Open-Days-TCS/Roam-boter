@@ -51,7 +51,7 @@ export default class StartNode {
         });
     }
 
-    /** Create the rect Object for the node **/
+    /** Create the rect Obj for the node **/
     createRect() {
         this.rect = new Konva.Rect({
             x: 0,
@@ -66,7 +66,7 @@ export default class StartNode {
         this.group.add(this.rect);
     }
 
-    /** Create the text Object for the node with contents 'Start' **/
+    /** Create the text Obj for the node with contents 'Start' **/
     createText() {
         this.text = new Konva.Text({
             x: 20,
