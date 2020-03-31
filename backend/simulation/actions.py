@@ -72,7 +72,7 @@ def move_from_nearest_object(tank, state, obj):
     obj = Object(obj)
     paths = filter_objects(tank, state, obj)
     nearest_path = closest_object_in_paths(tank.get_pos(), paths)
-    if nearest_path is not None and len(nearest_path) > 0:
+    if nearest_path is not None:
         move_from_position(state, tank, nearest_path.next_node(tank.get_pos()))
 
 
@@ -82,7 +82,7 @@ def aim_to_nearest_object(tank, state, obj):
     paths = filter_objects(tank, state, obj)
 
     nearest_path = closest_object_in_paths(tank.get_pos(), paths)
-    if nearest_path is not None and len(nearest_path) > 0:
+    if nearest_path is not None:
         aim_to_position(state, tank, nearest_path.next_node(tank.get_pos()))
 
 

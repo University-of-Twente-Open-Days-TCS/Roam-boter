@@ -29,7 +29,7 @@ def filter_objects(tank, state, obj):
             paths.append(Path([b.get_pos()]))
 
     elif obj.isSpawn():
-        for s in state.level.get_path_to_object(tank, Object.SPAWN):
+        for s in state.level.get_paths_to_object(tank, Object.SPAWN):
             paths.append(s)
     else:
         for p in state.level.get_paths_to_object(tank, obj):
