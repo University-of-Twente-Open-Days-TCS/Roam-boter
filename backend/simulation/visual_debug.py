@@ -5,7 +5,7 @@ import math
 import sys, os
 
 # Importing simulation imported this module, which resulted in the imgaes being loaded. 
-VISUAL_DEBUG = True
+VISUAL_DEBUG = False
 
 screen = None
 
