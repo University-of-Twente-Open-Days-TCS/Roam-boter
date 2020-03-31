@@ -47,7 +47,7 @@ def scout(tank, state):
 
         # Upon first scout action, a node has not yet been selected.
         if tank.scout_target is None:
-            goal = closest_object_in_paths(tank, paths)
+            goal = closest_object_in_paths(tank.get_pos(), paths)
             tank.scout_target = (goal[-1], state.level.scout_nodes.index(goal[-1]))
         else:
             # Select next scout node.
@@ -71,7 +71,7 @@ def patrol(tank, state):
 def move_from_nearest_object(tank, state, obj):
     obj = Object(obj)
     paths = filter_objects(tank, state, obj)
-    nearest_path = closest_object_in_paths(tank, paths)
+    nearest_path = closest_object_in_paths(tank.get_pos(), paths)
     if nearest_path is not None and len(nearest_path) > 0:
         move_from_position(state, tank, nearest_path.next_node(tank.get_pos()))
 
@@ -81,7 +81,7 @@ def aim_to_nearest_object(tank, state, obj):
     obj = Object(obj)
     paths = filter_objects(tank, state, obj)
 
-    nearest_path = closest_object_in_paths(tank, paths)
+    nearest_path = closest_object_in_paths(tank.get_pos(), paths)
     if nearest_path is not None and len(nearest_path) > 0:
         aim_to_position(state, tank, nearest_path.next_node(tank.get_pos()))
 
