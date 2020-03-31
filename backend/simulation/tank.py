@@ -8,6 +8,8 @@ import numpy
 TANK_TURN_SPEED = 2.5
 TURRET_TURN_SPEED = 3
 
+VISION_RANGE = 30
+
 
 class Tank:
     x = 0
@@ -217,7 +219,7 @@ class Tank:
 
             angle = math.degrees(math.acos(inproduct))
 
-            if angle < 30 or angle > 330:
+            if angle < VISION_RANGE or angle > 360 - VISION_RANGE:
                 if state.level.direct_line_of_sight(self.get_pos(), other.get_pos()):
                     visible_tanks.append(other)
 
@@ -251,7 +253,7 @@ class Tank:
 
             angle = math.degrees(math.acos(inproduct))
 
-            if angle < 30 or angle > 330:
+            if angle < VISION_RANGE or angle > 360 - VISION_RANGE:
                 if state.level.direct_line_of_sight(self.get_pos(), other.get_pos()):
                     visible_bullets.append(other)
 
