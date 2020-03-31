@@ -7,15 +7,15 @@ import Seconds from "./Seconds.js";
 
 //Lists of possible attributes of an Action
 const objectList = [
-    new Obj(1),
+    // new Obj(1),
     new Obj(2),
-    new Obj(3),
+    // new Obj(3),
     new Obj(4),
     new Obj(5),
     new Obj(6),
     new Obj(7),
     new Obj(8),
-    new Obj(9),
+    // new Obj(9),
     new Obj(10)
 ];
 
@@ -225,9 +225,9 @@ export default class Action {
                 return "Do nothing";
             case 1:
                 if (this.object != null) {
-                    return "Go to nearest\n" + this.object;
+                    return "Move to nearest\n" + this.object;
                 } else {
-                    return "Go to nearest \n <Object>";
+                    return "Move to nearest \n <Object>";
                 }
             case 2:
                 return "Scout";
@@ -239,9 +239,9 @@ export default class Action {
                 }
             case 5:
                 if (this.object != null) {
-                    return "Aim to nearest\n" + this.object;
+                    return "Aim at nearest\n" + this.object;
                 } else {
-                    return "Aim to nearest \n <Object>"
+                    return "Aim at nearest \n <Object>"
                 }
             case 6:
                 if (this.winddir != null) {

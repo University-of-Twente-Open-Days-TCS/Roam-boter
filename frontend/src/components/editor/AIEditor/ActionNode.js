@@ -33,7 +33,7 @@ export default class ActionNode {
     //The ID's of which actions are in a certain category
     movementActions = [1, 2, 4];
     containsMovement = false;
-    aimActions = [5, 6, 7, 8, 9];
+    aimActions = [5, 8, 9];
     containsAim = false;
     fireActions = [10, 11];
     containsFire = false;
