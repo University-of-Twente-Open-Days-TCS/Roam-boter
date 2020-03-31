@@ -47,8 +47,8 @@ def scout(tank, state):
 
         # Upon first scout action, a node has not yet been selected.
         if tank.scout_target is None:
-            goal = closest_object_in_paths(tank.get_pos(), paths)
-            tank.scout_target = (goal[-1], state.level.scout_nodes.index(goal[-1]))
+            p = closest_object_in_paths(tank.get_pos(), paths)
+            tank.scout_target = (p.goal(), state.level.scout_nodes.index(p.goal()))
         else:
             # Select next scout node.
             current_goal, current_index = tank.scout_target
@@ -59,7 +59,7 @@ def scout(tank, state):
     for p in paths:
         if p.goal() == tank.scout_target[0]:
             tank.path = p
-            move_to_position(state, tank, p[0])
+            move_to_position(state, tank, p.next_node(tank.get_pos()))
 
 
 
