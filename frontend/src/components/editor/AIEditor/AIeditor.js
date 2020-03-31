@@ -1,24 +1,24 @@
-import actionNode from "./actionNode.js";
-import conditionNode from "./conditionNode.js";
-import startNode from "./startNode.js";
+import ActionNode from "./ActionNode.js";
+import ConditionNode from "./ConditionNode.js";
+import StartNode from "./StartNode.js";
 import Konva from "konva"
-import distance from "./distance.js";
-import object from "./object.js";
-import label from "./label.js";
-import health from "./health.js";
-import winddir from "./winddir.js";
-import reldir from "./reldir.js";
-import speed from "./speed.js";
-import condition from "./condition.js";
-import action from "./action.js";
-import arrow from "./arrow.js";
-import seconds from "./seconds.js";
+import Distance from "./Distance.js";
+import Obj from "./Obj.js";
+import Label from "./Label.js";
+import Health from "./Health.js";
+import WindDir from "./WindDir.js";
+import RelDir from "./RelDir.js";
+import Speed from "./Speed.js";
+import Condition from "./Condition.js";
+import Action from "./Action.js";
+import Arrow from "./Arrow.js";
+import Seconds from "./Seconds.js";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 import JSONValidationError from "../Errors/JSONValidationError.js";
 
 /** AI Canvas, the stage with which the user interacts or watches a replay on **/
-export default class aiCanvas {
+export default class AiCanvas {
 
     //Stage dimensions
 
@@ -28,7 +28,7 @@ export default class aiCanvas {
     _startNode;
     _isReplay;
 
-    /** Created a stage, multiple layers and a startNode, gets the container ID where it needs to be placed in,
+    /** Created a stage, multiple layers and a StartNode, gets the container ID where it needs to be placed in,
      * and a boolean whether this is part of a replay next to a simulation (no interaction) **/
     constructor(container, isReplay) {
         this.isReplay = isReplay;
@@ -44,7 +44,7 @@ export default class aiCanvas {
         this.dragging = false;
 
         //Create the startnode and canvas
-        this.startNode = new startNode(this.stage, this.layer, this);
+        this.startNode = new StartNode(this.stage, this.layer, this);
         this.layer.add(this.startNode.group);
         this.stage.add(this.stage.staticlayer);
         this.stage.add(this.layer);
@@ -320,64 +320,64 @@ export default class aiCanvas {
     /** Create a new node to which this will point. **/
     treeify(nodeJson, startNodePos) {
 
-        //If the new childNode is a condition, create it with the given attributes and on the given position
+        //If the new childNode is a Condition, create it with the given attributes and on the given position
         let newOwnNode;
         if (nodeJson.condition != null) {
             switch (nodeJson.condition.type_id) {
                 case 1:
-                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(1,
-                        new distance(nodeJson.condition.attributes.distance),
-                        new object(nodeJson.condition.attributes.obj)),
+                    newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(1,
+                        new Distance(nodeJson.condition.attributes.distance),
+                        new Obj(nodeJson.condition.attributes.obj)),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 2:
-                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(2,
+                    newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(2,
                         null,
-                        new object(nodeJson.condition.attributes.obj)),
+                        new Obj(nodeJson.condition.attributes.obj)),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 3:
-                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(3,
+                    newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(3,
                         null,
-                        new object(nodeJson.condition.attributes.obj)),
+                        new Obj(nodeJson.condition.attributes.obj)),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 4:
-                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(4,
+                    newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(4,
                         null,
-                        new object(nodeJson.condition.attributes.obj)),
+                        new Obj(nodeJson.condition.attributes.obj)),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 5:
-                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(5),
+                    newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(5),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 6:
-                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(6,
-                        null, null, new label(nodeJson.condition.attributes.label)),
+                    newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(6,
+                        null, null, new Label(nodeJson.condition.attributes.label)),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
 
                     return newOwnNode;
                 case 7:
-                    newOwnNode = new conditionNode(this.stage, this.layer, this, new condition(7,
-                        null, null, null, new health(nodeJson.condition.attributes.health)),
+                    newOwnNode = new ConditionNode(this.stage, this.layer, this, new Condition(7,
+                        null, null, null, new Health(nodeJson.condition.attributes.health)),
                         this.addPosAAndPosB(nodeJson.condition.position, startNodePos));
 
                     this.createChildren(newOwnNode, nodeJson.condition, startNodePos);
@@ -387,51 +387,54 @@ export default class aiCanvas {
                     throw new JSONValidationError("Condition has faulty ID!");
             }
         } else if (nodeJson.actionblock != null) {
-            //Otherwise if new childNode is an action, first construct the actionlist
+            //Otherwise if new childNode is an Action, first construct the actionlist
             let newActionList = [];
             nodeJson.actionblock.actionlist.forEach(actionItem => {
                 switch (actionItem.type_id) {
+                    case 0:
+                        newActionList = newActionList.concat(new Action(0));
+                        break;
                     case 1:
-                        newActionList = newActionList.concat(new action(1, new object(actionItem.attributes.obj)));
+                        newActionList = newActionList.concat(new Action(1, new Obj(actionItem.attributes.obj)));
                         break;
                     case 2:
-                        newActionList = newActionList.concat(new action(2));
+                        newActionList = newActionList.concat(new Action(2));
                         break;
                     case 3:
-                        newActionList = newActionList.concat(new action(3, new object(actionItem.attributes.obj)));
+                        newActionList = newActionList.concat(new Action(3, new Obj(actionItem.attributes.obj)));
                         break;
                     case 4:
-                        newActionList = newActionList.concat(new action(4, new object(actionItem.attributes.obj)));
+                        newActionList = newActionList.concat(new Action(4, new Obj(actionItem.attributes.obj)));
                         break;
                     case 5:
-                        newActionList = newActionList.concat(new action(5, new object(actionItem.attributes.obj)));
+                        newActionList = newActionList.concat(new Action(5, new Obj(actionItem.attributes.obj)));
                         break;
                     case 6:
-                        newActionList = newActionList.concat(new action(6, null, new winddir(actionItem.attributes.winddir)));
+                        newActionList = newActionList.concat(new Action(6, null, new WindDir(actionItem.attributes.winddir)));
                         break;
                     case 7:
-                        newActionList = newActionList.concat(new action(7, null, null, new reldir(actionItem.attributes.reldir)));
+                        newActionList = newActionList.concat(new Action(7, null, null, new RelDir(actionItem.attributes.reldir)));
                         break;
                     case 8:
-                        newActionList = newActionList.concat(new action(8, null, null, null, new speed(actionItem.attributes.speed)));
+                        newActionList = newActionList.concat(new Action(8, null, null, null, new Speed(actionItem.attributes.speed)));
                         break;
                     case 9:
-                        newActionList = newActionList.concat(new action(9, null, null, null, new speed(actionItem.attributes.speed)));
+                        newActionList = newActionList.concat(new Action(9, null, null, null, new Speed(actionItem.attributes.speed)));
                         break;
                     case 10:
-                        newActionList = newActionList.concat(new action(10));
+                        newActionList = newActionList.concat(new Action(10));
                         break;
                     case 11:
-                        newActionList = newActionList.concat(new action(11));
+                        newActionList = newActionList.concat(new Action(11));
                         break;
                     case 12:
-                        newActionList = newActionList.concat(new action(12, null, null, null, null, new label(actionItem.attributes.label)));
+                        newActionList = newActionList.concat(new Action(12, null, null, null, null, new Label(actionItem.attributes.label)));
                         break;
                     case 13:
-                        newActionList = newActionList.concat(new action(13, null, null, null, null, new label(actionItem.attributes.label)));
+                        newActionList = newActionList.concat(new Action(13, null, null, null, null, new Label(actionItem.attributes.label)));
                         break;
                     case 14:
-                        newActionList = newActionList.concat(new action(14, null, null, null, null, new label(actionItem.attributes.label), new seconds(actionItem.attributes.seconds)));
+                        newActionList = newActionList.concat(new Action(14, null, null, null, null, new Label(actionItem.attributes.label), new Seconds(actionItem.attributes.seconds)));
                         break;
                     default:
                         throw new JSONValidationError("Action has faulty ID!");
@@ -440,15 +443,15 @@ export default class aiCanvas {
 
             });
             //And then create the new ActionNode with the actionlist and on the given position
-            return new actionNode(this.stage, this.layer, this, newActionList, this.addPosAAndPosB(nodeJson.actionblock.position, startNodePos));
+            return new ActionNode(this.stage, this.layer, this, newActionList, this.addPosAAndPosB(nodeJson.actionblock.position, startNodePos));
         } else {
-            throw new JSONValidationError("Did not get find action or condition in JSON!");
+            throw new JSONValidationError("Did not find Action or Condition in JSON!");
         }
     }
 
-    /** Draw an arrow from the false/true-circle to the newly created node **/
+    /** Draw an Arrow from the false/true-circle to the newly created node **/
     drawArrowFromJson(startNode, destNode, trueCondition) {
-        new arrow(startNode, destNode, trueCondition, this.stage, this.layer);
+        new Arrow(startNode, destNode, trueCondition, this.stage, this.layer);
     }
 
     /** Create childNodes, draw them on canvas and draw arrows to them **/
@@ -480,13 +483,13 @@ export default class aiCanvas {
 
     /** Add a blank ConditionNode to the canvas **/
     addCondition() {
-        let newCondition = new conditionNode(this.stage, this.layer, this);
+        let newCondition = new ConditionNode(this.stage, this.layer, this);
         return this.addNode(newCondition);
     }
 
     /** Add a blank ActionNode to the canvas **/
     addActionNode() {
-        let newActionNode = new actionNode(this.stage, this.layer, this);
+        let newActionNode = new ActionNode(this.stage, this.layer, this);
         return this.addNode(newActionNode);
     }
 

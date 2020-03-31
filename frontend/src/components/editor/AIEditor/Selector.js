@@ -1,6 +1,6 @@
 import Konva from "konva"
 
-export default class selector {
+export default class Selector {
 
     _stage;
     _layer;

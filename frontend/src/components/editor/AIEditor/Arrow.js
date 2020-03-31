@@ -1,19 +1,19 @@
 import Konva from "konva"
 
 
-/** The connection between two conditions or a condition and an action **/
-export default class arrow {
+/** The connection between two conditions or a Condition and an Action **/
+export default class Arrow {
 
-    //The Konva arrow object
+    //The Konva Arrow Obj
     _arrowline;
 
-    //The source/origin group of nodes (condition)
+    //The source/origin group of nodes (Condition)
     _src;
 
-    //The destination group of nodes (condition/action)
+    //The destination group of nodes (Condition/Action)
     _dest;
 
-    //Whether the arrow sprouts from a true or false condition
+    //Whether the Arrow sprouts from a true or false Condition
     _isTrue;
 
     //The starting coordinates on the canvas (absolute)//
@@ -60,7 +60,7 @@ export default class arrow {
     }
 
 
-    /** Move the arrow and update the canvas **/
+    /** Move the Arrow and update the canvas **/
     update() {
         if (this.isTrue) {
             this.startpos = this.src.getTrueDotPosition();
@@ -74,7 +74,7 @@ export default class arrow {
 
     }
 
-    /** Remove the arrow from the canvas and set the corresponding values at the src&dest nodes to null **/
+    /** Remove the Arrow from the canvas and set the corresponding values at the src&dest nodes to null **/
     delete() {
         if (this.isTrue) {
             this.src.trueArrow = null;

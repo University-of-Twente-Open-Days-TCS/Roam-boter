@@ -1,4 +1,4 @@
-import AICanvas from '../editor/AIEditor/ai_editor.js'
+import AICanvas from '../editor/AIEditor/AIeditor.js'
 
 function arraysMatch (arr1, arr2) {
     if(arr1.length !== arr2.length) {

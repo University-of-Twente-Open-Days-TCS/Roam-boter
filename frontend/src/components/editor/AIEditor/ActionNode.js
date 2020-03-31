@@ -1,5 +1,5 @@
-import popup from "./popup.js"
-import action from "./action.js";
+import Popup from "./Popup.js"
+import Action from "./Action.js";
 import Konva from "konva"
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
@@ -8,7 +8,7 @@ import ErrorCircle from "../Errors/ErrorCircle.js";
 const blockHeight = 40;
 const blockWidth = 100;
 
-//The circle radius of the inputcircle, and the hitbox (where the arrow will snap to this ActionNode)
+//The circle radius of the inputcircle, and the hitbox (where the Arrow will snap to this ActionNode)
 const circle_radius = 10;
 const hitboxCircleRadius = 25;
 
@@ -16,8 +16,8 @@ const hitboxCircleRadius = 25;
 const spawnPoint = {x: 0, y: 0};
 
 
-/** ActionNode, the object on the canvas which can contain one or more actions **/
-export default class actionNode {
+/** ActionNode, the Obj on the canvas which can contain one or more actions **/
+export default class ActionNode {
 
 
     _actionList;
@@ -52,7 +52,7 @@ export default class actionNode {
         this.position = position;
         this.actionList = actionList;
 
-        //Check every action in the list to flag which are still possible to add
+        //Check every Action in the list to flag which are still possible to add
         this.actionList.forEach(action => {
             if (this.movementActions.includes(action.id)) {
                 this.containsMovement = true;
@@ -117,9 +117,9 @@ export default class actionNode {
         });
 
 
-        //Popup to add an action to the actionList within the node
+        //Popup to add an Action to the actionList within the node
         this.group.on("click tap", () => {
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generatePossibleActionsList(), this.addAction.bind(this), "select an action").group);
+            this.stage.staticlayer.add(new Popup(this.stage, this.stage.staticlayer, this.generatePossibleActionsList(), this.addAction.bind(this), "select an Action").group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -127,7 +127,7 @@ export default class actionNode {
         //Set the dimensions and hitboxes of this node according to its text contents
         this.setassetsizes();
 
-        //Helper for popup, bind every action to a method which adds it to this node
+        //Helper for Popup, bind every Action to a method which adds it to this node
         this.remainingOptions = [{options: this.generatePossibleActionsList(), f: (actn) => this.addAction(actn)}];
 
         this.stage.draw();
@@ -138,7 +138,7 @@ export default class actionNode {
     }
 
     toString() {
-        return "action";
+        return "Action";
     }
 
     /** Loop over the ActionList, create the text  including newlines for the Node **/
@@ -161,15 +161,15 @@ export default class actionNode {
 
     }
 
-    /** Adds new action **/
+    /** Adds new Action **/
     addAction(action) {
         this.actionList = this.actionList.concat(action);
 
-        //Fill the actionNode with the newly added info
+        //Fill the ActionNode with the newly added info
         this.actionNodeText = this.createActionNodeText();
         this.actionNodeTextObj.text(this.actionNodeText);
 
-        //Check what type of action was added and adjust booleans accordingly
+        //Check what type of Action was added and adjust booleans accordingly
         if (this.movementActions.includes(action.id)) {
             this.containsMovement = true;
         } else if (this.fireActions.includes(action.id)) {
@@ -182,7 +182,7 @@ export default class actionNode {
         this.inputCircleHitbox.moveToTop();
     }
 
-    /** Returns the actions which can still be added to this actionNode **/
+    /** Returns the actions which can still be added to this ActionNode **/
     generatePossibleActionsList() {
 
 
@@ -190,30 +190,30 @@ export default class actionNode {
         let possibleActionsList = [
 
             //Do Nothing may be added indefinitely
-            new action(0),
+            new Action(0),
         ];
 
         if (!this.containsMovement) {
             this.movementActions.forEach(movement => {
-                possibleActionsList.push(new action(movement));
+                possibleActionsList.push(new Action(movement));
             })
         }
         if (!this.containsAim) {
             this.aimActions.forEach(aim => {
-                possibleActionsList.push(new action(aim));
+                possibleActionsList.push(new Action(aim));
             })
         }
         if (!this.containsFire) {
             this.fireActions.forEach(fire => {
-                possibleActionsList.push(new action(fire));
+                possibleActionsList.push(new Action(fire));
             })
         }
 
         //labels may be added indefinitely
         possibleActionsList.push(
-            new action(12),
-            new action(13),
-            new action(14));
+            new Action(12),
+            new Action(13),
+            new Action(14));
 
 
         return possibleActionsList;
@@ -238,7 +238,7 @@ export default class actionNode {
         this.stage.draw();
     }
 
-    /** create text object for in the condition**/
+    /** create text Obj for in the Condition**/
     createTextObject() {
         if (this.actionNodeText == null) {
             this.actionNodeText = "";
@@ -260,7 +260,7 @@ export default class actionNode {
     intifyPosition = ({x, y}) => ({"x": parseInt(x), "y": parseInt(y)});
 
 
-    /** Returns the json of its action contents and position relative to the startnode, raises an error if node is
+    /** Returns the json of its Action contents and position relative to the startnode, raises an error if node is
      * not valid **/
     jsonify(startNodePos) {
         let node = this.rect;
@@ -270,11 +270,11 @@ export default class actionNode {
         //Iterate over all actions and add its json to the actionblock
         this.actionList.forEach(item => {
 
-            //Throw error if action is incomplete
+            //Throw error if Action is incomplete
 
             if (!item.isValid()) {
                 new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
-                throw new AIValidationError("An action is missing one or more attributes!");
+                throw new AIValidationError("An Action is missing one or more attributes!");
             }
 
             //case Action:
@@ -286,7 +286,7 @@ export default class actionNode {
                         "type_id": 0, "attributes": {}
                     });
                     break;
-                // Finds shortest path to reach given object.
+                // Finds shortest path to reach given Obj.
                 case 1:
                     tree.actionlist.push({
                         "type_id": 1, "attributes": {"obj": item.object.id}
@@ -300,7 +300,7 @@ export default class actionNode {
                     });
                     break;
 
-                //Keeps moving in a straight away from object, if wall is hit keeps increasing either x or y-value to increase distance
+                //Keeps moving in a straight away from Obj, if wall is hit keeps increasing either x or y-value to increase Distance
                 case 4:
                     tree.actionlist.push({
                         "type_id": 4, "attributes": {"obj": item.object.id}
@@ -308,7 +308,7 @@ export default class actionNode {
                     break;
 
 
-                //Aims at an object. It aims according to the predicted position and bullet travel time
+                //Aims at an Obj. It aims according to the predicted position and bullet travel time
                 case 5:
                     tree.actionlist.push({
                         "type_id": 5, "attributes": {"obj": item.object.id}
@@ -359,19 +359,19 @@ export default class actionNode {
                     });
                     break;
 
-                //set label
+                //set Label
                 case 12:
                     tree.actionlist.push({
                         "type_id": 12, "attributes": {"label": item.label.id}
                     });
                     break;
-                //unset label
+                //unset Label
                 case 13:
                     tree.actionlist.push({
                         "type_id": 13, "attributes": {"label": item.label.id}
                     });
                     break;
-                //set label for seconds
+                //set Label for Seconds
                 case 14:
                     tree.actionlist.push({
                         "type_id": 14, "attributes": {"label": item.label.id, "seconds": item.seconds.id}
@@ -397,7 +397,7 @@ export default class actionNode {
         return {x: posX, y: posY};
     }
 
-    /** Create the rect object for the node **/
+    /** Create the rect Obj for the node **/
     createRect() {
         this.rect = new Konva.Rect({
             x: this.position.x,
@@ -437,7 +437,7 @@ export default class actionNode {
         this.group.add(this.inputCircleHitbox);
     }
 
-    /** Get position of the inputdot, to draw an arrow to **/
+    /** Get position of the inputdot, to draw an Arrow to **/
     getInputDotPosition() {
         return [this.inputCircle.x() + this.group.x(), this.inputCircle.y() + this.group.y()];
     }
@@ -449,7 +449,7 @@ export default class actionNode {
         }
     }
 
-    /** Remove node and its ingoing arrow **/
+    /** Remove node and its ingoing Arrow **/
     remove() {
         if (this.inputArrow != null) {
             this.inputArrow.delete();
