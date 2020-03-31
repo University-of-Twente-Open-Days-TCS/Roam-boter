@@ -1,8 +1,8 @@
 import Konva from "konva"
-import selector from "./selector.js";
+import Selector from "./Selector.js";
 
 
-export default class popup {
+export default class Popup {
 
     _stage;
     _layer;
@@ -42,7 +42,7 @@ export default class popup {
             this.textGroup.destroy();
         }
 
-        let boldWords = ["<object>", "<distance>", "<amount>", "<label>", "<speed>", "<reldir>", "<winddir>", "<seconds>"];
+        let boldWords = ["<Object>", "<Distance>", "<Amount>", "<Label>", "<Speed>", "<RelDir>", "<WindDir>", "<Seconds>"];
         let words = this.text.split(" ");
         let textGroup = new Konva.Group();
         let currentX = 0;
@@ -81,7 +81,7 @@ export default class popup {
         if (this.selector !== null) {
             this.selector.group.destroy();
         }
-        this.selector = new selector(this.stage, this.layer, options, (selection) => {
+        this.selector = new Selector(this.stage, this.layer, options, (selection) => {
             if (typeof selection.getRemainingOptions !== "undefined") {
                 this.getNextOption(selection, f);
             } else {
@@ -93,7 +93,7 @@ export default class popup {
         this.layer.draw();
     }
 
-    //updates the popup to be the correct size
+    //updates the Popup to be the correct size
     updatePopupGroup() {
         let margin = 10;
         this.rect.width(Math.max(this.selector.width, this.textWidth) + margin * 2);
@@ -108,7 +108,7 @@ export default class popup {
         let ratioY = this.rect.height() / this.stage.height();
         let maxRatio = Math.max(ratioX, ratioY);
         let scale = 1;
-        //if the  popup is larger than the stage it will scale down
+        //if the  Popup is larger than the stage it will scale down
         if (maxRatio > 0.9) {
             scale = 1 / maxRatio * 0.9;
         }
@@ -158,7 +158,7 @@ export default class popup {
     }
 
 
-    //Close popup, if an attribute has been given
+    //Close Popup, if an attribute has been given
     closePopup(attribute) {
         this.layer.moveToBottom();
         this.exitRect.destroy();

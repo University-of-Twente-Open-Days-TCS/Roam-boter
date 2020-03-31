@@ -18,8 +18,15 @@ class ReplayCanvas {
     ]
 
     constructor(canvasContainer, gameData) {
+        /**
+         * Initializes the canvas
+         * @param canvasContainer DOM element to use as container
+         * @param gameData frames of the simulation.
+         */
+
         this.frame = 0
-        this.draw = this.draw.bind(this)
+
+        // Initialize images
 
         this.tankTurretSprites = []
         this.tankSprites = []
@@ -38,19 +45,25 @@ class ReplayCanvas {
         this.canvasContainer = canvasContainer
         this.gameData = gameData
 
-
-
         let canvas = document.createElement('canvas')
+        canvas.style.position = 'absolute'
+        canvas.style.zIndex = 2
+
+        // offscreen canvas for level. Improves performance
+        let levelCanvas = document.createElement('canvas')
+        levelCanvas.style.zIndex = 1
+
         this.canvas = canvas
+        this.levelCanvas = levelCanvas
+
+
         this.updateSize()
+
         // append canvas to div
         canvasContainer.appendChild(canvas)
+        canvasContainer.appendChild(levelCanvas)
 
         this.ctx2d = this.canvas.getContext("2d");
-
-        //bind functions
-        this.start = this.start.bind(this)
-        this.draw = this.draw.bind(this)
     }
 
     getCanvasSize(){
@@ -65,6 +78,7 @@ class ReplayCanvas {
 
         let aspectRatio = levelWidth / levelHeight
         let height = width / aspectRatio
+
         return {width, height}
     }
 
@@ -73,6 +87,19 @@ class ReplayCanvas {
         let {width, height} = this.getCanvasSize()
         this.canvas.width = width
         this.canvas.height = height
+        this.levelCanvas.width = width
+        this.levelCanvas.height = height
+
+        // update size constants
+        let gameData = this.gameData
+        this.WIDTH = width
+        this.HEIGHT = height
+        this.CELLSIZE_X = height / gameData.level.length;
+        this.CELLSIZE_Y = width / gameData.level[0].length;
+        this.SCALING = width / ( gameData.level[0].length * 10 );
+
+        // redraw the level
+        this.drawLevel()
     }
 
     setFrame(frame) {
@@ -83,35 +110,16 @@ class ReplayCanvas {
         return this.gameData.frames.length
     }
 
-    start() {
-        this.draw()
-    }
+    drawLevel() {
+        /**
+         * Draws the level to a seperate canvas
+         * Since level stays constant this canvas does not need to be redrawn.
+         */
+        var ctx = this.levelCanvas.getContext('2d')
+        let blockColors = this.BLOCK_COLORS;
 
-    draw() {
-        let frame = this.frame
-        frame = frame % this.gameData.frames.length
-
-        var ctx = this.ctx2d;
-        var blockColors = this.BLOCK_COLORS;
-        var tankSprites = this.tankSprites;
-        var turretSprites = this.tankTurretSprites;
-        var healthPackSprite = this.healthPackSprite;
-        var width = this.canvas.width;
-        var height = this.canvas.height;
-
-        var cellsize_y = height / this.gameData.level.length;
-        var cellsize_x = width / this.gameData.level[0].length;
-
-        var scaling = width / (this.gameData.level[0].length * 10);
-
-        function drawImage(image, x, y, scale, rotation) {
-            ctx.setTransform(scale, 0, 0, scale, x, y); // sets scale and origin
-            ctx.rotate(rotation * (Math.PI / 180));
-            ctx.drawImage(image, -image.width / 2, -image.height / 2);
-        }
-
-
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        let cellsize_x = this.CELLSIZE_X
+        let cellsize_y = this.CELLSIZE_Y
 
         this.gameData.level.forEach(function (row, y) {
             row.forEach(function (cell, x) {
@@ -119,8 +127,52 @@ class ReplayCanvas {
                 ctx.fillRect((x * cellsize_x), (y * cellsize_y), cellsize_x, cellsize_y);
             });
         });
+    }
 
-        //draw tanks
+
+    draw() {
+        let frame = this.frame
+        frame = frame % this.gameData.frames.length
+
+        var ctx = this.ctx2d;
+        var tankSprites = this.tankSprites;
+        var turretSprites = this.tankTurretSprites;
+        var healthPackSprite = this.healthPackSprite;
+
+        let cellsize_x = this.CELLSIZE_X
+        let cellsize_y = this.CELLSIZE_Y
+        let scaling = this.SCALING
+
+        ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT)
+
+        function drawImage(image, x, y, scale, degrees) {
+            ctx.setTransform(scale, 0, 0, scale, x, y); // sets scale and origin
+            ctx.rotate(degrees * (Math.PI / 180));
+            let dx = Math.floor(-image.width / 2)   // prevent sub-pixel rendering
+            let dy = Math.floor(-image.height /2)
+            ctx.drawImage(image, dx, dy);
+        }
+
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+
+        // Draw the vision bars for each tank.
+        this.gameData.frames[frame].tanks.forEach(function (tank, index) {
+            var goal_x_1 = (tank.pos[0] * cellsize_x) + -Math.sin((tank.rotation + tank.turret_rotation - 30) * (Math.PI / 180)) * 100 * scaling;
+            var goal_y_1 = (tank.pos[1] * cellsize_y) + -Math.cos((tank.rotation + tank.turret_rotation - 30)  * (Math.PI / 180)) * 100 * scaling;
+
+            var goal_x_2 = (tank.pos[0] * cellsize_x) + -Math.sin((tank.rotation + tank.turret_rotation + 30) * (Math.PI / 180)) * 100 * scaling;
+            var goal_y_2 = (tank.pos[1] * cellsize_y) + -Math.cos((tank.rotation + tank.turret_rotation + 30)  * (Math.PI / 180)) * 100 * scaling;
+
+            ctx.beginPath();
+            ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
+            ctx.moveTo(tank.pos[0] * cellsize_x, tank.pos[1] * cellsize_y);
+            ctx.lineTo(goal_x_1, goal_y_1);
+            ctx.moveTo(tank.pos[0] * cellsize_x, tank.pos[1] * cellsize_y);
+            ctx.lineTo(goal_x_2, goal_y_2);
+            ctx.stroke();
+        });
+
         this.gameData.frames[frame].tanks.forEach(function (elem, index) {
             drawImage(tankSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
             drawImage(turretSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation - elem.turret_rotation);
@@ -146,23 +198,6 @@ class ReplayCanvas {
             ctx.fillRect(elem.pos[0] * cellsize_x - 2, elem.pos[1] * cellsize_y - 2, 4, 4);
         });
 
-        ctx.fillStyle = "#000000";
-        ctx.font = "15px Arial";
-        ctx.textAlign = "left";
-        ctx.fillText("Scores", width / (8 / 7), height / (8));
-
-
-        this.gameData.frames[frame].scores.forEach(function (score, index) {
-            ctx.font = "10px Arial";
-            ctx.fillText("Team " + index + ": " + score, width / (8 / 7), height / 8 + (10 * index + 10));
-        });
-
-
-        ctx.font = "40px Arial";
-        var team_names_string = this.gameData.team_names[0] + " VS " + this.gameData.team_names[1]
-        ctx.fillText(team_names_string, (width / 2) - (team_names_string.length * 20 / 2), height / 8);
-
-        requestAnimationFrame(this.draw)
     }
 }
 

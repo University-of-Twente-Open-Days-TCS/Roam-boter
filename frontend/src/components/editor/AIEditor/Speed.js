@@ -1,25 +1,25 @@
-/** Relative direction **/
-export default class reldir {
-        _id;
+/** Speed with which a turret turns**/
+export default class Speed {
+    _id;
 
     constructor(id) {
         this.id = id;
     }
 
-    toString(){
+    toString() {
         switch (this.id) {
             case 0:
-                return "Forward";
+                return "Slow Speed";
             case 1:
-                return "Backward";
+                return "Normal Speed";
             case 2:
-                return "Left";
-            case 3:
-                return "Right";
+                return "Fast Speed";
             default:
                 return null;
+
         }
     }
+
     get id() {
         return this._id;
     }

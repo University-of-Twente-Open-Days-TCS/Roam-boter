@@ -1,5 +1,6 @@
 import math
 from .objects import Object
+from .path import Path
 
 
 # Return the squared distance between points, this saves an expensive sqrt call and will
@@ -21,20 +22,20 @@ def filter_objects(tank, state, obj):
 
     if obj.isTank():
         for t in filter_tanks(tank, obj, tank.visible_tanks(state)):
-            paths.append([t.get_pos()])
+            paths.append(Path([t.get_pos()]))
 
     elif obj.isBullet():
         for b in filter_bullets(tank, obj, tank.visible_bullets(state)):
-            paths.append([b.get_pos()])
+            paths.append(Path([b.get_pos()]))
 
     elif obj.isSpawn():
-        for s in state.level.get_path_to_object(tank, Object.SPAWN):
+        for s in state.level.get_paths_to_object(tank, Object.SPAWN):
             paths.append(s)
     else:
         for p in state.level.get_paths_to_object(tank, obj):
             # Only show paths to ready health packs.
             if obj == Object.HEAL:
-                if state.level.health_pack_ready(state, p[-1]):
+                if state.level.health_pack_ready(state, p.goal()):
                     paths.append(p)
             else:
                 paths.append(p)
@@ -42,11 +43,11 @@ def filter_objects(tank, state, obj):
 
 
 # Closest object based on path lengths.
-def closest_object_in_paths(tank, paths):
+def closest_object_in_paths(pos, paths):
     closest = None
     closest_dist = float('inf')
     for p in paths:
-        d = path_length(p)
+        d = p.length(pos)
         if d < closest_dist:
             closest_dist = d
             closest = p
@@ -67,12 +68,6 @@ def move_to_position(state, tank, goal):
         dy = (y2 - y1) / distance * tank.speed
 
     ndx, ndy = dx, dy
-
-    # if not tank.check_collision(state, dx=dx):
-    #     ndx = dx
-    #
-    # if not tank.check_collision(state, dx=ndx, dy=dy):
-    #     ndy = dy
 
     goal_angle = angle_tank_towards_position(state, tank, (ndx, ndy))
     angle_difference = ((goal_angle % 360) - (tank.get_rotation() % 360)) % 360
@@ -132,17 +127,6 @@ def aim_to_position(state, tank, goal):
     else:
         angle_towards_goal = math.degrees(math.atan2(-dx, -dy))
     tank.rotate_turret_towards(angle_towards_goal - tank.get_rotation())
-
-
-# Calculate the length of a given path
-def path_length(path):
-    if len(path) <= 1:
-        return 0.0
-
-    total = 0.0
-    for i in range(1, len(path)):
-        total += math.sqrt(distance_squared(path[i-1], path[i]))
-    return total
 
 
 # filter between friendly, enemy and all tanks.

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useImperativeHandle, useRef, useState } from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -7,8 +7,6 @@ import IconButton from '@material-ui/core/IconButton'
 
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
-
-const sliderMax = 10000
 
 const useStyles = makeStyles(theme =>({
     root: {
@@ -21,32 +19,38 @@ const useStyles = makeStyles(theme =>({
         alignItems: 'center',
         width: '80%'
     },
-    slider: {
-    
-    }
 }))
 
 
-const ReplayControls = props => {
+const ReplayControls = React.forwardRef((props, ref) => {
     let classes = useStyles()
 
-    let { handleSlideChange, handlePlayButtonChange, playing, progress} = props
+    const sliderRef = useRef()
+    const [progress, setProgress] = useState(0)
 
-    const handleChange = (event, newValue) => {
-        handleSlideChange(event, newValue)
-    }
+    let { handleSlideChange, handlePlayButtonChange, playing, sliderMax} = props
+
+    useImperativeHandle(ref, () => ({
+        setSliderProgress: progress => {
+            /**
+             * Sets the progress sliders' position
+             * @param progress position to set slider
+             * This imperative handle allows for parents to control when this component rerenders.
+             */
+            setProgress(progress)
+        }
+    }))
     
     let playButton = (playing ? 
             <PauseIcon fontSize='default'/>
         : 
             <PlayArrowIcon fontSize='default'/> 
             )
-
     
     return (
         <div className={classes.root}>
             <div className={classes.sliderWrapper}>
-                <Slider value={progress} onChange={handleChange} min={0} max={sliderMax} aria-labelledby="continuous-slider" className={classes.slider}/>
+                <Slider ref={sliderRef} value={progress} onChange={handleSlideChange} min={0} max={sliderMax} aria-labelledby="continuous-slider" className={classes.slider}/>
             </div>
             <span style={{marginLeft: '0.5rem'}}></span>
             <IconButton onClick={handlePlayButtonChange} color="primary">
@@ -54,7 +58,7 @@ const ReplayControls = props => {
             </IconButton>
         </div>
     )
-}
+})
 
 
 export default ReplayControls

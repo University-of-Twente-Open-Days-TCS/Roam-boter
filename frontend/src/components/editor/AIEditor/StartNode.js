@@ -1,8 +1,8 @@
-import arrow from "./arrow.js";
+import Arrow from "./Arrow.js";
 import Konva from "konva"
-import popup from "./popup.js";
-import actionNode from "./actionNode.js";
-import conditionNode from "./conditionNode.js";
+import Popup from "./Popup.js";
+import ActionNode from "./ActionNode.js";
+import ConditionNode from "./ConditionNode.js";
 
 //The default dimensions of this node
 const blockHeight = 40;
@@ -13,7 +13,7 @@ const circle_radius = 10;
 const hitboxCircleRadius = 25;
 
 /** Startnode, the top of the decision tree, has one outgoing circle **/
-export default class startNode {
+export default class StartNode {
 
     arrow;
 
@@ -28,7 +28,6 @@ export default class startNode {
 
     /** Create the startnode on the given stage, layer and canvas **/
     constructor(stage, layer, canvas) {
-        //    bla insert shape and a point which can be dragged to a condition/action
         this.canvas = canvas;
         this.stage = stage;
         this.layer = layer;
@@ -52,7 +51,7 @@ export default class startNode {
         });
     }
 
-    /** Create the rect object for the node **/
+    /** Create the rect Obj for the node **/
     createRect() {
         this.rect = new Konva.Rect({
             x: 0,
@@ -67,7 +66,7 @@ export default class startNode {
         this.group.add(this.rect);
     }
 
-    /** Create the text object for the node with contents 'Start' **/
+    /** Create the text Obj for the node with contents 'Start' **/
     createText() {
         this.text = new Konva.Text({
             x: 20,
@@ -116,7 +115,7 @@ export default class startNode {
 
         let canvas = this.canvas;
 
-        //when the invisible circle starts to be dragged create a new temporary arrow
+        //when the invisible circle starts to be dragged create a new temporary Arrow
         this.dragCircle.on("dragstart", function () {
             this.tempX = this.x() + node.group.x();
             this.tempY = this.y() + node.group.y();
@@ -130,7 +129,7 @@ export default class startNode {
                 fill: "black"
             });
 
-            //delete any existing arrow
+            //delete any existing Arrow
             if (node.trueArrow != null) {
                 node.trueArrow.delete();
             }
@@ -138,7 +137,7 @@ export default class startNode {
             node.layer.add(this.tempArrow);
         });
 
-        //update the temporary arrow
+        //update the temporary Arrow
         this.dragCircle.on("dragmove", function () {
             canvas.dragging = true;
             //this is to offset the position of the stage
@@ -148,7 +147,7 @@ export default class startNode {
         });
         let g = this.group;
 
-        //when the drag has ended return the invisible circle to its original position, remove the temporary arrow and create a new connection between nodes if applicable
+        //when the drag has ended return the invisible circle to its original position, remove the temporary Arrow and create a new connection between nodes if applicable
         this.dragCircle.on("dragend", function () {
             let touchPos = node.stage.getPointerPosition();
             let intersect = node.layer.getIntersection(touchPos);
@@ -157,19 +156,19 @@ export default class startNode {
                 if (node.stage.inputDict.get(intersect).inputArrow != null) {
                     node.stage.inputDict.get(intersect).inputArrow.delete();
                 }
-                new arrow(node, node.stage.inputDict.get(intersect), true, node.stage, node.layer);
+                new Arrow(node, node.stage.inputDict.get(intersect), true, node.stage, node.layer);
             } else {
 
-                //If not dropped on other element, make a popup to create either a new condition or action
-                node.stage.staticlayer.add(new popup(node.stage, node.stage.staticlayer, [new conditionNode(node.stage, node.layer, node.canvas), new actionNode(node.stage, node.layer, node.canvas)], (selection) => {
+                //If not dropped on other element, make a Popup to create either a new Condition or Action
+                node.stage.staticlayer.add(new Popup(node.stage, node.stage.staticlayer, [new ConditionNode(node.stage, node.layer, node.canvas), new ActionNode(node.stage, node.layer, node.canvas)], (selection) => {
                     let newNode = null;
                     newNode = node.canvas.addNode(selection);
-                    new arrow(node, newNode, true, node.stage, node.layer);
+                    new Arrow(node, newNode, true, node.stage, node.layer);
                     if (newNode !== null) {
                         newNode.group.absolutePosition(touchPos);
                         newNode.updateArrows();
                     }
-                }, "select a new condition or action").group);
+                }, "select a new Condition or Action").group);
                 node.stage.staticlayer.moveToTop();
                 node.stage.draw();
             }
@@ -192,6 +191,8 @@ export default class startNode {
     /** Highlight its childnode according to the active path, used in a replay **/
     highlightPath(boolList) {
         this.trueArrow.dest.highlightPath(boolList);
+        this.trueArrow.arrowline.stroke("green");
+        this.trueArrow.arrowline.strokeWidth(4);
         this.layer.draw();
     }
 
@@ -199,7 +200,7 @@ export default class startNode {
         return [this.trueCircle.x() + this.group.x(), this.trueCircle.y() + this.group.y()];
     }
 
-    /** Calls its arrow to update their position**/
+    /** Calls its Arrow to update their position**/
     updateArrows() {
         if (this.trueArrow != null) {
             this.trueArrow.update();

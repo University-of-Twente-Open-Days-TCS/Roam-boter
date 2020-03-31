@@ -1,5 +1,5 @@
 /** Wind direction **/
-export default class winddir {
+export default class WindDir {
     _id;
 
     constructor(id) {

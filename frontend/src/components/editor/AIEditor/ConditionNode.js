@@ -1,12 +1,12 @@
-import arrow from "./arrow.js";
-import popup from "./popup.js"
-import condition from "./condition.js";
+import Arrow from "./Arrow.js";
+import Popup from "./Popup.js"
+import Condition from "./Condition.js";
 import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
-import actionNode from "./actionNode.js";
+import ActionNode from "./ActionNode.js";
 
-//The default dimensions of a conditionNode
+//The default dimensions of a ConditionNode
 const blockHeight = 40;
 const blockWidth = 100;
 
@@ -18,13 +18,13 @@ const hitboxCircleRadius = 25;
 const spawnPoint = {x: 0, y: 0};
 
 
-export default class conditionNode {
+export default class ConditionNode {
 
 
     //The node itself
     _rect;
 
-    //The three arrows connecting a conditionNode
+    //The three arrows connecting a ConditionNode
     _inputArrow;
     _trueArrow;
     _falseArrow;
@@ -43,18 +43,18 @@ export default class conditionNode {
     _layer;
     _group;
 
-    //The condition which is in this conditionNode
+    //The Condition which is in this ConditionNode
     _condition;
 
-    //The text which corresponds to the condition and its Konva Object
+    //The text which corresponds to the Condition and its Konva Obj
     _conditionText;
     _conditionTextObj;
 
-    //The position of the conditionNode
+    //The position of the ConditionNode
     _position;
 
 
-    /** Create a new condition in a given stage and layer. If a valid ID is given it will also be filled with text
+    /** Create a new Condition in a given stage and layer. If a valid ID is given it will also be filled with text
      * and if (all) its appropriate parameter(s) is given this will be included. **/
     constructor(stage, layer, canvas, condition, position = spawnPoint) {
         this.canvas = canvas;
@@ -130,9 +130,9 @@ export default class conditionNode {
             }
         });
 
-        //Popup to edit the condition
+        //Popup to edit the Condition
         this.group.on("click tap", () => {
-            this.stage.staticlayer.add(new popup(this.stage, this.stage.staticlayer, this.generateConditionList(), this.setCondition.bind(this), "select a condition").group);
+            this.stage.staticlayer.add(new Popup(this.stage, this.stage.staticlayer, this.generateConditionList(), this.setCondition.bind(this), "select a Condition").group);
             this.stage.staticlayer.moveToTop();
             this.stage.draw();
         });
@@ -141,7 +141,7 @@ export default class conditionNode {
 
     }
 
-    /** Set the new text in the conditionNode and adapt its size and position of input/false/truecircles **/
+    /** Set the new text in the ConditionNode and adapt its size and position of input/false/truecircles **/
     setCondition(cond) {
         this.condition = cond;
         this.conditionTextObj.text(this.condition.toString());
@@ -213,7 +213,7 @@ export default class conditionNode {
         } catch (err) {
             if (err instanceof TypeError) {
                 new ErrorCircle({x: this.trueCircle.x(), y: this.trueCircle.y()}, this, this.layer);
-                throw new AIValidationError("A condition is missing a 'true'-arrow!");
+                throw new AIValidationError("A Condition is missing a 'true'-Arrow!");
             }
         }
     }
@@ -225,7 +225,7 @@ export default class conditionNode {
         } catch (err) {
             if (err instanceof TypeError) {
                 new ErrorCircle({x: this.falseCircle.x(), y: this.falseCircle.y()}, this, this.layer);
-                throw new AIValidationError("A condition is missing a 'false'-arrow!");
+                throw new AIValidationError("A Condition is missing a 'false'-Arrow!");
             }
         }
     }
@@ -233,13 +233,13 @@ export default class conditionNode {
     /** Generate the list of possible conditions **/
     generateConditionList() {
         return [
-            new condition(1),
-            new condition(2),
-            new condition(3),
-            new condition(4),
-            new condition(5),
-            new condition(6),
-            new condition(7),
+            new Condition(1),
+            new Condition(2),
+            new Condition(3),
+            // new Condition(4),
+            new Condition(5),
+            new Condition(6),
+            new Condition(7),
         ]
     }
 
@@ -252,17 +252,17 @@ export default class conditionNode {
 
         if (!this.condition) {
             new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
-            throw new AIValidationError("A condition is not yet defined!");
+            throw new AIValidationError("A Condition is not yet defined!");
         }
 
         if (!this.condition.isValid()) {
             new ErrorCircle(this.getRectMiddlePos(), this, this.layer);
-            throw new AIValidationError("A condition misses one or more attributes!");
+            throw new AIValidationError("A Condition misses one or more attributes!");
         }
 
         //case Condition:
         switch (this.condition.id) {
-            //distance to nearest object greater than distance
+            //Distance to nearest Obj greater than Distance
             case 1:
                 tree.condition = {
                     "type_id": 1,
@@ -277,7 +277,7 @@ export default class conditionNode {
 
                 return tree;
 
-            //object visible
+            //Obj visible
             case 2:
                 tree.condition = {
                     "type_id": 2,
@@ -289,7 +289,7 @@ export default class conditionNode {
                 return tree;
 
 
-            //aimed at object
+            //aimed at Obj
             case 3:
                 tree.condition = {
                     "type_id": 3,
@@ -302,7 +302,7 @@ export default class conditionNode {
                 return tree;
 
 
-            // if object exists
+            // if Obj exists
             case 4:
                 tree.condition = {
                     "type_id": 4,
@@ -327,7 +327,7 @@ export default class conditionNode {
 
                 return tree;
 
-            //if label set
+            //if Label set
             case 6:
                 tree.condition = {
                     "type_id": 6,
@@ -339,7 +339,7 @@ export default class conditionNode {
 
                 return tree;
 
-            //health greater than amount
+            //Health greater than amount
             case 7:
                 tree.condition = {
                     "type_id": 7,
@@ -354,7 +354,7 @@ export default class conditionNode {
 
             default:
                 new ErrorCircle(this.getRectMiddlePos());
-                throw new AIValidationError("The condition has an unknown ID!");
+                throw new AIValidationError("The Condition has an unknown ID!");
 
         }
     }
@@ -390,7 +390,7 @@ export default class conditionNode {
         this.group.add(this.inputCircleHitbox);
     }
 
-    /** create Konva text for in the condition **/
+    /** create Konva text for in the Condition **/
     createTextObject(conditionText) {
         this.conditionTextObj = new Konva.Text({
             x: this.position.x,
@@ -405,7 +405,7 @@ export default class conditionNode {
         this.group.add(this.conditionTextObj);
     }
 
-    /** Create base rectangle which contains the condition text **/
+    /** Create base rectangle which contains the Condition text **/
     createRect() {
         if (this.conditionText != null) {
             this.rect = new Konva.Rect({
@@ -459,7 +459,7 @@ export default class conditionNode {
     }
 
     /** Creates an invisible circle used only for making a new connection between nodes,
-     * based on condition will create one for true or for false **/
+     * based on Condition will create one for true or for false **/
     createDragCircle(circle, condition) {
 
         let node = this;
@@ -479,7 +479,7 @@ export default class conditionNode {
         dragCircle.originalY = dragCircle.y();
         let canvas = this.canvas;
 
-        //when the invisible circle starts to be dragged create a new temporary arrow
+        //when the invisible circle starts to be dragged create a new temporary Arrow
         dragCircle.on("dragstart", function () {
             this.tempX = this.x() + node.group.x();
             this.tempY = this.y() + node.group.y();
@@ -493,7 +493,7 @@ export default class conditionNode {
                 fill: "black"
             });
 
-            //delete any existing arrow
+            //delete any existing Arrow
             if (condition && node.trueArrow != null) {
                 node.trueArrow.delete();
             } else if (!condition && node.falseArrow != null) {
@@ -503,7 +503,7 @@ export default class conditionNode {
             node.layer.add(this.tempArrow);
         });
 
-        //update the temporary arrow
+        //update the temporary Arrow
         dragCircle.on("dragmove", function () {
             //this is to offset the position of the stage
             canvas.dragging = true;
@@ -513,37 +513,37 @@ export default class conditionNode {
         });
         let g = this.group;
 
-        //when the drag has ended, return the invisible circle to its original position, remove the temporary arrow
+        //when the drag has ended, return the invisible circle to its original position, remove the temporary Arrow
         // and create a new connection between nodes if applicable
         dragCircle.on("dragend", function () {
             let touchPos = node.stage.getPointerPosition();
             let intersect = node.layer.getIntersection(touchPos);
             canvas.dragging = false;
 
-            //If arrow is dropped on another element
+            //If Arrow is dropped on another element
             if (intersect != null) {
                 //If the other element is an inputnode
                 if (node.stage.inputDict.has(intersect)) {
 
-                    //If the inputnode already had an arrow, remove that one
+                    //If the inputnode already had an Arrow, remove that one
                     if (node.stage.inputDict.get(intersect).inputArrow != null) {
                         node.stage.inputDict.get(intersect).inputArrow.delete();
                     }
 
-                    //Create new arrow between the two nodes
-                    new arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
+                    //Create new Arrow between the two nodes
+                    new Arrow(node, node.stage.inputDict.get(intersect), condition, node.stage, node.layer);
                 }
             } else {
-                //If not dropped on other element, make a popup to create either a new condition or action
-                node.stage.staticlayer.add(new popup(node.stage, node.stage.staticlayer, [new conditionNode(node.stage, node.layer, node.canvas), new actionNode(node.stage, node.layer, node.canvas)], (selection) => {
+                //If not dropped on other element, make a Popup to create either a new Condition or Action
+                node.stage.staticlayer.add(new Popup(node.stage, node.stage.staticlayer, [new ConditionNode(node.stage, node.layer, node.canvas), new ActionNode(node.stage, node.layer, node.canvas)], (selection) => {
                     let newNode = null;
                     newNode = node.canvas.addNode(selection);
-                    new arrow(node, newNode, condition, node.stage, node.layer);
+                    new Arrow(node, newNode, condition, node.stage, node.layer);
                     if (newNode !== null) {
                         newNode.group.absolutePosition(touchPos);
                         newNode.updateArrows();
                     }
-                }, "select a new condition or action").group);
+                }, "select a new Condition or Action").group);
                 node.stage.staticlayer.moveToTop();
                 node.stage.draw();
             }
@@ -563,7 +563,7 @@ export default class conditionNode {
     }
 
     toString() {
-        return "condition"
+        return "Condition"
     }
 
     getTrueDotPosition() {

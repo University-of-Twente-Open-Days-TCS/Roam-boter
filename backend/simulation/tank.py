@@ -8,6 +8,8 @@ import numpy
 TANK_TURN_SPEED = 2.5
 TURRET_TURN_SPEED = 3
 
+VISION_RANGE = 30
+
 
 class Tank:
     x = 0
@@ -36,7 +38,7 @@ class Tank:
 
     team_id = 0
 
-
+    current_path = None
     scout_target = None
 
     path = None
@@ -59,6 +61,7 @@ class Tank:
 
     def set_label_timer(self, index, seconds):
         self.label_timers[index] = seconds * 60
+        self.labels[index] = True
 
     def process_label_timers(self):
         for i, x in enumerate(self.label_timers):
@@ -165,7 +168,7 @@ class Tank:
             if t == self:
                 continue
 
-            if distance(t.get_pos(), self.get_pos()) < 1.8:
+            if distance(t.get_pos(), (x, y)) < 1.8:
                 return True
 
         for a in numpy.arange(y - 0.8, y + 0.8, 0.2):
@@ -217,7 +220,7 @@ class Tank:
 
             angle = math.degrees(math.acos(inproduct))
 
-            if angle < 20 or angle > 340:
+            if angle < VISION_RANGE or angle > 360 - VISION_RANGE:
                 if state.level.direct_line_of_sight(self.get_pos(), other.get_pos()):
                     visible_tanks.append(other)
 
@@ -251,7 +254,7 @@ class Tank:
 
             angle = math.degrees(math.acos(inproduct))
 
-            if angle < 20 or angle > 340:
+            if angle < VISION_RANGE or angle > 360 - VISION_RANGE:
                 if state.level.direct_line_of_sight(self.get_pos(), other.get_pos()):
                     visible_bullets.append(other)
 
@@ -270,11 +273,13 @@ class Tank:
             self.destroyed = True
 
     def on_hill(self, state):
-        p = state.level.get_path_to_object(self, Object.HILL)
-        if p is not None and len(p) > 0:
-            d = distance(self.get_pos(), p[-1])
-            print(d)
+        paths = state.level.get_paths_to_object(self, Object.HILL)
+        if paths is not None and len(paths) > 0:
+            d = distance(self.get_pos(), paths[0].goal())
             return d < 5
+
+        # No hill found to be on.
+        return False
 
     def get_team(self):
         return self.team_id

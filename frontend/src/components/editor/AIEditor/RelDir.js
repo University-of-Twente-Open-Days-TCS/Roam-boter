@@ -1,27 +1,25 @@
-/** Amount of seconds a label lasts **/
-export default class seconds {
-    _id;
+/** Relative direction **/
+export default class RelDir {
+        _id;
 
     constructor(id) {
         this.id = id;
     }
 
-    toString() {
+    toString(){
         switch (this.id) {
+            case 0:
+                return "Forward";
             case 1:
-                return "1 second";
+                return "Backward";
+            case 2:
+                return "Left";
             case 3:
-                return "3 seconds";
-            case 5:
-                return "5 seconds";
-            case 7:
-                return "7 seconds";
+                return "Right";
             default:
                 return null;
-
         }
     }
-
     get id() {
         return this._id;
     }

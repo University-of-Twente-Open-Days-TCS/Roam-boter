@@ -36,12 +36,11 @@ class Bullet:
         if self.x < 0 or self.y < 0 or self.x > state.level.get_width() - 1 or self.y > state.level.get_height() - 1:
             return True
 
-        if state.level.get_object(round(self.x), round(self.y)) == Object.WALL:
+        if state.level.get_object(math.floor(self.x), math.floor(self.y)) == Object.WALL:
             return True
         return False
 
     # Check if a bullet has a collision with a tank.
-    # TODO: This is now a rectangle collision, do we want it to stay that way?
     def check_collision_tank(self, state):
         for tank in state.tanks:
             if tank == self.owner:

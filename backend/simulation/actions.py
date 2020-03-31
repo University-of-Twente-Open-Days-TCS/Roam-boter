@@ -30,10 +30,11 @@ def move_to_nearest_object(tank, state, obj):
     obj = Object(obj)
     paths = filter_objects(tank, state, obj)
 
-    nearest_path = closest_object_in_paths(tank, paths)
-    if nearest_path is not None and len(nearest_path) > 0:
+    nearest_path = closest_object_in_paths(tank.get_pos(), paths)
+    if nearest_path is not None:
         tank.path = nearest_path
-        move_to_position(state, tank, nearest_path[0])
+
+        move_to_position(state, tank, nearest_path.next_node(tank.get_pos()))
 
 
 # The function correlated with the action of the tank scouting the map.
@@ -46,8 +47,8 @@ def scout(tank, state):
 
         # Upon first scout action, a node has not yet been selected.
         if tank.scout_target is None:
-            goal = closest_object_in_paths(tank, paths)
-            tank.scout_target = (goal[-1], state.level.scout_nodes.index(goal[-1]))
+            p = closest_object_in_paths(tank.get_pos(), paths)
+            tank.scout_target = (p.goal(), state.level.scout_nodes.index(p.goal()))
         else:
             # Select next scout node.
             current_goal, current_index = tank.scout_target
@@ -56,9 +57,9 @@ def scout(tank, state):
 
     # Actually move to the next node in the scout path.
     for p in paths:
-        if p[-1] == tank.scout_target[0]:
+        if p.goal() == tank.scout_target[0]:
             tank.path = p
-            move_to_position(state, tank, p[0])
+            move_to_position(state, tank, p.next_node(tank.get_pos()))
 
 
 
@@ -70,9 +71,9 @@ def patrol(tank, state):
 def move_from_nearest_object(tank, state, obj):
     obj = Object(obj)
     paths = filter_objects(tank, state, obj)
-    nearest_path = closest_object_in_paths(tank, paths)
-    if nearest_path is not None and len(nearest_path) > 0:
-        move_from_position(state, tank, nearest_path[0])
+    nearest_path = closest_object_in_paths(tank.get_pos(), paths)
+    if nearest_path is not None:
+        move_from_position(state, tank, nearest_path.next_node(tank.get_pos()))
 
 
 # Let the tank aim to the nearest object.
@@ -80,9 +81,9 @@ def aim_to_nearest_object(tank, state, obj):
     obj = Object(obj)
     paths = filter_objects(tank, state, obj)
 
-    nearest_path = closest_object_in_paths(tank, paths)
-    if nearest_path is not None and len(nearest_path) > 0:
-        aim_to_position(state, tank, nearest_path[0])
+    nearest_path = closest_object_in_paths(tank.get_pos(), paths)
+    if nearest_path is not None:
+        aim_to_position(state, tank, nearest_path.next_node(tank.get_pos()))
 
 
 def aim_reldir(tank, state, reldir):
