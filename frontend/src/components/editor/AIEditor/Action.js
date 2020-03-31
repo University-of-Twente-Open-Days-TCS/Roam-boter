@@ -274,21 +274,21 @@ export default class Action {
                 return "Self-destruct!";
             case 12:
                 if (this.label != null) {
-                    return "Set Label " + this.label;
+                    return "Set label " + this.label;
                 } else {
-                    return "Set Label  <Label>";
+                    return "Set label  <Label>";
                 }
             case 13:
                 if (this.label != null) {
-                    return "Unset Label " + this.label;
+                    return "Unset label " + this.label;
                 } else {
-                    return "Unset Label  <Label>";
+                    return "Unset label  <Label>";
                 }
             case 14:
                 if (this.label != null && this.seconds != null) {
-                    return "Set Label " + this.label + "\n for " + this.seconds;
+                    return "Set label " + this.label + "\n for " + this.seconds;
                 } else {
-                    return "Set Label \n <Label> \n for <Seconds>";
+                    return "Set label \n <Label> \n for <Seconds>";
                 }
             default:
                 return null

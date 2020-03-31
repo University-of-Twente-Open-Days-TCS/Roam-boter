@@ -236,7 +236,7 @@ export default class ConditionNode {
             new Condition(1),
             new Condition(2),
             new Condition(3),
-            new Condition(4),
+            // new Condition(4),
             new Condition(5),
             new Condition(6),
             new Condition(7),
