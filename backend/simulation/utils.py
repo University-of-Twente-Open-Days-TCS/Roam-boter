@@ -1,5 +1,6 @@
 import math
 from .objects import Object
+from .path import Path
 
 
 # Return the squared distance between points, this saves an expensive sqrt call and will
@@ -21,11 +22,11 @@ def filter_objects(tank, state, obj):
 
     if obj.isTank():
         for t in filter_tanks(tank, obj, tank.visible_tanks(state)):
-            paths.append([t.get_pos()])
+            paths.append(Path([t.get_pos()]))
 
     elif obj.isBullet():
         for b in filter_bullets(tank, obj, tank.visible_bullets(state)):
-            paths.append([b.get_pos()])
+            paths.append(Path([b.get_pos()]))
 
     elif obj.isSpawn():
         for s in state.level.get_path_to_object(tank, Object.SPAWN):
