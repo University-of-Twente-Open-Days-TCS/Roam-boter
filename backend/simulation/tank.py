@@ -273,10 +273,13 @@ class Tank:
             self.destroyed = True
 
     def on_hill(self, state):
-        p = state.level.get_path_to_object(self, Object.HILL)
-        if p is not None and len(p) > 0:
-            d = distance(self.get_pos(), p[-1])
+        paths = state.level.get_paths_to_object(self, Object.HILL)
+        if paths is not None and len(paths) > 0:
+            d = distance(self.get_pos(), p[0].goal())
             return d < 5
+
+        # No hill found to be on.
+        return False
 
     def get_team(self):
         return self.team_id
