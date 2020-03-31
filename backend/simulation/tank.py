@@ -275,7 +275,7 @@ class Tank:
     def on_hill(self, state):
         paths = state.level.get_paths_to_object(self, Object.HILL)
         if paths is not None and len(paths) > 0:
-            d = distance(self.get_pos(), p[0].goal())
+            d = distance(self.get_pos(), paths[0].goal())
             return d < 5
 
         # No hill found to be on.
