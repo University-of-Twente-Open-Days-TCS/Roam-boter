@@ -1,6 +1,12 @@
-from .utils import distance_squared
-
 import math
+
+
+def distance_squared(pos1: (float, float), pos2: (float, float)):
+    x1, y1 = pos1
+    x2, y2 = pos2
+
+    return ((x1 - x2) ** 2) + ((y1 - y2) ** 2)
+
 
 class Path:
 
