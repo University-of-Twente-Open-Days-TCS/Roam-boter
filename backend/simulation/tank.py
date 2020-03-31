@@ -36,7 +36,7 @@ class Tank:
 
     team_id = 0
 
-
+    current_path = None
     scout_target = None
 
     path = None
@@ -59,6 +59,7 @@ class Tank:
 
     def set_label_timer(self, index, seconds):
         self.label_timers[index] = seconds * 60
+        self.labels[index] = True
 
     def process_label_timers(self):
         for i, x in enumerate(self.label_timers):
@@ -165,7 +166,7 @@ class Tank:
             if t == self:
                 continue
 
-            if distance(t.get_pos(), self.get_pos()) < 1.8:
+            if distance(t.get_pos(), (x, y)) < 1.8:
                 return True
 
         for a in numpy.arange(y - 0.8, y + 0.8, 0.2):
@@ -273,7 +274,6 @@ class Tank:
         p = state.level.get_path_to_object(self, Object.HILL)
         if p is not None and len(p) > 0:
             d = distance(self.get_pos(), p[-1])
-            print(d)
             return d < 5
 
     def get_team(self):

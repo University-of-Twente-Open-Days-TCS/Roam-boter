@@ -1,4 +1,5 @@
 from .objects import Object, ALL_OBJECTS
+from .path import Path
 
 import pickle
 import math
@@ -136,11 +137,12 @@ class Level:
         return cache
 
     def find_all_paths(self, obj, x, y):
-        if x == 0:
-            print(y)
+        if x == 0 and y % 3 == 0:
+            # Print status message for cache generation.
+            LOGGER.debug((x * 100) // len(self.objects), "%")
         # A tank can always walk straight towards the nearest wall
         if obj == Object.WALL:
-            return [self.find_nearest_object(obj, x, y)]
+            return Path([self.find_nearest_object(obj, x, y)])
 
         queue = [(None, x, y)]
         visited = dict()
@@ -193,8 +195,11 @@ class Level:
         # backtrack the path
         paths = [self.backtrack_path(n, visited) for n in goal]
 
-        # decrease path based on line of sight smoothing
-        return [self.smooth_path(p) for p in paths]
+        # decrease path based on line of sight smoothing and encapsulate with Path object.
+        paths = [self.smooth_path(p) for p in paths]
+
+        # Remove the need for paths that start next to a wall to directly walk away from it.
+        return [Path(self.fix_nodes_next_to_walls(p)) for p in paths]
 
     def backtrack_path(self, node, visited):
         parent, x, y = node
@@ -217,6 +222,18 @@ class Level:
             return path[1:]
         else:
             return path
+
+    def fix_nodes_next_to_walls(self, path):
+        x, y = path[0]
+        x, y = math.floor(x), math.floor(y)
+
+        for wa in range(x - 1, x + 2):
+            for wb in range(y - 1, y + 2):
+                if self.get_object(wa, wb) == Object.WALL:
+                    del path[1]
+                    return path
+
+        return path
 
 
     def get_paths_to_object(self, tank, obj):
