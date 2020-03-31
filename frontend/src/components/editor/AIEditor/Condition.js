@@ -5,15 +5,15 @@ import Label from "./Label.js";
 
 //The attributes which a Condition can contain
 const objectList = [
-    new Obj(1),
+    // new Obj(1),
     new Obj(2),
-    new Obj(3),
+    // new Obj(3),
     new Obj(4),
     new Obj(5),
     new Obj(6),
     new Obj(7),
     new Obj(8),
-    new Obj(9),
+    // new Obj(9),
     new Obj(10)
 ];
 
