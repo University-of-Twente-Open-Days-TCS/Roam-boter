@@ -153,9 +153,9 @@ export default class Condition {
             case 1:
                 // provide both Distance and Obj, otherwise both will be ignored
                 if (this.distance == null || this.object == null) {
-                    return "If Distance to nearest \n <Object> is greater \n than <Distance>";
+                    return "If distance to nearest \n <Object> is greater \n than <Distance>";
                 } else {
-                    return "If Distance to nearest \n" + this.object + " is greater \n than " + this.distance;
+                    return "If distance to nearest \n" + this.object + " is greater \n than " + this.distance;
                 }
             case 2:
                 if (this.object == null) {
@@ -176,18 +176,18 @@ export default class Condition {
                     return "If " + this.object + "\n exists";
                 }
             case 5:
-                return "Bullet ready";
+                return "If bullet ready";
             case 6:
                 if (this.label == null) {
-                    return "If Label <Label> set";
+                    return "If label <Label> set";
                 } else {
-                    return "If Label " + this.label + " set";
+                    return "If label " + this.label + " set";
                 }
             case 7:
                 if (this.health == null) {
-                    return "If Health is \n greater than <Amount>";
+                    return "If health is \n greater than <Amount>";
                 } else {
-                    return "If Health is \n greater than " + this.health;
+                    return "If health is \n greater than " + this.health;
                 }
             default:
                 return null;
