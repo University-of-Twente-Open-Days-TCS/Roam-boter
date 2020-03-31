@@ -1,19 +1,21 @@
-//Wind direction
-export default class speed {
+/** Wind direction **/
+export default class WindDir {
     _id;
 
     constructor(id) {
-        this.id = id;
+        this._id = id;
     }
 
     toString() {
         switch (this.id) {
             case 0:
-                return "Slow speed";
+                return "North";
             case 1:
-                return "Normal speed";
+                return "East";
             case 2:
-                return "Fast speed";
+                return "South";
+            case 3:
+                return "West";
             default:
                 return null;
 

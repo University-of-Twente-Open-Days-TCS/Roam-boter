@@ -15,7 +15,7 @@ const TeamMatchItem = (props) => {
 
     return (
         <li>
-            <NavLink to={'/BotMatchReplay/'+props.match.simulation.pk}>
+            <NavLink to={'/BotMatchReplay/'+props.match.simulation.pk+'/'+props.match.initiator_ai.pk}>
                 <Button variant="outlined" color="primary" size="small">{timeString}</Button>
             </NavLink><span className='spacing'></span>
             <Button variant="outlined" color="secondary" size="small" onClick={() => props.onDelete(props.match)}>Delete</Button>

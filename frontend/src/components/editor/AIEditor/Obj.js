@@ -1,4 +1,5 @@
-export default class object {
+/** Object on the map **/
+export default class Obj {
     _id;
 
     constructor(id) {
@@ -18,15 +19,15 @@ export default class object {
             case 5:
                 return "Wall";
             case 6:
-                return "Friendly Spawn";
+                return "Own Spawnpoint";
             case 7:
                 return "Enemy Spawn";
             case 8:
-                return "Heal";
+                return "Health pack";
             case 9:
                 return "Flag";
             case 10:
-                return "King of the Hill";
+                return "Center";
             default:
                 return null;
         }

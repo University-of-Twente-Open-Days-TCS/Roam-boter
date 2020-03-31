@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import RoamBotAPI from './RoamBotAPI.js';
 
@@ -30,7 +30,6 @@ class App extends Component {
         this.state = {
             loggedIn: false,
             loginAttemptFailed: false,
-            team: null
         };
 
         // Bind handlers
@@ -40,38 +39,43 @@ class App extends Component {
 
     componentDidMount() { //TODO: Make async
         document.addEventListener('fullscreenchange', () => this.forceUpdate())
-       
+
         // Check whether the session is logged in
         RoamBotAPI.getTeamDetail()
             .then((response) => {
                 if (response.ok) {
-                    let json = response.json()
-                    json.then((result) => {
-                        this.setState({loggedIn: true, team: result})
-                    })
+                   this.setState({ loggedIn: true})
                 } else {
-                    this.setState({loggedIn: false})
+                    this.setState({ loggedIn: false })
                 }
             })
-
     }
 
-    
-    handleSubmitLogin = (teamCode) => {
-        let response = RoamBotAPI.loginUser(teamCode)
-        response
-            .then((response) => {
-                response.ok ? this.setState({loggedIn: true, loginAttemptFailed: false}) : this.setState({loggedIn: false, loginAttemptFailed: true})
-            })
+    handleSubmitLogin = async (teamCode) => {
+        try {
+            let response = await RoamBotAPI.loginUser(teamCode)
+            if (response.ok) {
+                // get new team details
+                this.setState({ loggedIn: true, loginAttemptFailed: false })
+            } else {
+                this.setState({ loggedIn: false, loginAttemptFailed: true })
+            }
+
+        } catch (error) {
+            this.setState({ loggedIn: false })
+            console.error(error)
+        }
     }
 
-    handleSubmitLogout = () => {
-        let response = RoamBotAPI.logoutUser()
-        response
-            .then((response) => {
-                response.ok ? this.setState({loggedIn: false}) : this.setState({loggedIn: true})
-            })
+    handleSubmitLogout = async () => {
+        let response = await RoamBotAPI.logoutUser()
+        if (response.ok) {
+            this.setState({ loggedIn: false })
+        } else {
+            window.alert("Something went wrong...")
+        }
     }
+
 
     toggleFull = () => {
         let fullscreenElement = document.fullscreenElement
@@ -83,27 +87,27 @@ class App extends Component {
                     this.forceUpdate()
                 })
 
-        }else {
+        } else {
             //enter fullscreen
             let body = document.querySelector('body')
             if (body.requestFullscreen) {
                 let promise = body.requestFullscreen();
-                if(promise) {
+                if (promise) {
                     promise.then(() => this.forceUpdate())
                 }
             } else if (body.mozRequestFullScreen) { /* Firefox */
                 let promise = body.mozRequestFullScreen();
-                if(promise) {
+                if (promise) {
                     promise.then(() => this.forceUpdate())
                 }
             } else if (body.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
                 let promise = body.webkitRequestFullscreen();
-                if(promise) {
+                if (promise) {
                     promise.then(() => this.forceUpdate())
                 }
             } else if (body.msRequestFullscreen) { /* IE/Edge */
                 let promise = body.msRequestFullscreen();
-                if(promise) {
+                if (promise) {
                     promise.then(() => this.forceUpdate())
                 }
             }
@@ -112,7 +116,7 @@ class App extends Component {
 
 
 
-    
+
     render() {
 
         // Props to send to layout component. Neccesary for fullscreen option.
@@ -124,26 +128,26 @@ class App extends Component {
         }
 
         return (
-            (this.state.loggedIn) ? 
+            (this.state.loggedIn) ?
                 (<div>
                     <Structure {...layoutProps}>
-                        <Route exact path="/" 
-                            render={(props) => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
+                        <Route exact path="/"
+                            render={() => <Home handleSubmitLogout={this.handleSubmitLogout}></Home>}
                         />
 
                         <Route path="/AIEditor/:id?" component={AIEditor} />
-                        <Route path="/AIList" component={AIList}/>
-                        <Route path="/PlayvsBot" component={PlayvsBot}/>
-                        <Route path="/BotMatchHistory" component={BotMatchHistory}/>
-                        <Route path="/BotMatchReplay/:matchId" component={BotMatchReplay}/>
-                        <Route path="/NewBotMatch" component={NewBotMatch}/>
-                        <Route path="/PlayvsPlayer" component={PlayvsPlayer}/>
-                        <Route path="/NewTeamMatch" component={() => <NewTeamMatch team={this.state.team}></NewTeamMatch>}/>
-                        <Route path="/TeamMatchHistory" component={TeamMatchHistory}/>
+                        <Route path="/AIList" component={AIList} />
+                        <Route path="/PlayvsBot" component={PlayvsBot} />
+                        <Route path="/BotMatchHistory" component={BotMatchHistory} />
+                        <Route path="/BotMatchReplay/:matchId/:aiId" component={BotMatchReplay} />
+                        <Route path="/NewBotMatch" component={NewBotMatch} />
+                        <Route path="/PlayvsPlayer" component={PlayvsPlayer} />
+                        <Route path="/NewTeamMatch" component={NewTeamMatch} />
+                        <Route path="/TeamMatchHistory" component={TeamMatchHistory} />
                     </Structure>
-                </div>) 
-                    : 
-                (<Login handleSubmit={this.handleSubmitLogin.bind(this)} attemptFailed={this.state.loginAttemptFailed}/>)
+                </div>)
+                :
+                (<Login handleSubmit={this.handleSubmitLogin.bind(this)} attemptFailed={this.state.loginAttemptFailed} />)
         );
     }
 }

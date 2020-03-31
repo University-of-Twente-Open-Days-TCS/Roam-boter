@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 
-import { Typography, Grid, Button } from '@material-ui/core'
+import {Typography, Grid, Button, Snackbar} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import ContentBox from '../../layout/ContentBox'
 import SelectAIDialog from '../SelectAIDialog'
+import ActiveAIDialog from "../ActiveAIDialog"
 
 import RoamBotAPI from '../../../RoamBotAPI'
-
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -24,11 +25,18 @@ const NewTeamMatch = props => {
 
     const classes = useStyles()
 
-    let team = props.team
-
     let [ais, setAis] = useState(null)
+    let [team, setTeam] = useState(null)
+
+
     let [selectAIOpen, setSelectAIOpen] = useState(false)
     let [selectedAI, setSelectedAI] = useState(null)
+    let [snackbar, setSnackbar] = useState({
+        open: false,
+        error: false,
+        message: ""
+    })
+    let [activeAIDialogOpen, setActiveAIDialogOpen] = useState(false)
 
     useEffect(() => {
         async function updateAis() {
@@ -37,28 +45,39 @@ const NewTeamMatch = props => {
             setAis(json)
         }
 
+        async function updateTeam() {
+            let call = await RoamBotAPI.getTeamDetail()
+            let json = await call.json()
+            setTeam(json)
+        }
+
         if (ais === null) {
             updateAis()
+        }
+
+        if (team === null){
+            updateTeam()
         }
     })
 
     const playMatch = async () => {
         if (!team.active_ai) {
-            // prompt whether to set this as active ai
-            let prompt = window.confirm("You do not have an active AI yet. Do you want to set this as your active AI?")
-            if (prompt){
-                let call = await RoamBotAPI.putActiveAI(selectedAI.pk)
-                if(!call.ok){
-                    window.alert("Could not set as active AI")
-                }
-            }
+            setActiveAIDialogOpen(true)
         }
 
         let call = await RoamBotAPI.postTeamMatch({gamemode: "DM", ai: selectedAI.pk})
         if (call.ok){
-            window.alert("Simulation successfull")
+            setSnackbar({
+                message: "Simulation successful! Match available under Replays",
+                error: false,
+                open: true
+            })
         }else {
-            window.alert("Match could not be simulation")
+            setSnackbar({
+                message: "Something went wrong, perhaps there are no other teams with an active AI yet?",
+                error: true,
+                open: true
+            })
         }
     }
 
@@ -66,8 +85,6 @@ const NewTeamMatch = props => {
         setSelectedAI(ai)
         setSelectAIOpen(false)
     }
-
-
 
     return (
          <ContentBox>
@@ -85,6 +102,12 @@ const NewTeamMatch = props => {
                         <Button className={classes.button} type="submit" variant="contained" disabled={!(selectedAI)} color="secondary" onClick={playMatch}>Play</Button>
 
                         {(ais) ? (<SelectAIDialog ais={ais} open={selectAIOpen} handleClose={() => setSelectAIOpen(false)} handleClick={handleAIListItemClick} />) : "no AIs found"}
+
+                        <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({...snackbar, open: false})}>
+                            <Alert severity={snackbar.error ? "error" : "success"} elevation={6} variant="filled"> {snackbar.message} </Alert>
+                        </Snackbar>
+
+                        <ActiveAIDialog open={activeAIDialogOpen} handleClose={() => setActiveAIDialogOpen(false)} selectedAI={selectedAI} />
                     </div>
                 </Grid>
             </Grid>

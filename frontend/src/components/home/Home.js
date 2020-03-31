@@ -53,6 +53,7 @@ const Home = (props) => {
                 setTeam(null)
                 setAis(null)
             }else {
+                window.alert(response.body)
                 window.alert("Something went wrong...")
             }
         })

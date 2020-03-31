@@ -1,21 +1,21 @@
-//Wind direction
-export default class winddir {
+/** Amount of Seconds a Label lasts **/
+export default class Seconds {
     _id;
 
     constructor(id) {
-        this._id = id;
+        this.id = id;
     }
 
     toString() {
         switch (this.id) {
-            case 0:
-                return "North";
             case 1:
-                return "East";
-            case 2:
-                return "South";
+                return "1 second";
             case 3:
-                return "West";
+                return "3 Seconds";
+            case 5:
+                return "5 Seconds";
+            case 7:
+                return "7 Seconds";
             default:
                 return null;
 

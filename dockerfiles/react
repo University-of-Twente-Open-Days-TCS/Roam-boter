@@ -6,3 +6,4 @@ WORKDIR /frontend/
 EXPOSE 3000
 # start application
 CMD npm install ; npm start 
+# CMD server -s build -l 3000

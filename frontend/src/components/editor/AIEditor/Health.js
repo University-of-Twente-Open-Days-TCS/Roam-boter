@@ -1,4 +1,5 @@
-export default class health {
+/** Health of a tank **/
+export default class Health {
     constructor(id) {
 
         this.id = id;

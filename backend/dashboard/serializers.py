@@ -22,5 +22,5 @@ class TeamSerializer(serializers.Serializer):
 
 
 class TeamCodeSerializer(serializers.Serializer):
-    # TODO: VALIDATE
+
     team_code = serializers.IntegerField()

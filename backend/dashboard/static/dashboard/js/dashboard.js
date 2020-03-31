@@ -12,6 +12,9 @@ function initializeDashboard() {
     let generateTeamCodesButton = document.getElementById("generate-team-codes-button")
     if (generateTeamCodesButton) generateTeamCodesButton.addEventListener("click", generateTeamCodes)
 
+    let downloadTeamCodes = document.getElementById("generate-textfile-button")
+    downloadTeamCodes.addEventListener("click", downloadTextfile)
+
 }
 
 // First confirms with user and then closes the current workshop
@@ -65,6 +68,22 @@ function generateTeamCodes(event) {
     generateTeamCodesCall(amount).then(response => {
         location.reload()
     })  
+}
+
+function downloadTextfile() {
+    let codeElements = document.getElementsByClassName('team-code')
+    let codeList = []
+    for (i = 0; i < codeElements.length; i ++) {
+        elem = codeElements[i]
+        codeList.push(elem.innerText+"\n")
+    }
+    const blob = new Blob(codeList, {type: 'text/plain;charset=utf-8'})
+    
+    var url = URL.createObjectURL(blob)
+    var a = document.createElement('a')
+    a.download = "codes.txt"
+    a.href = url
+    a.click()
 }
 
 /* 

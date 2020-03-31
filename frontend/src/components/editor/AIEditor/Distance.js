@@ -1,5 +1,5 @@
-
-export default class distance {
+/** Distance from one Obj to another on the map **/
+export default class Distance {
     _id;
 
     constructor(id) {
@@ -9,11 +9,11 @@ export default class distance {
     toString() {
         switch (this.id) {
             case 1:
-                return "Near";
+                return "5 squares";
             case 2:
-                return "Average";
+                return "10 squares";
             case 3:
-                return "Far";
+                return "15 squares";
             default:
                 return null;
         }
