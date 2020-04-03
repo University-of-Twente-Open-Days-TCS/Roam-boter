@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import SwipeableViews  from 'react-swipeable-views'
 
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Tabs, Tab } from '@material-ui/core'
-import ContentBox from "../layout/ContentBox";
+import { AppBar, Tabs, Tab, Typography } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -16,19 +15,34 @@ const useStyles = makeStyles(theme => ({
         height: 'auto',
         flexGrow: 1
     },
+    tabPanel: {
+        padding: theme.spacing(2)
+    },
+    spacer: {
+        margin: '1rem 0'
+    }
 }))
 
 const TabPanel = props => {
     const classes = useStyles()
 
     return (
-        <ContentBox
+        <div
             className={classes.tabPanel}
             role="tabpanel"
             hidden={props.value !== props.index}    
         >
             {props.children}
-        </ContentBox>
+        </div>
+    )
+}
+
+const Spacer = props => {
+    const classes = useStyles()
+    return (
+        <div className={classes.spacer}>
+
+        </div>
     )
 }
 
@@ -66,7 +80,22 @@ const Help = (props) => {
                 className={classes.swipeAbleViews}
             >
                 <TabPanel value={tabIndex} index={0}>
-                    Item 1
+                    <Typography variant="h5">Welcome to RoamBot-er!</Typography>
+                    <Typography className={classes.panelText}>
+                                In this workshop you will write Artificial Intelligence for a tank, together with your teammates. 
+                                Via a <i>decision tree</i> you will instruct the tank what to do in which situation. 
+                                Once you have created an AI you can run it against a bot, a battle which will take place on a <i>map</i>.
+                    </Typography>
+                    <Spacer />
+                    <Typography className={classes.panelText}>
+                                Once you have created a nice AI, you can save it and select it as your <i>active AI</i>, 
+                                which makes it possible for other teams to play against it. In turn, in the <i>Team vs Team</i> menu you can compete against other teams.
+                    </Typography>
+                    <Spacer />
+                    <Typography>
+                    Try to improve your AI through trial and error, discuss with your teammates and feel free to<br></br>
+                    <i><b>ask any questions about the workshop, the study of TCS or the student life at the Super Future Guides!</b></i>
+                    </Typography>
                 </TabPanel>
 
                 <TabPanel value={tabIndex} index={1}>

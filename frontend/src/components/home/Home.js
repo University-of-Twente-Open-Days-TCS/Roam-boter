@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import SwipeableViews  from 'react-swipeable-views'
-
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Tabs, Tab, Button } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 
 
 
