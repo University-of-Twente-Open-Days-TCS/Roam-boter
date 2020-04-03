@@ -57,7 +57,7 @@ class TeamMatchHistory extends Component {
     render() {
         return(
             <ContentBox>
-                <Typography variant="h4">Team Match History <Button onClick={() => this.refreshMatchHistory()} variant="contained" color="primary"><Refresh/></Button></Typography>
+                <Typography variant="h4">Team Match History <Button onClick={() => this.refreshMatchHistory()} variant="outlined" size="small" color="primary"><Refresh/></Button></Typography>
                 {this.state.matches.length > 0 ?
                 (<ul>{
                         this.state.matches.map((match, i) => {

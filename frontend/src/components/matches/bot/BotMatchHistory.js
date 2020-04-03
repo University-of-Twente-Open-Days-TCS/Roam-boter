@@ -1,12 +1,13 @@
-import Button from '@material-ui/core/Button'
-
 import React, { Component } from "react";
 import {NavLink} from "react-router-dom";
+
+import { Button, Typography } from '@material-ui/core'
+import {Refresh} from "@material-ui/icons";
+
 
 import RoamBotAPI from "../../../RoamBotAPI"
 
 import ContentBox from '../../layout/ContentBox';
-import {Refresh} from "@material-ui/icons";
 
 
 const MatchItem = (props) => {
@@ -62,7 +63,7 @@ class BotMatchHistory extends Component {
     render() {
         return(
         <ContentBox>
-            <h1>Match History <Button onClick={() => this.refreshMatchHistory()} variant="contained" color="primary"><Refresh/></Button></h1>
+            <Typography variant="h4">Bot Match History <Button onClick={() => this.refreshMatchHistory()} variant="outlined" size="small" color="primary"><Refresh/></Button></Typography>
             <ul>{
                 this.state.matches.map((match, i) => {
                     return (
