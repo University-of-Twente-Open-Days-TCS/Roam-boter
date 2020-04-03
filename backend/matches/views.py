@@ -71,8 +71,17 @@ class BotMatchHistoryListAPI(APIView):
         serializer = BotMatchSerializer(data=request.data, context={'team': team})
 
         if serializer.is_valid():
-
             botmatch = serializer.save()
+
+            # Copy AI for match replay, so that when the AI is altered, this one will still show up next to replay.
+            ai = botmatch.ai
+            ai.listed = False
+            ai.pk = None
+            ai.save()
+
+            botmatch.ai = ai
+            botmatch.save()
+
             SIMULATION_PLAYER.run_botmatch(botmatch)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
