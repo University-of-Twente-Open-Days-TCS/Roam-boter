@@ -21,6 +21,7 @@ class AIList(APIView):
     def get(self, request):
         """Get list of AI's"""
         team_pk = request.session['team_id']
+        # only list listed AI's
         ai_list = AI.objects.filter(team=team_pk, listed=True).all()
         serializer = AISerializer(ai_list, many=True)
         return Response(serializer.data)
@@ -33,8 +34,6 @@ class AIList(APIView):
         serializer = AISerializer(data=request.data, context={'team': team})
 
         if serializer.is_valid():
-            if AI.objects.filter(team=team, name=request.data['name']).count() != 0:
-                return Response("Name already exists", status=status.HTTP_400_BAD_REQUEST)
 
             # save new AI
             serializer.save()

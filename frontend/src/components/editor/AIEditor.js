@@ -237,7 +237,7 @@ class AIEditor extends Component {
 
                     } else {
                         response.json().then((data) => {
-                            this.setState({errorAlertOpen: true, errorMessage: data})
+                            this.setState({errorAlertOpen: true, errorMessage: JSON.stringify(data)})
                         })
                     }
             }).catch((err) => {console.error(err); window.alert("Something went wrong...")})
