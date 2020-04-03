@@ -232,15 +232,23 @@ class AIEditor extends Component {
                                 this.setState({successAlertOpen: true})
                             }).catch((error) => {
                                 console.error(error)
-                                window.alert("Something went wrong...")
+                                window.alert("Something went wrong1...")
                             })
 
                     } else {
                         response.json().then((data) => {
-                            this.setState({errorAlertOpen: true, errorMessage: JSON.stringify(data)})
+                            var message = ""
+                            console.log(data)
+                            Object.keys(data).forEach(function (key, elem) {
+                                console.log(data[key])
+                                data[key].forEach(function (error, index) {
+                                    message += key + " error: " + error + "\n";
+                                })
+                            });
+                            this.setState({errorAlertOpen: true, errorMessage: message});
                         })
                     }
-            }).catch((err) => {console.error(err); window.alert("Something went wrong...")})
+            }).catch((err) => {console.error(err); window.alert("Something went wrong2...")})
         } catch (error) {
             this.setState({errorAlertOpen: true, errorMessage: error.message})
         }
