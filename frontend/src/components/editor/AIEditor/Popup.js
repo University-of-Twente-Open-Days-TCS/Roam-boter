@@ -1,6 +1,6 @@
 import Konva from "konva"
 import Selector from "./Selector.js";
-
+import indigo from '@material-ui/core/colors/indigo'
 
 export default class Popup {
 
@@ -134,7 +134,7 @@ export default class Popup {
     createRect() {
 
         this.rect = new Konva.Rect({
-            fill: 'blue',
+            fill: indigo['500'],
             stroke: 'black',
             strokeWidth: 2,
             cornerRadius: 10,

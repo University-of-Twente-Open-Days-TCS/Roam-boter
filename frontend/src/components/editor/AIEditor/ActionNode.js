@@ -404,7 +404,7 @@ export default class ActionNode {
             y: this.position.y,
             width: blockWidth,
             height: blockHeight,
-            fill: 'green',
+            fill: this.canvas.colors.action_node,
             stroke: 'black',
             strokeWidth: 2,
             cornerRadius: 10,

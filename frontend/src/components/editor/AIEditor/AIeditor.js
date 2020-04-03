@@ -16,6 +16,7 @@ import Seconds from "./Seconds.js";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 import JSONValidationError from "../Errors/JSONValidationError.js";
+import {amber, blue, deepPurple, green, grey, indigo, pink, red} from '@material-ui/core/colors';
 
 /** AI Canvas, the stage with which the user interacts or watches a replay on **/
 export default class AiCanvas {
@@ -28,9 +29,20 @@ export default class AiCanvas {
     _startNode;
     _isReplay;
 
+    // colors
+    colors = {
+        condition_node: indigo['500'],
+        action_node: indigo['300'],
+        true_circle: green['600'],
+        false_circle: pink['A400'],
+        popup_background: grey['50'],
+        stroke: grey['500']
+    }
+
     /** Created a stage, multiple layers and a StartNode, gets the container ID where it needs to be placed in,
      * and a boolean whether this is part of a replay next to a simulation (no interaction) **/
     constructor(container, isReplay) {
+        console.log(red)
         this.isReplay = isReplay;
         //Create the stage
         this.createStage(container);

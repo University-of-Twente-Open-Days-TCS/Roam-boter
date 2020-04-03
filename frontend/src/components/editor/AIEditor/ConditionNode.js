@@ -413,7 +413,7 @@ export default class ConditionNode {
                 y: this.position["y"],
                 width: this.conditionTextObj.width(),
                 height: this.conditionTextObj.height(),
-                fill: 'blue',
+                fill: this.canvas.colors.condition_node,
                 stroke: 'black',
                 strokeWidth: 2,
                 cornerRadius: 10,
@@ -439,7 +439,7 @@ export default class ConditionNode {
             y: this.position.y + this.rect.height(),
             x: this.position.x,
             radius: circle_radius,
-            fill: 'red',
+            fill: this.canvas.colors.false_circle,
             stroke: 'black',
         });
         this.group.add(this.falseCircle);
@@ -451,7 +451,7 @@ export default class ConditionNode {
             y: this.position.y + this.rect.height(),
             x: this.position.x + this.rect.width(),
             radius: circle_radius,
-            fill: 'green',
+            fill: this.canvas.colors.true_circle,
             stroke: 'black',
         });
         this.group.add(this.trueCircle);
