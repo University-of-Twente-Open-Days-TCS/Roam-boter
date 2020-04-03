@@ -6,17 +6,19 @@ import { Typography, Button } from '@material-ui/core'
 import ContentBox from '../../layout/ContentBox'
 
 import RoamBotAPI from '../../../RoamBotAPI'
+import {Refresh} from "@material-ui/icons";
 
 
 const TeamMatchItem = (props) => {
 
     let date = new Date(props.match.date)
     let timeString = date.toLocaleTimeString()
+    let done = (props.match.simulation.state === "DONE")
 
     return (
         <li>
-            <NavLink to={'/BotMatchReplay/'+props.match.simulation.pk+'/'+props.match.initiator_ai.pk}>
-                <Button variant="outlined" color="primary" size="small">{timeString}</Button>
+            <NavLink to={'/BotMatchReplay/'+props.match.simulation.pk+'/'+props.match.initiator_ai.pk} onClick={e => done ? null : e.preventDefault()}>
+                <Button variant="outlined" color="primary" size="small" disabled={!done}>{timeString} {(done) ? null : "Simulating.."}</Button>
             </NavLink><span className='spacing'></span>
             <Button variant="outlined" color="secondary" size="small" onClick={() => props.onDelete(props.match)}>Delete</Button>
         </li>
@@ -55,7 +57,7 @@ class TeamMatchHistory extends Component {
     render() {
         return(
             <ContentBox>
-                <Typography variant="h4">Team Match History</Typography>
+                <Typography variant="h4">Team Match History <Button onClick={() => this.refreshMatchHistory()} variant="contained" color="primary"><Refresh/></Button></Typography>
                 {this.state.matches.length > 0 ?
                 (<ul>{
                         this.state.matches.map((match, i) => {
