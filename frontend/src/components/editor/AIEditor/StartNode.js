@@ -59,13 +59,14 @@ export default class StartNode {
             width: blockWidth,
             height: blockHeight,
             fill: 'black',
-            stroke: 'black',
-            strokeWidth: 2,
+            stroke: this.canvas.start_node.stroke_color,
+            strokeWidth: this.canvas.start_node.stroke_width,
             cornerRadius: 10,
         });
         this.group.add(this.rect);
     }
 
+    // TODO: lettertype etc
     /** Create the text Obj for the node with contents 'Start' **/
     createText() {
         this.text = new Konva.Text({
@@ -87,8 +88,9 @@ export default class StartNode {
             y: this.rect.height(),
             x: this.rect.width() / 2,
             radius: circle_radius,
-            fill: 'green',
-            stroke: 'black',
+            fill: this.canvas.true_circle.fill,
+            stroke: this.canvas.true_circle.stroke_color,
+            strokeWidth: this.canvas.true_circle.stroke_width
         });
         this.group.add(this.trueCircle);
 
@@ -125,8 +127,8 @@ export default class StartNode {
             // in order to check what is under the cursor later
             this.moveTo(node.stage.templayer);
             this.tempArrow = new Konva.Arrow({
-                stroke: "black",
-                fill: "black"
+                stroke: 'black',
+                fill: 'black'
             });
 
             //delete any existing Arrow

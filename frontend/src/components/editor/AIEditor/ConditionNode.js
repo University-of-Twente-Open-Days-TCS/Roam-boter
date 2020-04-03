@@ -372,15 +372,16 @@ export default class ConditionNode {
             y: this.position.y,
             x: this.position.x + this.rect.width() / 2,
             radius: circle_radius,
-            fill: 'white',
-            stroke: 'black',
+            fill: this.canvas.input_circle.fill,
+            stroke: this.canvas.input_circle.stroke_color,
+            strokeWidth: this.canvas.input_circle.stroke_width
         });
         this.inputCircleHitbox = new Konva.Circle({
             y: this.position.y,
             x: this.position.x + this.rect.width() / 2,
             radius: hitboxCircleRadius,
-            fill: 'white',
-            stroke: 'black',
+            fill: this.canvas.input_circle.fill,
+            stroke: this.canvas.input_circle.stroke_color,
             opacity: 0
         });
 
@@ -398,9 +399,9 @@ export default class ConditionNode {
             text: conditionText,
             fontSize: 12,
             fill: '#FFF',
-            fontFamily: 'Monospace',
-            align: 'center',
-            padding: 10
+            fontFamily: '"Lucida Console", Monaco, monospace',
+            align: 'left',
+            padding: 13
         });
         this.group.add(this.conditionTextObj);
     }
@@ -413,10 +414,10 @@ export default class ConditionNode {
                 y: this.position["y"],
                 width: this.conditionTextObj.width(),
                 height: this.conditionTextObj.height(),
-                fill: this.canvas.colors.condition_node,
-                stroke: 'black',
-                strokeWidth: 2,
-                cornerRadius: 10,
+                fill: this.canvas.condition_node.fill,
+                stroke: this.canvas.condition_node.stroke_color,
+                strokeWidth: this.canvas.condition_node.stroke_width,
+                cornerRadius: this.canvas.condition_node.corner_radius,
             });
         } else {
             this.rect = new Konva.Rect({
@@ -424,10 +425,10 @@ export default class ConditionNode {
                 y: this.position.y,
                 width: blockWidth,
                 height: blockHeight,
-                fill: 'blue',
-                stroke: 'black',
-                strokeWidth: 2,
-                cornerRadius: 10,
+                fill: this.canvas.condition_node.fill,
+                stroke: this.canvas.condition_node.stroke_color,
+                strokeWidth: this.canvas.condition_node.stroke_width,
+                cornerRadius: this.canvas.condition_node.corner_radius,
             });
         }
         this.group.add(this.rect);
@@ -439,8 +440,9 @@ export default class ConditionNode {
             y: this.position.y + this.rect.height(),
             x: this.position.x,
             radius: circle_radius,
-            fill: this.canvas.colors.false_circle,
-            stroke: 'black',
+            fill: this.canvas.false_circle.fill,
+            stroke: this.canvas.false_circle.stroke_color,
+            strokeWidth: this.canvas.false_circle.stroke_width
         });
         this.group.add(this.falseCircle);
     }
@@ -451,8 +453,9 @@ export default class ConditionNode {
             y: this.position.y + this.rect.height(),
             x: this.position.x + this.rect.width(),
             radius: circle_radius,
-            fill: this.canvas.colors.true_circle,
-            stroke: 'black',
+            fill: this.canvas.true_circle.fill,
+            stroke: this.canvas.true_circle.stroke_color,
+            strokeWidth: this.canvas.true_circle.stroke_width
         });
         this.group.add(this.trueCircle);
 
@@ -489,8 +492,8 @@ export default class ConditionNode {
             // in order to check what is under the cursor later
             this.moveTo(node.stage.templayer);
             this.tempArrow = new Konva.Arrow({
-                stroke: "black",
-                fill: "black"
+                stroke: 'black',
+                fill: 'black'
             });
 
             //delete any existing Arrow

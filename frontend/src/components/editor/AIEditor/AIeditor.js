@@ -16,7 +16,20 @@ import Seconds from "./Seconds.js";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 import JSONValidationError from "../Errors/JSONValidationError.js";
-import {amber, blue, deepPurple, green, grey, indigo, pink, red} from '@material-ui/core/colors';
+import {
+    amber,
+    blue, cyan,
+    deepOrange,
+    deepPurple,
+    green,
+    grey,
+    indigo,
+    lightBlue,
+    pink,
+    red, teal,
+    yellow
+} from '@material-ui/core/colors';
+import {black, white} from "color-name";
 
 /** AI Canvas, the stage with which the user interacts or watches a replay on **/
 export default class AiCanvas {
@@ -29,20 +42,61 @@ export default class AiCanvas {
     _startNode;
     _isReplay;
 
-    // colors
-    colors = {
-        condition_node: indigo['500'],
-        action_node: indigo['300'],
-        true_circle: green['600'],
-        false_circle: pink['A400'],
-        popup_background: grey['50'],
-        stroke: grey['500']
+    // styling of the editor
+
+    circle = {
+        stroke_width: 1,
+        stroke_color: grey['800'],
+    }
+
+    input_circle = {
+        ...this.circle,
+        fill: 'white'
+    }
+
+    true_circle = {
+        ...this.circle,
+        stroke_width: 0,
+        fill: green['500']
+    }
+
+    false_circle = {
+        ...this.circle,
+        stroke_width: 0,
+        fill: pink['A400']
+    }
+
+    node = {
+        corner_radius: 5,
+        stroke_width: 0,
+        stroke_color: grey['800']
+    }
+
+    start_node = {
+        ...this.node,
+        fill: black,
+    }
+
+    condition_node = {
+        ...this.node,
+        fill: blue['900']
+    }
+
+    action_node = {
+        ...this.node,
+        fill: blue['700']
+    }
+
+    arrow = {
+        stroke_width: 2,
+        stroke_color: 'red',
+        fill: 'black'
     }
 
     /** Created a stage, multiple layers and a StartNode, gets the container ID where it needs to be placed in,
      * and a boolean whether this is part of a replay next to a simulation (no interaction) **/
     constructor(container, isReplay) {
-        console.log(red)
+        console.log(blue['700'])
         this.isReplay = isReplay;
         //Create the stage
         this.createStage(container);
