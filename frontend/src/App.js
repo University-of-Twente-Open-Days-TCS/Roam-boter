@@ -8,6 +8,7 @@ import {
 
 
 import Home from "./components/home/Home";
+import Tutorial from "./components/home/Tutorial"
 import AIEditor from "./components/editor/AIEditor.js";
 import AIList from "./components/editor/AIList";
 import Login from "./components/login/Login";
@@ -144,6 +145,7 @@ class App extends Component {
                         <Route path="/PlayvsPlayer" component={PlayvsPlayer} />
                         <Route path="/NewTeamMatch" component={NewTeamMatch} />
                         <Route path="/TeamMatchHistory" component={TeamMatchHistory} />
+                        <Route path="/Guide" component={Tutorial} />
                     </Structure>
                 </div>)
                 :
