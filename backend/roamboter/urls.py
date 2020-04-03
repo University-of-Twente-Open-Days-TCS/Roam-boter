@@ -32,10 +32,10 @@ urlpatterns = [
     #Our apps url configuration
     path(r'ai/', include(AIapi_urls)),                  # saving and getting AI's
     path(r'matches/', include(matches_urls)),           # playing matches and retrieving bots.
-    path(r'dashboard/', include(dashboard_urls)),
+    path(r'', include(dashboard_urls)),
     path(r'csrf/', views.csrf),                         # sets csrf cookie.
     path(r'test/', views.test),                         # ping test
-    path(r'', include(home_urls)),]
+    path(r'home/', include(home_urls)),]
 
 
 
