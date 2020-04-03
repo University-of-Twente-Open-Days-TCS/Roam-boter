@@ -61,12 +61,11 @@ class Tank:
 
     def set_label_timer(self, index, seconds):
         self.label_timers[index] = seconds * 60
-        self.labels[index] = True
 
     def process_label_timers(self):
         for i, x in enumerate(self.label_timers):
             if x == 0:
-                self.labels[i] = False
+                self.labels[i] = True
             self.label_timers[i] -= 1
 
     def set_spawn(self, x, y):
