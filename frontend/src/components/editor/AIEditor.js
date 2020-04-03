@@ -237,15 +237,7 @@ class AIEditor extends Component {
 
                     } else {
                         response.json().then((data) => {
-                            var message = ""
-                            console.log(data)
-                            Object.keys(data).forEach(function (key, elem) {
-                                console.log(data[key])
-                                data[key].forEach(function (error, index) {
-                                    message += key + " error: " + error + "\n";
-                                })
-                            });
-                            this.setState({errorAlertOpen: true, errorMessage: message});
+                            this.setState({errorAlertOpen: true, errorMessage: RoamBotAPI.stringifyError(data)});
                         })
                     }
             }).catch((err) => {console.error(err); window.alert("Something went wrong2...")})
