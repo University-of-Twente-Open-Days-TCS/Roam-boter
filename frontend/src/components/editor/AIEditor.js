@@ -208,6 +208,10 @@ class AIEditor extends Component {
          * Called when user confirms dialog
          * Save the AI as a new AI.
          */
+
+        //TODO: Proper error handling when the server returns a 400 status
+
+
         this.setState({
             dialog: {...this.state.dialog, open: false}
         })
@@ -228,14 +232,15 @@ class AIEditor extends Component {
                                 this.setState({successAlertOpen: true})
                             }).catch((error) => {
                                 console.error(error)
-                                window.alert("Something went wrong...")
+                                window.alert("Something went wrong1...")
                             })
 
-                    }else {
-                        console.error(response)
-                        window.alert("Something went wrong...")
+                    } else {
+                        response.json().then((data) => {
+                            this.setState({errorAlertOpen: true, errorMessage: RoamBotAPI.stringifyError(data)});
+                        })
                     }
-            }).catch((err) => {console.error(err); window.alert("Something went wrong...")})
+            }).catch((err) => {console.error(err); window.alert("Something went wrong2...")})
         } catch (error) {
             this.setState({errorAlertOpen: true, errorMessage: error.message})
         }

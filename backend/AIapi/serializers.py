@@ -30,6 +30,16 @@ class AISerializer(AIOverviewSerializer):
             raise serializers.ValidationError("Invalid AI Json")
         return value
 
+    def validate_name(self, value):
+        # Only validate name on creation of new AI
+        if self.instance is None and self.initial_data is not None:
+            # On creation of object
+            name = self.initial_data['name']
+            team = self.context['team']
+            if AI.objects.filter(team=team, name=name).exists():
+                raise serializers.ValidationError("Duplicate Name")
+        return value
+
     def create(self, validated_data):
         """Returns an AI instance from the serializer"""
         # convert json to actual text
