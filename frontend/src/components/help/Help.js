@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import SwipeableViews  from 'react-swipeable-views'
 
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Tabs, Tab, Typography, Grid } from '@material-ui/core'
-import { Spa } from "@material-ui/icons";
+import { Paper, AppBar, Tabs, Tab, Typography, Grid } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -25,6 +24,11 @@ const useStyles = makeStyles(theme => ({
     panelText: {
         margin: theme.spacing(1, 0),
         wordWrap: 'break-word',
+    },
+    panelImage: {
+        display: 'block',
+        margin: `${theme.spacing(2)}px auto`,
+        maxWidth: '100%',
     }
 }))
 
@@ -57,7 +61,9 @@ const PanelText = props => {
 const PanelImage = props => {
     const classes = useStyles()
     return (
-        <div>TO BE IMAGE</div>
+        <div>
+            <img className={classes.panelImage} src={props.src}></img>
+        </div>
     )
 }
 
@@ -108,7 +114,7 @@ const Help = (props) => {
                     </PanelText>
                     <PanelText>
                                 Try to improve your AI through trial and error, discuss with your teammates and feel free to<br></br>
-                                <i><b>ask any questions about the workshop, the study of TCS or the student life at the Super Future Guides!</b></i>
+                                <i><b>ask any questions about the workshop, the study of TCS or the student life to the Super Future Guides!</b></i>
                     </PanelText>
                 </TabPanel>
 
@@ -121,7 +127,7 @@ const Help = (props) => {
                                 it will follow the path from the green circle, otherwise it will follow the false-path, from the red circle. 
                                 Eventually it will end up at an action-node, and perform the action(s) that it contains.
                     </PanelText>
-                    <PanelImage>
+                    <PanelImage src="/help_images/dectree.png">
 
                     </PanelImage>
                     <PanelText>
@@ -143,7 +149,7 @@ const Help = (props) => {
                                 The blue dots are the spawn point objects, the yellow dot in the middle is the center and the red cross packets are health packets, 
                                 which you can navigate to to heal.
                     </PanelText>
-                    <PanelImage></PanelImage>
+                    <PanelImage src="/help_images/simulreplaywithoutai.png"></PanelImage>
                     <PanelText>
                                 From the tank two grey lines sprout, those are its vision-lines. The tank is aware of the location of everything on the map, 
                                 except enemy bullets and the enemy tank itself, since those move around. 
@@ -158,7 +164,7 @@ const Help = (props) => {
                                 This picture is from a replay, you can watch it frame by frame via the slider and to the right you see your AI and the current state it is in. 
                                 This means that when your tank is not behaving like you want it to, you can exactly pinpoint the problem and adjust your AI accordingly.
                     </PanelText>
-                    <PanelImage></PanelImage>
+                    <PanelImage src="/help_images/simulreplay.png"></PanelImage>
                 </TabPanel>
 
                 <TabPanel value={tabIndex} index={4}>
