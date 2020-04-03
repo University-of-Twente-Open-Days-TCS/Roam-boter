@@ -21,7 +21,7 @@ class AIList(APIView):
     def get(self, request):
         """Get list of AI's"""
         team_pk = request.session['team_id']
-        ai_list = AI.objects.filter(team=team_pk).all()
+        ai_list = AI.objects.filter(team=team_pk, listed=True).all()
         serializer = AISerializer(ai_list, many=True)
         return Response(serializer.data)
 
