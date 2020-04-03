@@ -33,6 +33,9 @@ class AIList(APIView):
         serializer = AISerializer(data=request.data, context={'team': team})
 
         if serializer.is_valid():
+            if AI.objects.filter(team=team, name=request.data['name']).count() != 0:
+                return Response("Name already exists", status=status.HTTP_400_BAD_REQUEST)
+
             # save new AI
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
