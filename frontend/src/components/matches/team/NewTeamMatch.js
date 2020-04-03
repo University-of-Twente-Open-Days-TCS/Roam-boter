@@ -9,6 +9,7 @@ import ActiveAIDialog from "../ActiveAIDialog"
 
 import RoamBotAPI from '../../../RoamBotAPI'
 import Alert from "@material-ui/lab/Alert";
+import {NavLink} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -34,7 +35,8 @@ const NewTeamMatch = props => {
     let [snackbar, setSnackbar] = useState({
         open: false,
         error: false,
-        message: ""
+        message: "",
+        url: null
     })
     let [activeAIDialogOpen, setActiveAIDialogOpen] = useState(false)
 
@@ -68,15 +70,17 @@ const NewTeamMatch = props => {
         let call = await RoamBotAPI.postTeamMatch({gamemode: "DM", ai: selectedAI.pk})
         if (call.ok){
             setSnackbar({
-                message: "Simulation successful! Match available under Replays",
+                message: "Simulation successful, click here to view replays",
                 error: false,
-                open: true
+                open: true,
+                url: "/TeamMatchHistory"
             })
         }else {
             setSnackbar({
                 message: "Something went wrong, perhaps there are no other teams with an active AI yet?",
                 error: true,
-                open: true
+                open: true,
+                url: null
             })
         }
     }
@@ -103,9 +107,11 @@ const NewTeamMatch = props => {
 
                         {(ais) ? (<SelectAIDialog ais={ais} open={selectAIOpen} handleClose={() => setSelectAIOpen(false)} handleClick={handleAIListItemClick} />) : "no AIs found"}
 
-                        <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({...snackbar, open: false})}>
-                            <Alert severity={snackbar.error ? "error" : "success"} elevation={6} variant="filled"> {snackbar.message} </Alert>
-                        </Snackbar>
+                        <NavLink to={snackbar.url ? snackbar.url : '/'} onClick={e => snackbar.url ? null : e.preventDefault()}>
+                            <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({...snackbar, open: false})}>
+                                <Alert severity={snackbar.error ? "error" : "success"} elevation={6} variant="filled"> {snackbar.message} </Alert>
+                            </Snackbar>
+                        </NavLink>
 
                         <ActiveAIDialog open={activeAIDialogOpen} handleClose={() => setActiveAIDialogOpen(false)} selectedAI={selectedAI} />
                     </div>
