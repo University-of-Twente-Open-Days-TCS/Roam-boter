@@ -131,12 +131,12 @@ const Help = (props) => {
 
                     </PanelImage>
                     <PanelText>
-                                <i>Conditions</i>: You can tap on a condition-node to edit it
+                                <i>Conditions</i>: You can tap on a condition-node to edit it.
                     </PanelText>
                     
                     <PanelText>
-                                <i>Actions</i>: You can tap on an action-node to add another action to it, you may only use one movement, 
-                                aim and shoot/self-destruct action per node.
+                                <i>Actions</i>: You can tap on an action-node to add another action to it. You may only use one movement action, 
+                                one aim action and one shoot/self-destruct action per node.
                     </PanelText>
 
                 </TabPanel>
