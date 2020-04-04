@@ -5,7 +5,7 @@ from .models import Bot, Simulation, BotMatch, TeamMatch, Match
 from AIapi.models import AI
 from AIapi.serializers import AIOverviewSerializer
 
-from dashboard.serializers import TeamOverviewSerializer
+from dashboard.serializers import TeamSerializer, TeamOverviewSerializer
 
 
 class BotSerializer(serializers.ModelSerializer):
@@ -65,7 +65,19 @@ class MatchSerializer(serializers.Serializer):
 
 class BotMatchSerializer(MatchSerializer):
     """
-    Serializer for BotMatches.
+    Retrieves an overview of the botmatch. Cannot be used to instantiate a match.
+    """
+
+    team = TeamOverviewSerializer(read_only=True)
+    bot = BotSerializer(read_only=True)
+    # ai of the playing team (not the bot)
+    ai = AIOverviewSerializer(read_only=True)
+    simulation = SimulationOverviewSerializer(read_only=True)
+
+
+class BotMatchPrimaryKeySerializer(MatchSerializer):
+    """
+    Serializer for BotMatches. This mainly is used for instantiating a match.
     The team playing the botmatch needs to be passed as context to this serializer.
     """
 
@@ -95,10 +107,10 @@ class BotMatchSerializer(MatchSerializer):
 
 class DetailedBotMatchSerializer(BotMatchSerializer):
     """
-    Detailed Serializer of a botmatch. Includes full simulation
+    Detailed Serializer of a botmatch. Includes full simulation, and team, bot, ai details
     """
 
-    # override simulation
+    # override simulation serializer.
     simulation = SimulationSerializer(read_only=True)
 
 

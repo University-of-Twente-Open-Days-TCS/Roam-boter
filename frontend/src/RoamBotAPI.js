@@ -180,6 +180,15 @@ class RoamBotAPI {
         return response
     }
 
+    getTeamMatchDetail(pk) {
+        /**
+         * Gets team match detail, including the simulation!
+         * @param pk primary key of the match.
+         */
+        let response = this.callApi('matches/teammatches/'+pk, 'GET')
+        return response
+    }
+
     postTeamMatch({gamemode, ai}) {
         /**
          * @param gamemode Gamemode

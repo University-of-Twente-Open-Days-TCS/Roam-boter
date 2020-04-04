@@ -33,7 +33,7 @@ const MatchItem = (props) => {
 
     return (
         <li>
-            <NavLink to={'/BotMatchReplay/'+props.match.simulation.pk+'/'+props.match.ai} onClick={e => done ? null : e.preventDefault()}>
+            <NavLink to={'/MatchReplay/'+props.match.pk+'/botmatch'} onClick={e => done ? null : e.preventDefault()}>
                 <Button variant="outlined" color="primary" size="small" disabled={!done}>{timeString} {(done) ? null : "Simulating.."}</Button>
             </NavLink><span className='spacing'></span>
             <Button variant="outlined" color="secondary" size="small" onClick={deleteMatch}>Delete</Button>

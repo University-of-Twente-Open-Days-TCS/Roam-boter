@@ -129,8 +129,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 CSRF_TRUSTED_ORIGINS = ['*',] #change to app.example.com
 
 # URLS used for logging in and logging out workshop owners.
-LOGIN_URL = "/dashboard/login"
-LOGOUT_REDIRECT_URL = "/dashboard/login"
+LOGIN_URL = "/login"
+LOGOUT_REDIRECT_URL = "/login"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
