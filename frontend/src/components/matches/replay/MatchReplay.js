@@ -3,15 +3,19 @@ import { withRouter } from "react-router-dom";
 
 import { withStyles } from '@material-ui/core/styles'
 
-import ReplayCanvas from "../ReplayCanvas";
+import ReplayCanvas from "./ReplayCanvas";
 import ContentBox from '../../layout/ContentBox'
-import ReplayControls from '../ReplayControls'
+import ReplayControls from './ReplayControls'
 import AIReplayCanvas from "../AIReplayCanvas";
+import MatchReplayHeader from './MatchReplayHeader'
 
 import RoamBotAPI from "../../../RoamBotAPI"
 
 
 const styles = theme => ({
+    replayHeader: {
+
+    },
     wrapper: {
         display: 'flex',
         height: 'auto',
@@ -40,7 +44,7 @@ const styles = theme => ({
 })
 
 
-class BotMatchReplay extends Component {
+class MatchReplay extends Component {
 
     SLIDER_MAX = 10000
 
@@ -64,7 +68,6 @@ class BotMatchReplay extends Component {
         }
 
         this.frameData = frameData
-
 
         this.state = {
             match: null,
@@ -126,10 +129,11 @@ class BotMatchReplay extends Component {
         }
 
         // Finally set the state of everything
-        this.setState({ match: match, matchKind: matchKind })
 
-        this.resizeCanvas()
-        replayCanvas.draw()
+        this.setState({ match: match, matchKind: matchKind }, () => {
+            this.resizeCanvas()
+            replayCanvas.draw()
+        })
     }
 
     componentDidUpdate() {
@@ -291,6 +295,9 @@ class BotMatchReplay extends Component {
 
         return (
             <ContentBox>
+                <div className={classes.replayHeader}>
+                    <MatchReplayHeader></MatchReplayHeader>
+                </div>
                 <div className={classes.wrapper}>
                     <div className={classes.matchWrapper}>
                         <div ref={this.replayContainerRef} className={classes.matchContainer}></div>
@@ -305,4 +312,4 @@ class BotMatchReplay extends Component {
     }
 }
 
-export default withRouter(withStyles(styles)(BotMatchReplay));
+export default withRouter(withStyles(styles)(MatchReplay));
