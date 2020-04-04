@@ -13,19 +13,23 @@ import RoamBotAPI from "../../../RoamBotAPI"
 
 
 const styles = theme => ({
-    replayHeader: {
-
-    },
     wrapper: {
         display: 'flex',
         height: 'auto',
+
+        borderBottom: 'solid 1px rgba(0,0,0,0.2)',
     },
     matchWrapper: {
         position: 'relative',
+
         display: 'flex',
         flexDirection: 'column',
         width: '70%',
         height: 'auto',
+
+        padding: theme.spacing(1),
+
+        borderRight: 'solid 1px rgba(0,0,0,0.2)',
     },
     matchContainer: {
         display: 'block',
@@ -38,8 +42,11 @@ const styles = theme => ({
         flexGrow: 1,
     },
     editorContainer: {
-        backgroundColor: '#f6f6f6',
         overflow: 'hidden',
+
+        backgroundImage: 'url("/ai_editor_images/Seamless-Circuit-Board-Pattern.svg")',
+        backgroundRepeat: 'repeat',
+        backgroundSize: '4000px',
     },
 })
 
@@ -177,14 +184,27 @@ class MatchReplay extends Component {
                     let botmatchCall = await RoamBotAPI.getBotMatchDetails(matchPk)
                     let botmatchJson = await botmatchCall.json()
                     match = botmatchJson
+
+                    // inject some extra data into the json.
+                    match.generalInfo = {
+                        player: botmatchJson.team.team_name,
+                        opponent: botmatchJson.bot.name
+                    }
+
                     aiPk = botmatchJson.ai.pk
                     break
                 case types.TEAMMATCH:
                     let teammatchCall = await RoamBotAPI.getTeamMatchDetail(matchPk)
                     let teammatchJson = await teammatchCall.json()
                     match = teammatchJson
-                    aiPk = teammatchJson.initiator_ai.pk
 
+                    // inject some extra data into the json.
+                    match.generalInfo = {
+                        player: teammatchJson.initiator.team_name,
+                        opponent: teammatchJson.opponent.team_name
+                    }
+
+                    aiPk = teammatchJson.initiator_ai.pk
                     break
                 default:
                     throw new Error("INVALID MATCH TYPE")
@@ -294,12 +314,12 @@ class MatchReplay extends Component {
         }
 
         return (
-            <ContentBox>
-                <div className={classes.replayHeader}>
-                    <MatchReplayHeader></MatchReplayHeader>
-                </div>
+            <ContentBox noPadding>
+
                 <div className={classes.wrapper}>
+
                     <div className={classes.matchWrapper}>
+                        <MatchReplayHeader match={this.state.match}></MatchReplayHeader>
                         <div ref={this.replayContainerRef} className={classes.matchContainer}></div>
                         <ReplayControls ref={this.controlsRef} {...props} />
                     </div>
