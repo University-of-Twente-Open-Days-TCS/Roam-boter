@@ -59,7 +59,7 @@ class Level:
 
                 if file_checksum != checksum:
                     raise FileNotFoundError
-        except (ValueError, FileNotFoundError):
+        except (ValueError, FileNotFoundError, pickle.UnpicklingError):
             nearest_objects = self.prepare_nearest_objects()
             with open(pickle_path, 'wb') as f:
                 pickle.dump((checksum, nearest_objects), f)
@@ -126,7 +126,7 @@ class Level:
                 if file_checksum != checksum:
                     raise FileNotFoundError
 
-        except (ValueError, FileNotFoundError):
+        except (ValueError, FileNotFoundError, pickle.UnpicklingError):
             nearest_paths = self.prepare_all_paths()
             with open(pickle_path, 'wb') as f:
                 pickle.dump((checksum, nearest_paths), f)
