@@ -16,6 +16,13 @@ import Seconds from "./Seconds.js";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 import JSONValidationError from "../Errors/JSONValidationError.js";
+import {
+    blue,
+    green,
+    grey,
+    pink,
+} from '@material-ui/core/colors';
+import {black} from "color-name";
 
 /** AI Canvas, the stage with which the user interacts or watches a replay on **/
 export default class AiCanvas {
@@ -27,6 +34,57 @@ export default class AiCanvas {
     _dragging;
     _startNode;
     _isReplay;
+
+    // styling of the editor
+
+    circle = {
+        stroke_width: 1,
+        stroke_color: grey['800'],
+    }
+
+    input_circle = {
+        ...this.circle,
+        fill: 'white'
+    }
+
+    true_circle = {
+        ...this.circle,
+        stroke_width: 0,
+        fill: green['500']
+    }
+
+    false_circle = {
+        ...this.circle,
+        stroke_width: 0,
+        fill: pink['A400']
+    }
+
+    node = {
+        corner_radius: 5,
+        stroke_width: 0,
+        stroke_color: grey['800']
+    }
+
+    start_node = {
+        ...this.node,
+        fill: black,
+    }
+
+    condition_node = {
+        ...this.node,
+        fill: blue['900']
+    }
+
+    action_node = {
+        ...this.node,
+        fill: blue['700']
+    }
+
+    arrow = {
+        stroke_width: 2,
+        stroke_color: 'red',
+        fill: 'black'
+    }
 
     /** Created a stage, multiple layers and a StartNode, gets the container ID where it needs to be placed in,
      * and a boolean whether this is part of a replay next to a simulation (no interaction) **/

@@ -149,10 +149,11 @@ export default class ActionNode {
         let i = 0;
         if (this.actionList != null) {
             let actionListLength = this.actionList.length;
+            actionNodeString = "> "
             this.actionList.forEach(element => {
                 actionNodeString = actionNodeString.concat(element.toString());
                 if (i + 1 < actionListLength) {
-                    actionNodeString = actionNodeString.concat("\n");
+                    actionNodeString = actionNodeString.concat("\n> ");
                 }
                 i = i + 1;
             });
@@ -251,9 +252,9 @@ export default class ActionNode {
             text: this.actionNodeText,
             fontSize: 12,
             fill: '#FFF',
-            fontFamily: 'Monospace',
-            align: 'center',
-            padding: 10
+            fontFamily: '"Lucida Console", Monaco, monospace',
+            align: 'left',
+            padding: 13
         });
         this.group.add(this.actionNodeTextObj);
 
@@ -406,10 +407,10 @@ export default class ActionNode {
             y: this.position.y,
             width: blockWidth,
             height: blockHeight,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 2,
-            cornerRadius: 10,
+            fill: this.canvas.action_node.fill,
+            stroke: this.canvas.action_node.stroke_color,
+            strokeWidth: this.canvas.action_node.stroke_width,
+            cornerRadius: this.canvas.action_node.corner_radius
         });
         this.group.add(this.rect);
     }
@@ -420,16 +421,17 @@ export default class ActionNode {
             y: this.position.y,
             x: this.position.x + this.rect.width() / 2,
             radius: circle_radius,
-            fill: 'white',
-            stroke: 'black',
+            fill: this.canvas.input_circle.fill,
+            stroke: this.canvas.input_circle.stroke_color,
+            strokeWidth: this.canvas.input_circle.stroke_width
         });
 
         this.inputCircleHitbox = new Konva.Circle({
             y: this.position.y,
             x: this.position.x + this.rect.width() / 2,
             radius: hitboxCircleRadius,
-            fill: 'white',
-            stroke: 'black',
+            fill: this.canvas.input_circle.fill,
+            stroke: this.canvas.input_circle.stroke_color,
             opacity: 0
         });
         this.stage.inputDict.set(this.inputCircleHitbox, this);
