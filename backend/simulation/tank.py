@@ -8,6 +8,8 @@ import numpy
 TANK_TURN_SPEED = 2.5
 TURRET_TURN_SPEED = 3
 
+FPS = 60
+
 VISION_RANGE = 30
 
 
@@ -60,7 +62,7 @@ class Tank:
         self.labels[index] = False
 
     def set_label_timer(self, index, seconds):
-        self.label_timers[index] = seconds * 60
+        self.label_timers[index] = seconds * FPS
 
     def process_label_timers(self):
         for i, x in enumerate(self.label_timers):
