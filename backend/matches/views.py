@@ -13,7 +13,7 @@ from dashboard.models import Team
 
 
 from .models import Bot, Simulation, BotMatch, TeamMatch
-from .serializers import BotSerializer, BotMatchSerializer, TeamMatchPrimaryKeySerializer, TeamMatchSerializer, DetailedTeamMatchSerializer, SimulationSerializer
+from .serializers import BotSerializer, BotMatchSerializer, BotMatchPrimaryKeySerializer, DetailedBotMatchSerializer, TeamMatchPrimaryKeySerializer, TeamMatchSerializer, DetailedTeamMatchSerializer, SimulationSerializer
 from .matchplayer import SIMULATION_PLAYER
 
 
@@ -68,7 +68,7 @@ class BotMatchHistoryListAPI(APIView):
         team_pk = request.session['team_id']
         team = Team.objects.get(pk=team_pk)
 
-        serializer = BotMatchSerializer(data=request.data, context={'team': team})
+        serializer = BotMatchPrimaryKeySerializer(data=request.data, context={'team': team})
 
         if serializer.is_valid():
             botmatch = serializer.save()
@@ -97,7 +97,7 @@ class BotMatchHistoryRetrieveAPI(RetrieveTeamObjectMixin, DestroyTeamObjectMixin
     permission_classes = [InTeamPermission]
 
     queryset = BotMatch.objects.all()
-    serializer_class = BotMatchSerializer
+    serializer_class = DetailedBotMatchSerializer
 
     def get(self, request, *args, **kwargs):
         """

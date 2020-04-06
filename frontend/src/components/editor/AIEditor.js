@@ -43,7 +43,11 @@ const styles = theme => ({
         height: '100%',
 
         backgroundColor: 'white',
-        borderLeft: '1px solid rgba(0, 0, 0, 0.12)'
+        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+
+        zIndex: 4,
+        overflowY: 'auto',
+        overscrollBehavior: 'contain',
     }
 })
 
@@ -63,7 +67,8 @@ class AIEditor extends Component {
         this.handleAddAction = this.handleAddAction.bind(this)
         this.handleSave = this.handleSave.bind(this)
         this.handleSaveAsNew = this.handleSaveAsNew.bind(this)
-        this.handleDelete = this.handleDelete.bind(this)
+        this.handlePlayvsBot = this.handlePlayvsBot.bind(this)
+        this.handlePlayvsTeam = this.handlePlayvsTeam.bind(this)
 
         this.state = {
             id: null,
@@ -152,24 +157,14 @@ class AIEditor extends Component {
         this.setState({dialog: {...this.state.dialog, open: true}})
     }
 
-    handleDelete = () => {
-        /** Prompts user and deletes AI if user confirms. */
-        let confirmation = window.confirm("Are you sure you want to delete this AI?")
-        if(confirmation){
-            // check if ai exists
-            if (this.state.ai) {
-                let call = RoamBotAPI.deleteAI(this.state.ai.pk)
-                call.then((response) => {
-                    if(response.ok){
-                        this.props.history.push('/AIList')
-                    }else{
-                        window.alert(response.json)
-                    }
-                })
-            }else {
-                this.props.history.push('/AIList')
-            }
-        }
+    handlePlayvsBot() {
+        let ai = this.state.ai
+        this.props.history.push('/NewBotMatch/'+ai.pk)
+    }
+
+    handlePlayvsTeam() {
+        let ai = this.state.ai
+        this.props.history.push('/NewTeamMatch/'+ai.pk)
     }
 
 
@@ -261,7 +256,8 @@ class AIEditor extends Component {
             addActionHandler: this.handleAddAction,
             handleSave: this.handleSave,
             handleSaveAsNew: this.handleSaveAsNew,
-            handleDelete: this.handleDelete,
+            handlePlayvsBot: this.handlePlayvsBot,
+            handlePlayvsTeam: this.handlePlayvsTeam,
             ai: this.state.ai
         }
 
