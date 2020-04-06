@@ -76,8 +76,11 @@ const NewTeamMatch = props => {
                 url: "/TeamMatchHistory"
             })
         }else {
+            let error = await call.json()
+            let message = (call.status === 423) ? error.error : "Something went wrong, please contact the supervisors"
+
             setSnackbar({
-                message: "Something went wrong, perhaps there are no other teams with an active AI yet?",
+                message: message,
                 error: true,
                 open: true,
                 url: null
