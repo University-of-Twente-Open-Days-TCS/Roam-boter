@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
     content: {
         /* Content Max height */
         backgroundColor: 'white',
-        height: '100vh',
         overflowX: 'hidden', 
         flexGrow: 1,
     },
@@ -26,8 +25,22 @@ const useStyles = makeStyles(theme => ({
 export default function Structure(props) {
     
     const classes = useStyles()
-
     let {toggleFull, isFull} = props
+
+
+    const [height, setHeight] = useState(null)
+
+    const adjustHeight = () => {
+        let height = window.innerHeight
+        setHeight(height)
+    }
+    
+    useEffect(() => {
+        if(height === null) {
+            window.addEventListener('resize', adjustHeight)
+            adjustHeight()
+        }
+    })
 
     return (
 
@@ -37,7 +50,7 @@ export default function Structure(props) {
             <HashRouter>                
                 <DrawerMenu toggleFull={toggleFull} isFull={isFull}/>
 
-                <main className={classes.content}>
+                <main className={classes.content} style={{height: height}}>
                     { props.children }
                 </main>
             </HashRouter>

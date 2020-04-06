@@ -44,7 +44,7 @@ const AIListItem = ({ai}) => {
 
             <ListItemSecondaryAction onClick={deleteHandler}>
                 <IconButton aria-label="delete-ai">
-                    <DeleteIcon></DeleteIcon>
+                    <DeleteIcon color='secondary'></DeleteIcon>
                 </IconButton>
             </ListItemSecondaryAction>
         </ListItem>

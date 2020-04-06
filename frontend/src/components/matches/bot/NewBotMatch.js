@@ -127,6 +127,7 @@ const NewBotMatch = props => {
                     </div>
                 </Grid>
             </Grid>
+
         </ContentBox>
     )
 }

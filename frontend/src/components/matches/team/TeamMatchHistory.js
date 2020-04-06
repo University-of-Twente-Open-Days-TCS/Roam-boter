@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 
-import { Typography, Button } from '@material-ui/core'
+import { Typography, Button, Grid } from '@material-ui/core'
 
 import ContentBox from '../../layout/ContentBox'
 
@@ -58,25 +58,26 @@ class TeamMatchHistory extends Component {
         return(
             <ContentBox>
                 <Typography variant="h4">Team Match History <Button onClick={() => this.refreshMatchHistory()} variant="outlined" size="small" color="primary"><Refresh/></Button></Typography>
-                {this.state.matches.length > 0 ?
-                (<ul>{
-                        this.state.matches.map((match, i) => {
-                            return (
-                                <TeamMatchItem key={i} match={match} onDelete={this.deleteHandler}></TeamMatchItem>
-                            )
-                        })
-                    }
-                </ul>)
-                    :
-                (
-                    <div>
-                        <Typography>You haven't played any matches yet against opponents.</Typography>
-                        <NavLink to="/NewTeamMatch">
-                            <Button color="primary" variant="contained">Play a match!</Button>
-                        </NavLink>
-                    </div>
-                )
-                }
+                
+                    {this.state.matches.length > 0 ?
+                    (<ul>{
+                            this.state.matches.map((match, i) => {
+                                return (
+                                    <TeamMatchItem key={i} match={match} onDelete={this.deleteHandler}></TeamMatchItem>
+                                )
+                            })
+                        }
+                    </ul>)
+                        :
+                    (
+                        <div>
+                            <Typography>You haven't played any matches yet against opponents.</Typography>
+                            <NavLink to="/NewTeamMatch">
+                                <Button color="primary" variant="contained">Play a match!</Button>
+                            </NavLink>
+                        </div>
+                    )}
+
             </ContentBox>
         )
     }

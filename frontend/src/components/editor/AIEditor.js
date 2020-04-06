@@ -43,7 +43,11 @@ const styles = theme => ({
         height: '100%',
 
         backgroundColor: 'white',
-        borderLeft: '1px solid rgba(0, 0, 0, 0.12)'
+        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+
+        zIndex: 4,
+        overflowY: 'scroll',
+        overscrollBehavior: 'contain',
     }
 })
 
