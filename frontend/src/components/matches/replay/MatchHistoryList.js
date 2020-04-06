@@ -1,13 +1,13 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 import clsx from 'clsx'
 
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
-
 import { Delete } from '@material-ui/icons'
-import { NavLink } from 'react-router-dom'
 
 import RoamBotAPI from '../../../RoamBotAPI'
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -22,13 +22,19 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
 
-        margin: '4px',
+        margin: '0.5rem',
         padding: '4px 0.75rem',
 
-        boxShadow: '1px 1px 2px rgba(0,0,0,0.3)',
+        boxShadow: '1px 1px 3px rgba(0,0,0,0.4)',
 
         '&:hover': {
             backgroundColor: 'rgba(0,0,0,0.02)'
+        }
+    },
+    matchListItemDisabled: {
+        boxShadow: '1px 1px 3px rgba(0,0,0,0.15)',
+        '&:hover': {
+            backgroundColor: 'unset'
         }
     },
     matchListItemText: {
@@ -63,11 +69,17 @@ const useStyles = makeStyles(theme => ({
         minWidth: '1.5rem',
 
     },
+    simulating: {
+        color: '#3f51b5'
+    }
 }))
 
 const MatchHistoryListItem = props => {
     let { match } = props
     let classes = useStyles()
+
+    let done = match.simulation.state === 'DONE'
+    console.log(done)
 
     let teammatch = Boolean(match.opponent)
     let opponent = teammatch ? match.opponent.team_name : match.bot.name
@@ -103,26 +115,42 @@ const MatchHistoryListItem = props => {
             })
 
     }
-
-    return (
-        <NavLink to={'/MatchReplay/'+props.match.pk+'/'+(teammatch ? 'teammatch' : 'botmatch')}>
-            <li className={classes.matchListItem}>
-                    <div className={classes.matchListItemText}>
-                        <Typography className={classes.title}>{player} vs {opponent}</Typography>
-                        {
-                            won ?
-                                (<div variant='caption' className={classes.caption}><span className={classes.green}>won</span> (<i>{ai_name}</i>)</div>)
-                                :
-                                (<div variant='caption' className={classes.caption}><span className={classes.red}>lost</span> (<i>{ai_name}</i>)</div>)
-                        }
-                    </div>
-                    <div className={classes.matchListItemIcon}>
-                        <IconButton onClick={(event) => {event.preventDefault(); deleteMatch();}}>
-                            <Delete></Delete>
-                        </IconButton>
-                    </div>
-            </li>
-        </NavLink>)
+    if(done) {
+        return (
+            <NavLink to={'/MatchReplay/'+props.match.pk+'/'+(teammatch ? 'teammatch' : 'botmatch')}>
+                <li className={classes.matchListItem}>
+                        <div className={classes.matchListItemText}>
+                            <Typography className={classes.title}>{player} vs {opponent}</Typography>
+                            {
+                                won ?
+                                    (<div className={classes.caption}><span className={classes.green}>won</span> (<i>{ai_name}</i>)</div>)
+                                    :
+                                    (<div className={classes.caption}><span className={classes.red}>lost</span> (<i>{ai_name}</i>)</div>)
+                            }
+                        </div>
+                        <div className={classes.matchListItemIcon}>
+                            <IconButton onClick={(event) => {event.preventDefault(); deleteMatch();}}>
+                                <Delete></Delete>
+                            </IconButton>
+                        </div>
+                </li>
+            </NavLink>)
+    }else {
+        return (
+                <li className={clsx(classes.matchListItem, classes.matchListItemDisabled)}>
+                        <div className={classes.matchListItemText}>
+                            <Typography className={classes.title}>{player} vs {opponent}</Typography>
+                           
+                            <div className={classes.caption}><span className={classes.simulating}>simulating...</span></div>
+                        </div>
+                        <div className={clsx(classes.matchListItemIcon)}>
+                            <IconButton style={{color: 'rgba(0,0,0,0.1)'}}>
+                                <Delete></Delete>
+                            </IconButton>
+                        </div>
+                </li>
+                )
+    }
 }
 
 const MatchHistoryList = props => {

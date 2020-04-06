@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { ListItem, ListItemText, ListItemIcon, ListItemSecondaryAction, makeStyles, IconButton } from '@material-ui/core'
+import { ListItem, ListItemText, ListItemSecondaryAction, makeStyles, IconButton } from '@material-ui/core'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 import RoamBotAPI from '../../RoamBotAPI'
@@ -44,7 +44,7 @@ const AIListItem = ({ai}) => {
 
             <ListItemSecondaryAction onClick={deleteHandler}>
                 <IconButton aria-label="delete-ai">
-                    <DeleteIcon color='primary'></DeleteIcon>
+                    <DeleteIcon></DeleteIcon>
                 </IconButton>
             </ListItemSecondaryAction>
         </ListItem>
