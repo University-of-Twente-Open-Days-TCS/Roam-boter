@@ -185,8 +185,12 @@ export default class StartNode {
     }
 
     /** Recursively darkens its childnodes, used in a replay **/
-    darkenAll() {
-        this.trueArrow.dest.darkenAll();
+    unhighlightAll() {
+        this.trueArrow.dest.unhighlightAll();
+    }
+
+    unhighlightPath(boolList) {
+        this.trueArrow.dest.unhighlightPath(boolList);
     }
 
     /** Highlight its childnode according to the active path, used in a replay **/

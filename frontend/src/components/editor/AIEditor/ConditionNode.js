@@ -604,11 +604,25 @@ export default class ConditionNode {
     }
 
     /** Darken this node and its children, used in a replay **/
-    darkenAll() {
+    unhighlightAll() {
+        this.unhighlight();
+        this.trueArrow.dest.unhighlightAll();
+        this.falseArrow.dest.unhighlightAll();
+    }
+
+    unhighlightPath(boolList){
+        this.unhighlight();
+        if (boolList.shift()) {
+            this.trueArrow.dest.unhighlightPath(boolList);
+        } else {
+            this.falseArrow.dest.unhighlightPath(boolList);
+        }
+    }
+
+
+    unhighlight(){
         this.rect.fill(this.canvas.condition_node.fill_unselected);
         this.rect.strokeWidth(this.canvas.condition_node.stroke_width);
-        this.trueArrow.dest.darkenAll();
-        this.falseArrow.dest.darkenAll();
         this.trueArrow.arrowline.strokeWidth(2);
         this.trueArrow.arrowline.stroke(this.canvas.arrow.fill_unselected);
         this.trueArrow.arrowline.fill(this.canvas.arrow.fill_unselected);
@@ -618,8 +632,8 @@ export default class ConditionNode {
 
         this.trueCircle.fill(this.canvas.true_circle.fill_unselected);
         this.falseCircle.fill(this.canvas.false_circle.fill_unselected);
-
     }
+
 
     /** Highlight this node and one of their children, used in a replay **/
     highlightPath(boolList) {

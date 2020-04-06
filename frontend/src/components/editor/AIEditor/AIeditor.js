@@ -127,13 +127,15 @@ export default class AiCanvas {
         if (!isReplay) {
             this.addTrashcan(this.stage);
         }
+        //for the replay
+        this.previousPath = null;
+
 
         this.layer.draw();
         this.stage.staticlayer.draw();
 
         //Make canvas draggable
         this.makeDraggable();
-
     }
 
     /** Create the stage in the given container, with the previously defined width & height **/
@@ -360,8 +362,12 @@ export default class AiCanvas {
          * @param boolList a boolean list that represents the AI's state. 
          * Note: this list will be cleared.
          */
-        console.log(boolList);
-        this.startNode.darkenAll();
+        if (this.previousPath === null) {
+            this.startNode.unhighlightAll();
+        } else {
+            this.startNode.unhighlightPath(this.previousPath);
+        }
+        this.previousPath = boolList.slice();
         this.startNode.highlightPath(boolList);
     }
 
