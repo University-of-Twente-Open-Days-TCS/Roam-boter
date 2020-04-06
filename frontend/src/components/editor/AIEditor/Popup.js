@@ -62,7 +62,7 @@ export default class Popup {
                 });
                 textGroup.add(boldText);
                 currentX += boldText.width();
-                currentText = new Konva.Text({fill: "#FFF", padding: 5, text: "", x: currentX, fontSize: size});
+                currentText = new Konva.Text({fill: "#FFF", text: "", x: currentX, fontSize: size, fontStyle: "bold", shadowOffset: {x: 1, y: 1}, shadowBlur: 1, shadowColor: grey['500']});
                 textGroup.add(currentText);
             } else {
                 currentText.text(currentText.text() + word + " ")

@@ -89,7 +89,6 @@ export default class AiCanvas {
     /** Created a stage, multiple layers and a StartNode, gets the container ID where it needs to be placed in,
      * and a boolean whether this is part of a replay next to a simulation (no interaction) **/
     constructor(container, isReplay) {
-        console.log(blue['700'])
         this.isReplay = isReplay;
         //Create the stage
         this.createStage(container);
