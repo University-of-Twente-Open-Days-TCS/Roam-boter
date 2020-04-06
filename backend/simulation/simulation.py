@@ -198,10 +198,12 @@ class Simulation:
 # Run the simulation with an array of ais to be executed.
 # Params: [AINode]
 # Returns: PlayBack
-def simulate(ais, game_mode="DM", level="level1"):
-    level_loader = LevelLoader()
 
-    sim = Simulation(level_loader.load_level(level), ais, game_mode)
+LEVEL_LOADER = LevelLoader()
+
+def simulate(ais, game_mode="DM", level="level1"):
+
+    sim = Simulation(LEVEL_LOADER.load_level(level), ais, game_mode)
     while not sim.has_ended():
         sim.step()
 
@@ -209,9 +211,8 @@ def simulate(ais, game_mode="DM", level="level1"):
 
 # Prepares caches for list of level names
 def prepare_caches(levels):
-    level_loader = LevelLoader()
     for l in levels:
-        level_loader.load_level(l)
+        LEVEL_LOADER.load_level(l)
 
 
 def test_simulation():

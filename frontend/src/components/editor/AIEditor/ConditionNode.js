@@ -5,6 +5,7 @@ import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 import ActionNode from "./ActionNode.js";
+import JSONValidationError from "../Errors/JSONValidationError.js";
 
 //The default dimensions of a ConditionNode
 const blockHeight = 40;
@@ -96,19 +97,21 @@ export default class ConditionNode {
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
-            if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
-                this.stage.trashcan.fire('touchstart', {
-                    type: 'touchstart',
-                    target: this.stage.trashcan
-                });
-            } else {
+            if (typeof this.stage.trashcan !== "undefined") {
+                if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
+                    this.stage.trashcan.fire('touchstart', {
+                        type: 'touchstart',
+                        target: this.stage.trashcan
+                    });
+                } else {
 
-                //If node is no longer hovered over trashcan, close trashcan
-                this.stage.trashcan.fire('touchend', {
-                    type: 'touchend',
-                    target: this.stage.trashcan
+                    //If node is no longer hovered over trashcan, close trashcan
+                    this.stage.trashcan.fire('touchend', {
+                        type: 'touchend',
+                        target: this.stage.trashcan
 
-                });
+                    });
+                }
             }
         });
 
@@ -610,7 +613,7 @@ export default class ConditionNode {
         this.falseArrow.dest.unhighlightAll();
     }
 
-    unhighlightPath(boolList){
+    unhighlightPath(boolList) {
         this.unhighlight();
         if (boolList.shift()) {
             this.trueArrow.dest.unhighlightPath(boolList);
@@ -620,7 +623,7 @@ export default class ConditionNode {
     }
 
 
-    unhighlight(){
+    unhighlight() {
         this.rect.fill(this.canvas.condition_node.fill_unselected);
         this.rect.strokeWidth(this.canvas.condition_node.stroke_width);
         this.trueArrow.arrowline.strokeWidth(2);
@@ -633,7 +636,6 @@ export default class ConditionNode {
         this.trueCircle.fill(this.canvas.true_circle.fill_unselected);
         this.falseCircle.fill(this.canvas.false_circle.fill_unselected);
     }
-
 
     /** Highlight this node and one of their children, used in a replay **/
     highlightPath(boolList) {

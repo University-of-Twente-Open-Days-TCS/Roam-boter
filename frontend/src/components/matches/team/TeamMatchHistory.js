@@ -17,7 +17,7 @@ const TeamMatchItem = (props) => {
 
     return (
         <li>
-            <NavLink to={'/BotMatchReplay/'+props.match.simulation.pk+'/'+props.match.initiator_ai.pk} onClick={e => done ? null : e.preventDefault()}>
+            <NavLink to={'/MatchReplay/'+props.match.pk+'/teammatch'} onClick={e => done ? null : e.preventDefault()}>
                 <Button variant="outlined" color="primary" size="small" disabled={!done}>{timeString} {(done) ? null : "Simulating.."}</Button>
             </NavLink><span className='spacing'></span>
             <Button variant="outlined" color="secondary" size="small" onClick={() => props.onDelete(props.match)}>Delete</Button>
@@ -57,26 +57,27 @@ class TeamMatchHistory extends Component {
     render() {
         return(
             <ContentBox>
-                <Typography variant="h4">Team Match History <Button onClick={() => this.refreshMatchHistory()} variant="contained" color="primary"><Refresh/></Button></Typography>
-                {this.state.matches.length > 0 ?
-                (<ul>{
-                        this.state.matches.map((match, i) => {
-                            return (
-                                <TeamMatchItem key={i} match={match} onDelete={this.deleteHandler}></TeamMatchItem>
-                            )
-                        })
-                    }
-                </ul>)
-                    :
-                (
-                    <div>
-                        <Typography>You haven't played any matches yet against opponents.</Typography>
-                        <NavLink to="/NewTeamMatch">
-                            <Button color="primary" variant="contained">Play a match!</Button>
-                        </NavLink>
-                    </div>
-                )
-                }
+                <Typography variant="h4">Team Match History <Button onClick={() => this.refreshMatchHistory()} variant="outlined" size="small" color="primary"><Refresh/></Button></Typography>
+                
+                    {this.state.matches.length > 0 ?
+                    (<ul>{
+                            this.state.matches.map((match, i) => {
+                                return (
+                                    <TeamMatchItem key={i} match={match} onDelete={this.deleteHandler}></TeamMatchItem>
+                                )
+                            })
+                        }
+                    </ul>)
+                        :
+                    (
+                        <div>
+                            <Typography>You haven't played any matches yet against opponents.</Typography>
+                            <NavLink to="/NewTeamMatch">
+                                <Button color="primary" variant="contained">Play a match!</Button>
+                            </NavLink>
+                        </div>
+                    )}
+
             </ContentBox>
         )
     }

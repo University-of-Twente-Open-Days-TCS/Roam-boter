@@ -18,13 +18,14 @@ import AIList from "./components/editor/AIList";
 import PlayvsBot from "./components/matches/bot/PlayvsBot";
 import NewBotMatch from "./components/matches/bot/NewBotMatch";
 import BotMatchHistory from './components/matches/bot/BotMatchHistory.js';
-import BotMatchReplay from './components/matches/bot/BotMatchReplay.js';
 
 import PlayvsPlayer from "./components/matches/team/PlayvsPlayer";
 import NewTeamMatch from "./components/matches/team/NewTeamMatch";
 import TeamMatchHistory from './components/matches/team/TeamMatchHistory.js';
 
 import Help from "./components/help/Help"
+
+import MatchReplay from './components/matches/replay/MatchReplay.js';
 
 
 class App extends Component {
@@ -143,9 +144,11 @@ class App extends Component {
                         <Route path="/AIList" component={AIList} />
                         <Route path="/PlayvsBot" component={PlayvsBot} />
                         <Route path="/BotMatchHistory" component={BotMatchHistory} />
-                        <Route path="/BotMatchReplay/:matchId/:aiId" component={BotMatchReplay} />
+                        <Route path="/MatchReplay/:matchId/:matchKind" component={MatchReplay} />
+                        <Route path="/NewBotMatch/:preSelectedAI" component={NewBotMatch} />
                         <Route path="/NewBotMatch" component={NewBotMatch} />
                         <Route path="/PlayvsPlayer" component={PlayvsPlayer} />
+                        <Route path="/NewTeamMatch/:preSelectedAI" component={NewTeamMatch} />
                         <Route path="/NewTeamMatch" component={NewTeamMatch} />
                         <Route path="/TeamMatchHistory" component={TeamMatchHistory} />
                         <Route path="/Help" component={Help} />

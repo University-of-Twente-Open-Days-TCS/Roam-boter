@@ -1,6 +1,8 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
+import clsx from 'clsx'
+
 import { makeStyles } from '@material-ui/core/styles'
 import { List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core'
 
@@ -20,7 +22,6 @@ const useStyles = makeStyles(theme => ({
         borderRadius: '0.2rem',
     },
     listItemText: {
-        color: '#444444',
         margin: '0',
     },
     noIconPadding: {
@@ -56,19 +57,35 @@ const ButtonListTextLink = ({ url, children }) => {
 }
 
 // Icon button navlink
-const ButtonListIconLink = ({url, children}) => {
+const ButtonListIconLink = (props) => {
     let classes = useStyles()
 
+    let noIconPadding = props.noIconPadding ? classes.noIconPadding : false
+
+
     return (
-        <NavLink to={url}>
+        <NavLink to={props.url}>
             <ListItem button className={classes.listItem}>
-                <ListItemIcon className={classes.noIconPadding}>
-                    {children}
+                <ListItemIcon className={clsx(noIconPadding)}>
+                    {props.children}
                 </ListItemIcon>
             </ListItem>
         </NavLink>
     )
 }
 
+const ButtonListLink = ({url, children}) => {
+    let classes = useStyles()
 
-export {ButtonList, ButtonListTextLink, ButtonListIconLink}
+    return (
+        <NavLink to={url}>
+            <ListItem button className={classes.listItem}>
+                {children}
+            </ListItem>
+        </NavLink>
+    )
+
+}
+
+
+export {ButtonList, ButtonListTextLink, ButtonListIconLink, ButtonListLink}

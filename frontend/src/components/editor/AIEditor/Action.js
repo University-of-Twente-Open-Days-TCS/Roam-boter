@@ -286,9 +286,9 @@ export default class Action {
                 }
             case 14:
                 if (this.label != null && this.seconds != null) {
-                    return "Set label " + this.label + "\n for " + this.seconds;
+                    return "Set label " + this.label + "\n after " + this.seconds;
                 } else {
-                    return "Set label \n <Label> \n for <Seconds>";
+                    return "Set label \n <Label> \n after <Seconds>";
                 }
             default:
                 return null

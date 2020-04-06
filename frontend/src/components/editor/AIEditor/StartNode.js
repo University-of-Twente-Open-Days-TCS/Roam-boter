@@ -3,6 +3,7 @@ import Konva from "konva"
 import Popup from "./Popup.js";
 import ActionNode from "./ActionNode.js";
 import ConditionNode from "./ConditionNode.js";
+import JSONValidationError from "../Errors/JSONValidationError.js";
 
 //The default dimensions of this node
 const blockHeight = 40;
@@ -66,7 +67,6 @@ export default class StartNode {
         this.group.add(this.rect);
     }
 
-    // TODO: lettertype etc
     /** Create the text Obj for the node with contents 'Start' **/
     createText() {
         this.text = new Konva.Text({

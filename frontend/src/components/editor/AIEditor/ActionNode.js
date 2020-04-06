@@ -83,19 +83,21 @@ export default class ActionNode {
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
-            if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
-                this.stage.trashcan.fire('touchstart', {
-                    type: 'touchstart',
-                    target: this.stage.trashcan
-                });
-            } else {
+            if(typeof this.stage.trashcan !== "undefined") {
+                if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
+                    this.stage.trashcan.fire('touchstart', {
+                        type: 'touchstart',
+                        target: this.stage.trashcan
+                    });
+                } else {
 
-                //If node is no longer hovered over trashcan, close trashcan
-                this.stage.trashcan.fire('touchend', {
-                    type: 'touchend',
-                    target: this.stage.trashcan
+                    //If node is no longer hovered over trashcan, close trashcan
+                    this.stage.trashcan.fire('touchend', {
+                        type: 'touchend',
+                        target: this.stage.trashcan
 
-                });
+                    });
+                }
             }
         });
 
@@ -239,7 +241,6 @@ export default class ActionNode {
         this.stage.draw();
     }
 
-    // TODO: lettertype etc.
     /** create text Obj for in the Condition**/
     createTextObject() {
         if (this.actionNodeText == null) {

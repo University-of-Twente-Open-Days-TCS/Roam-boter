@@ -90,6 +90,7 @@ class BotMatch(Match):
 class TeamMatch(Match):
     """
     A Match played between two teams.
+    If the winner of the match is null, then the game ended in a tie.
     """
 
     initiator = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="initiator")

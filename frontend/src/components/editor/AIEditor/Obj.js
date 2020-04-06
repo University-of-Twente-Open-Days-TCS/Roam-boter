@@ -19,9 +19,9 @@ export default class Obj {
             case 5:
                 return "Wall";
             case 6:
-                return "Own Spawnpoint";
+                return "Own Spawn Point";
             case 7:
-                return "Enemy Spawn";
+                return "Enemy Spawn Point";
             case 8:
                 return "Health pack";
             case 9:

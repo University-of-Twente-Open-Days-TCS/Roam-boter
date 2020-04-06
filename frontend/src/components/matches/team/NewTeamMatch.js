@@ -9,7 +9,7 @@ import ActiveAIDialog from "../ActiveAIDialog"
 
 import RoamBotAPI from '../../../RoamBotAPI'
 import Alert from "@material-ui/lab/Alert";
-import {NavLink} from "react-router-dom";
+import {NavLink, useParams} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -25,6 +25,7 @@ const useStyles = makeStyles(theme => ({
 const NewTeamMatch = props => {
 
     const classes = useStyles()
+    let { preSelectedAI } = useParams()
 
     let [ais, setAis] = useState(null)
     let [team, setTeam] = useState(null)
@@ -41,9 +42,22 @@ const NewTeamMatch = props => {
     let [activeAIDialogOpen, setActiveAIDialogOpen] = useState(false)
 
     useEffect(() => {
-        async function updateAis() {
+        async function updateAis(aiPk) {
             let call = await RoamBotAPI.getAiList()
             let json = await call.json()
+
+            //find ai and set as selected
+            if(aiPk){
+                let ai = null
+                for (let i = 0; i < json.length; i++){
+                    let curAi = json[i]
+                    if(curAi.pk === aiPk){
+                        ai = curAi
+                    }
+                }
+                setSelectedAI(ai)
+            }
+
             setAis(json)
         }
 
@@ -54,7 +68,12 @@ const NewTeamMatch = props => {
         }
 
         if (ais === null) {
-            updateAis()
+            if(preSelectedAI){
+                let aiPk = parseInt(preSelectedAI)
+                updateAis(aiPk)
+            }else {
+                updateAis()
+            }
         }
 
         if (team === null){
@@ -76,8 +95,11 @@ const NewTeamMatch = props => {
                 url: "/TeamMatchHistory"
             })
         }else {
+            let error = await call.json()
+            let message = (call.status === 423) ? error.error : "Something went wrong, please contact the supervisors"
+
             setSnackbar({
-                message: "Something went wrong, perhaps there are no other teams with an active AI yet?",
+                message: message,
                 error: true,
                 open: true,
                 url: null
@@ -92,7 +114,7 @@ const NewTeamMatch = props => {
 
     return (
          <ContentBox>
-            <Typography variant="h4" align="center">New Team Match</Typography>
+            <Typography variant="h4" align="center">Play vs. Peers</Typography>
             <Grid container justify="center" spacing={2}>
                 <Grid item xs={12} sm={9} md={6}>
                     <div className={classes.wrapper}>
