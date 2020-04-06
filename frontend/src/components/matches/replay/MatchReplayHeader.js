@@ -49,7 +49,7 @@ const MatchReplayHeader = props => {
             <div className={classes.root}>
                 <div className={classes.wrapper}>
                     <Typography variant={fontSize} className={classes.player}>{generalInfo.player}</Typography>
-                    <Typography variant={fontSize}>V.S.</Typography>
+                    <Typography variant={fontSize}>vs</Typography>
                     <Typography variant={fontSize} className={classes.opponent}>{generalInfo.opponent}</Typography>
                 </div>
             </div>)
