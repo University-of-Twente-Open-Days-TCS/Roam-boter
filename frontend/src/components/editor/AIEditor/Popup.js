@@ -1,6 +1,6 @@
 import Konva from "konva"
 import Selector from "./Selector.js";
-import {cyan, grey} from "@material-ui/core/colors";
+import {blue, cyan, green, grey} from "@material-ui/core/colors";
 
 export default class Popup {
 
@@ -44,9 +44,9 @@ export default class Popup {
 
         let boldWords = ["<Object>", "<Distance>", "<Amount>", "<Label>", "<Speed>", "<RelDir>", "<WindDir>", "<Seconds>"];
         let words = this.text.split(" ");
-        let textGroup = new Konva.Group();
+        let textGroup = new Konva.Group({offsetX: -15, offsetY: -15});
         let currentX = 0;
-        let currentText = new Konva.Text({fill: "#FFF", padding: 5, text: ""});
+        let currentText = new Konva.Text({fill: 'white', text: "", fontStyle: "bold", shadowOffset: {x: 1, y: 1}, shadowBlur: 1, shadowColor: grey['500']});
         let size = currentText.fontSize() * 1.3;
         currentText.fontSize(size);
         textGroup.add(currentText);
@@ -54,8 +54,7 @@ export default class Popup {
             if (boldWords.includes(word)) {
                 currentX += currentText.width();
                 let boldText = new Konva.Text({
-                    fill: "#FFF",
-                    padding: 5,
+                    fill: blue['900'],
                     text: word.substring(1, word.length - 1),
                     fontStyle: "italic bold",
                     x: currentX,
@@ -136,8 +135,12 @@ export default class Popup {
         this.rect = new Konva.Rect({
             fill: cyan['400'],
             stroke: grey['900'],
-            strokeWidth: 2,
+            strokeWidth: 0,
             cornerRadius: 5,
+            shadowColor: grey['700'],
+            shadowOffset: {x: 3, y: 3},
+            shadowBlur: 5,
+            shadowOpacity: 90
         });
         this.group.add(this.rect);
     }

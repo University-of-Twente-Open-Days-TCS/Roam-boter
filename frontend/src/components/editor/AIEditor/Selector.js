@@ -1,4 +1,5 @@
 import Konva from "konva"
+import {grey} from "@material-ui/core/colors";
 
 export default class Selector {
 
@@ -80,8 +81,8 @@ export default class Selector {
             height: maxHeight,
             width: maxWidth,
             fill: "white",
-            stroke: 'black',
-            strokeWidth: 1,
+            stroke: grey['500'],
+            strokeWidth: 0.5,
         });
 
     }
