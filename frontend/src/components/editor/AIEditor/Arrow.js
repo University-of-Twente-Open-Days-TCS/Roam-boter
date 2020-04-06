@@ -51,7 +51,8 @@ export default class Arrow {
             points: this._startpos.concat(this.endpos).map(function (p) {
                 return p / stage.scale
             }),
-            stroke: 'black'
+            stroke: 'black',
+            fill: 'black'
         });
         this.arrowline.absolutePosition({x: 0, y: 0});
 
