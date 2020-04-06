@@ -22,7 +22,6 @@ const useStyles = makeStyles(theme => ({
         borderRadius: '0.2rem',
     },
     listItemText: {
-        color: '#444444',
         margin: '0',
     },
     noIconPadding: {

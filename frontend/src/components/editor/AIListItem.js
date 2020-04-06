@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { ListItem, ListItemText, ListItemSecondaryAction, makeStyles, IconButton } from '@material-ui/core'
+import { ListItem, ListItemText, ListItemIcon, ListItemSecondaryAction, makeStyles, IconButton } from '@material-ui/core'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 import RoamBotAPI from '../../RoamBotAPI'
