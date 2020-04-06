@@ -6,19 +6,19 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 
-import {Adb, Person, HelpOutline} from "@material-ui/icons";
+import {Adb, Person, HelpOutline, Computer} from "@material-ui/icons";
 
 
 export default function PlayMenuList(text) {
 
     const items = [
         {
-            text: "Play versus Bot",
-            icon: <Adb/>,
+            text: "Play vs. Computer",
+            icon: <Computer/>,
             url: "/PlayvsBot"
         },
         {
-            text: "Play versus Player",
+            text: "Play vs. Peers",
             icon: <Person/>,
             url: "/PlayvsPlayer"
         },

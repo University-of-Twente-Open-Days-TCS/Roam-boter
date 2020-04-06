@@ -30,7 +30,8 @@ def filter_objects(tank, state, obj):
 
     elif obj.isSpawn():
         for s in state.level.get_paths_to_object(tank, Object.SPAWN):
-            paths.append(s)
+            if tank.correct_spawn(obj, s):
+                paths.append(s)
     else:
         for p in state.level.get_paths_to_object(tank, obj):
             # Only show paths to ready health packs.
