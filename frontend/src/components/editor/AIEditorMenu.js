@@ -4,7 +4,7 @@ import React from 'react'
 import {Button, createMuiTheme, Typography} from '@material-ui/core'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { makeStyles } from '@material-ui/core/styles'
-import {blue, green} from "@material-ui/core/colors";
+import {blue} from "@material-ui/core/colors";
 import {ThemeProvider} from "@material-ui/styles";
 
 const useStyles = makeStyles(theme => ({

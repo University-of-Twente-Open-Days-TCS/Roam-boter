@@ -1,7 +1,6 @@
 import Konva from "konva"
 import Selector from "./Selector.js";
-import indigo from '@material-ui/core/colors/indigo'
-import {cyan, deepPurple, grey} from "@material-ui/core/colors";
+import {cyan, grey} from "@material-ui/core/colors";
 
 export default class Popup {
 

@@ -17,19 +17,12 @@ import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 import JSONValidationError from "../Errors/JSONValidationError.js";
 import {
-    amber,
-    blue, cyan,
-    deepOrange,
-    deepPurple,
+    blue,
     green,
     grey,
-    indigo,
-    lightBlue,
     pink,
-    red, teal,
-    yellow
 } from '@material-ui/core/colors';
-import {black, white} from "color-name";
+import {black} from "color-name";
 
 /** AI Canvas, the stage with which the user interacts or watches a replay on **/
 export default class AiCanvas {

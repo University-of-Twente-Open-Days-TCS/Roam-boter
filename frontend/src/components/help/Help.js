@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import SwipeableViews  from 'react-swipeable-views'
 
 import { makeStyles } from '@material-ui/core/styles'
-import { Paper, AppBar, Tabs, Tab, Typography, Grid } from '@material-ui/core'
+import { AppBar, Tabs, Tab, Typography, Grid } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
     root: {

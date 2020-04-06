@@ -147,11 +147,11 @@ export default class ActionNode {
         let i = 0;
         if (this.actionList != null) {
             let actionListLength = this.actionList.length;
-            actionNodeString = "\> "
+            actionNodeString = "> "
             this.actionList.forEach(element => {
                 actionNodeString = actionNodeString.concat(element.toString());
                 if (i + 1 < actionListLength) {
-                    actionNodeString = actionNodeString.concat("\n\> ");
+                    actionNodeString = actionNodeString.concat("\n> ");
                 }
                 i = i + 1;
             });
