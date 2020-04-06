@@ -10,7 +10,7 @@ const PlayvsPlayer = () => {
         <ContentBox>
             <Grid container justify='center'>
                 <Grid item xs={12} sm={9} md={6}>
-                    <Typography variant="h4" align="center">Play vs. Peers</Typography>
+                    <Typography variant="h4" align="center">Play vs Peers</Typography>
                     <ButtonList>
                         <ButtonListTextLink url="/NewTeamMatch">New Match</ButtonListTextLink>
                         <ButtonListTextLink url="/TeamMatchHistory">Replays</ButtonListTextLink>

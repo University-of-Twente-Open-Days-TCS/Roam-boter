@@ -143,12 +143,15 @@ class AIEditor extends Component {
                         this.setState({errorAlertOpen: true, errorMessage: response.body})
                     }
                 })
+                return true
             } catch (error) {
                 this.setState({errorAlertOpen: true, errorMessage: error.message})
+                return false 
             }
 
         }else {
             this.handleSaveAsNew()
+            return true
         }   
     }
 
@@ -159,12 +162,18 @@ class AIEditor extends Component {
 
     handlePlayvsBot() {
         let ai = this.state.ai
-        this.props.history.push('/NewBotMatch/'+ai.pk)
+        let saved = this.handleSave()
+        if(saved){
+            this.props.history.push('/NewBotMatch/'+ai.pk)
+        }
     }
 
     handlePlayvsTeam() {
         let ai = this.state.ai
-        this.props.history.push('/NewTeamMatch/'+ai.pk)
+        let saved = this.handleSave()
+        if(saved){
+            this.props.history.push('/NewTeamMatch/'+ai.pk)
+        }
     }
 
 
