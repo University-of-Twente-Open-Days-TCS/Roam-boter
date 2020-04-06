@@ -22,7 +22,7 @@ export default function AIMenuList(text) {
             url: "/"
         },
         {
-            text: "Edit existing AI",
+            text: "AI list",
             icon: <Memory/>,
             url: "/AIList"
         },

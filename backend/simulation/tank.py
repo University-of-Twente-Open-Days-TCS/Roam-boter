@@ -53,6 +53,14 @@ class Tank:
     def get_label(self, index):
         return self.labels[index]
 
+    def correct_spawn(self, obj, path):
+        if obj == Object.SPAWN:
+            return True
+        elif obj == Object.ENEMY_SPAWN:
+            return path.goal() != self.spawn
+        elif obj == Object.FRIENDLY_SPAWN:
+            return path.goal() == self.spawn
+
     def set_label(self, index):
         self.labels[index] = True
 
