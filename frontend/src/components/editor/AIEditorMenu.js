@@ -60,8 +60,8 @@ const AIEditorMenu = (props) => {
             </div>
 
             <div className={classes.menuSection}>
-                <Button variant="outlined" color="secondary" disabled={ai ? false : true} className={classes.button} onClick={handlePlayvsBot}>Play vs Bot</Button>
-                <Button variant="outlined" color="secondary" disabled={ai ? false : true} className={classes.button} onClick={handlePlayvsTeam}>Play vs Team</Button>
+                <Button variant="outlined" color="secondary" disabled={ai ? false : true} className={classes.button} onClick={handlePlayvsBot}>Play vs. Computer</Button>
+                <Button variant="outlined" color="secondary" disabled={ai ? false : true} className={classes.button} onClick={handlePlayvsTeam}>Play vs. Peers</Button>
             </div>
 
         </div>
