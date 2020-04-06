@@ -239,7 +239,6 @@ export default class ActionNode {
         this.stage.draw();
     }
 
-    // TODO: lettertype etc.
     /** create text Obj for in the Condition**/
     createTextObject() {
         if (this.actionNodeText == null) {

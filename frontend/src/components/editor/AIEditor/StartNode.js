@@ -66,7 +66,6 @@ export default class StartNode {
         this.group.add(this.rect);
     }
 
-    // TODO: lettertype etc
     /** Create the text Obj for the node with contents 'Start' **/
     createText() {
         this.text = new Konva.Text({
