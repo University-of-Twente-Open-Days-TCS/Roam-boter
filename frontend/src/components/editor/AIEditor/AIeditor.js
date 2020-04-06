@@ -47,6 +47,12 @@ export default class AiCanvas {
         this.startNode = new StartNode(this.stage, this.layer, this);
         this.layer.add(this.startNode.group);
         this.stage.add(this.stage.staticlayer);
+        // when the stage is moved the static layer should remain in the same position
+        this.stage.on("dragmove", () => {
+            this.stage.staticlayer.absolutePosition({x: 0, y: 0});
+            this.stage.staticlayer.draw();
+        });
+
         this.stage.add(this.layer);
         this.stage.add(this.stage.templayer);
         if (isReplay) {
@@ -138,11 +144,6 @@ export default class AiCanvas {
                 stage.staticlayer.draw();
 
             };
-        });
-
-        // when the stage is moved the trashcan should remain in the same position
-        this.stage.on("dragmove", function () {
-            stage.staticlayer.absolutePosition({x: 0, y: 0});
         });
 
     }
