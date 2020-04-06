@@ -101,9 +101,12 @@ const MatchHistoryListItem = props => {
             }
 
             if(!response.ok){
+                
                 // an error occurred
-                console.error(response)
-                alert("An error occurred see console.")
+                if(response.status !== 404){
+                    console.error(response)
+                    alert("An error occurred see console.")
+                }
 
             }else {
                 // refresh parent component
