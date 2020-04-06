@@ -19,13 +19,18 @@ const useStyles = makeStyles(theme => ({
         margin: '0.5rem 0'
     },
     button: {
-        width: '80%',
-        margin: '0.5rem 0',
+        width: '90%',
+        margin: '2px',
+        fontSize: '0.2rem',
 
-        fontSize: '0.5rem',
+        [theme.breakpoints.up('sm')]: {
+            margin: '0.25rem 0',
+            fontSize: '0.5rem',
+        },
         [theme.breakpoints.up('md')]: {
             width: '70%',
-            fontSize: '1rem'
+            fontSize: '1rem',
+            margin: '0.5rem 0'
         }
     }
 
@@ -33,8 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 const AIEditorMenu = (props) => {
     const classes = useStyles()
-
-    let {addConditionHandler, addActionHandler, handleSave, handleSaveAsNew, handleDelete} = props
+    let { addConditionHandler, addActionHandler, handleSave, handleSaveAsNew, handlePlayvsBot, handlePlayvsTeam } = props
     let ai = props.ai
 
     const theme = createMuiTheme({
@@ -65,14 +69,17 @@ const AIEditorMenu = (props) => {
                 <div className={classes.menuSection}>
                     <Button variant="outlined" color="primary" disabled={ai ? false : true} onClick={handleSave}
                             className={classes.button}>Save</Button>
-                    <Button variant="outlined" color="primary" onClick={handleSaveAsNew}
-                            className={classes.button}>Save as new</Button>
+                    <Button variant="outlined" color="primary" onClick={handleSaveAsNew} className={classes.button}>Save
+                        as new</Button>
                 </div>
 
                 <div className={classes.menuSection}>
-                    <Button variant="outlined" color="primary" onClick={handleDelete}
-                            className={classes.button}>Delete</Button>
+                    <Button variant="outlined" color="secondary" disabled={ai ? false : true} className={classes.button}
+                            onClick={handlePlayvsBot}>Play vs Bot</Button>
+                    <Button variant="outlined" color="secondary" disabled={ai ? false : true} className={classes.button}
+                            onClick={handlePlayvsTeam}>Play vs Team</Button>
                 </div>
+
             </div>
         </ThemeProvider>
     )

@@ -3,10 +3,11 @@ import { withRouter } from "react-router-dom";
 
 import { withStyles } from '@material-ui/core/styles'
 
-import ReplayCanvas from "../ReplayCanvas";
+import ReplayCanvas from "./ReplayCanvas";
 import ContentBox from '../../layout/ContentBox'
-import ReplayControls from '../ReplayControls'
+import ReplayControls from './ReplayControls'
 import AIReplayCanvas from "../AIReplayCanvas";
+import MatchReplayHeader from './MatchReplayHeader'
 
 import RoamBotAPI from "../../../RoamBotAPI"
 
@@ -15,13 +16,20 @@ const styles = theme => ({
     wrapper: {
         display: 'flex',
         height: 'auto',
+
+        borderBottom: 'solid 1px rgba(0,0,0,0.2)',
     },
     matchWrapper: {
         position: 'relative',
+
         display: 'flex',
         flexDirection: 'column',
         width: '70%',
         height: 'auto',
+
+        padding: theme.spacing(1),
+
+        borderRight: 'solid 1px rgba(0,0,0,0.2)',
     },
     matchContainer: {
         display: 'block',
@@ -34,15 +42,23 @@ const styles = theme => ({
         flexGrow: 1,
     },
     editorContainer: {
-        backgroundColor: '#f6f6f6',
         overflow: 'hidden',
+
+        backgroundImage: 'url("/ai_editor_images/Seamless-Circuit-Board-Pattern.svg")',
+        backgroundRepeat: 'repeat',
+        backgroundSize: '4000px',
     },
 })
 
 
-class BotMatchReplay extends Component {
+class MatchReplay extends Component {
 
     SLIDER_MAX = 10000
+
+    MATCH_TYPES = {
+        BOTMATCH: 'botmatch',
+        TEAMMATCH: 'teammatch'
+    }
 
     constructor(props) {
         super(props)
@@ -60,9 +76,10 @@ class BotMatchReplay extends Component {
 
         this.frameData = frameData
 
-
         this.state = {
-            gameData: null,
+            match: null,
+            matchKind: null,
+
             playing: false,
         }
 
@@ -77,14 +94,27 @@ class BotMatchReplay extends Component {
     async componentDidMount() {
         // selects the id of the match from the URL
         const match_id = this.props.match.params.matchId;
-        const ai_id = this.props.match.params.aiId;
+        const kind = this.props.match.params.matchKind;
 
-        let { ai, gameData } = await this.fetchMatchInfo(match_id, ai_id)
-        this.ai = ai
+        let matchKind
+        switch(kind){
+            case "botmatch":
+                matchKind = this.MATCH_TYPES.BOTMATCH
+                break
+            case "teammatch":
+                matchKind = this.MATCH_TYPES.TEAMMATCH
+                break
+            default:
+                matchKind = null
+                console.error('Not an appropriate matchkind')
+                break
+        }
+
+        let { match, ai } = await this.fetchMatchInfo(matchKind, match_id)
 
         let matchContainer = this.replayContainerRef.current
 
-        let replayCanvas = new ReplayCanvas(matchContainer, gameData)
+        let replayCanvas = new ReplayCanvas(matchContainer, match.simulation.simulation)
         let editorCanvas = new AIReplayCanvas('editor-container')
 
         // TODO: tankId ophalen + meegeven, bij BotMatches ben je altijd tank 0
@@ -92,7 +122,7 @@ class BotMatchReplay extends Component {
         this.editorCanvas = editorCanvas
 
         // Fill editor canvas with AI
-        editorCanvas.fillCanvas(this.ai)
+        editorCanvas.fillCanvas(ai)
         
         window.addEventListener('resize', this.resizeCanvas)
         window.addEventListener('load', this.resizeCanvas)
@@ -104,10 +134,12 @@ class BotMatchReplay extends Component {
             framesLength: this.replayCanvas.getFramesLength()
         }
 
-        this.setState({ gameData: gameData })
+        // Finally set the state of everything
 
-        this.resizeCanvas()
-        replayCanvas.draw()
+        this.setState({ match: match, matchKind: matchKind }, () => {
+            this.resizeCanvas()
+            replayCanvas.draw()
+        })
     }
 
     componentDidUpdate() {
@@ -133,20 +165,65 @@ class BotMatchReplay extends Component {
         window.removeEventListener('orientationchange', this.resizeCanvas)
     }
 
-    async fetchMatchInfo(match_id, ai_id) {
+    async fetchMatchInfo(matchKind, matchPk) {
         /**
-         * Fetches both the match and ai 
+         * Fetches all relevant match info.
+         * @param matchKind MATCH_TYPE to get data from
+         * @param matchPk id of the match to get.
+         * @returns dictionary with match, ai and simulation data.
          */
-        const match_response = await RoamBotAPI.getSimulation(match_id)
-        let match_data = await match_response.json();
+        
+        let types = this.MATCH_TYPES
+        try {
+            let match
+            let aiPk
 
-        const ai_response = await RoamBotAPI.getAiDetail(ai_id)
-        let ai_data = await ai_response.json();
+            switch (matchKind){
+                case types.BOTMATCH:
+                    let botmatchCall = await RoamBotAPI.getBotMatchDetails(matchPk)
+                    let botmatchJson = await botmatchCall.json()
+                    match = botmatchJson
 
-        let ai = JSON.parse(ai_data.ai)
-        let gameData = JSON.parse(match_data.simulation)
+                    // inject some extra data into the json.
+                    match.generalInfo = {
+                        player: botmatchJson.team.team_name,
+                        opponent: botmatchJson.bot.name
+                    }
 
-        return { ai: ai, gameData: gameData }
+                    aiPk = botmatchJson.ai.pk
+                    break
+                case types.TEAMMATCH:
+                    let teammatchCall = await RoamBotAPI.getTeamMatchDetail(matchPk)
+                    let teammatchJson = await teammatchCall.json()
+                    match = teammatchJson
+
+                    // inject some extra data into the json.
+                    match.generalInfo = {
+                        player: teammatchJson.initiator.team_name,
+                        opponent: teammatchJson.opponent.team_name
+                    }
+
+                    aiPk = teammatchJson.initiator_ai.pk
+                    break
+                default:
+                    throw new Error("INVALID MATCH TYPE")
+            }
+
+            // convert simulation data to actual object
+            match.simulation.simulation = JSON.parse(match.simulation.simulation)
+
+            let aiCall = await RoamBotAPI.getAiDetail(aiPk)
+            let aiJson = await aiCall.json()
+            let ai = await JSON.parse(aiJson.ai)
+
+            return {match, ai}
+
+
+        } catch(err){
+            window.alert("Something went wrong")
+            console.error(err)
+            return null
+        }
     }
 
 
@@ -169,9 +246,10 @@ class BotMatchReplay extends Component {
 
     redrawCanvases(frame) {
         // only redraw state if data available
-        if (this.state.gameData) {
+        if (this.state.match.simulation.simulation) {
+            let gameData = this.state.match.simulation.simulation
 
-            let curFrame = this.state.gameData.frames[frame]
+            let curFrame = gameData.frames[frame]
             if (!curFrame) return;
             let aiPath = curFrame.tanks[0].ai_path
 
@@ -235,9 +313,12 @@ class BotMatchReplay extends Component {
         }
 
         return (
-            <ContentBox>
+            <ContentBox noPadding>
+
                 <div className={classes.wrapper}>
+
                     <div className={classes.matchWrapper}>
+                        <MatchReplayHeader match={this.state.match}></MatchReplayHeader>
                         <div ref={this.replayContainerRef} className={classes.matchContainer}></div>
                         <ReplayControls ref={this.controlsRef} {...props} />
                     </div>
@@ -250,4 +331,4 @@ class BotMatchReplay extends Component {
     }
 }
 
-export default withRouter(withStyles(styles)(BotMatchReplay));
+export default withRouter(withStyles(styles)(MatchReplay));

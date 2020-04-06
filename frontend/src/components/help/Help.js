@@ -62,7 +62,7 @@ const PanelImage = props => {
     const classes = useStyles()
     return (
         <div>
-            <img className={classes.panelImage} src={props.src}></img>
+            <img className={classes.panelImage} src={props.src} alt="tutorial"></img>
         </div>
     )
 }

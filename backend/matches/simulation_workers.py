@@ -28,12 +28,7 @@ class WorkerPool:
         TeamMatch = 1
 
     class SimulationObject:
-        success = False
-        match_id = None
-        kind = None
-        players = None
-        playback = None
-        winner = None
+        pass
 
     def __init__(self):
         self.stopped = False
