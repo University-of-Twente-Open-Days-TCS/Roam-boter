@@ -21,6 +21,7 @@ import {
     green,
     grey,
     pink,
+    red,
 } from '@material-ui/core/colors';
 import {black} from "color-name";
 
@@ -50,13 +51,15 @@ export default class AiCanvas {
     true_circle = {
         ...this.circle,
         stroke_width: 0,
-        fill: green['500']
+        fill: green['500'],
+        fill_unselected: green['200'],
     }
 
     false_circle = {
         ...this.circle,
         stroke_width: 0,
-        fill: pink['A400']
+        fill: pink['A400'],
+        fill_unselected: red['200'],
     }
 
     node = {
@@ -72,18 +75,24 @@ export default class AiCanvas {
 
     condition_node = {
         ...this.node,
-        fill: blue['900']
+        fill: blue['900'],
+        fill_unselected: blue['100'],
     }
 
     action_node = {
         ...this.node,
-        fill: blue['700']
+        fill: blue['700'],
+        fill_unselected: blue['100'],
+
     }
 
     arrow = {
         stroke_width: 2,
         stroke_color: 'red',
-        fill: 'black'
+        fill: 'black',
+        fill_green: green['500'],
+        fill_red: pink['A400'],
+        fill_unselected: grey['500'],
     }
 
     /** Created a stage, multiple layers and a StartNode, gets the container ID where it needs to be placed in,
@@ -351,6 +360,7 @@ export default class AiCanvas {
          * @param boolList a boolean list that represents the AI's state. 
          * Note: this list will be cleared.
          */
+        console.log(boolList);
         this.startNode.darkenAll();
         this.startNode.highlightPath(boolList);
     }

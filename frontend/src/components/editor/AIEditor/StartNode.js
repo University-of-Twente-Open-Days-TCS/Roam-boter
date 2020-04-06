@@ -187,15 +187,13 @@ export default class StartNode {
     /** Recursively darkens its childnodes, used in a replay **/
     darkenAll() {
         this.trueArrow.dest.darkenAll();
-        this.layer.draw();
     }
 
     /** Highlight its childnode according to the active path, used in a replay **/
     highlightPath(boolList) {
         this.trueArrow.dest.highlightPath(boolList);
-        this.trueArrow.arrowline.stroke("green");
         this.trueArrow.arrowline.strokeWidth(4);
-        this.layer.draw();
+        this.layer.batchDraw();
     }
 
     getTrueDotPosition() {

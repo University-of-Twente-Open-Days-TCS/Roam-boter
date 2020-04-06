@@ -605,42 +605,39 @@ export default class ConditionNode {
 
     /** Darken this node and its children, used in a replay **/
     darkenAll() {
-        this.group.filters([Konva.Filters.Brighten]);
-        this.group.brightness(-0.5);
+        this.rect.fill(this.canvas.condition_node.fill_unselected);
+        this.rect.strokeWidth(this.canvas.condition_node.stroke_width);
         this.trueArrow.dest.darkenAll();
         this.falseArrow.dest.darkenAll();
-        this.trueArrow.arrowline.fill("black");
-        this.falseArrow.arrowline.fill("black");
         this.trueArrow.arrowline.strokeWidth(2);
+        this.trueArrow.arrowline.stroke(this.canvas.arrow.fill_unselected);
+        this.trueArrow.arrowline.fill(this.canvas.arrow.fill_unselected);
         this.falseArrow.arrowline.strokeWidth(2);
-        this.falseCircle.cache();
-        this.falseCircle.filters([Konva.Filters.Brighten]);
-        this.falseCircle.brightness(0);
-        this.trueCircle.cache();
-        this.trueCircle.filters([Konva.Filters.Brighten]);
-        this.trueCircle.brightness(0);
-        this.group.cache();
+        this.falseArrow.arrowline.stroke(this.canvas.arrow.fill_unselected);
+        this.falseArrow.arrowline.fill(this.canvas.arrow.fill_unselected);
+
+        this.trueCircle.fill(this.canvas.true_circle.fill_unselected);
+        this.falseCircle.fill(this.canvas.false_circle.fill_unselected);
+
     }
 
     /** Highlight this node and one of their children, used in a replay **/
     highlightPath(boolList) {
-        this.group.brightness(0);
+        this.rect.fill(this.canvas.condition_node.fill);
+        this.rect.strokeWidth(3);
         if (boolList.shift()) {
             this.trueArrow.dest.highlightPath(boolList);
-            this.trueArrow.arrowline.stroke("green");
             this.trueArrow.arrowline.strokeWidth(4);
-            this.falseCircle.cache();
-            this.falseCircle.filters([Konva.Filters.Brighten]);
-            this.falseCircle.brightness(-0.5);
-            this.group.cache();
+            this.trueArrow.arrowline.stroke(this.canvas.arrow.fill_green);
+            this.trueArrow.arrowline.fill(this.canvas.arrow.fill_green);
+            this.trueCircle.fill(this.canvas.true_circle.fill);
         } else {
             this.falseArrow.dest.highlightPath(boolList);
-            this.falseArrow.arrowline.stroke("red");
             this.falseArrow.arrowline.strokeWidth(4);
-            this.trueCircle.cache();
-            this.trueCircle.filters([Konva.Filters.Brighten]);
-            this.trueCircle.brightness(-0.5);
-            this.group.cache();
+            this.falseArrow.arrowline.stroke(this.canvas.arrow.fill_red);
+            this.falseArrow.arrowline.fill(this.canvas.arrow.fill_red);
+            this.falseCircle.fill(this.canvas.false_circle.fill);
+
         }
     }
 
