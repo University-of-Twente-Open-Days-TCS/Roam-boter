@@ -5,6 +5,7 @@ import Konva from "konva";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 import ActionNode from "./ActionNode.js";
+import JSONValidationError from "../Errors/JSONValidationError.js";
 
 //The default dimensions of a ConditionNode
 const blockHeight = 40;
@@ -604,8 +605,11 @@ export default class ConditionNode {
     darkenAll() {
         this.group.filters([Konva.Filters.Brighten]);
         this.group.brightness(-0.5);
+
+        //If a condition misses children, the typeError will get caught by the StartNode
         this.trueArrow.dest.darkenAll();
         this.falseArrow.dest.darkenAll();
+
         this.trueArrow.arrowline.fill("black");
         this.falseArrow.arrowline.fill("black");
         this.trueArrow.arrowline.strokeWidth(2);
@@ -622,22 +626,26 @@ export default class ConditionNode {
     /** Highlight this node and one of their children, used in a replay **/
     highlightPath(boolList) {
         this.group.brightness(0);
-        if (boolList.shift()) {
-            this.trueArrow.dest.highlightPath(boolList);
-            this.trueArrow.arrowline.stroke("green");
-            this.trueArrow.arrowline.strokeWidth(4);
-            this.falseCircle.cache();
-            this.falseCircle.filters([Konva.Filters.Brighten]);
-            this.falseCircle.brightness(-0.5);
-            this.group.cache();
-        } else {
-            this.falseArrow.dest.highlightPath(boolList);
-            this.falseArrow.arrowline.stroke("red");
-            this.falseArrow.arrowline.strokeWidth(4);
-            this.trueCircle.cache();
-            this.trueCircle.filters([Konva.Filters.Brighten]);
-            this.trueCircle.brightness(-0.5);
-            this.group.cache();
+        try {
+            if (boolList.shift()) {
+                this.trueArrow.dest.highlightPath(boolList);
+                this.trueArrow.arrowline.stroke("green");
+                this.trueArrow.arrowline.strokeWidth(4);
+                this.falseCircle.cache();
+                this.falseCircle.filters([Konva.Filters.Brighten]);
+                this.falseCircle.brightness(-0.5);
+                this.group.cache();
+            } else {
+                this.falseArrow.dest.highlightPath(boolList);
+                this.falseArrow.arrowline.stroke("red");
+                this.falseArrow.arrowline.strokeWidth(4);
+                this.trueCircle.cache();
+                this.trueCircle.filters([Konva.Filters.Brighten]);
+                this.trueCircle.brightness(-0.5);
+                this.group.cache();
+            }
+        } catch (err) {
+            throw new JSONValidationError("The list to highlight nodes does not match the actual tree!");
         }
     }
 
