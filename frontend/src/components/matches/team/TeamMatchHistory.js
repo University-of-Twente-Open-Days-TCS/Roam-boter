@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 
-import { Typography, Button, Grid } from '@material-ui/core'
+import { Typography, Button } from '@material-ui/core'
 
 import ContentBox from '../../layout/ContentBox'
 

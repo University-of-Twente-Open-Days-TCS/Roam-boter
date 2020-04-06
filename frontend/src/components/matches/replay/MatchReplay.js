@@ -97,7 +97,6 @@ class MatchReplay extends Component {
         const kind = this.props.match.params.matchKind;
 
         let matchKind
-        console.log(kind)
         switch(kind){
             case "botmatch":
                 matchKind = this.MATCH_TYPES.BOTMATCH
