@@ -9,10 +9,10 @@ class ReplayCanvas {
         "#000000",    // 5: WALL
         "#000000",    // 6: RESERVED
         "#000000",    // 7: RESERVED
-        "#00FF00",    // 8: HEAL
-        "#FF0000",    // 9: FLAG
-        "#FFFF00",    // 10: HILL
-        "#0000FF",    // 11: SPAWN
+        "#FFFFFF",    // 8: HEAL
+        "#FFFFFF",    // 9: FLAG
+        "#FFFFFF",    // 10: HILL
+        "#FFFFFF",    // 11: SPAWN
         "#000000",    // 12: RESERVED
         "#000000",    // 13: RESERVED
     ]
@@ -123,6 +123,7 @@ class ReplayCanvas {
 
         this.gameData.level.forEach(function (row, y) {
             row.forEach(function (cell, x) {
+
                 ctx.fillStyle = blockColors[cell];
                 ctx.fillRect((x * cellsize_x), (y * cellsize_y), cellsize_x, cellsize_y);
             });
