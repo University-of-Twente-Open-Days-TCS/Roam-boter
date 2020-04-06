@@ -17,7 +17,7 @@ class Level:
     def __init__(self, path, checksum, objects):
         self.objects = objects
         self.path = path
-        self.nearest_objects = self.cache_or_prepare_nearest_objects()
+        self.nearest_objects = self.cache_or_prepare_nearest_objects(checksum)
         self.nearest_paths = self.cache_or_prepare_all_paths(checksum)
         self.health_packs = self.collect_health_packs()
         self.scout_nodes = []
@@ -49,17 +49,20 @@ class Level:
             return True
         return False
 
-    def cache_or_prepare_nearest_objects(self):
+    def cache_or_prepare_nearest_objects(self, checksum):
 
         nearest_objects = None
         pickle_path = os.path.join(self.get_caching_directory(), "nearest_objects_" + self.path + ".p")
         try:
             with open(pickle_path, 'rb') as f:
-                nearest_objects = pickle.load(f)
-        except FileNotFoundError:
+                file_checksum, nearest_objects = pickle.load(f)
+
+                if file_checksum != checksum:
+                    raise FileNotFoundError
+        except (ValueError, FileNotFoundError, pickle.UnpicklingError):
             nearest_objects = self.prepare_nearest_objects()
             with open(pickle_path, 'wb') as f:
-                pickle.dump(nearest_objects, f)
+                pickle.dump((checksum, nearest_objects), f)
 
         return nearest_objects
 
@@ -74,7 +77,7 @@ class Level:
     def prepare_nearest_objects(self):
         # for y, for x, for object collect nearest of obj from x, y
         LOGGER.info("Preparing find_nearest_object cache for " + self.path)
-        return []  # return [[{obj: self.find_nearest_object(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)]for y, row in enumerate(self.objects)]
+        return [[{obj: self.find_nearest_object(obj, x, y) for obj in ALL_OBJECTS} for x, cell in enumerate(row)]for y, row in enumerate(self.objects)]
 
     def find_nearest_object(self, obj, x, y):
         queue = [(x, y)]
@@ -123,7 +126,7 @@ class Level:
                 if file_checksum != checksum:
                     raise FileNotFoundError
 
-        except FileNotFoundError:
+        except (ValueError, FileNotFoundError, pickle.UnpicklingError):
             nearest_paths = self.prepare_all_paths()
             with open(pickle_path, 'wb') as f:
                 pickle.dump((checksum, nearest_paths), f)
@@ -137,12 +140,12 @@ class Level:
         return cache
 
     def find_all_paths(self, obj, x, y):
-        if x == 0 and y % 3 == 0:
+        if x == 0 and obj == Object.WALL:
             # Print status message for cache generation.
             LOGGER.debug(str((y * 100) // len(self.objects)) + "%")
         # A tank can always walk straight towards the nearest wall
         if obj == Object.WALL:
-            return Path([self.find_nearest_object(obj, x, y)])
+            return [Path([self.find_nearest_object(obj, x, y)])]
 
         queue = [(None, x, y)]
         visited = dict()

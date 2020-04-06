@@ -16,6 +16,13 @@ import Seconds from "./Seconds.js";
 import AIValidationError from "../Errors/AIValidationError.js";
 import ErrorCircle from "../Errors/ErrorCircle.js";
 import JSONValidationError from "../Errors/JSONValidationError.js";
+import {
+    blue,
+    green,
+    grey,
+    pink,
+} from '@material-ui/core/colors';
+import {black} from "color-name";
 
 /** AI Canvas, the stage with which the user interacts or watches a replay on **/
 export default class AiCanvas {
@@ -27,6 +34,57 @@ export default class AiCanvas {
     _dragging;
     _startNode;
     _isReplay;
+
+    // styling of the editor
+
+    circle = {
+        stroke_width: 1,
+        stroke_color: grey['800'],
+    }
+
+    input_circle = {
+        ...this.circle,
+        fill: 'white'
+    }
+
+    true_circle = {
+        ...this.circle,
+        stroke_width: 0,
+        fill: green['500']
+    }
+
+    false_circle = {
+        ...this.circle,
+        stroke_width: 0,
+        fill: pink['A400']
+    }
+
+    node = {
+        corner_radius: 5,
+        stroke_width: 0,
+        stroke_color: grey['800']
+    }
+
+    start_node = {
+        ...this.node,
+        fill: black,
+    }
+
+    condition_node = {
+        ...this.node,
+        fill: blue['900']
+    }
+
+    action_node = {
+        ...this.node,
+        fill: blue['700']
+    }
+
+    arrow = {
+        stroke_width: 2,
+        stroke_color: 'red',
+        fill: 'black'
+    }
 
     /** Created a stage, multiple layers and a StartNode, gets the container ID where it needs to be placed in,
      * and a boolean whether this is part of a replay next to a simulation (no interaction) **/
@@ -47,6 +105,12 @@ export default class AiCanvas {
         this.startNode = new StartNode(this.stage, this.layer, this);
         this.layer.add(this.startNode.group);
         this.stage.add(this.stage.staticlayer);
+        // when the stage is moved the static layer should remain in the same position
+        this.stage.on("dragmove", () => {
+            this.stage.staticlayer.absolutePosition({x: 0, y: 0});
+            this.stage.staticlayer.draw();
+        });
+
         this.stage.add(this.layer);
         this.stage.add(this.stage.templayer);
         if (isReplay) {
@@ -68,7 +132,7 @@ export default class AiCanvas {
 
     }
 
-    /** Create the stage in the given container, with the previously defined width & height **/
+    /** Create the stage in the given container **/
     createStage(container) {
         this.stage = new Konva.Stage({
             container: container,
@@ -82,7 +146,7 @@ export default class AiCanvas {
         this.stage.scale = 1;
     }
 
-    /** Resize stage and redraw stage */
+    /** Resize stage and redraw stage, with the given width and height. Moves stage-center to middle of canvas */
     resizeStage(width, height) {
         this.stage.size({
             width: width,
@@ -95,7 +159,13 @@ export default class AiCanvas {
                 height: height
             })
         }
-        //TODO: Move ai to the center
+
+        //Move spawnpoint of stage to middle of canvas
+        this.stage.position({x: width / 2, y: 0});
+
+        //If this is not a replay, update trashcan position
+        this.stage.staticlayer.absolutePosition({x: 0, y: 0});
+
         this.stage.batchDraw()
     }
 
@@ -138,11 +208,6 @@ export default class AiCanvas {
                 stage.staticlayer.draw();
 
             };
-        });
-
-        // when the stage is moved the trashcan should remain in the same position
-        this.stage.on("dragmove", function () {
-            stage.staticlayer.absolutePosition({x: 0, y: 0});
         });
 
     }
@@ -289,7 +354,7 @@ export default class AiCanvas {
     /** Highlights the active path through the tree in a replay **/
     highlightPath(boolList) {
         /**
-         * @param boolList a boolean list that represents the AI's state. 
+         * @param boolList a boolean list that represents the AI's state.
          * Note: this list will be cleared.
          */
         this.startNode.darkenAll();
@@ -300,7 +365,9 @@ export default class AiCanvas {
     jsonToTree(json) {
 
         //Create first child from the startnode (and therefore iteratively all their successors)
-        let nodeChild = this.treeify(json, this.intifyPosition(this.startNode.rect.getAbsolutePosition()));
+        //NOTE this was changed after the startnode now always spawns in {0,0} and the stage is moved!
+        //Therefore the given attribute is {x:0,y:0} instead of this.startNode.position
+        let nodeChild = this.treeify(json, this.intifyPosition({x:0,y:0}));
 
         //Add child to canvas
         this.layer.add(nodeChild.group);
@@ -472,7 +539,7 @@ export default class AiCanvas {
     /** Add a node to this layer **/
     addNode(node) {
         this.layer.add(node.group);
-        let { width, height } = this.getStageSize()
+        let {width, height} = this.getStageSize()
         let posx = Math.floor(width / 2)
         let posy = Math.floor(height / 2)
 
@@ -501,7 +568,7 @@ export default class AiCanvas {
     set dragging(bool) {
         this._dragging = bool;
     }
-    
+
     get dragging() {
         return this._dragging;
     }

@@ -3,6 +3,7 @@ import Konva from "konva"
 import Popup from "./Popup.js";
 import ActionNode from "./ActionNode.js";
 import ConditionNode from "./ConditionNode.js";
+import JSONValidationError from "../Errors/JSONValidationError.js";
 
 //The default dimensions of this node
 const blockHeight = 40;
@@ -59,8 +60,8 @@ export default class StartNode {
             width: blockWidth,
             height: blockHeight,
             fill: 'black',
-            stroke: 'black',
-            strokeWidth: 2,
+            stroke: this.canvas.start_node.stroke_color,
+            strokeWidth: this.canvas.start_node.stroke_width,
             cornerRadius: 10,
         });
         this.group.add(this.rect);
@@ -87,8 +88,9 @@ export default class StartNode {
             y: this.rect.height(),
             x: this.rect.width() / 2,
             radius: circle_radius,
-            fill: 'green',
-            stroke: 'black',
+            fill: this.canvas.true_circle.fill,
+            stroke: this.canvas.true_circle.stroke_color,
+            strokeWidth: this.canvas.true_circle.stroke_width
         });
         this.group.add(this.trueCircle);
 
@@ -125,8 +127,8 @@ export default class StartNode {
             // in order to check what is under the cursor later
             this.moveTo(node.stage.templayer);
             this.tempArrow = new Konva.Arrow({
-                stroke: "black",
-                fill: "black"
+                stroke: 'black',
+                fill: 'black'
             });
 
             //delete any existing Arrow
@@ -184,15 +186,30 @@ export default class StartNode {
 
     /** Recursively darkens its childnodes, used in a replay **/
     darkenAll() {
-        this.trueArrow.dest.darkenAll();
+        try {
+            this.trueArrow.dest.darkenAll();
+        } catch (err) {
+            //If not every ConditionNode has two children a TypeError will get thrown
+            throw new JSONValidationError("Tree is missing terminal nodes!");
+        }
         this.layer.draw();
     }
 
     /** Highlight its childnode according to the active path, used in a replay **/
     highlightPath(boolList) {
-        this.trueArrow.dest.highlightPath(boolList);
-        this.trueArrow.arrowline.stroke("green");
-        this.trueArrow.arrowline.strokeWidth(4);
+        try {
+            this.trueArrow.dest.highlightPath(boolList);
+            this.trueArrow.arrowline.stroke("green");
+            this.trueArrow.arrowline.strokeWidth(4);
+        } catch (err) {
+            //TypeError gets thrown if StartNode misses an arrow or destination
+            if (err instanceof TypeError) {
+                throw new JSONValidationError("StartNode misses an arrow or destination!");
+            } else {
+                //Otherwise a ConditionNode threw it because of missing children compared to the boolList
+                throw new JSONValidationError("The list to highlight nodes does not match the actual tree!")
+            }
+        }
         this.layer.draw();
     }
 
