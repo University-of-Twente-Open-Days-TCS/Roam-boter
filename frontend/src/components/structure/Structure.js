@@ -38,6 +38,8 @@ export default function Structure(props) {
     useEffect(() => {
         if(height === null) {
             window.addEventListener('resize', adjustHeight)
+            window.addEventListener('load', adjustHeight)
+            window.addEventListener('orientationchange', adjustHeight)
             adjustHeight()
         }
     })

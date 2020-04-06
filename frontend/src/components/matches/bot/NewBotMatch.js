@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { NavLink, useParams } from 'react-router-dom'
 
 import RoambotAPI from '../../../RoamBotAPI'
 
@@ -11,7 +12,6 @@ import ContentBox from '../../layout/ContentBox'
 import SelectAIDialog from '../SelectAIDialog'
 import SelectBotDialog from '../SelectBotDialog'
 import Alert from "@material-ui/lab/Alert";
-import { NavLink } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
 
 const NewBotMatch = props => {
     const classes = useStyles()
+    let { preSelectedAI } = useParams()
 
     let [ais, setAis] = useState(null)
     let [bots, setBots] = useState(null)
@@ -46,11 +47,32 @@ const NewBotMatch = props => {
     })
 
     useEffect(() => {
-        async function updateAis() {
+        async function updateAis(aiPk) {
+            /**
+             * Updates the AI list. And if given an ai primary key. Will set that AI as selected
+             * @param aiPk primary key of ai to set selected
+             * TODO: Error Checking on aiPk
+             */
             let call = await RoambotAPI.getAiList()
             let json = await call.json()
+
+            //find ai and set as selected
+            if(aiPk){
+                let ai = null
+                for (let i = 0; i < json.length; i++){
+                    let curAi = json[i]
+                    if(curAi.pk === aiPk){
+                        ai = curAi
+                    }
+                }
+                setSelected({...selected, ai: ai})
+            }
+
             setAis(json)
+
         }
+
+
 
         async function updateBots() {
             let call = await RoambotAPI.getBotList()
@@ -60,11 +82,17 @@ const NewBotMatch = props => {
 
         // only update if ai list is unset
         if (ais === null) {
-            updateAis()
+            if(preSelectedAI){
+                let aiPk = parseInt(preSelectedAI)
+                updateAis(aiPk)
+            }else {
+                updateAis()
+            }
         }
         if (bots === null) {
             updateBots()
         }
+
     })
 
     const playMatch = async () => {

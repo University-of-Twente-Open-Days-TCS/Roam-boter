@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Typography,Grid } from '@material-ui/core'
+import { Typography, Grid } from '@material-ui/core'
 
 import { ButtonList, ButtonListTextLink } from '../../layout/ButtonList'
 import ContentBox from "../../layout/ContentBox";

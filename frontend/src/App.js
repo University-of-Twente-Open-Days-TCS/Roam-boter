@@ -145,8 +145,10 @@ class App extends Component {
                         <Route path="/PlayvsBot" component={PlayvsBot} />
                         <Route path="/BotMatchHistory" component={BotMatchHistory} />
                         <Route path="/MatchReplay/:matchId/:matchKind" component={MatchReplay} />
+                        <Route path="/NewBotMatch/:preSelectedAI" component={NewBotMatch} />
                         <Route path="/NewBotMatch" component={NewBotMatch} />
                         <Route path="/PlayvsPlayer" component={PlayvsPlayer} />
+                        <Route path="/NewTeamMatch/:preSelectedAI" component={NewTeamMatch} />
                         <Route path="/NewTeamMatch" component={NewTeamMatch} />
                         <Route path="/TeamMatchHistory" component={TeamMatchHistory} />
                         <Route path="/Help" component={Help} />

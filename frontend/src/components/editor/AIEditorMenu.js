@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 const AIEditorMenu = (props) => {
     const classes = useStyles()
     
-    let { addConditionHandler, addActionHandler, handleSave, handleSaveAsNew, handleDelete } = props
+    let { addConditionHandler, addActionHandler, handleSave, handleSaveAsNew, handlePlayvsBot, handlePlayvsTeam } = props
     let ai = props.ai
 
     const theme = useTheme()
@@ -60,8 +60,8 @@ const AIEditorMenu = (props) => {
             </div>
 
             <div className={classes.menuSection}>
-                <Button variant="outlined" color="secondary" disabled={ai ? false : true}   className={classes.button}>Play vs Bot</Button>
-                <Button variant="outlined" color="secondary" disabled={ai ? false : true} className={classes.button}>Play vs Team</Button>
+                <Button variant="outlined" color="secondary" disabled={ai ? false : true} className={classes.button} onClick={handlePlayvsBot}>Play vs Bot</Button>
+                <Button variant="outlined" color="secondary" disabled={ai ? false : true} className={classes.button} onClick={handlePlayvsTeam}>Play vs Team</Button>
             </div>
 
         </div>
