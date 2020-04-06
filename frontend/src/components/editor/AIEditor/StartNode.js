@@ -3,6 +3,7 @@ import Konva from "konva"
 import Popup from "./Popup.js";
 import ActionNode from "./ActionNode.js";
 import ConditionNode from "./ConditionNode.js";
+import JSONValidationError from "../Errors/JSONValidationError.js";
 
 //The default dimensions of this node
 const blockHeight = 40;
@@ -184,15 +185,30 @@ export default class StartNode {
 
     /** Recursively darkens its childnodes, used in a replay **/
     darkenAll() {
-        this.trueArrow.dest.darkenAll();
+        try {
+            this.trueArrow.dest.darkenAll();
+        } catch (err) {
+            //If not every ConditionNode has two children a TypeError will get thrown
+            throw new JSONValidationError("Tree is missing terminal nodes!");
+        }
         this.layer.draw();
     }
 
     /** Highlight its childnode according to the active path, used in a replay **/
     highlightPath(boolList) {
-        this.trueArrow.dest.highlightPath(boolList);
-        this.trueArrow.arrowline.stroke("green");
-        this.trueArrow.arrowline.strokeWidth(4);
+        try {
+            this.trueArrow.dest.highlightPath(boolList);
+            this.trueArrow.arrowline.stroke("green");
+            this.trueArrow.arrowline.strokeWidth(4);
+        } catch (err) {
+            //TypeError gets thrown if StartNode misses an arrow or destination
+            if (err instanceof TypeError) {
+                throw new JSONValidationError("StartNode misses an arrow or destination!");
+            } else {
+                //Otherwise a ConditionNode threw it because of missing children compared to the boolList
+                throw new JSONValidationError("The list to highlight nodes does not match the actual tree!")
+            }
+        }
         this.layer.draw();
     }
 
