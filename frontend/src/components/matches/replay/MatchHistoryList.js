@@ -79,7 +79,6 @@ const MatchHistoryListItem = props => {
     let classes = useStyles()
 
     let done = match.simulation.state === 'DONE'
-    console.log(done)
 
     let teammatch = Boolean(match.opponent)
     let opponent = teammatch ? match.opponent.team_name : match.bot.name

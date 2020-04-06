@@ -33,7 +33,7 @@ class BotMatchHistory extends Component {
         <ContentBox>
             <Grid container justify='center'>
                 <Grid item xs={12} ms={9} md={6}>
-                    <Typography variant="h4" align='center'>Bot Match History <Button onClick={() => this.refreshMatchHistory()} variant="outlined" size="small" color="primary"><Refresh/></Button></Typography>
+                    <Typography variant="h4" align='center'>Computer Match History <Button onClick={() => this.refreshMatchHistory()} variant="outlined" size="small" color="primary"><Refresh/></Button></Typography>
                         {this.state.matches.length > 0 ?
                             (<MatchHistoryList matches={this.state.matches} refresh={this.refreshMatchHistory}/>)
                             :
