@@ -15,6 +15,7 @@ import RoamBotAPI from "../../../RoamBotAPI"
 const styles = theme => ({
     wrapper: {
         display: 'flex',
+        minHeight: '100%',
         height: 'auto',
 
         borderBottom: 'solid 1px rgba(0,0,0,0.2)',
@@ -110,7 +111,15 @@ class MatchReplay extends Component {
                 break
         }
 
-        let { match, ai } = await this.fetchMatchInfo(matchKind, match_id)
+        let fetchedMatchInfo = await this.fetchMatchInfo(matchKind, match_id)
+
+        if (!fetchedMatchInfo) {
+            // go to home if something went wrong.
+            console.alert("Something went wrong. Could not get match data")
+            this.props.history.push('/')
+        }
+
+        let {match, ai} = fetchedMatchInfo
 
         let matchContainer = this.replayContainerRef.current
 

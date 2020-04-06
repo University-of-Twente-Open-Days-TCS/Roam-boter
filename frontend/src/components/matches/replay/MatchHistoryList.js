@@ -92,26 +92,24 @@ const MatchHistoryListItem = props => {
         won = (match.team.pk === match.winner) ? true : false
     }
 
-    const deleteMatch = () => {
-            let call
+    const deleteMatch = async () => {
+            let response
             if(teammatch){
-                call = RoamBotAPI.deleteTeamMatch(props.match.pk)
+                response = await RoamBotAPI.deleteTeamMatch(props.match.pk)
             }else {
-                call = RoamBotAPI.deleteBotMatch(props.match.pk)
+                response = await RoamBotAPI.deleteBotMatch(props.match.pk)
             }
 
-            call.then((response) => {
+            if(!response.ok){
+                // an error occurred
+                console.error(response)
+                alert("An error occurred see console.")
 
-                if(!response.ok){
-                    // an error occurred
-                    console.error(response)
-                    alert("An error occurred see console.")
-
-                }else {
-                    // refresh parent component
-                    props.refresh()
-                }
-            })
+            }else {
+                // refresh parent component
+                props.refresh()
+            }
+            
 
     }
     if(done) {
