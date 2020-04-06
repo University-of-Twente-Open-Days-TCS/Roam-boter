@@ -18,8 +18,8 @@ const useStyles = makeStyles(theme => ({
         /* Content Max height */
         backgroundColor: 'white',
         height: '100vh',
+        overflowX: 'hidden', 
         flexGrow: 1,
-        overflow: "auto"
     },
 }));
 

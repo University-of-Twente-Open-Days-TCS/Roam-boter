@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from "react";
 
-import { Grid, Button } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import { Button } from '@material-ui/core'
 
+
+
+import TeamInfo from './TeamInfo'
 import ContentBox from '../layout/ContentBox'
-
 import RoamBotAPI from '../../RoamBotAPI'
-import TeamInfo from "./TeamInfo";
+
+const useStyles = makeStyles(theme => ({
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+    },
+}))
+
 
 const Home = (props) => {
+    const classes = useStyles()
 
     let logoutHandler = props.handleSubmitLogout
 
@@ -60,12 +72,15 @@ const Home = (props) => {
     }
 
     return (
-        <ContentBox>
-            {team ? <TeamInfo team={team} ais={ais} setActiveAI={setActiveAI}></TeamInfo> : null}
-            <Grid container justify="center" style={{marginTop: '1rem'}}>
-                <Button onClick={logoutHandler} variant="contained" color="secondary" style={{margin: '0.5rem'}}>Logout</Button>
-            </Grid>
-        </ContentBox>
+        <div className={classes.root}>
+            
+                    <ContentBox>
+                        {team ? <TeamInfo team={team} ais={ais} setActiveAI={setActiveAI}/> : null}
+                        <div style={{margin: '0.5rem auto', textAlign: 'center'}}>
+                            <Button onClick={logoutHandler} variant="contained" color="secondary">Logout</Button>
+                        </div>
+                    </ContentBox>
+        </div>
     )
 }
 

@@ -95,7 +95,7 @@ Also in the contaiers not related to the RoamBot-er Project.
 
 1.  Delete all migration files. (keep \_\_init\_\_.py)
 2.  `sudo docker-compose down`
-3.  `sudo docker volume rm $(sudo docker volume -q)`
+3.  `sudo docker volume rm $(sudo docker volume ls -q)`
 
     This will delete **all** docker volumes on the system!
 

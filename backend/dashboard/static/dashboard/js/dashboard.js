@@ -29,7 +29,7 @@ function closeWorkshop() {
 
 async function closeWorkshopCall() {
 
-    const response = await fetch("/dashboard/close/", {
+    const response = await fetch("/close/", {
         method: "POST",
         headers: {
             'X_CSRFTOKEN' : csrfToken  
@@ -49,7 +49,7 @@ function openWorkshop() {
 
 async function openWorkshopCall() {
 
-    const response = await fetch("/dashboard/open/", {
+    const response = await fetch("/open/", {
         method: "POST",
         headers: {
             'X_CSRFTOKEN' : csrfToken
@@ -94,7 +94,7 @@ async function generateTeamCodesCall(amount){
     let formData = new FormData()
     formData.append("amount", amount)
 
-    const response = await fetch("/dashboard/generate/", {
+    const response = await fetch("/generate/", {
         method: "POST",
         headers: {
             'X_CSRFTOKEN' : csrfToken

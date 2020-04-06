@@ -56,6 +56,18 @@ class RoamBotAPI {
         return response
     }
 
+    stringifyError(data) {
+        var message = ""
+        Object.keys(data).forEach(function (key, elem) {
+            console.log(data[key])
+            data[key].forEach(function (error, index) {
+                message += key + " error: " + error + "\n";
+            })
+        });
+
+        return message
+    }
+
     testAPI() {
         /**
          * Returns a promise that if resolves if successful
@@ -71,7 +83,7 @@ class RoamBotAPI {
         let body = {
             'team_code' : teamCode
         }
-        let response = this.callApi('dashboard/enter/', 'POST', body)
+        let response = this.callApi('enter/', 'POST', body)
         return response
     }
 
@@ -79,7 +91,7 @@ class RoamBotAPI {
         /**
          * Calls te api to logout a session.
          */
-        let response = this.callApi('dashboard/enter/', 'DELETE')
+        let response = this.callApi('enter/', 'DELETE')
         return response
     }
 
@@ -87,7 +99,7 @@ class RoamBotAPI {
         /**
          * Calls the team detail. If a user is in a team this returns team information.
          */
-        let response = this.callApi('dashboard/team/detail/', 'GET')
+        let response = this.callApi('team/detail/', 'GET')
         return response
     }
 
@@ -96,7 +108,7 @@ class RoamBotAPI {
          * Sets the active AI of a team.
          * @param aiPk Primary Key of AI to set active
          */
-        let response = this.callApi('dashboard/team/detail/', 'PUT', {active_ai_pk: aiPk})
+        let response = this.callApi('team/detail/', 'PUT', {active_ai_pk: aiPk})
         return response
     }
 

@@ -6,7 +6,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 
-import {Adb, Person} from "@material-ui/icons";
+import {Adb, Person, HelpOutline} from "@material-ui/icons";
 
 
 export default function PlayMenuList(text) {
@@ -22,6 +22,11 @@ export default function PlayMenuList(text) {
             icon: <Person/>,
             url: "/PlayvsPlayer"
         },
+        {
+            text: "Tutorial",
+            icon: <HelpOutline />,
+            url: "/Help"
+        }
 
     ];
 
