@@ -97,7 +97,7 @@ export default class ConditionNode {
             let touchPos = this.stage.getPointerPosition();
 
             //If while moving the node is hovered over trashcan, open trashcan
-            if(typeof this.stage.trashcan !== "undefined") {
+            if (typeof this.stage.trashcan !== "undefined") {
                 if (this.stage.staticlayer.getIntersection(touchPos) === this.trashcan) {
                     this.stage.trashcan.fire('touchstart', {
                         type: 'touchstart',
@@ -607,50 +607,53 @@ export default class ConditionNode {
     }
 
     /** Darken this node and its children, used in a replay **/
-    darkenAll() {
-        this.group.filters([Konva.Filters.Brighten]);
-        this.group.brightness(-0.5);
+    unhighlightAll() {
+        this.unhighlight();
+        this.trueArrow.dest.unhighlightAll();
+        this.falseArrow.dest.unhighlightAll();
+    }
 
-        //If a condition misses children, the typeError will get caught by the StartNode
-        this.trueArrow.dest.darkenAll();
-        this.falseArrow.dest.darkenAll();
+    unhighlightPath(boolList) {
+        this.unhighlight();
+        if (boolList.shift()) {
+            this.trueArrow.dest.unhighlightPath(boolList);
+        } else {
+            this.falseArrow.dest.unhighlightPath(boolList);
+        }
+    }
 
-        this.trueArrow.arrowline.fill("black");
-        this.falseArrow.arrowline.fill("black");
+
+    unhighlight() {
+        this.rect.fill(this.canvas.condition_node.fill_unselected);
+        this.rect.strokeWidth(this.canvas.condition_node.stroke_width);
         this.trueArrow.arrowline.strokeWidth(2);
+        this.trueArrow.arrowline.stroke(this.canvas.arrow.fill_unselected);
+        this.trueArrow.arrowline.fill(this.canvas.arrow.fill_unselected);
         this.falseArrow.arrowline.strokeWidth(2);
-        this.falseCircle.cache();
-        this.falseCircle.filters([Konva.Filters.Brighten]);
-        this.falseCircle.brightness(0);
-        this.trueCircle.cache();
-        this.trueCircle.filters([Konva.Filters.Brighten]);
-        this.trueCircle.brightness(0);
-        this.group.cache();
+        this.falseArrow.arrowline.stroke(this.canvas.arrow.fill_unselected);
+        this.falseArrow.arrowline.fill(this.canvas.arrow.fill_unselected);
+
+        this.trueCircle.fill(this.canvas.true_circle.fill_unselected);
+        this.falseCircle.fill(this.canvas.false_circle.fill_unselected);
     }
 
     /** Highlight this node and one of their children, used in a replay **/
     highlightPath(boolList) {
-        this.group.brightness(0);
-        try {
-            if (boolList.shift()) {
-                this.trueArrow.dest.highlightPath(boolList);
-                this.trueArrow.arrowline.stroke("green");
-                this.trueArrow.arrowline.strokeWidth(4);
-                this.falseCircle.cache();
-                this.falseCircle.filters([Konva.Filters.Brighten]);
-                this.falseCircle.brightness(-0.5);
-                this.group.cache();
-            } else {
-                this.falseArrow.dest.highlightPath(boolList);
-                this.falseArrow.arrowline.stroke("red");
-                this.falseArrow.arrowline.strokeWidth(4);
-                this.trueCircle.cache();
-                this.trueCircle.filters([Konva.Filters.Brighten]);
-                this.trueCircle.brightness(-0.5);
-                this.group.cache();
-            }
-        } catch (err) {
-            throw new JSONValidationError("The list to highlight nodes does not match the actual tree!");
+        this.rect.fill(this.canvas.condition_node.fill);
+        this.rect.strokeWidth(3);
+        if (boolList.shift()) {
+            this.trueArrow.dest.highlightPath(boolList);
+            this.trueArrow.arrowline.strokeWidth(4);
+            this.trueArrow.arrowline.stroke(this.canvas.arrow.fill_green);
+            this.trueArrow.arrowline.fill(this.canvas.arrow.fill_green);
+            this.trueCircle.fill(this.canvas.true_circle.fill);
+        } else {
+            this.falseArrow.dest.highlightPath(boolList);
+            this.falseArrow.arrowline.strokeWidth(4);
+            this.falseArrow.arrowline.stroke(this.canvas.arrow.fill_red);
+            this.falseArrow.arrowline.fill(this.canvas.arrow.fill_red);
+            this.falseCircle.fill(this.canvas.false_circle.fill);
+
         }
     }
 

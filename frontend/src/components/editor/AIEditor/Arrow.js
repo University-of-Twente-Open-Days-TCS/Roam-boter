@@ -72,7 +72,6 @@ export default class Arrow {
         //this is to offset the possible movement of the entire stage, otherwise the arrows would not be in the correct position
         this.arrowline.points(this.startpos.concat(this.endpos));
         this.layer.batchDraw();
-
     }
 
     /** Remove the Arrow from the canvas and set the corresponding values at the src&dest nodes to null **/

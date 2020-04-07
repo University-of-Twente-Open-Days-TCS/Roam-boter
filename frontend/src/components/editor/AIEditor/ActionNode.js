@@ -471,15 +471,23 @@ export default class ActionNode {
     }
 
     /** Darken the node, for when it is shown next to a simulation but is not active **/
-    darkenAll() {
-        this.group.cache();
-        this.group.filters([Konva.Filters.Brighten]);
-        this.group.brightness(-0.3);
+    unhighlightAll() {
+        this.unhighlight()
+    }
+
+    unhighlightPath(){
+        this.unhighlight();
+    }
+
+    unhighlight(){
+        this.rect.fill(this.canvas.action_node.fill_unselected);
+        this.rect.strokeWidth(this.canvas.action_node.stroke_width);
     }
 
     /** Highlight the node, for when it is shown next to a simulation and is active **/
     highlightPath(boolList) {
-        this.group.brightness(0);
+        this.rect.fill(this.canvas.action_node.fill);
+        this.rect.strokeWidth(3);
     }
 
     /** All getters & setters **/
