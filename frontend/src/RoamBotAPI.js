@@ -59,7 +59,6 @@ class RoamBotAPI {
     stringifyError(data) {
         var message = ""
         Object.keys(data).forEach(function (key, elem) {
-            console.log(data[key])
             data[key].forEach(function (error, index) {
                 message += key + " error: " + error + "\n";
             })

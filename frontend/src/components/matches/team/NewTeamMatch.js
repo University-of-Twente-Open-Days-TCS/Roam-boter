@@ -114,7 +114,7 @@ const NewTeamMatch = props => {
 
     return (
          <ContentBox>
-            <Typography variant="h4" align="center">Play vs. Peers</Typography>
+            <Typography variant="h4" align="center">Play vs Peers</Typography>
             <Grid container justify="center" spacing={2}>
                 <Grid item xs={12} sm={9} md={6}>
                     <div className={classes.wrapper}>

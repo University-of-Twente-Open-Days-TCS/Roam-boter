@@ -11,7 +11,7 @@ const PlayvsBot = () => {
         <ContentBox>
             <Grid container justify='center'>
                 <Grid item xs={12} sm={9} md={6}>
-                    <Typography variant="h4" align="center">Play vs. Computer</Typography>
+                    <Typography variant="h4" align="center">Play vs Computer</Typography>
                     <ButtonList>
                         <ButtonListTextLink url="/NewBotMatch">New Match</ButtonListTextLink>
                         <ButtonListTextLink url="/BotMatchHistory">Replays</ButtonListTextLink>
