@@ -105,7 +105,7 @@ const MatchHistoryListItem = props => {
                 // an error occurred
                 if(response.status !== 404){
                     console.error(response)
-                    alert("An error occurred see console.")
+                    window.alert("An error occurred see console.")
                 }
 
             }else {
