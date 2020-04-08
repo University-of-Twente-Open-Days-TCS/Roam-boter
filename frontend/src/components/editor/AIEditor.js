@@ -1,15 +1,17 @@
 import React, {Component} from "react"
+import { withRouter } from "react-router-dom"
 
-import {withStyles} from '@material-ui/styles'
+import { ThemeProvider, withStyles } from '@material-ui/styles'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
+import { createMuiTheme } from '@material-ui/core'
+import { blue } from "@material-ui/core/colors";
 
 import RoamBotAPI from '../../RoamBotAPI'
 
 import AIEditorMenu from "./AIEditorMenu";
 import AICanvas from './AIEditor/AIeditor.js'
 
-import {withRouter} from "react-router-dom"
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -270,57 +272,70 @@ class AIEditor extends Component {
             ai: this.state.ai
         }
 
+        const theme = createMuiTheme({
+            palette: {
+                primary: {
+                    main: blue['900']
+                },
+                secondary: {
+                    main: blue['700']
+                }
+            }
+        })
+
         return (
-            <div id="AIEditor" className={classes.AIEditor}>
-                <Grid container className={classes.AIEditorGrid}>
+            <ThemeProvider theme={theme}>
+                <div id="AIEditor" className={classes.AIEditor}>
+                    <Grid container className={classes.AIEditorGrid}>
 
-                    <Grid item xs={9} className={classes.AIEditorKonvaGridItem}>
-                        <Box id="konva-container" width={1} height={1}></Box>
+                        <Grid item xs={9} className={classes.AIEditorKonvaGridItem}>
+                            <Box id="konva-container" width={1} height={1}></Box>
+                        </Grid>
+
+                        <Grid item xs={3} className={classes.AIEditorMenuGridItem}>
+                            <AIEditorMenu dialogState={this.state.dialog} {...menuProps} />
+                        </Grid>
                     </Grid>
 
-                    <Grid item xs={3} className={classes.AIEditorMenuGridItem}>
-                        <AIEditorMenu {...menuProps} />
-                    </Grid>
-                </Grid>
 
-
-                {/** DIALOG */}
-                <Dialog open={this.state.dialog.open} onClose={this.handleCancelDialog}
-                        aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Enter AI name</DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="AI name"
-                            type="text"
-                            fullWidth
-                            value={this.state.dialog.aiName ? this.state.dialog.aiName : ""}
-                            onChange={this.handleChangeName}
-                            required={true}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleCancelDialog} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.handleConfirmDialog} color="primary" disabled={!this.state.dialog.aiName}>
-                            Save
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-                <Snackbar open={this.state.errorAlertOpen} autoHideDuration={6000} onClose={this.handleErrorSnackbarClose}>
-                    <Alert onClose={this.handleErrorSnackbarClose} severity="error">
-                        {this.state.errorMessage}
-                    </Alert>
-                </Snackbar>
-                <Snackbar open={this.state.successAlertOpen} autoHideDuration={6000} onClose={this.handleSuccessSnackbarClose}>
-                    <Alert onClose={this.handleSuccessSnackbarClose} severity="success">
-                        AI saved!
-                    </Alert>
-                </Snackbar>
-            </div>
+                    {/** DIALOG */}
+                    <Dialog open={this.state.dialog.open} onClose={this.handleCancelDialog}
+                            aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Enter AI name</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="name"
+                                label="AI name"
+                                type="text"
+                                fullWidth
+                                value={this.state.dialog.aiName ? this.state.dialog.aiName : ""}
+                                onChange={this.handleChangeName}
+                                required={true}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleCancelDialog} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={this.handleConfirmDialog} color="primary" disabled={!this.state.dialog.aiName}>
+                                Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Snackbar open={this.state.errorAlertOpen} autoHideDuration={6000} onClose={this.handleErrorSnackbarClose}>
+                        <Alert onClose={this.handleErrorSnackbarClose} severity="error">
+                            {this.state.errorMessage}
+                        </Alert>
+                    </Snackbar>
+                    <Snackbar open={this.state.successAlertOpen} autoHideDuration={6000} onClose={this.handleSuccessSnackbarClose}>
+                        <Alert onClose={this.handleSuccessSnackbarClose} severity="success">
+                            AI saved!
+                        </Alert>
+                    </Snackbar>
+                </div>
+            </ThemeProvider>
         )
     }
 }
