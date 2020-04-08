@@ -34,7 +34,7 @@ def move_to_nearest_object(tank, state, obj):
     if nearest_path is not None:
         tank.path = nearest_path
 
-        move_to_position(state, tank, nearest_path.next_node(tank.get_pos()))
+        move_to_position(state, tank, nearest_path.next_node(tank.get_pos()), wall_collision=False)
 
 
 # The function correlated with the action of the tank scouting the map.
@@ -59,12 +59,11 @@ def scout(tank, state):
     for p in paths:
         if p.goal() == tank.scout_target[0]:
             tank.path = p
-            move_to_position(state, tank, p.next_node(tank.get_pos()))
-
+            move_to_position(state, tank, p.next_node(tank.get_pos()), wall_collision=False)
 
 
 def patrol(tank, state):
-    raise NotImplementedError("Patrolling is not possible yet")
+    pass
 
 
 # The tank moving straight back from a nearest object.
@@ -73,7 +72,7 @@ def move_from_nearest_object(tank, state, obj):
     paths = filter_objects(tank, state, obj)
     nearest_path = closest_object_in_paths(tank.get_pos(), paths)
     if nearest_path is not None:
-        move_from_position(state, tank, nearest_path.next_node(tank.get_pos()))
+        move_from_position(state, tank, nearest_path.next_node(tank.get_pos()), wall_collision=True)
 
 
 # Let the tank aim to the nearest object.
