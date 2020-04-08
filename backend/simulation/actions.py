@@ -34,7 +34,10 @@ def move_to_nearest_object(tank, state, obj):
     if nearest_path is not None:
         tank.path = nearest_path
 
-        move_to_position(state, tank, nearest_path.next_node(tank.get_pos()), wall_collision=False)
+        wall_collision = False
+        if obj == obj.WALL:
+            wall_collision = True
+        move_to_position(state, tank, nearest_path.next_node(tank.get_pos()), wall_collision=wall_collision)
 
 
 # The function correlated with the action of the tank scouting the map.
