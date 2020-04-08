@@ -82,8 +82,6 @@ class BotMatchHistoryListAPI(APIView):
             botmatch.ai = ai
             botmatch.save()
 
-            SIMULATION_PLAYER.run_botmatch(botmatch)
-
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -151,7 +149,17 @@ class TeamMatchHistoryListAPI(APIView):
         serializer = TeamMatchPrimaryKeySerializer(data=request.data, context=context)
 
         if serializer.is_valid():
-            serializer.save()
+            teammatch = serializer.save()
+
+            # Copy AI for match replay, so that when the AI is altered, this one will still show up next to replay.
+            ai = teammatch.initiator_ai
+            ai.listed = False
+            ai.pk = None
+            ai.save()
+
+            teammatch.initiator_ai = ai
+            teammatch.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

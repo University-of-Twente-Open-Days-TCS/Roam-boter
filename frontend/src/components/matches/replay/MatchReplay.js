@@ -115,7 +115,7 @@ class MatchReplay extends Component {
 
         if (!fetchedMatchInfo) {
             // go to home if something went wrong.
-            console.alert("Something went wrong. Could not get match data")
+            window.alert("Something went wrong. Could not get match data")
             this.props.history.push('/')
         }
 
