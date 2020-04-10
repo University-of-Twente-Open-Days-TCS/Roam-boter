@@ -8,7 +8,9 @@ import logging
 logger = logging.getLogger("debugLogger")
 
 def csrf(request):
-    """Does nothing, but as a side effect the csrf token cookie will be set."""
+    """
+    The response will make sure that the csrfcookie is set.
+    """
     get_token(request) # sets the csrfcookie as a side-effect.
     return JsonResponse({'success': "OK"})
 

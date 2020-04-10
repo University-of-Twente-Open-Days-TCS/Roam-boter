@@ -46,8 +46,6 @@ INSTALLED_APPS = [
 
     # Our App
     'roamboter',
-    'simulation',
-    'home',
     'dashboard',
     'AIapi',
     'matches',
