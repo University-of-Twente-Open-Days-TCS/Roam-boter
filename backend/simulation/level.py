@@ -22,6 +22,9 @@ class Level:
         self.health_packs = self.collect_health_packs()
         self.scout_nodes = []
 
+    def reset(self):
+        self.health_packs = self.collect_health_packs()
+
     def set_scout_nodes(self, scout_nodes):
         self.scout_nodes = scout_nodes
 
