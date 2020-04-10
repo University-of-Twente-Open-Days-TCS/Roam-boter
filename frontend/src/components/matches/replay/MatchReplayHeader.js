@@ -26,12 +26,6 @@ const useStyles = makeStyles(theme => ({
         color: 'red',
         fontWeight: 700,
     },
-    small: {
-
-    },
-    big: {
-        
-    }
 })) 
 
 
