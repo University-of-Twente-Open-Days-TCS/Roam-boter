@@ -31,6 +31,7 @@ class SimulationState:
 
     def __init__(self, level, players):
         self.level = level
+        self.bullets = []
         self.tanks = [Tank(x) for x in players]
         self.scores = [0 for _ in self.tanks]
 
@@ -203,6 +204,9 @@ class Simulation:
 LEVEL_LOADER = LevelLoader()
 
 def simulate(ais, game_mode="DM", level="level1"):
+
+    levelstate = LEVEL_LOADER.load_level(level)
+    levelstate.reset()
 
     sim = Simulation(LEVEL_LOADER.load_level(level), ais, game_mode)
     while not sim.has_ended():
