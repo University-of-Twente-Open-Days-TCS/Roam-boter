@@ -92,7 +92,7 @@ class Level:
 
                 a, b = node
 
-                if a + 1 < len(self.objects):
+                if a + 1 < len(self.objects[0]):
                     queue.append((a + 1, b))
                 if a - 1 >= 0:
                     queue.append((a - 1, b))
