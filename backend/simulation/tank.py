@@ -189,7 +189,7 @@ class Tank:
         return False
 
     def hit(self, bullet):
-        self.health -= 20
+        self.health -= SETTINGS.BULLET_DAMAGE
 
     def get_health(self):
         return self.health

@@ -27,6 +27,9 @@ RELOAD_TIME = 1
 # The speed at which a bullet travels in squares per seconds.
 BULLET_SPEED = 60
 
+# the amount of damage a single bullet does
+BULLET_DAMAGE = 20
+
 # The speed at which a tank moves in squares per second.
 TANK_SPEED = 6
 
