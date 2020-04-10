@@ -8,6 +8,8 @@ from .actions import Action
 from .playback import PlayBack, PlayBackEncoder
 from .level import Level
 
+import simulation.settings as SETTINGS
+
 import cProfile
 
 import json
@@ -18,7 +20,6 @@ import logging
 import time
 
 LOGGER = logging.getLogger('simulation.simulation')
-MAX_GAME_LENGTH = 1800
 
 
 class SimulationState:
@@ -153,7 +154,7 @@ class Simulation:
 
     def check_game_end_condition(self):
         # Check if time limit has been exceeded.
-        if self.state.frames_passed > MAX_GAME_LENGTH:
+        if self.state.frames_passed > SETTINGS.MAX_FRAME_DATA * SETTINGS.FPS:
             self.ended = True
             return True
 
@@ -222,7 +223,7 @@ def test_simulation():
 
     ai = ConditionNode(Condition(1, {'obj': 10, 'distance': 1}), true_node, false_node)
 
-    ai2 = ActionNode([Action(1, {'obj': 8})])
+    ai2 = ActionNode([Action(1, {'obj': 10})])
     playback = simulate([ai2, ai])
 
     print(playback.to_json([0, 1], ["Team1", "Team2"]))

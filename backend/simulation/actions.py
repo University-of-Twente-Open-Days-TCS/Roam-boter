@@ -2,6 +2,8 @@ from .objects import Object, RelDir, WindDir, ALL_OBJECTS
 from .bullet import Bullet
 
 from .utils import *
+
+import simulation.settings as SETTINGS
 import random
 
 
@@ -127,7 +129,7 @@ def self_destruct(tank, state):
     tanks = state.tanks
     for t in tanks:
         if distance(tank.get_pos(), t.get_pos()) < EXPLOSION_RADIUS:
-            t.health -= 200
+            t.health -= SETTINGS.SELF_DESTRUCT_DAMAGE
 
 
 def set_label(tank, state, label):
@@ -172,11 +174,11 @@ ACTIONS = [
     aim_reldir,                             #7
     aim_to_left,                            #8
     aim_to_right,                           #9
-    shoot,                                  #13
-    self_destruct,                          #14
-    set_label,                              #15
-    unset_label,                            #16
-    set_label_for_seconds,                  #17
+    shoot,                                  #1
+    self_destruct,                          #11
+    set_label,                              #12
+    unset_label,                            #13
+    set_label_for_seconds,                  #14
     placeholder_action,                     #18
     placeholder_action,                     #19
     placeholder_action,                     #20

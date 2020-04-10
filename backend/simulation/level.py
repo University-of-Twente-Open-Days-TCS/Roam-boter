@@ -1,6 +1,8 @@
 from .objects import Object, ALL_OBJECTS
 from .path import Path
 
+import simulation.settings as SETTINGS
+
 import pickle
 import math
 
@@ -8,8 +10,6 @@ import os
 
 import logging
 LOGGER = logging.getLogger('simulation.simulation')
-
-HEALTH_PACK_COOLDOWN = 9999999
 
 
 class Level:
@@ -45,7 +45,7 @@ class Level:
         x, y = pos
         pos = math.floor(x), math.floor(y)
         if self.health_pack_ready(state, pos):
-            self.health_packs[pos] = state.frames_passed + HEALTH_PACK_COOLDOWN
+            self.health_packs[pos] = state.frames_passed + SETTINGS.HEALTH_PACK_COOLDOWN
             return True
         return False
 

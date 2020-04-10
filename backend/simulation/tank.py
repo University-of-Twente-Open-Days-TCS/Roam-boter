@@ -2,16 +2,10 @@ from .objects import Object
 from .actions import is_movement_action, is_aim_action
 from .utils import distance
 
+import simulation.settings as SETTINGS
+
 import math
 import numpy
-
-TANK_TURN_SPEED = 2.5
-TURRET_TURN_SPEED = 3
-
-FPS = 60
-
-VISION_RANGE = 30
-
 
 class Tank:
     x = 0
@@ -20,20 +14,20 @@ class Tank:
     rotation = 0
     turret_rotation = 0
 
-    degrees_visibility = 30
-    hacked = True
+    degrees_visibility = SETTINGS.VISION_RANGE / 2
+
     spawn = (0.0, 0.0)
     spawn_rotation = 0
     destroyed = False
 
-    health = 100
+    health = SETTINGS.HEALTH
 
     shoot_ready = 0
-    reload_time = 60
+    reload_time = SETTINGS.RELOAD_TIME * SETTINGS.FPS
 
-    bullet_speed = 1
-    max_speed = 0.1
-    speed = 0.1
+    bullet_speed = SETTINGS.BULLET_SPEED / SETTINGS.FPS
+    max_speed = SETTINGS.TANK_SPEED / SETTINGS.FPS
+    speed = SETTINGS.TANK_SPEED / SETTINGS.FPS
 
     width = 1
     height = 1
@@ -118,9 +112,9 @@ class Tank:
         # self.speed = self.max_speed * min(((90 - min(difference, 90)) / 90), 1)
 
         if abs(difference) > 180:
-            self.rotation -= max(min(difference, TANK_TURN_SPEED), -TANK_TURN_SPEED)
+            self.rotation -= max(min(difference, SETTINGS.TANK_TURN_SPEED), -SETTINGS.TANK_TURN_SPEED)
         else:
-            self.rotation += max(min(difference, TANK_TURN_SPEED), -TANK_TURN_SPEED)
+            self.rotation += max(min(difference, SETTINGS.TANK_TURN_SPEED), -SETTINGS.TANK_TURN_SPEED)
 
     def rotate_turret_towards(self, angle):
         # self.turret_rotation = angle
@@ -130,9 +124,9 @@ class Tank:
         difference = angle - self.turret_rotation
 
         if abs(difference) > 180:
-            self.turret_rotation -= max(min(difference, TURRET_TURN_SPEED), -TURRET_TURN_SPEED)
+            self.turret_rotation -= max(min(difference, SETTINGS.TURRET_TURN_SPEED), -SETTINGS.TURRET_TURN_SPEED)
         else:
-            self.turret_rotation += max(min(difference, TURRET_TURN_SPEED), -TURRET_TURN_SPEED)
+            self.turret_rotation += max(min(difference, SETTINGS.TURRET_TURN_SPEED), -SETTINGS.TURRET_TURN_SPEED)
 
     # Collect the actions that the ai would execute within the current game state
     def collectActions(self, state):
@@ -232,7 +226,7 @@ class Tank:
 
             angle = math.degrees(math.acos(inproduct))
 
-            if angle < VISION_RANGE or angle > 360 - VISION_RANGE:
+            if angle < (SETTINGS.VISION_RANGE / 2) or angle > 360 - (SETTINGS.VISION_RANGE / 2):
                 if state.level.direct_line_of_sight(self.get_pos(), other.get_pos()):
                     visible_tanks.append(other)
 
@@ -266,7 +260,7 @@ class Tank:
 
             angle = math.degrees(math.acos(inproduct))
 
-            if angle < VISION_RANGE or angle > 360 - VISION_RANGE:
+            if angle < (SETTINGS.VISION_RANGE / 2) or angle > 360 - (SETTINGS.VISION_RANGE / 2):
                 if state.level.direct_line_of_sight(self.get_pos(), other.get_pos()):
                     visible_bullets.append(other)
 
@@ -277,7 +271,7 @@ class Tank:
         if game_mode == "KH":
             x, y = self.spawn
             self.set_pos(x, y)
-            self.health = 100
+            self.health = SETTINGS.HEALTH
             self.rotation = self.spawn_rotation
             self.turret_rotation = 0
             self.shoot_ready = 0
@@ -298,7 +292,7 @@ class Tank:
 
     def handle_health_packs(self, state):
         if state.level.pickup_health_pack(state, self.get_pos()):
-            self.health = 100
+            self.health = SETTINGS.HEALTH
 
     def get_health(self):
         return self.health
