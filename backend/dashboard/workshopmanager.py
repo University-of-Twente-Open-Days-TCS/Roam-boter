@@ -137,7 +137,17 @@ def close_workshop():
     else:
         cur_workshop = get_cur_workshop()
         cur_workshop.workshop_open = False
+
+        # Delete all existing user sessions
+        workshop_teams = Team.objects.filter(workshop=cur_workshop)
+
+        for team in workshop_teams:
+            sessions = team.usersession_set.all()
+            for session in sessions:
+                session.delete()
+
         cur_workshop.save()
+
         return True
 
 

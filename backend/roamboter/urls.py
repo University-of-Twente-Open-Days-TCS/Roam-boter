@@ -19,7 +19,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 
-import home.urls as home_urls
 import AIapi.urls as AIapi_urls
 import dashboard.urls as dashboard_urls
 import matches.urls as matches_urls
@@ -35,7 +34,7 @@ urlpatterns = [
     path(r'', include(dashboard_urls)),
     path(r'csrf/', views.csrf),                         # sets csrf cookie.
     path(r'test/', views.test),                         # ping test
-    path(r'home/', include(home_urls)),]
+]
 
 
 

@@ -145,15 +145,14 @@ const Help = (props) => {
                 <TabPanel value={tabIndex} index={2}>
                     <PanelText variant="h5">The Map</PanelText>
                     <PanelText>
-                                Below you can see the map where your tank will play. Your own tank is always the top left one, the enemy the bottom right. 
-                                The blue dots are the spawn point objects, the yellow dot in the middle is the center and the red cross packets are health packets, 
-                                which you can navigate to to heal.
+                                Below you can see the map where your tank will play. Your own tank is always the top left green one and your opponent is the red bottom right tank. 
+                                The red cross packets are health packets, which you can navigate to to heal.
                     </PanelText>
                     <PanelImage src="/help_images/simulreplaywithoutai.png"></PanelImage>
                     <PanelText>
                                 From the tank two grey lines sprout, those are its vision-lines. The tank is aware of the location of everything on the map, 
-                                except enemy bullets and the enemy tank itself, since those move around. 
-                                Only if such an object is between those two (infinite) lines and not blocked by a wall, your tank can see them.
+                                except for enemy bullets and the enemy tank itself. The tank needs to see these objects before it can navigate to them.
+                                Only if such an object is between the (infinite) vision-lines your tank can see them. Tanks cannot see through walls.
                     </PanelText>
                 </TabPanel>
 
