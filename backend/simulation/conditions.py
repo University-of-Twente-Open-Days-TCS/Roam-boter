@@ -56,7 +56,7 @@ def aimed_at_object(tank, state, obj):
         angle = (vector_angle(tank.get_pos(), location) - vision_angle) % 360
 
         # If angle difference is small enough return true
-        if 0.5 > angle or angle > 359.5:
+        if 1 > angle or angle > 359:
             return True
     return False
 
