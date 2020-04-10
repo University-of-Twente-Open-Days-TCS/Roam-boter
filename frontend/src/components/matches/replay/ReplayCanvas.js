@@ -30,6 +30,7 @@ class ReplayCanvas {
 
         this.tankTurretSprites = []
         this.tankSprites = []
+        this.tankDestroyedSprites = []
 
         for (var i = 0; i < 2; i++) {
           this.tankSprites.push(new Image());
@@ -37,6 +38,9 @@ class ReplayCanvas {
 
           this.tankTurretSprites.push(new Image());
           this.tankTurretSprites[i].src = "simulation_images/tank_turret" + i + ".png"
+
+          this.tankDestroyedSprites.push(new Image());
+          this.tankDestroyedSprites[i].src = "simulation_images/tank_broken"+i+".png"
         }
 
         this.healthPackSprite = new Image();
@@ -138,6 +142,7 @@ class ReplayCanvas {
         var ctx = this.ctx2d;
         var tankSprites = this.tankSprites;
         var turretSprites = this.tankTurretSprites;
+        var tankDestroyedSprites = this.tankDestroyedSprites;
         var healthPackSprite = this.healthPackSprite;
 
         let cellsize_x = this.CELLSIZE_X
@@ -174,16 +179,19 @@ class ReplayCanvas {
             ctx.stroke();
         });
 
+        // Draw the tank
         this.gameData.frames[frame].tanks.forEach(function (elem, index) {
-            drawImage(tankSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
-            drawImage(turretSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation - elem.turret_rotation);
+            if(elem.health <= 0){
+                drawImage(tankDestroyedSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
+            }else {
+                drawImage(tankSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation);
+                drawImage(turretSprites[index], elem.pos[0] * cellsize_x, elem.pos[1] * cellsize_y, scaling, -elem.rotation - elem.turret_rotation);
 
-            // draw health bar
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-            ctx.fillStyle = "rgb(" + ((100 - elem.health) * (255 / 100)) + ", " + (elem.health * (255 / 100)) + ", 0)"
-            ctx.fillRect(elem.pos[0] * cellsize_x - 20, elem.pos[1] * cellsize_y - 20, elem.health / 100 * 40, 5);
-            //ctx.drawImage(tankSprite, elem.pos[0] * 20 - 32, elem.pos[1] * 20 - 32, 64, 64);
-            //ctx.fillRect((elem.pos[0] * 20 - 10), elem.pos[1] * 20 - 10, 20, 20);
+                // draw health bar
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                ctx.fillStyle = "rgb(" + ((100 - elem.health) * (255 / 100)) + ", " + (elem.health * (255 / 100)) + ", 0)"
+                ctx.fillRect(elem.pos[0] * cellsize_x - 20, elem.pos[1] * cellsize_y - 20, elem.health / 100 * 40, 5);
+            }
         });
 
         this.gameData.frames[frame].health_packs.forEach(function (elem, index) {
