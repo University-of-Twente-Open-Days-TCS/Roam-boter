@@ -22,7 +22,7 @@ VISION_RANGE = 60
 HEALTH = 100
 
 # The reload time of a tank in seconds.
-RELOAD_TIME = 0.1
+RELOAD_TIME = 1
 
 # The speed at which a bullet travels in squares per seconds.
 BULLET_SPEED = 60
