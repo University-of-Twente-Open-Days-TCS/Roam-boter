@@ -56,7 +56,7 @@ def closest_object_in_paths(pos, paths):
 
 
 # Rotate and move towards a given point. (This does not hold into account walls)
-def move_to_position(state, tank, goal):
+def move_to_position(state, tank, goal, wall_collision=False):
     x1, y1 = tank.get_pos()
     x2, y2 = goal
 
@@ -73,18 +73,18 @@ def move_to_position(state, tank, goal):
     goal_angle = angle_tank_towards_position(state, tank, (ndx, ndy))
     angle_difference = ((goal_angle % 360) - (tank.get_rotation() % 360)) % 360
     if angle_difference < 90 or angle_difference > 270:
-        tank.move_forward(state, distance * 0.99)
+        tank.move_forward(state, distance * 0.99, wall_collision)
 
 
 # Move straight away from a position.
-def move_from_position(state, tank, goal):
+def move_from_position(state, tank, goal, wall_collision=False):
     x, y = goal
     tx, ty = tank.get_pos()
 
     relative_x, relative_y = x - tx, y - ty
 
     tank.path = [(tx - relative_x, ty - relative_y)]
-    move_to_position(state, tank, (tx - relative_x, ty - relative_y))
+    move_to_position(state, tank, (tx - relative_x, ty - relative_y), wall_collision)
 
 
 # Calculate the angle towards the goal and let the tank rotate slowly towards this angle.

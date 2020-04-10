@@ -92,10 +92,10 @@ class Tank:
         self.x += x
         self.y += y
 
-    def move_forward(self, state, max_dist=99999):
+    def move_forward(self, state, max_dist=99999, wall_collision=False):
         dx = -math.sin(math.radians(self.rotation)) * min(self.speed, max_dist)
         dy = -math.cos(math.radians(self.rotation)) * min(self.speed, max_dist)
-        if not self.check_collision(state, dx, dy):
+        if not self.check_collision(state, dx, dy, wall_collision):
             self.move(dx, dy)
         # self.move(dx, dy)
 
@@ -163,7 +163,7 @@ class Tank:
             action.execute(self, state)
 
     # Check for wall collisions.
-    def check_collision(self, state, dx=0.0, dy=0.0):
+    def check_collision(self, state, dx=0.0, dy=0.0, wall_collision=False):
         x, y = self.get_pos()
         x += dx
         y += dy
@@ -179,6 +179,9 @@ class Tank:
 
             if distance(t.get_pos(), (x, y)) < 1.8:
                 return True
+
+        if not wall_collision:
+            return False
 
         for a in numpy.arange(y - 0.8, y + 0.8, 0.2):
             for b in numpy.arange(x - 0.8, x + 0.8, 0.2):
