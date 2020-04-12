@@ -81,7 +81,7 @@ class MatchReplay extends Component {
             match: null,
             matchKind: null,
 
-            playing: false,
+            playing: true,
         }
 
 
