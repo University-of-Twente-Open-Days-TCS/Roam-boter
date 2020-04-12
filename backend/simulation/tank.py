@@ -28,6 +28,8 @@ class Tank:
     bullet_speed = SETTINGS.BULLET_SPEED / SETTINGS.FPS
     max_speed = SETTINGS.TANK_SPEED / SETTINGS.FPS
     speed = SETTINGS.TANK_SPEED / SETTINGS.FPS
+    turret_turn_speed = SETTINGS.TURRET_TURN_SPEED / SETTINGS.FPS
+    tank_turn_speed = SETTINGS.TANK_TURN_SPEED / SETTINGS.FPS
 
     width = 1
     height = 1
@@ -112,9 +114,9 @@ class Tank:
         # self.speed = self.max_speed * min(((90 - min(difference, 90)) / 90), 1)
 
         if abs(difference) > 180:
-            self.rotation -= max(min(difference, SETTINGS.TANK_TURN_SPEED), -SETTINGS.TANK_TURN_SPEED)
+            self.rotation -= max(min(difference, Tank.tank_turn_speed), -Tank.tank_turn_speed)
         else:
-            self.rotation += max(min(difference, SETTINGS.TANK_TURN_SPEED), -SETTINGS.TANK_TURN_SPEED)
+            self.rotation += max(min(difference, Tank.tank_turn_speed), -Tank.tank_turn_speed)
 
     def rotate_turret_towards(self, angle):
         # self.turret_rotation = angle
@@ -124,9 +126,9 @@ class Tank:
         difference = angle - self.turret_rotation
 
         if abs(difference) > 180:
-            self.turret_rotation -= max(min(difference, SETTINGS.TURRET_TURN_SPEED), -SETTINGS.TURRET_TURN_SPEED)
+            self.turret_rotation -= max(min(difference, Tank.turret_turn_speed), -Tank.turret_turn_speed)
         else:
-            self.turret_rotation += max(min(difference, SETTINGS.TURRET_TURN_SPEED), -SETTINGS.TURRET_TURN_SPEED)
+            self.turret_rotation += max(min(difference, Tank.turret_turn_speed), -Tank.turret_turn_speed)
 
     # Collect the actions that the ai would execute within the current game state
     def collectActions(self, state):
@@ -293,6 +295,3 @@ class Tank:
     def handle_health_packs(self, state):
         if state.level.pickup_health_pack(state, self.get_pos()):
             self.health = SETTINGS.HEALTH
-
-    def get_health(self):
-        return self.health
