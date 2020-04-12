@@ -11,6 +11,8 @@ import RoamBotAPI from '../../../RoamBotAPI'
 
 class BotMatchHistory extends Component {
 
+    SECOND_REFRESH_TIMEOUT = 8000
+
     constructor(props) {
         super(props)
         this.state = {matches: []}
@@ -20,12 +22,20 @@ class BotMatchHistory extends Component {
 
     async componentDidMount() {
         this.refreshMatchHistory()
+        this.refreshTimeout = setTimeout(this.refreshMatchHistory, this.SECOND_REFRESH_TIMEOUT) //Second refresh after X seconds.
     }
 
     async refreshMatchHistory() {
+        console.log('getting match history')
         let response = await RoamBotAPI.getBotMatchHistoryList()
         let data = await response.json()
         this.setState({matches: data})
+    }
+
+    componentWillUnmount() {
+        if(this.refreshTimer) {
+            clearTimeout(this.refreshTimeout)
+        }
     }
 
     render() {
