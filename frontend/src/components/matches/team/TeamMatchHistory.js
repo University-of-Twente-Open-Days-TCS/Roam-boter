@@ -12,6 +12,8 @@ import MatchHistoryList from '../replay/MatchHistoryList'
 
 class TeamMatchHistory extends Component {
 
+    SECOND_REFRESH_DELAY = 8000 
+
     constructor(props) {
         super(props)
         this.state = {matches: []}
@@ -21,12 +23,14 @@ class TeamMatchHistory extends Component {
 
     async componentDidMount() {
         this.refreshMatchHistory()
+        this.refreshTimeout = setTimeout(this.refreshMatchHistory, this.SECOND_REFRESH_DELAY)
     }
 
     async refreshMatchHistory() {
         let call = await RoamBotAPI.getTeamMatchHistoryList()
         let json = await call.json()
         this.setState({matches: json})
+
     }
 
     async deleteHandler(match) {
@@ -37,6 +41,13 @@ class TeamMatchHistory extends Component {
             window.alert("Something went wrong...")
         }
     }
+
+    componentWillUnmount() {
+        if(this.refreshTimeout){
+            clearTimeout(this.refreshMatchHistory)
+        }
+    }
+
 
     render() {
         return(

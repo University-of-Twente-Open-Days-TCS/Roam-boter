@@ -15,20 +15,6 @@ services:
         expose:
             - "5432"
 
-    #pgadmin REMOVE IN PRODUCTION!
-    pg:
-        image: dpage/pgadmin4
-        environment:
-            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_ADMIN}
-            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASS}
-        restart: always
-        ports:
-            - "5050:80"
-        expose:
-            - "5050"
-        logging:
-            driver: "none"
- 
     redis: 
         restart: always
         image: redis:5.0.5
@@ -72,9 +58,6 @@ services:
         ports:
             - "3000:3000"
 
-
-
-#react nodejs container
 
 volumes:
     db_data: 
