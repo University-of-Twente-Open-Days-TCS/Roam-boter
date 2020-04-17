@@ -41,32 +41,33 @@ const NewTeamMatch = props => {
     })
     let [activeAIDialogOpen, setActiveAIDialogOpen] = useState(false)
 
-    useEffect(() => {
-        async function updateAis(aiPk) {
-            let call = await RoamBotAPI.getAiList()
-            let json = await call.json()
 
-            //find ai and set as selected
-            if(aiPk){
-                let ai = null
-                for (let i = 0; i < json.length; i++){
-                    let curAi = json[i]
-                    if(curAi.pk === aiPk){
-                        ai = curAi
-                    }
+    async function updateTeam() {
+        let call = await RoamBotAPI.getTeamDetail()
+        let json = await call.json()
+        setTeam(json)
+    }
+
+    async function updateAis(aiPk) {
+        let call = await RoamBotAPI.getAiList()
+        let json = await call.json()
+
+        //find ai and set as selected
+        if(aiPk){
+            let ai = null
+            for (let i = 0; i < json.length; i++){
+                let curAi = json[i]
+                if(curAi.pk === aiPk){
+                    ai = curAi
                 }
-                setSelectedAI(ai)
             }
-
-            setAis(json)
+            setSelectedAI(ai)
         }
 
-        async function updateTeam() {
-            let call = await RoamBotAPI.getTeamDetail()
-            let json = await call.json()
-            setTeam(json)
-        }
+        setAis(json)
+    }
 
+    useEffect(() => {
         // If ai list not set get ai's
         if (ais === null) {
             if(preSelectedAI){
@@ -137,7 +138,7 @@ const NewTeamMatch = props => {
                             </Snackbar>
                         </NavLink>
 
-                        <ActiveAIDialog open={activeAIDialogOpen} handleClose={() => setActiveAIDialogOpen(false)} selectedAI={selectedAI} />
+                        <ActiveAIDialog open={activeAIDialogOpen} handleClose={() => setActiveAIDialogOpen(false)} selectedAI={selectedAI} activeAISetCallback={() => updateTeam()}/>
                     </div>
                 </Grid>
             </Grid>
