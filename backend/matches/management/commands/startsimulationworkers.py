@@ -18,4 +18,4 @@ class Command(BaseCommand):
             self.stdout.write("\u001b[35mStarting simulation workers\u001b[0m")
             WorkerPool()
         except ProgrammingError:
-            self.stdout.write("\u001b[35mCould not start simulation workers, because database has not been initialized\u001b[0m")
+            self.stdout.write("\u001b[35mCould not start simulation workers. Have you initialized the database properly?\u001b[0m")
