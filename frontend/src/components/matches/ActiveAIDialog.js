@@ -4,15 +4,20 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import React from "react";
+import React, { useCallback } from "react";
 import RoamBotAPI from "../../RoamBotAPI";
 
-const ActiveAIDialog = ({ open, handleClose, selectedAI }) => {
+const ActiveAIDialog = ({ open, handleClose, selectedAI, activeAISetCallback }) => {
     const handleConfirm = async (selectedAI) => {
         handleClose()
         let call = await RoamBotAPI.putActiveAI(selectedAI.pk)
         if(!call.ok){
             window.alert("Could not set active AI")
+        }else {
+            // refresh the page to prevent looping of active dialog
+            if(activeAISetCallback){
+                activeAISetCallback()
+            }
         }
     }
 

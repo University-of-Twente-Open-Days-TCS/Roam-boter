@@ -16,6 +16,10 @@ Make sure you have docker and docker-compose installed. It is important that doc
 1. Clone the git repository.
 2. CD to the git repository. 
 
+Make sure to set the number of simulation workers:
+   In backend/matches/simulation\_worker.py change the line:
+      `num_workers = 8` to the number of cores that should be used for simulations.
+
 Build the docker containers:
 
 3. `sudo docker-compose build` 
@@ -41,6 +45,15 @@ Create a super user:
 
    Follow the instructions to create credentials for the superuser.
 
+Make the migrations for the apps:
+
+8. `python manage.py makemigrations AIapi dashboard matches`
+9. `python manage.py migrate` 
+
+Reboot the roambot-er\_web container to make sure that the simulation workers are created.
+
+10. `docker restart roambot-er_web_1`
+
 
 ### Migrations
 Follow the following commands to ready the django database for errors.
@@ -62,7 +75,7 @@ For every level a cache needs to be generated to do this run the prepare\_caches
 
 For example the following command will generate cache for level1 and level2:
 
-`./prepare_caches.py level1 level2`
+`./manage.py generatecaches --levels <level-name-1> <level-name-2>`
 
 ### Starting simulation workers
 To simulate matches efficiently the webserver uses multiprocessing.
@@ -104,5 +117,5 @@ Also in the contaiers not related to the RoamBot-er Project.
 ### Makemigrations doesn't create all migrations
 Make sure you specify app names as follows:
 
-    `./manage.py makemigrations app1-name app2-name etc...
+    `./manage.py makemigrations AIapi dashboard matches`
 

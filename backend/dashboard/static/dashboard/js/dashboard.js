@@ -75,7 +75,7 @@ function downloadTextfile() {
     let codeList = []
     for (i = 0; i < codeElements.length; i ++) {
         elem = codeElements[i]
-        codeList.push(elem.innerText+"\n")
+        codeList.push(elem.innerText+"\r\n")
     }
     const blob = new Blob(codeList, {type: 'text/plain;charset=utf-8'})
     

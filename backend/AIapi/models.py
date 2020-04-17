@@ -7,7 +7,7 @@ class AI(models.Model):
     """AI Model"""
     ai = models.TextField()
 
-    team = models.ForeignKey('dashboard.Team', on_delete=models.CASCADE, null=True) # an AI might not belong to a bot, but to a team
+    team = models.ForeignKey('dashboard.Team', on_delete=models.CASCADE, null=True, blank=True) # an AI might not belong to a bot, but to a team
     name = models.CharField(max_length=20, blank=False)
 
     # Whether the AI should show up in lists.
