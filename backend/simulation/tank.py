@@ -66,7 +66,7 @@ class Tank:
         self.labels[index] = False
 
     def set_label_timer(self, index, seconds):
-        self.label_timers[index] = seconds * FPS
+        self.label_timers[index] = seconds * SETTINGS.FPS
 
     def process_label_timers(self):
         for i, x in enumerate(self.label_timers):
