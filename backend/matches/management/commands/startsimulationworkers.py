@@ -3,9 +3,6 @@ from django.db.utils import ProgrammingError
 
 from matches.simulation_workers import WorkerPool
 
-from matches.models import BotMatch, TeamMatch, Simulation
-from dashboard.models import Team
-
 
 class Command(BaseCommand):
 
