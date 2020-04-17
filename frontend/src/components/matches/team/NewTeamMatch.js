@@ -67,6 +67,7 @@ const NewTeamMatch = props => {
             setTeam(json)
         }
 
+        // If ai list not set get ai's
         if (ais === null) {
             if(preSelectedAI){
                 let aiPk = parseInt(preSelectedAI)
@@ -76,6 +77,7 @@ const NewTeamMatch = props => {
             }
         }
 
+        // If team not set get team details
         if (team === null){
             updateTeam()
         }

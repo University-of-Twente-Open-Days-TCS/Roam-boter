@@ -37,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 const AIEditorMenu = (props) => {
     const classes = useStyles()
     const theme = useTheme()
+    
     let { addConditionHandler, addActionHandler, handleSave, handleSaveAsNew, handlePlayvsBot, handlePlayvsTeam } = props
     let ai = props.ai
 
