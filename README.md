@@ -31,9 +31,9 @@ Start the docker containers:
 The above commands will have initialized and started the containers. The django web server is not ready yet. First the database needs to initialized and a super user must be created. 
 To do this you first have to open a new terminal and get inside the 'web' docker container.
 
-5. `docker exec -it roambot-er_web_1 /bin/bash` 
+5. `sudo docker exec -it roam-boter_web_1 /bin/bash` 
 
-   This will give you a bash terminal inside of the docker container.
+   This will give you a bash terminal inside the docker container.
 
 Initialize the database:
 
@@ -50,9 +50,9 @@ Make the migrations for the apps:
 8. `python manage.py makemigrations AIapi dashboard matches`
 9. `python manage.py migrate` 
 
-Reboot the roambot-er\_web container to make sure that the simulation workers are created.
+Reboot the roam-boter_web_1 container to make sure that the simulation workers are created.
 
-10. `docker restart roambot-er_web_1`
+10. `sudo docker restart roam-boter_web_1`
 
 
 ### Migrations
@@ -63,7 +63,7 @@ Follow the following commands to ready the django database for errors.
 
 Go in the shell of your django docker container 
 
-3. `sudo docker exec -it roambot-er_web_1 /bin/bash`
+3. `sudo docker exec -it roam-boter_web_1 /bin/bash`
 4. `./manage.py makemigrations <app-names>`
 
    Fill in all apps to make sure all migrations happen.
@@ -91,7 +91,7 @@ This file is run when the docker container is started.
 ### Insert bots
 Follow the following command to load bots into the database.
 
-1. ./manage.py loaddata roamboter/fixtures/bots.json
+1. `./manage.py loaddata roamboter/fixtures/bots.json`
 
 ## Troubleshooting
 
