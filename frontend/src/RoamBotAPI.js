@@ -23,7 +23,9 @@ class RoamBotAPI {
 
     constructor() {
         this._csrfToken = null
-        this.API_HOST = 'http://'+window.location.hostname + ":8000"
+        this.API_HOST = window.location.hostname === 'localhost'
+                ? 'http://' + window.location.hostname + ":8000"
+                : window.location.protocol + '//api.' + window.location.hostname;
     }
 
     async callApi(url, method, data) {
