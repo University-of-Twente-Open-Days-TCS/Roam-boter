@@ -93,6 +93,59 @@ Follow the following command to load bots into the database.
 
 1. `./manage.py loaddata roamboter/fixtures/bots.json`
 
+
+### NGINX Reverse Proxy
+Use the following server configuration for the nginx reverse proxy:
+```
+server {
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate /etc/letsencrypt/live/roamboter.ia.utwente.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/roamboter.ia.utwente.nl/privkey.pem;
+
+	server_name roamboter.ia.utwente.nl roamboter.inter-actief.utwente.nl;
+
+	location / {
+		proxy_pass http://127.0.0.1:3000;
+	}
+
+	location ^~ /.well-known/acme-challenge/ {
+		root /var/www/letsencrypt;
+		default_type text/plain;
+	}
+
+	location = /.well-known/acme-challenge/ {
+		return 404;
+	}
+}
+
+server {
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate /etc/letsencrypt/live/roamboter.ia.utwente.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/roamboter.ia.utwente.nl/privkey.pem;
+
+	server_name api.roamboter.ia.utwente.nl api.roamboter.inter-actief.utwente.nl;
+	underscores_in_headers on;
+
+	location / {
+		proxy_pass http://127.0.0.1:8000;
+		proxy_pass_request_headers on;
+	}
+
+	location ^~ /.well-known/acme-challenge/ {
+		root /var/www/letsencrypt;
+		default_type text/plain;
+	}
+
+	location = /.well-known/acme-challenge/ {
+		return 404;
+	}
+}
+```
+
 ## Troubleshooting
 
 ### Migrations won't apply
