@@ -93,6 +93,8 @@ class Simulation:
 
     # Step through one frame of the simulation
     def step(self):
+        self.state.frames_passed += 1
+
         # Check if the simulation has ended
         if self.check_game_end_condition():
             return
@@ -128,8 +130,6 @@ class Simulation:
 
         DRAW_WORLD(self.state)
         # Draw the world if VISUAL_DEBUG is True.
-
-        self.state.frames_passed += 1
 
         # Add the frame to the playback.
         self.playback.add_frame(self.state)

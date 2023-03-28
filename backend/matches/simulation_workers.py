@@ -75,6 +75,21 @@ class WorkerPool:
             x.simulation.state = Simulation.SimulationState.PENDING
             x.simulation.save()
 
+    @staticmethod
+    def remove_unfished_simulations():
+        unplayed_matches = BotMatch.objects.filter(simulation__state=Simulation.SimulationState.BUSY)
+        for x in unplayed_matches:
+            x.delete()
+
+        unplayed_matches = TeamMatch.objects.filter(simulation__state=Simulation.SimulationState.BUSY)
+        for x in unplayed_matches:
+            x.delete()
+
+        unfinished_simulations = Simulation.objects.filter(state=Simulation.SimulationState.BUSY)
+        for x in unfinished_simulations:
+            x.delete()
+
+
     # Initialise workers
     def init_workers(self):
         processes = []
